@@ -6,7 +6,7 @@ import (
 	"github.com/ethereum/go-ethereum/common"
 	ethtypes "github.com/ethereum/go-ethereum/core/types"
 
-	rpctypes "github.com/cosmos/evm/rpc/types"
+	rpctypes "github.com/deep-thought-labs/infinite/rpc/types"
 )
 
 // GetBlockByNumber returns the JSON-RPC compatible Ethereum block identified by

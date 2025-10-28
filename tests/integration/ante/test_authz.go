@@ -9,10 +9,10 @@ import (
 
 	abci "github.com/cometbft/cometbft/abci/types"
 
-	"github.com/cosmos/evm/testutil"
-	"github.com/cosmos/evm/testutil/integration/base/factory"
-	utiltx "github.com/cosmos/evm/testutil/tx"
-	evmtypes "github.com/cosmos/evm/x/vm/types"
+	"github.com/deep-thought-labs/infinite/testutil"
+	"github.com/deep-thought-labs/infinite/testutil/integration/base/factory"
+	utiltx "github.com/deep-thought-labs/infinite/testutil/tx"
+	evmtypes "github.com/deep-thought-labs/infinite/x/vm/types"
 
 	"cosmossdk.io/math"
 

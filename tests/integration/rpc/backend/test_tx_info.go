@@ -14,11 +14,11 @@ import (
 	"github.com/cometbft/cometbft/types"
 
 	dbm "github.com/cosmos/cosmos-db"
-	"github.com/cosmos/evm/indexer"
-	"github.com/cosmos/evm/rpc/backend/mocks"
-	rpctypes "github.com/cosmos/evm/rpc/types"
-	cosmosevmtypes "github.com/cosmos/evm/server/types"
-	evmtypes "github.com/cosmos/evm/x/vm/types"
+	"github.com/deep-thought-labs/infinite/indexer"
+	"github.com/deep-thought-labs/infinite/rpc/backend/mocks"
+	rpctypes "github.com/deep-thought-labs/infinite/rpc/types"
+	cosmosevmtypes "github.com/deep-thought-labs/infinite/server/types"
+	evmtypes "github.com/deep-thought-labs/infinite/x/vm/types"
 
 	"cosmossdk.io/log"
 	"cosmossdk.io/math"

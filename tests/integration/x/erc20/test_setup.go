@@ -4,11 +4,11 @@ import (
 	"github.com/ethereum/go-ethereum/params"
 	"github.com/stretchr/testify/suite"
 
-	"github.com/cosmos/evm/testutil/integration/evm/factory"
-	"github.com/cosmos/evm/testutil/integration/evm/grpc"
-	"github.com/cosmos/evm/testutil/integration/evm/network"
-	"github.com/cosmos/evm/testutil/keyring"
-	"github.com/cosmos/evm/x/erc20/types"
+	"github.com/deep-thought-labs/infinite/testutil/integration/evm/factory"
+	"github.com/deep-thought-labs/infinite/testutil/integration/evm/grpc"
+	"github.com/deep-thought-labs/infinite/testutil/integration/evm/network"
+	"github.com/deep-thought-labs/infinite/testutil/keyring"
+	"github.com/deep-thought-labs/infinite/x/erc20/types"
 
 	sdkmath "cosmossdk.io/math"
 

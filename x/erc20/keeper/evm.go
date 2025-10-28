@@ -7,9 +7,9 @@ import (
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/crypto"
 
-	"github.com/cosmos/evm/contracts"
-	"github.com/cosmos/evm/utils"
-	"github.com/cosmos/evm/x/erc20/types"
+	"github.com/deep-thought-labs/infinite/contracts"
+	"github.com/deep-thought-labs/infinite/utils"
+	"github.com/deep-thought-labs/infinite/x/erc20/types"
 
 	errorsmod "cosmossdk.io/errors"
 

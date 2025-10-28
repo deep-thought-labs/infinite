@@ -5,10 +5,10 @@ package systemtests
 import (
 	"testing"
 
-	"github.com/cosmos/evm/tests/systemtests/accountabstraction"
-	"github.com/cosmos/evm/tests/systemtests/mempool"
+	"github.com/deep-thought-labs/infinite/tests/systemtests/accountabstraction"
+	"github.com/deep-thought-labs/infinite/tests/systemtests/mempool"
 
-	"github.com/cosmos/evm/tests/systemtests/eip712"
+	"github.com/deep-thought-labs/infinite/tests/systemtests/eip712"
 
 	"cosmossdk.io/systemtests"
 )

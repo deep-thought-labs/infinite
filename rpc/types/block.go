@@ -14,7 +14,7 @@ import (
 	"github.com/spf13/cast"
 	"google.golang.org/grpc/metadata"
 
-	"github.com/cosmos/evm/utils"
+	"github.com/deep-thought-labs/infinite/utils"
 
 	grpctypes "github.com/cosmos/cosmos-sdk/types/grpc"
 )

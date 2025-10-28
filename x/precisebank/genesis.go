@@ -3,8 +3,8 @@ package precisebank
 import (
 	"fmt"
 
-	"github.com/cosmos/evm/x/precisebank/keeper"
-	"github.com/cosmos/evm/x/precisebank/types"
+	"github.com/deep-thought-labs/infinite/x/precisebank/keeper"
+	"github.com/deep-thought-labs/infinite/x/precisebank/types"
 
 	sdkmath "cosmossdk.io/math"
 

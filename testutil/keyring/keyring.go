@@ -5,7 +5,7 @@ import (
 
 	"github.com/ethereum/go-ethereum/common"
 
-	utiltx "github.com/cosmos/evm/testutil/tx"
+	utiltx "github.com/deep-thought-labs/infinite/testutil/tx"
 
 	cryptotypes "github.com/cosmos/cosmos-sdk/crypto/types"
 	sdktypes "github.com/cosmos/cosmos-sdk/types"

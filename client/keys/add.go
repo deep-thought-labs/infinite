@@ -12,7 +12,7 @@ import (
 
 	"github.com/spf13/cobra"
 
-	cryptohd "github.com/cosmos/evm/crypto/hd"
+	cryptohd "github.com/deep-thought-labs/infinite/crypto/hd"
 	bip39 "github.com/cosmos/go-bip39"
 
 	"github.com/cosmos/cosmos-sdk/client"

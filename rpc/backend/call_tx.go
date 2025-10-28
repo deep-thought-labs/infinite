@@ -16,9 +16,9 @@ import (
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 
-	"github.com/cosmos/evm/mempool"
-	rpctypes "github.com/cosmos/evm/rpc/types"
-	evmtypes "github.com/cosmos/evm/x/vm/types"
+	"github.com/deep-thought-labs/infinite/mempool"
+	rpctypes "github.com/deep-thought-labs/infinite/rpc/types"
+	evmtypes "github.com/deep-thought-labs/infinite/x/vm/types"
 
 	errorsmod "cosmossdk.io/errors"
 

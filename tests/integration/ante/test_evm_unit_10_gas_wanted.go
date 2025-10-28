@@ -3,14 +3,14 @@ package ante
 import (
 	"fmt"
 
-	"github.com/cosmos/evm/ante/evm"
-	testconstants "github.com/cosmos/evm/testutil/constants"
-	"github.com/cosmos/evm/testutil/integration/evm/factory"
-	"github.com/cosmos/evm/testutil/integration/evm/grpc"
-	"github.com/cosmos/evm/testutil/integration/evm/network"
-	"github.com/cosmos/evm/testutil/integration/evm/utils"
-	testkeyring "github.com/cosmos/evm/testutil/keyring"
-	evmtypes "github.com/cosmos/evm/x/vm/types"
+	"github.com/deep-thought-labs/infinite/ante/evm"
+	testconstants "github.com/deep-thought-labs/infinite/testutil/constants"
+	"github.com/deep-thought-labs/infinite/testutil/integration/evm/factory"
+	"github.com/deep-thought-labs/infinite/testutil/integration/evm/grpc"
+	"github.com/deep-thought-labs/infinite/testutil/integration/evm/network"
+	"github.com/deep-thought-labs/infinite/testutil/integration/evm/utils"
+	testkeyring "github.com/deep-thought-labs/infinite/testutil/keyring"
+	evmtypes "github.com/deep-thought-labs/infinite/x/vm/types"
 
 	storetypes "cosmossdk.io/store/types"
 

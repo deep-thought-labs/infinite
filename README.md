@@ -1,19 +1,21 @@
-<img
-src="repo_header.svg"
-alt="Cosmos EVM - A plug-and-play solution that adds EVM compatibility and customizability to your chain"
-/>
+# Infinite Drive
 
-**Please note**: This repo is undergoing changes while the code is being audited and tested. For the time being we will
-be making v0.x releases. Some breaking changes might occur. Cosmos Labs will only mark the Cosmos EVM repository as stable with a v1
-release after the audit, key stability features and benchmarking are completed.
+**Infinite Drive** is a blockchain powered by Cosmos EVM technology, featuring the **Improbability Toast (TOAST)** token. This blockchain provides complete Ethereum compatibility with Solidity smart contracts, Ethereum JSON-RPC, and access to the entire Ethereum developer ecosystem.
 
-**Visit the official documentation for Cosmos EVM**: [evm.cosmos.network](https://evm.cosmos.network/)
+## What is Infinite Drive?
 
-## What is Cosmos EVM?
+Infinite Drive is a plug-and-play solution that adds EVM compatibility and customizability to your Cosmos SDK chain. Infinite Drive equips Cosmos chains with complete Ethereum capabilities: Solidity smart contracts, Ethereum JSON-RPC, native support for the EVM wallet/token/user experience, and access to the entire Ethereum developer ecosystem. Its precompiles and extensions allow developers to leverage modules like [IBC](https://github.com/cosmos/ibc-go) with EVM and get native ERC-20 support for tokens on Cosmos.
 
-Cosmos EVM is a plug-and-play solution that adds EVM compatibility and customizability to your Cosmos SDK chain. Cosmos EVM equips Cosmos chains with complete Ethereum capabilities: Solidity smart contracts, Ethereum JSON-RPC, native support for the EVM wallet/token/user experience, and access to the entire Ethereum developer ecosystem. Its precompiles and extensions allow developers to leverage modules like [IBC](https://github.com/cosmos/ibc-go) with EVM and get native ERC-20 support for tokens on Cosmos. 
+Infinite Drive is customizable for your business use case, chain architecture, and performance needs.
 
-Cosmos EVM is customizable for your business use case, chain architecture, and performance needs.
+## Token Information
+
+- **Name**: Improbability Toast
+- **Symbol**: TOAST
+- **Base Denom**: miga (1 TOAST = 10^18 miga)
+- **Decimals**: 18
+- **Chain ID**: infinite_421018-1 (EVM: 421018)
+- **Bech32 Prefix**: infinite
 
 
 ## Integration

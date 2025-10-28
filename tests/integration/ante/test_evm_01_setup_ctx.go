@@ -3,10 +3,10 @@ package ante
 import (
 	"math/big"
 
-	evmante "github.com/cosmos/evm/ante/evm"
-	"github.com/cosmos/evm/testutil"
-	testutiltx "github.com/cosmos/evm/testutil/tx"
-	evmtypes "github.com/cosmos/evm/x/vm/types"
+	evmante "github.com/deep-thought-labs/infinite/ante/evm"
+	"github.com/deep-thought-labs/infinite/testutil"
+	testutiltx "github.com/deep-thought-labs/infinite/testutil/tx"
+	evmtypes "github.com/deep-thought-labs/infinite/x/vm/types"
 
 	storetypes "cosmossdk.io/store/types"
 

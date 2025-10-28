@@ -4,8 +4,8 @@ import (
 	"errors"
 	"time"
 
-	"github.com/cosmos/evm/testutil/integration/evm/grpc"
-	"github.com/cosmos/evm/testutil/integration/evm/network"
+	"github.com/deep-thought-labs/infinite/testutil/integration/evm/grpc"
+	"github.com/deep-thought-labs/infinite/testutil/integration/evm/network"
 
 	errorsmod "cosmossdk.io/errors"
 

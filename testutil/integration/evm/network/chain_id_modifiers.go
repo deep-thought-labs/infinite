@@ -5,9 +5,9 @@
 package network
 
 import (
-	testconstants "github.com/cosmos/evm/testutil/constants"
-	erc20types "github.com/cosmos/evm/x/erc20/types"
-	evmtypes "github.com/cosmos/evm/x/vm/types"
+	testconstants "github.com/deep-thought-labs/infinite/testutil/constants"
+	erc20types "github.com/deep-thought-labs/infinite/x/erc20/types"
+	evmtypes "github.com/deep-thought-labs/infinite/x/vm/types"
 
 	banktypes "github.com/cosmos/cosmos-sdk/x/bank/types"
 )

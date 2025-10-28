@@ -5,9 +5,9 @@ import (
 
 	"github.com/ethereum/go-ethereum/common"
 
-	cmn "github.com/cosmos/evm/precompiles/common"
-	"github.com/cosmos/evm/precompiles/slashing"
-	"github.com/cosmos/evm/precompiles/testutil"
+	cmn "github.com/deep-thought-labs/infinite/precompiles/common"
+	"github.com/deep-thought-labs/infinite/precompiles/slashing"
+	"github.com/deep-thought-labs/infinite/precompiles/testutil"
 
 	"github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/query"

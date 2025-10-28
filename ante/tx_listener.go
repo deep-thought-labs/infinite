@@ -3,7 +3,7 @@ package ante
 import (
 	"github.com/ethereum/go-ethereum/common"
 
-	evmtypes "github.com/cosmos/evm/x/vm/types"
+	evmtypes "github.com/deep-thought-labs/infinite/x/vm/types"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 )

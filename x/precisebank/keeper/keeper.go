@@ -3,8 +3,8 @@ package keeper
 import (
 	"context"
 
-	"github.com/cosmos/evm/x/precisebank/types"
-	evmtypes "github.com/cosmos/evm/x/vm/types"
+	"github.com/deep-thought-labs/infinite/x/precisebank/types"
+	evmtypes "github.com/deep-thought-labs/infinite/x/vm/types"
 
 	storetypes "cosmossdk.io/store/types"
 

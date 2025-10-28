@@ -3,7 +3,7 @@ package factory
 import (
 	"fmt"
 
-	"github.com/cosmos/evm/testutil/keyring"
+	"github.com/deep-thought-labs/infinite/testutil/keyring"
 
 	sdktypes "github.com/cosmos/cosmos-sdk/types"
 	banktypes "github.com/cosmos/cosmos-sdk/x/bank/types"

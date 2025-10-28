@@ -8,10 +8,10 @@ import (
 	"github.com/ethereum/go-ethereum/crypto"
 	"github.com/holiman/uint256"
 
-	cmn "github.com/cosmos/evm/precompiles/common"
-	"github.com/cosmos/evm/precompiles/staking"
-	testkeyring "github.com/cosmos/evm/testutil/keyring"
-	"github.com/cosmos/evm/x/vm/statedb"
+	cmn "github.com/deep-thought-labs/infinite/precompiles/common"
+	"github.com/deep-thought-labs/infinite/precompiles/staking"
+	testkeyring "github.com/deep-thought-labs/infinite/testutil/keyring"
+	"github.com/deep-thought-labs/infinite/x/vm/statedb"
 
 	"cosmossdk.io/math"
 

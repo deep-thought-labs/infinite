@@ -8,12 +8,12 @@ import (
 
 	"github.com/stretchr/testify/require"
 
-	"github.com/cosmos/evm/encoding"
-	evmaddress "github.com/cosmos/evm/encoding/address"
-	"github.com/cosmos/evm/ethereum/eip712"
-	"github.com/cosmos/evm/testutil/constants"
-	utiltx "github.com/cosmos/evm/testutil/tx"
-	evmtypes "github.com/cosmos/evm/x/vm/types"
+	"github.com/deep-thought-labs/infinite/encoding"
+	evmaddress "github.com/deep-thought-labs/infinite/encoding/address"
+	"github.com/deep-thought-labs/infinite/ethereum/eip712"
+	"github.com/deep-thought-labs/infinite/testutil/constants"
+	utiltx "github.com/deep-thought-labs/infinite/testutil/tx"
+	evmtypes "github.com/deep-thought-labs/infinite/x/vm/types"
 
 	"cosmossdk.io/math"
 

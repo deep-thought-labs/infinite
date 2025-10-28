@@ -3,7 +3,7 @@ package vm
 import (
 	"github.com/stretchr/testify/suite"
 
-	"github.com/cosmos/evm/testutil/integration/evm/network"
+	"github.com/deep-thought-labs/infinite/testutil/integration/evm/network"
 )
 
 type EvmAnteTestSuite struct {

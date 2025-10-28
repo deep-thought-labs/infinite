@@ -14,13 +14,13 @@ COMMIT := $(shell git log -1 --format='%H')
 
 BINDIR ?= $(GOPATH)/bin
 BUILDDIR ?= $(CURDIR)/build
-EXAMPLE_BINARY := evmd
+EXAMPLE_BINARY := infinited
 
 ###############################################################################
 ###                              Repo Info                                  ###
 ###############################################################################
 
-HTTPS_GIT := https://github.com/cosmos/evm.git
+HTTPS_GIT := git@github.com:deep-thought-labs/infinite.git
 DOCKER := $(shell which docker)
 
 export GO111MODULE = on
@@ -29,12 +29,12 @@ export GO111MODULE = on
 ###                            Submodule Settings                           ###
 ###############################################################################
 
-# evmd is a separate module under ./evmd
-EVMD_DIR      := evmd
-EVMD_MAIN_PKG := ./cmd/evmd
+# infinited is a separate module under ./infinited
+INFINITED_DIR      := infinited
+INFINITED_MAIN_PKG := ./cmd/infinited
 
 ###############################################################################
-###                        Build & Install evmd                             ###
+###                        Build & Install infinited                         ###
 ###############################################################################
 
 # process build tags
@@ -52,7 +52,7 @@ build_tags := $(strip $(build_tags))
 
 # process linker flags
 
-ldflags = -X github.com/cosmos/cosmos-sdk/version.Name=os \
+ldflags = -X github.com/cosmos/cosmos-sdk/version.Name=infinite \
           -X github.com/cosmos/cosmos-sdk/version.AppName=$(EXAMPLE_BINARY) \
           -X github.com/cosmos/cosmos-sdk/version.Version=$(VERSION) \
           -X github.com/cosmos/cosmos-sdk/version.Commit=$(COMMIT) \
@@ -98,8 +98,8 @@ endif
 build: go.sum $(BUILDDIR)/
 	@echo "🏗️  Building evmd to $(BUILDDIR)/$(EXAMPLE_BINARY) ..."
 	@echo "BUILD_FLAGS: $(BUILD_FLAGS)"
-	@cd $(EVMD_DIR) && CGO_ENABLED="1" \
-	  go build $(BUILD_FLAGS) -o $(BUILDDIR)/$(EXAMPLE_BINARY) $(EVMD_MAIN_PKG)
+	@cd $(INFINITED_DIR) && CGO_ENABLED="1" \
+	  go build $(BUILD_FLAGS) -o $(BUILDDIR)/$(EXAMPLE_BINARY) $(INFINITED_MAIN_PKG)
 
 # Cross-compile for Linux AMD64
 build-linux:
@@ -109,8 +109,8 @@ build-linux:
 install: go.sum
 	@echo "🚚  Installing evmd to $(BINDIR) ..."
 	@echo "BUILD_FLAGS: $(BUILD_FLAGS)"
-	@cd $(EVMD_DIR) && CGO_ENABLED="1" \
-	  go install $(BUILD_FLAGS) $(EVMD_MAIN_PKG)
+	@cd $(INFINITED_DIR) && CGO_ENABLED="1" \
+	  go install $(BUILD_FLAGS) $(INFINITED_MAIN_PKG)
 
 $(BUILDDIR)/:
 	mkdir -p $(BUILDDIR)/

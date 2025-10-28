@@ -3,8 +3,8 @@ package keeper
 import (
 	"fmt"
 
-	"github.com/cosmos/evm/x/erc20/types"
-	transferkeeper "github.com/cosmos/evm/x/ibc/transfer/keeper"
+	"github.com/deep-thought-labs/infinite/x/erc20/types"
+	transferkeeper "github.com/deep-thought-labs/infinite/x/ibc/transfer/keeper"
 
 	"cosmossdk.io/core/address"
 	"cosmossdk.io/log"

@@ -11,7 +11,7 @@ import (
 	sdkmath "cosmossdk.io/math"
 	"cosmossdk.io/systemtests"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/cosmos/evm/tests/systemtests/clients"
+	"github.com/deep-thought-labs/infinite/tests/systemtests/clients"
 	"github.com/stretchr/testify/require"
 )
 

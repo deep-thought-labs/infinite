@@ -7,13 +7,13 @@ import (
 	"github.com/ethereum/go-ethereum/crypto"
 	"github.com/stretchr/testify/suite"
 
-	cmn "github.com/cosmos/evm/precompiles/common"
-	"github.com/cosmos/evm/precompiles/werc20"
-	testconstants "github.com/cosmos/evm/testutil/constants"
-	"github.com/cosmos/evm/testutil/integration/evm/factory"
-	"github.com/cosmos/evm/testutil/integration/evm/grpc"
-	"github.com/cosmos/evm/testutil/integration/evm/network"
-	"github.com/cosmos/evm/testutil/keyring"
+	cmn "github.com/deep-thought-labs/infinite/precompiles/common"
+	"github.com/deep-thought-labs/infinite/precompiles/werc20"
+	testconstants "github.com/deep-thought-labs/infinite/testutil/constants"
+	"github.com/deep-thought-labs/infinite/testutil/integration/evm/factory"
+	"github.com/deep-thought-labs/infinite/testutil/integration/evm/grpc"
+	"github.com/deep-thought-labs/infinite/testutil/integration/evm/network"
+	"github.com/deep-thought-labs/infinite/testutil/keyring"
 )
 
 type PrecompileUnitTestSuite struct {

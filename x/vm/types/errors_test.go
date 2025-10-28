@@ -6,7 +6,7 @@ import (
 	"github.com/ethereum/go-ethereum/common/hexutil"
 	"github.com/stretchr/testify/require"
 
-	"github.com/cosmos/evm/x/vm/types"
+	"github.com/deep-thought-labs/infinite/x/vm/types"
 )
 
 func TestNewExecErrorWithReason(t *testing.T) {

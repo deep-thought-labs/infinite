@@ -12,11 +12,11 @@ import (
 
 	cmtproto "github.com/cometbft/cometbft/proto/tendermint/types"
 
-	"github.com/cosmos/evm/mempool"
-	"github.com/cosmos/evm/mempool/mocks"
-	"github.com/cosmos/evm/testutil/constants"
-	"github.com/cosmos/evm/x/vm/statedb"
-	vmtypes "github.com/cosmos/evm/x/vm/types"
+	"github.com/deep-thought-labs/infinite/mempool"
+	"github.com/deep-thought-labs/infinite/mempool/mocks"
+	"github.com/deep-thought-labs/infinite/testutil/constants"
+	"github.com/deep-thought-labs/infinite/x/vm/statedb"
+	vmtypes "github.com/deep-thought-labs/infinite/x/vm/types"
 
 	"cosmossdk.io/log"
 	storetypes "cosmossdk.io/store/types"

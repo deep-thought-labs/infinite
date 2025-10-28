@@ -11,11 +11,11 @@ import (
 
 	cmttypes "github.com/cometbft/cometbft/types"
 
-	"github.com/cosmos/evm/mempool/miner"
-	"github.com/cosmos/evm/mempool/txpool"
-	"github.com/cosmos/evm/mempool/txpool/legacypool"
-	"github.com/cosmos/evm/rpc/stream"
-	evmtypes "github.com/cosmos/evm/x/vm/types"
+	"github.com/deep-thought-labs/infinite/mempool/miner"
+	"github.com/deep-thought-labs/infinite/mempool/txpool"
+	"github.com/deep-thought-labs/infinite/mempool/txpool/legacypool"
+	"github.com/deep-thought-labs/infinite/rpc/stream"
+	evmtypes "github.com/deep-thought-labs/infinite/x/vm/types"
 
 	"cosmossdk.io/log"
 	"cosmossdk.io/math"

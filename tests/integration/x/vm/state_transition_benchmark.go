@@ -11,8 +11,8 @@ import (
 	"github.com/holiman/uint256"
 	"github.com/stretchr/testify/require"
 
-	utiltx "github.com/cosmos/evm/testutil/tx"
-	evmtypes "github.com/cosmos/evm/x/vm/types"
+	utiltx "github.com/deep-thought-labs/infinite/testutil/tx"
+	evmtypes "github.com/deep-thought-labs/infinite/x/vm/types"
 
 	"github.com/cosmos/cosmos-sdk/crypto/keyring"
 	sdk "github.com/cosmos/cosmos-sdk/types"

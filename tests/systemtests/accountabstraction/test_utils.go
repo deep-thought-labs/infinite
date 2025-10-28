@@ -13,7 +13,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/cosmos/evm/tests/systemtests/clients"
+	"github.com/deep-thought-labs/infinite/tests/systemtests/clients"
 	"github.com/ethereum/go-ethereum/accounts/abi"
 	"github.com/ethereum/go-ethereum/common"
 	ethtypes "github.com/ethereum/go-ethereum/core/types"

@@ -15,8 +15,8 @@ import (
 
 	cmtrpctypes "github.com/cometbft/cometbft/rpc/core/types"
 
-	"github.com/cosmos/evm/rpc/backend"
-	"github.com/cosmos/evm/rpc/types"
+	"github.com/deep-thought-labs/infinite/rpc/backend"
+	"github.com/deep-thought-labs/infinite/rpc/types"
 
 	"cosmossdk.io/log"
 )

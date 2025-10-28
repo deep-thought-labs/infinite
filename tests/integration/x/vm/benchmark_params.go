@@ -3,7 +3,7 @@ package vm
 import (
 	"testing"
 
-	"github.com/cosmos/evm/x/vm/types"
+	"github.com/deep-thought-labs/infinite/x/vm/types"
 )
 
 func BenchmarkSetParams(b *testing.B) {

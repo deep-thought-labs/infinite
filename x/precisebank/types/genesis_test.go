@@ -5,10 +5,10 @@ import (
 
 	"github.com/stretchr/testify/require"
 
-	testconstants "github.com/cosmos/evm/testutil/constants"
-	"github.com/cosmos/evm/x/precisebank/testutil"
-	"github.com/cosmos/evm/x/precisebank/types"
-	evmtypes "github.com/cosmos/evm/x/vm/types"
+	testconstants "github.com/deep-thought-labs/infinite/testutil/constants"
+	"github.com/deep-thought-labs/infinite/x/precisebank/testutil"
+	"github.com/deep-thought-labs/infinite/x/precisebank/types"
+	evmtypes "github.com/deep-thought-labs/infinite/x/vm/types"
 
 	sdkmath "cosmossdk.io/math"
 

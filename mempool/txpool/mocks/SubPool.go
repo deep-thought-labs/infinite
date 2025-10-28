@@ -14,7 +14,7 @@ import (
 
 	mock "github.com/stretchr/testify/mock"
 
-	txpool "github.com/cosmos/evm/mempool/txpool"
+	txpool "github.com/deep-thought-labs/infinite/mempool/txpool"
 
 	types "github.com/ethereum/go-ethereum/core/types"
 )

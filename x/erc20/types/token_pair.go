@@ -5,7 +5,7 @@ import (
 
 	"github.com/cometbft/cometbft/crypto/tmhash"
 
-	"github.com/cosmos/evm/utils"
+	"github.com/deep-thought-labs/infinite/utils"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 )

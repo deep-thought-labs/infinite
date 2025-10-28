@@ -6,7 +6,7 @@ import (
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/stretchr/testify/require"
 
-	evmaddress "github.com/cosmos/evm/encoding/address"
+	evmaddress "github.com/deep-thought-labs/infinite/encoding/address"
 
 	"cosmossdk.io/core/address"
 

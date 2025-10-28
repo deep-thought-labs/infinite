@@ -8,10 +8,10 @@ import (
 
 	abcitypes "github.com/cometbft/cometbft/abci/types"
 
-	"github.com/cosmos/evm/precompiles/testutil"
-	"github.com/cosmos/evm/server/config"
-	testutiltypes "github.com/cosmos/evm/testutil/types"
-	evmtypes "github.com/cosmos/evm/x/vm/types"
+	"github.com/deep-thought-labs/infinite/precompiles/testutil"
+	"github.com/deep-thought-labs/infinite/server/config"
+	testutiltypes "github.com/deep-thought-labs/infinite/testutil/types"
+	evmtypes "github.com/deep-thought-labs/infinite/x/vm/types"
 
 	errorsmod "cosmossdk.io/errors"
 

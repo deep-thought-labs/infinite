@@ -9,14 +9,14 @@ import (
 	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/require"
 
-	cmn "github.com/cosmos/evm/precompiles/common"
-	cmnmocks "github.com/cosmos/evm/precompiles/common/mocks"
-	testutil "github.com/cosmos/evm/testutil"
-	testconstants "github.com/cosmos/evm/testutil/constants"
-	precisebanktypes "github.com/cosmos/evm/x/precisebank/types"
-	"github.com/cosmos/evm/x/vm/statedb"
-	evmtypes "github.com/cosmos/evm/x/vm/types"
-	"github.com/cosmos/evm/x/vm/types/mocks"
+	cmn "github.com/deep-thought-labs/infinite/precompiles/common"
+	cmnmocks "github.com/deep-thought-labs/infinite/precompiles/common/mocks"
+	testutil "github.com/deep-thought-labs/infinite/testutil"
+	testconstants "github.com/deep-thought-labs/infinite/testutil/constants"
+	precisebanktypes "github.com/deep-thought-labs/infinite/x/precisebank/types"
+	"github.com/deep-thought-labs/infinite/x/vm/statedb"
+	evmtypes "github.com/deep-thought-labs/infinite/x/vm/types"
+	"github.com/deep-thought-labs/infinite/x/vm/types/mocks"
 
 	storetypes "cosmossdk.io/store/types"
 

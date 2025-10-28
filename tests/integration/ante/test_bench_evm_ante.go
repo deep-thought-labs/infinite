@@ -7,12 +7,12 @@ import (
 
 	ethtypes "github.com/ethereum/go-ethereum/core/types"
 
-	evmante "github.com/cosmos/evm/ante/evm"
-	"github.com/cosmos/evm/testutil"
-	"github.com/cosmos/evm/testutil/integration/evm/network"
-	testutiltx "github.com/cosmos/evm/testutil/tx"
-	"github.com/cosmos/evm/x/vm/statedb"
-	evmtypes "github.com/cosmos/evm/x/vm/types"
+	evmante "github.com/deep-thought-labs/infinite/ante/evm"
+	"github.com/deep-thought-labs/infinite/testutil"
+	"github.com/deep-thought-labs/infinite/testutil/integration/evm/network"
+	testutiltx "github.com/deep-thought-labs/infinite/testutil/tx"
+	"github.com/deep-thought-labs/infinite/x/vm/statedb"
+	evmtypes "github.com/deep-thought-labs/infinite/x/vm/types"
 
 	sdkmath "cosmossdk.io/math"
 	storetypes "cosmossdk.io/store/types"

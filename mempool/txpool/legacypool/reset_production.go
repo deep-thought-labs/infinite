@@ -21,7 +21,7 @@ func (pool *LegacyPool) reset(oldHead, newHead *types.Header) {
 		// logic would only panic for cosmos chains in a valid state, we have
 		// removed it and replaced with a debug log.
 		//
-		// see https://github.com/cosmos/evm/pull/668 for more context.
+		// see https://github.com/deep-thought-labs/infinite/pull/668 for more context.
 		log.Debug("leacypool saw skipped block (reorg) on cosmos chain, doing nothing...", "oldHead", oldHead.Hash(), "newHead", newHead.Hash(), "newParent", newHead.ParentHash)
 	}
 	pool.resetInternalState(newHead, reinject)

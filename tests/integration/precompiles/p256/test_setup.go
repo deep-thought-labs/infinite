@@ -12,8 +12,8 @@ import (
 
 	"github.com/cometbft/cometbft/crypto"
 
-	"github.com/cosmos/evm/precompiles/p256"
-	"github.com/cosmos/evm/testutil/integration/evm/network"
+	"github.com/deep-thought-labs/infinite/precompiles/p256"
+	"github.com/deep-thought-labs/infinite/testutil/integration/evm/network"
 )
 
 type PrecompileTestSuite struct {

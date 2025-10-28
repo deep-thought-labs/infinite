@@ -13,8 +13,8 @@ import (
 
 	cmtrpctypes "github.com/cometbft/cometbft/rpc/core/types"
 
-	rpctypes "github.com/cosmos/evm/rpc/types"
-	evmtypes "github.com/cosmos/evm/x/vm/types"
+	rpctypes "github.com/deep-thought-labs/infinite/rpc/types"
+	evmtypes "github.com/deep-thought-labs/infinite/x/vm/types"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 )

@@ -13,8 +13,8 @@ import (
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/core/vm"
 
-	cmn "github.com/cosmos/evm/precompiles/common"
-	evmtypes "github.com/cosmos/evm/x/vm/types"
+	cmn "github.com/deep-thought-labs/infinite/precompiles/common"
+	evmtypes "github.com/deep-thought-labs/infinite/x/vm/types"
 
 	storetypes "cosmossdk.io/store/types"
 

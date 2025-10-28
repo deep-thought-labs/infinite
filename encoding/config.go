@@ -3,11 +3,11 @@ package encoding
 import (
 	"google.golang.org/protobuf/reflect/protoreflect"
 
-	evmaddress "github.com/cosmos/evm/encoding/address"
-	enccodec "github.com/cosmos/evm/encoding/codec"
-	"github.com/cosmos/evm/ethereum/eip712"
-	erc20types "github.com/cosmos/evm/x/erc20/types"
-	evmtypes "github.com/cosmos/evm/x/vm/types"
+	evmaddress "github.com/deep-thought-labs/infinite/encoding/address"
+	enccodec "github.com/deep-thought-labs/infinite/encoding/codec"
+	"github.com/deep-thought-labs/infinite/ethereum/eip712"
+	erc20types "github.com/deep-thought-labs/infinite/x/erc20/types"
+	evmtypes "github.com/deep-thought-labs/infinite/x/vm/types"
 	"github.com/cosmos/gogoproto/proto"
 
 	"cosmossdk.io/x/tx/signing"

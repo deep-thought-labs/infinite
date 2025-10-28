@@ -12,10 +12,10 @@ import (
 	"github.com/ethereum/go-ethereum/event"
 	"github.com/ethereum/go-ethereum/params"
 
-	"github.com/cosmos/evm/mempool/txpool"
-	"github.com/cosmos/evm/mempool/txpool/legacypool"
-	"github.com/cosmos/evm/x/vm/statedb"
-	evmtypes "github.com/cosmos/evm/x/vm/types"
+	"github.com/deep-thought-labs/infinite/mempool/txpool"
+	"github.com/deep-thought-labs/infinite/mempool/txpool/legacypool"
+	"github.com/deep-thought-labs/infinite/x/vm/statedb"
+	evmtypes "github.com/deep-thought-labs/infinite/x/vm/types"
 
 	sdkerrors "cosmossdk.io/errors"
 	"cosmossdk.io/log"

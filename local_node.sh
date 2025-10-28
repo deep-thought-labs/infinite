@@ -1,6 +1,6 @@
 #!/bin/bash
 
-CHAINID="${CHAIN_ID:-9001}"
+CHAINID="${CHAIN_ID:-421018}"
 MONIKER="localtestnet"
 # Remember to change to other types of keyring like 'file' in-case exposing to outside world,
 # otherwise your balance will be wiped quickly
@@ -9,8 +9,8 @@ KEYRING="test"
 KEYALGO="eth_secp256k1"
 
 LOGLEVEL="info"
-# Set dedicated home directory for the evmd instance
-CHAINDIR="$HOME/.evmd"
+# Set dedicated home directory for the infinited instance
+CHAINDIR="$HOME/.infinited"
 
 BASEFEE=10000000
 
@@ -47,7 +47,7 @@ Options:
   --no-install             Skip 'make install'
   --remote-debugging       Build with nooptimization,nostrip
   --additional-users N     Create N extra users: dev4, dev5, ...
-  --mnemonic-file PATH     Where to write mnemonics YAML (default: \$HOME/.evmd/mnemonics.yaml)
+  --mnemonic-file PATH     Where to write mnemonics YAML (default: \$HOME/.infinited/mnemonics.yaml)
   --mnemonics-input PATH   Read dev mnemonics from a yaml file (key: mnemonics:)
 EOF
 }
@@ -64,7 +64,7 @@ while [[ $# -gt 0 ]]; do
       overwrite="n"; shift
       ;;
     --no-install)
-      echo "Flag --no-install passed -> Skipping installation of the evmd binary."
+      echo "Flag --no-install passed -> Skipping installation of the infinited binary."
       install=false; shift
       ;;
     --remote-debugging)
@@ -164,20 +164,20 @@ write_mnemonics_yaml() {
 # ---------- Add funded account ----------
 add_genesis_funds() {
   local keyname="$1"
-  evmd genesis add-genesis-account "$keyname" 1000000000000000000000atest --keyring-backend "$KEYRING" --home "$CHAINDIR"
+  infinited genesis add-genesis-account "$keyname" 1000000000000000000000miga --keyring-backend "$KEYRING" --home "$CHAINDIR"
 }
 
 # Setup local node if overwrite is set to Yes, otherwise skip setup
 if [[ $overwrite == "y" || $overwrite == "Y" ]]; then
   rm -rf "$CHAINDIR"
 
-  evmd config set client chain-id "$CHAINID" --home "$CHAINDIR"
-  evmd config set client keyring-backend "$KEYRING" --home "$CHAINDIR"
+  infinited config set client chain-id "$CHAINID" --home "$CHAINDIR"
+  infinited config set client keyring-backend "$KEYRING" --home "$CHAINDIR"
 
   # ---------------- Validator key ----------------
   VAL_KEY="mykey"
   VAL_MNEMONIC="gesture inject test cycle original hollow east ridge hen combine junk child bacon zero hope comfort vacuum milk pitch cage oppose unhappy lunar seat"
-  echo "$VAL_MNEMONIC" | evmd keys add "$VAL_KEY" --recover --keyring-backend "$KEYRING" --algo "$KEYALGO" --home "$CHAINDIR"
+  echo "$VAL_MNEMONIC" | infinited keys add "$VAL_KEY" --recover --keyring-backend "$KEYRING" --algo "$KEYALGO" --home "$CHAINDIR"
 
   # ---------------- dev mnemonics source ----------------
   # dev0 address 0xC6Fe5D33615a1C52c08018c47E8Bc53646A0E101 | cosmos1cml96vmptgw99syqrrz8az79xer2pcgp84pdun
@@ -228,24 +228,24 @@ if [[ $overwrite == "y" || $overwrite == "Y" ]]; then
   fi
 
   # init chain w/ validator mnemonic
-  echo "$VAL_MNEMONIC" | evmd init $MONIKER -o --chain-id "$CHAINID" --home "$CHAINDIR" --recover
+  echo "$VAL_MNEMONIC" | infinited init $MONIKER -o --chain-id "$CHAINID" --home "$CHAINDIR" --recover
 
   # ---------- Genesis customizations ----------
-  jq '.app_state["staking"]["params"]["bond_denom"]="atest"' "$GENESIS" >"$TMP_GENESIS" && mv "$TMP_GENESIS" "$GENESIS"
-  jq '.app_state["gov"]["deposit_params"]["min_deposit"][0]["denom"]="atest"' "$GENESIS" >"$TMP_GENESIS" && mv "$TMP_GENESIS" "$GENESIS"
-  jq '.app_state["gov"]["params"]["min_deposit"][0]["denom"]="atest"' "$GENESIS" >"$TMP_GENESIS" && mv "$TMP_GENESIS" "$GENESIS"
-  jq '.app_state["gov"]["params"]["expedited_min_deposit"][0]["denom"]="atest"' "$GENESIS" >"$TMP_GENESIS" && mv "$TMP_GENESIS" "$GENESIS"
-  jq '.app_state["evm"]["params"]["evm_denom"]="atest"' "$GENESIS" >"$TMP_GENESIS" && mv "$TMP_GENESIS" "$GENESIS"
-  jq '.app_state["mint"]["params"]["mint_denom"]="atest"' "$GENESIS" >"$TMP_GENESIS" && mv "$TMP_GENESIS" "$GENESIS"
+  jq '.app_state["staking"]["params"]["bond_denom"]="miga"' "$GENESIS" >"$TMP_GENESIS" && mv "$TMP_GENESIS" "$GENESIS"
+  jq '.app_state["gov"]["deposit_params"]["min_deposit"][0]["denom"]="miga"' "$GENESIS" >"$TMP_GENESIS" && mv "$TMP_GENESIS" "$GENESIS"
+  jq '.app_state["gov"]["params"]["min_deposit"][0]["denom"]="miga"' "$GENESIS" >"$TMP_GENESIS" && mv "$TMP_GENESIS" "$GENESIS"
+  jq '.app_state["gov"]["params"]["expedited_min_deposit"][0]["denom"]="miga"' "$GENESIS" >"$TMP_GENESIS" && mv "$TMP_GENESIS" "$GENESIS"
+  jq '.app_state["evm"]["params"]["evm_denom"]="miga"' "$GENESIS" >"$TMP_GENESIS" && mv "$TMP_GENESIS" "$GENESIS"
+  jq '.app_state["mint"]["params"]["mint_denom"]="miga"' "$GENESIS" >"$TMP_GENESIS" && mv "$TMP_GENESIS" "$GENESIS"
 
-  jq '.app_state["bank"]["denom_metadata"]=[{"description":"The native staking token for evmd.","denom_units":[{"denom":"atest","exponent":0,"aliases":["attotest"]},{"denom":"test","exponent":18,"aliases":[]}],"base":"atest","display":"test","name":"Test Token","symbol":"TEST","uri":"","uri_hash":""}]' "$GENESIS" >"$TMP_GENESIS" && mv "$TMP_GENESIS" "$GENESIS"
+  jq '.app_state["bank"]["denom_metadata"]=[{"description":"Improbability Toast: A token powered by the most improbable crumb in the galaxy.","denom_units":[{"denom":"miga","exponent":0,"aliases":["crumb","improbability_particle"]},{"denom":"TOAST","exponent":18,"aliases":[]}],"base":"miga","display":"TOAST","name":"Improbability Toast","symbol":"TOAST","uri":"","uri_hash":""}]' "$GENESIS" >"$TMP_GENESIS" && mv "$TMP_GENESIS" "$GENESIS"
 
   jq '.app_state["evm"]["params"]["active_static_precompiles"]=["0x0000000000000000000000000000000000000100","0x0000000000000000000000000000000000000400","0x0000000000000000000000000000000000000800","0x0000000000000000000000000000000000000801","0x0000000000000000000000000000000000000802","0x0000000000000000000000000000000000000803","0x0000000000000000000000000000000000000804","0x0000000000000000000000000000000000000805", "0x0000000000000000000000000000000000000806", "0x0000000000000000000000000000000000000807"]' "$GENESIS" >"$TMP_GENESIS" && mv "$TMP_GENESIS" "$GENESIS"
 
-  jq '.app_state["evm"]["params"]["evm_denom"]="atest"' "$GENESIS" >"$TMP_GENESIS" && mv "$TMP_GENESIS" "$GENESIS"
+  jq '.app_state["evm"]["params"]["evm_denom"]="miga"' "$GENESIS" >"$TMP_GENESIS" && mv "$TMP_GENESIS" "$GENESIS"
 
   jq '.app_state.erc20.native_precompiles=["0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE"]' "$GENESIS" >"$TMP_GENESIS" && mv "$TMP_GENESIS" "$GENESIS"
-  jq '.app_state.erc20.token_pairs=[{contract_owner:1,erc20_address:"0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE",denom:"atest",enabled:true}]' "$GENESIS" >"$TMP_GENESIS" && mv "$TMP_GENESIS" "$GENESIS"
+  jq '.app_state.erc20.token_pairs=[{contract_owner:1,erc20_address:"0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE",denom:"miga",enabled:true}]' "$GENESIS" >"$TMP_GENESIS" && mv "$TMP_GENESIS" "$GENESIS"
 
   jq '.consensus.params.block.max_gas="10000000"' "$GENESIS" >"$TMP_GENESIS" && mv "$TMP_GENESIS" "$GENESIS"
 
@@ -255,7 +255,7 @@ if [[ $overwrite == "y" || $overwrite == "Y" ]]; then
   sed -i.bak 's/"expedited_voting_period": "86400s"/"expedited_voting_period": "15s"/g' "$GENESIS"
 
   # fund validator (devs already funded in the loop)
-  evmd genesis add-genesis-account "$VAL_KEY" 100000000000000000000000000atest --keyring-backend "$KEYRING" --home "$CHAINDIR"
+  infinited genesis add-genesis-account "$VAL_KEY" 100000000000000000000000000miga --keyring-backend "$KEYRING" --home "$CHAINDIR"
 
   # ---------- Config customizations ----------
   sed -i.bak 's/timeout_propose = "3s"/timeout_propose = "2s"/g' "$CONFIG_TOML"
@@ -291,7 +291,7 @@ if [[ $overwrite == "y" || $overwrite == "Y" ]]; then
     echo "adding key for $keyname"
 
     # Add key to keyring using the mnemonic
-    echo "$mnemonic" | evmd keys add "$keyname" --recover --keyring-backend "$KEYRING" --algo "$KEYALGO" --home "$CHAINDIR"
+    echo "$mnemonic" | infinited keys add "$keyname" --recover --keyring-backend "$KEYRING" --algo "$KEYALGO" --home "$CHAINDIR"
 
     # Fund the account in genesis
     add_genesis_funds "$keyname"
@@ -304,7 +304,7 @@ if [[ $overwrite == "y" || $overwrite == "Y" ]]; then
       keyname="dev${idx}"
 
       # create key and capture mnemonic
-      mnemonic_out="$(evmd keys add "$keyname" --keyring-backend "$KEYRING" --algo "$KEYALGO" --home "$CHAINDIR" 2>&1)"
+      mnemonic_out="$(infinited keys add "$keyname" --keyring-backend "$KEYRING" --algo "$KEYALGO" --home "$CHAINDIR" 2>&1)"
       # try to grab a line that looks like a seed phrase (>=12 words), else last line
       user_mnemonic="$(echo "$mnemonic_out" | grep -E '([[:alpha:]]+[[:space:]]+){11,}[[:alpha:]]+$' | tail -1)"
       if [[ -z "$user_mnemonic" ]]; then
@@ -323,9 +323,9 @@ if [[ $overwrite == "y" || $overwrite == "Y" ]]; then
   fi
 
   # --------- Finalize genesis ---------
-  evmd genesis gentx "$VAL_KEY" 1000000000000000000000atest --gas-prices ${BASEFEE}atest --keyring-backend "$KEYRING" --chain-id "$CHAINID" --home "$CHAINDIR"
-  evmd genesis collect-gentxs --home "$CHAINDIR"
-  evmd genesis validate-genesis --home "$CHAINDIR"
+  infinited genesis gentx "$VAL_KEY" 1000000000000000000000miga --gas-prices ${BASEFEE}miga --keyring-backend "$KEYRING" --chain-id "$CHAINID" --home "$CHAINDIR"
+  infinited genesis collect-gentxs --home "$CHAINDIR"
+  infinited genesis validate-genesis --home "$CHAINDIR"
 
   # --------- Write YAML with mnemonics if the user specified more ---------
   if [[ "$ADDITIONAL_USERS" -gt 0 ]]; then
@@ -338,10 +338,10 @@ if [[ $overwrite == "y" || $overwrite == "Y" ]]; then
 fi
 
 # Start the node
-evmd start "$TRACE" \
+infinited start "$TRACE" \
 	--pruning nothing \
 	--log_level $LOGLEVEL \
-	--minimum-gas-prices=0atest \
+	--minimum-gas-prices=0miga \
 	--evm.min-tip=0 \
 	--home "$CHAINDIR" \
 	--json-rpc.api eth,txpool,personal,net,debug,web3 \

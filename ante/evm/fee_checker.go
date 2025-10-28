@@ -5,9 +5,9 @@ import (
 
 	"github.com/ethereum/go-ethereum/params"
 
-	cosmosevmtypes "github.com/cosmos/evm/ante/types"
-	feemarkettypes "github.com/cosmos/evm/x/feemarket/types"
-	evmtypes "github.com/cosmos/evm/x/vm/types"
+	cosmosevmtypes "github.com/deep-thought-labs/infinite/ante/types"
+	feemarkettypes "github.com/deep-thought-labs/infinite/x/feemarket/types"
+	evmtypes "github.com/deep-thought-labs/infinite/x/vm/types"
 
 	errorsmod "cosmossdk.io/errors"
 	sdkmath "cosmossdk.io/math"

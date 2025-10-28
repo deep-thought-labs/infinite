@@ -5,7 +5,7 @@ import (
 
 	"github.com/ethereum/go-ethereum/accounts/abi"
 
-	cmn "github.com/cosmos/evm/precompiles/common"
+	cmn "github.com/deep-thought-labs/infinite/precompiles/common"
 )
 
 // Embed abi json file to the executable binary. Needed when importing as dependency.

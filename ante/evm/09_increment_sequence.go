@@ -3,8 +3,8 @@ package evm
 import (
 	"math"
 
-	anteinterfaces "github.com/cosmos/evm/ante/interfaces"
-	"github.com/cosmos/evm/mempool"
+	anteinterfaces "github.com/deep-thought-labs/infinite/ante/interfaces"
+	"github.com/deep-thought-labs/infinite/mempool"
 
 	errorsmod "cosmossdk.io/errors"
 

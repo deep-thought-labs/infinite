@@ -5,7 +5,7 @@ import (
 
 	"github.com/stretchr/testify/require"
 
-	"github.com/cosmos/evm/x/precisebank/types"
+	"github.com/deep-thought-labs/infinite/x/precisebank/types"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 )

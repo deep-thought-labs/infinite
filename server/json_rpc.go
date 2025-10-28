@@ -15,11 +15,11 @@ import (
 
 	rpcclient "github.com/cometbft/cometbft/rpc/client"
 
-	evmmempool "github.com/cosmos/evm/mempool"
-	"github.com/cosmos/evm/rpc"
-	"github.com/cosmos/evm/rpc/stream"
-	serverconfig "github.com/cosmos/evm/server/config"
-	"github.com/cosmos/evm/server/types"
+	evmmempool "github.com/deep-thought-labs/infinite/mempool"
+	"github.com/deep-thought-labs/infinite/rpc"
+	"github.com/deep-thought-labs/infinite/rpc/stream"
+	serverconfig "github.com/deep-thought-labs/infinite/server/config"
+	"github.com/deep-thought-labs/infinite/server/types"
 
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/server"

@@ -5,7 +5,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/cosmos/evm/tests/systemtests/clients"
+	"github.com/deep-thought-labs/infinite/tests/systemtests/clients"
 	"github.com/stretchr/testify/require"
 
 	"cosmossdk.io/systemtests"

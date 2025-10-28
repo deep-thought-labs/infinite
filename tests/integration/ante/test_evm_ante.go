@@ -11,11 +11,11 @@ import (
 	ethparams "github.com/ethereum/go-ethereum/params"
 	"github.com/holiman/uint256"
 
-	ethante "github.com/cosmos/evm/ante/evm"
-	"github.com/cosmos/evm/testutil"
-	testconstants "github.com/cosmos/evm/testutil/constants"
-	utiltx "github.com/cosmos/evm/testutil/tx"
-	evmtypes "github.com/cosmos/evm/x/vm/types"
+	ethante "github.com/deep-thought-labs/infinite/ante/evm"
+	"github.com/deep-thought-labs/infinite/testutil"
+	testconstants "github.com/deep-thought-labs/infinite/testutil/constants"
+	utiltx "github.com/deep-thought-labs/infinite/testutil/tx"
+	evmtypes "github.com/deep-thought-labs/infinite/x/vm/types"
 
 	sdkmath "cosmossdk.io/math"
 

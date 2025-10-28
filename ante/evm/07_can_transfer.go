@@ -5,9 +5,9 @@ import (
 
 	"github.com/ethereum/go-ethereum/core"
 
-	anteinterfaces "github.com/cosmos/evm/ante/interfaces"
-	"github.com/cosmos/evm/utils"
-	evmtypes "github.com/cosmos/evm/x/vm/types"
+	anteinterfaces "github.com/deep-thought-labs/infinite/ante/interfaces"
+	"github.com/deep-thought-labs/infinite/utils"
+	evmtypes "github.com/deep-thought-labs/infinite/x/vm/types"
 
 	errorsmod "cosmossdk.io/errors"
 

@@ -6,7 +6,7 @@ import (
 
 	abcitypes "github.com/cometbft/cometbft/abci/types"
 
-	precisebanktypes "github.com/cosmos/evm/x/precisebank/types"
+	precisebanktypes "github.com/deep-thought-labs/infinite/x/precisebank/types"
 	ibctesting "github.com/cosmos/ibc-go/v10/testing"
 
 	sdktypes "github.com/cosmos/cosmos-sdk/types"

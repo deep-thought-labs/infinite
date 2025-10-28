@@ -5,10 +5,10 @@ import (
 
 	"github.com/stretchr/testify/suite"
 
-	testconstants "github.com/cosmos/evm/testutil/constants"
-	"github.com/cosmos/evm/testutil/integration/evm/network"
-	"github.com/cosmos/evm/x/precisebank"
-	"github.com/cosmos/evm/x/precisebank/types"
+	testconstants "github.com/deep-thought-labs/infinite/testutil/constants"
+	"github.com/deep-thought-labs/infinite/testutil/integration/evm/network"
+	"github.com/deep-thought-labs/infinite/x/precisebank"
+	"github.com/deep-thought-labs/infinite/x/precisebank/types"
 
 	sdkmath "cosmossdk.io/math"
 

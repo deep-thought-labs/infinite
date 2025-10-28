@@ -15,13 +15,13 @@ import (
 
 	"github.com/cometbft/cometbft/crypto"
 
-	"github.com/cosmos/evm/precompiles/p256"
-	"github.com/cosmos/evm/testutil/integration/evm/factory"
-	"github.com/cosmos/evm/testutil/integration/evm/grpc"
-	"github.com/cosmos/evm/testutil/integration/evm/network"
-	"github.com/cosmos/evm/testutil/integration/evm/utils"
-	testkeyring "github.com/cosmos/evm/testutil/keyring"
-	evmtypes "github.com/cosmos/evm/x/vm/types"
+	"github.com/deep-thought-labs/infinite/precompiles/p256"
+	"github.com/deep-thought-labs/infinite/testutil/integration/evm/factory"
+	"github.com/deep-thought-labs/infinite/testutil/integration/evm/grpc"
+	"github.com/deep-thought-labs/infinite/testutil/integration/evm/network"
+	"github.com/deep-thought-labs/infinite/testutil/integration/evm/utils"
+	testkeyring "github.com/deep-thought-labs/infinite/testutil/keyring"
+	evmtypes "github.com/deep-thought-labs/infinite/x/vm/types"
 )
 
 type IntegrationTestSuite struct {

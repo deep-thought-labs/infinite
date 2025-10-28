@@ -1,7 +1,7 @@
 package keeper
 
 import (
-	"github.com/cosmos/evm/x/feemarket/types"
+	"github.com/deep-thought-labs/infinite/x/feemarket/types"
 
 	"cosmossdk.io/math"
 

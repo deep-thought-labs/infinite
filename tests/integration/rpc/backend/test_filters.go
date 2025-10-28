@@ -6,9 +6,9 @@ import (
 
 	cmttypes "github.com/cometbft/cometbft/types"
 
-	"github.com/cosmos/evm/rpc/backend/mocks"
-	ethrpc "github.com/cosmos/evm/rpc/types"
-	evmtypes "github.com/cosmos/evm/x/vm/types"
+	"github.com/deep-thought-labs/infinite/rpc/backend/mocks"
+	ethrpc "github.com/deep-thought-labs/infinite/rpc/types"
+	evmtypes "github.com/deep-thought-labs/infinite/x/vm/types"
 )
 
 func (s *TestSuite) TestGetLogs() {

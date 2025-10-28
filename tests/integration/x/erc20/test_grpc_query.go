@@ -3,10 +3,10 @@ package erc20
 import (
 	"fmt"
 
-	"github.com/cosmos/evm/testutil/config"
-	testconstants "github.com/cosmos/evm/testutil/constants"
-	utiltx "github.com/cosmos/evm/testutil/tx"
-	"github.com/cosmos/evm/x/erc20/types"
+	"github.com/deep-thought-labs/infinite/testutil/config"
+	testconstants "github.com/deep-thought-labs/infinite/testutil/constants"
+	utiltx "github.com/deep-thought-labs/infinite/testutil/tx"
+	"github.com/deep-thought-labs/infinite/x/erc20/types"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/query"

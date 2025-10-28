@@ -13,8 +13,8 @@ import (
 	"github.com/ethereum/go-ethereum/crypto"
 	"github.com/ethereum/go-ethereum/ethclient"
 
-	"github.com/cosmos/evm/tests/jsonrpc/simulator/config"
-	"github.com/cosmos/evm/tests/jsonrpc/simulator/types"
+	"github.com/deep-thought-labs/infinite/tests/jsonrpc/simulator/config"
+	"github.com/deep-thought-labs/infinite/tests/jsonrpc/simulator/types"
 )
 
 func SendTransaction(rCtx *types.RPCContext, from, to string, value *big.Int, isGeth bool) (string, error) {

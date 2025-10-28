@@ -14,11 +14,11 @@ import (
 
 	cmttypes "github.com/cometbft/cometbft/types"
 
-	antetypes "github.com/cosmos/evm/ante/types"
-	rpctypes "github.com/cosmos/evm/rpc/types"
-	"github.com/cosmos/evm/utils"
-	"github.com/cosmos/evm/x/vm/statedb"
-	"github.com/cosmos/evm/x/vm/types"
+	antetypes "github.com/deep-thought-labs/infinite/ante/types"
+	rpctypes "github.com/deep-thought-labs/infinite/rpc/types"
+	"github.com/deep-thought-labs/infinite/utils"
+	"github.com/deep-thought-labs/infinite/x/vm/statedb"
+	"github.com/deep-thought-labs/infinite/x/vm/types"
 
 	errorsmod "cosmossdk.io/errors"
 	"cosmossdk.io/math"
@@ -145,7 +145,7 @@ func (k Keeper) GetHashFn(ctx sdk.Context) vm.GetHashFunc {
 
 		case ctx.BlockHeight() > h:
 			// Case 2: The requested height is historical, query EIP-2935 contract storage for that
-			// see: https://github.com/cosmos/evm/issues/406
+			// see: https://github.com/deep-thought-labs/infinite/issues/406
 			return k.GetHeaderHash(ctx, height)
 		default:
 			// Case 3: The requested height is greater than the latest one, return empty hash

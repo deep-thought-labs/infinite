@@ -18,10 +18,10 @@ import (
 	"github.com/cometbft/cometbft/proto/tendermint/crypto"
 	cmtrpctypes "github.com/cometbft/cometbft/rpc/core/types"
 
-	"github.com/cosmos/evm/rpc/types"
-	"github.com/cosmos/evm/utils"
-	feemarkettypes "github.com/cosmos/evm/x/feemarket/types"
-	evmtypes "github.com/cosmos/evm/x/vm/types"
+	"github.com/deep-thought-labs/infinite/rpc/types"
+	"github.com/deep-thought-labs/infinite/utils"
+	feemarkettypes "github.com/deep-thought-labs/infinite/x/feemarket/types"
+	evmtypes "github.com/deep-thought-labs/infinite/x/vm/types"
 
 	"cosmossdk.io/log"
 

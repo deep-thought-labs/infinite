@@ -6,12 +6,12 @@ import (
 
 	"github.com/stretchr/testify/mock"
 
-	"github.com/cosmos/evm/testutil/integration/evm/utils"
-	testutils "github.com/cosmos/evm/testutil/integration/evm/utils"
-	"github.com/cosmos/evm/testutil/keyring"
-	erc20types "github.com/cosmos/evm/x/erc20/types"
-	transferkeeper "github.com/cosmos/evm/x/ibc/transfer/keeper"
-	evmtypes "github.com/cosmos/evm/x/vm/types"
+	"github.com/deep-thought-labs/infinite/testutil/integration/evm/utils"
+	testutils "github.com/deep-thought-labs/infinite/testutil/integration/evm/utils"
+	"github.com/deep-thought-labs/infinite/testutil/keyring"
+	erc20types "github.com/deep-thought-labs/infinite/x/erc20/types"
+	transferkeeper "github.com/deep-thought-labs/infinite/x/ibc/transfer/keeper"
+	evmtypes "github.com/deep-thought-labs/infinite/x/vm/types"
 	"github.com/cosmos/ibc-go/v10/modules/apps/transfer/types"
 	channeltypes "github.com/cosmos/ibc-go/v10/modules/core/04-channel/types"
 

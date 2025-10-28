@@ -18,11 +18,11 @@ import (
 	cmtrpcclient "github.com/cometbft/cometbft/rpc/client"
 	cmtrpctypes "github.com/cometbft/cometbft/rpc/core/types"
 
-	"github.com/cosmos/evm/mempool/txpool"
-	rpctypes "github.com/cosmos/evm/rpc/types"
-	servertypes "github.com/cosmos/evm/server/types"
-	"github.com/cosmos/evm/utils"
-	evmtypes "github.com/cosmos/evm/x/vm/types"
+	"github.com/deep-thought-labs/infinite/mempool/txpool"
+	rpctypes "github.com/deep-thought-labs/infinite/rpc/types"
+	servertypes "github.com/deep-thought-labs/infinite/server/types"
+	"github.com/deep-thought-labs/infinite/utils"
+	evmtypes "github.com/deep-thought-labs/infinite/x/vm/types"
 
 	errorsmod "cosmossdk.io/errors"
 

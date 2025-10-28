@@ -14,8 +14,8 @@ import (
 
 	coretypes "github.com/cometbft/cometbft/rpc/core/types"
 
-	"github.com/cosmos/evm/rpc/stream"
-	"github.com/cosmos/evm/rpc/types"
+	"github.com/deep-thought-labs/infinite/rpc/stream"
+	"github.com/deep-thought-labs/infinite/rpc/types"
 
 	"cosmossdk.io/log"
 

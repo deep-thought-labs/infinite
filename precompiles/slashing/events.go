@@ -5,7 +5,7 @@ import (
 	ethtypes "github.com/ethereum/go-ethereum/core/types"
 	"github.com/ethereum/go-ethereum/core/vm"
 
-	cmn "github.com/cosmos/evm/precompiles/common"
+	cmn "github.com/deep-thought-labs/infinite/precompiles/common"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 )

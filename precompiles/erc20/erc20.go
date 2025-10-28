@@ -7,9 +7,9 @@ import (
 	"github.com/ethereum/go-ethereum/accounts/abi"
 	"github.com/ethereum/go-ethereum/core/vm"
 
-	ibcutils "github.com/cosmos/evm/ibc"
-	cmn "github.com/cosmos/evm/precompiles/common"
-	erc20types "github.com/cosmos/evm/x/erc20/types"
+	ibcutils "github.com/deep-thought-labs/infinite/ibc"
+	cmn "github.com/deep-thought-labs/infinite/precompiles/common"
+	erc20types "github.com/deep-thought-labs/infinite/x/erc20/types"
 
 	storetypes "cosmossdk.io/store/types"
 

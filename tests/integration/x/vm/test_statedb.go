@@ -12,12 +12,12 @@ import (
 	ethparams "github.com/ethereum/go-ethereum/params"
 	"github.com/holiman/uint256"
 
-	testconstants "github.com/cosmos/evm/testutil/constants"
-	"github.com/cosmos/evm/testutil/integration/evm/network"
-	testkeyring "github.com/cosmos/evm/testutil/keyring"
-	utiltx "github.com/cosmos/evm/testutil/tx"
-	"github.com/cosmos/evm/x/vm/statedb"
-	"github.com/cosmos/evm/x/vm/types"
+	testconstants "github.com/deep-thought-labs/infinite/testutil/constants"
+	"github.com/deep-thought-labs/infinite/testutil/integration/evm/network"
+	testkeyring "github.com/deep-thought-labs/infinite/testutil/keyring"
+	utiltx "github.com/deep-thought-labs/infinite/testutil/tx"
+	"github.com/deep-thought-labs/infinite/x/vm/statedb"
+	"github.com/deep-thought-labs/infinite/x/vm/types"
 
 	"cosmossdk.io/math"
 	"cosmossdk.io/store/prefix"

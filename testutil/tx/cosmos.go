@@ -3,8 +3,8 @@ package tx
 import (
 	protov2 "google.golang.org/protobuf/proto"
 
-	"github.com/cosmos/evm"
-	"github.com/cosmos/evm/testutil/constants"
+	"github.com/deep-thought-labs/infinite"
+	"github.com/deep-thought-labs/infinite/testutil/constants"
 
 	sdkmath "cosmossdk.io/math"
 

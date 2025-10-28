@@ -11,11 +11,11 @@ import (
 
 	cmtrpcclient "github.com/cometbft/cometbft/rpc/client"
 
-	"github.com/cosmos/evm/crypto/ethsecp256k1"
-	"github.com/cosmos/evm/rpc/backend/mocks"
-	"github.com/cosmos/evm/server/config"
-	"github.com/cosmos/evm/testutil/constants"
-	evmtypes "github.com/cosmos/evm/x/vm/types"
+	"github.com/deep-thought-labs/infinite/crypto/ethsecp256k1"
+	"github.com/deep-thought-labs/infinite/rpc/backend/mocks"
+	"github.com/deep-thought-labs/infinite/server/config"
+	"github.com/deep-thought-labs/infinite/testutil/constants"
+	evmtypes "github.com/deep-thought-labs/infinite/x/vm/types"
 
 	"cosmossdk.io/math"
 

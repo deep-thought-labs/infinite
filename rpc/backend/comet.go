@@ -8,8 +8,8 @@ import (
 
 	cmtrpctypes "github.com/cometbft/cometbft/rpc/core/types"
 
-	rpctypes "github.com/cosmos/evm/rpc/types"
-	"github.com/cosmos/evm/utils"
+	rpctypes "github.com/deep-thought-labs/infinite/rpc/types"
+	"github.com/deep-thought-labs/infinite/utils"
 )
 
 // CometBlockByNumber returns a CometBFT-formatted block for a given

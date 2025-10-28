@@ -1,8 +1,8 @@
 package vm
 
 import (
-	"github.com/cosmos/evm/testutil/config"
-	"github.com/cosmos/evm/x/vm/types"
+	"github.com/deep-thought-labs/infinite/testutil/config"
+	"github.com/deep-thought-labs/infinite/x/vm/types"
 )
 
 func (s *KeeperTestSuite) TestParams() {

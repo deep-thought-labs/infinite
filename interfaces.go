@@ -3,12 +3,12 @@ package evm
 import (
 	"encoding/json"
 
-	erc20keeper "github.com/cosmos/evm/x/erc20/keeper"
-	feemarketkeeper "github.com/cosmos/evm/x/feemarket/keeper"
-	"github.com/cosmos/evm/x/ibc/callbacks/keeper"
-	transferkeeper "github.com/cosmos/evm/x/ibc/transfer/keeper"
-	precisebankkeeper "github.com/cosmos/evm/x/precisebank/keeper"
-	evmkeeper "github.com/cosmos/evm/x/vm/keeper"
+	erc20keeper "github.com/deep-thought-labs/infinite/x/erc20/keeper"
+	feemarketkeeper "github.com/deep-thought-labs/infinite/x/feemarket/keeper"
+	"github.com/deep-thought-labs/infinite/x/ibc/callbacks/keeper"
+	transferkeeper "github.com/deep-thought-labs/infinite/x/ibc/transfer/keeper"
+	precisebankkeeper "github.com/deep-thought-labs/infinite/x/precisebank/keeper"
+	evmkeeper "github.com/deep-thought-labs/infinite/x/vm/keeper"
 	ibctesting "github.com/cosmos/ibc-go/v10/testing"
 
 	storetypes "cosmossdk.io/store/types"

@@ -9,10 +9,10 @@ import (
 	"github.com/ethereum/go-ethereum/common/hexutil"
 	"github.com/spf13/cobra"
 
-	"github.com/cosmos/evm/contracts"
-	rpctypes "github.com/cosmos/evm/rpc/types"
-	"github.com/cosmos/evm/utils"
-	"github.com/cosmos/evm/x/vm/types"
+	"github.com/deep-thought-labs/infinite/contracts"
+	rpctypes "github.com/deep-thought-labs/infinite/rpc/types"
+	"github.com/deep-thought-labs/infinite/utils"
+	"github.com/deep-thought-labs/infinite/x/vm/types"
 
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"

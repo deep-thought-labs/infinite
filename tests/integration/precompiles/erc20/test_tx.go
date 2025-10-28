@@ -6,13 +6,13 @@ import (
 	"github.com/ethereum/go-ethereum/core/vm"
 	"github.com/holiman/uint256"
 
-	cmn "github.com/cosmos/evm/precompiles/common"
-	"github.com/cosmos/evm/precompiles/common/mocks"
-	"github.com/cosmos/evm/precompiles/erc20"
-	"github.com/cosmos/evm/precompiles/testutil"
-	erc20types "github.com/cosmos/evm/x/erc20/types"
-	"github.com/cosmos/evm/x/vm/statedb"
-	vmtypes "github.com/cosmos/evm/x/vm/types"
+	cmn "github.com/deep-thought-labs/infinite/precompiles/common"
+	"github.com/deep-thought-labs/infinite/precompiles/common/mocks"
+	"github.com/deep-thought-labs/infinite/precompiles/erc20"
+	"github.com/deep-thought-labs/infinite/precompiles/testutil"
+	erc20types "github.com/deep-thought-labs/infinite/x/erc20/types"
+	"github.com/deep-thought-labs/infinite/x/vm/statedb"
+	vmtypes "github.com/deep-thought-labs/infinite/x/vm/types"
 
 	"cosmossdk.io/math"
 

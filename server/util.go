@@ -11,7 +11,7 @@ import (
 
 	tmcmd "github.com/cometbft/cometbft/cmd/cometbft/commands"
 
-	"github.com/cosmos/evm/server/config"
+	"github.com/deep-thought-labs/infinite/server/config"
 
 	"cosmossdk.io/log"
 

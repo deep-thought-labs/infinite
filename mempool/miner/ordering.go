@@ -24,7 +24,7 @@ import (
 	"github.com/ethereum/go-ethereum/core/types"
 	"github.com/holiman/uint256"
 
-	"github.com/cosmos/evm/mempool/txpool"
+	"github.com/deep-thought-labs/infinite/mempool/txpool"
 )
 
 // txWithMinerFee wraps a transaction with its gas price or effective miner gasTipCap

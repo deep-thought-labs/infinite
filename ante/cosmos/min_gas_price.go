@@ -5,8 +5,8 @@ import (
 	"math/big"
 	"slices"
 
-	feemarkettypes "github.com/cosmos/evm/x/feemarket/types"
-	evmtypes "github.com/cosmos/evm/x/vm/types"
+	feemarkettypes "github.com/deep-thought-labs/infinite/x/feemarket/types"
+	evmtypes "github.com/deep-thought-labs/infinite/x/vm/types"
 
 	errorsmod "cosmossdk.io/errors"
 	"cosmossdk.io/math"

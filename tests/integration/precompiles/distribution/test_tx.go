@@ -7,13 +7,13 @@ import (
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/core/vm"
 
-	evmaddress "github.com/cosmos/evm/encoding/address"
-	cmn "github.com/cosmos/evm/precompiles/common"
-	"github.com/cosmos/evm/precompiles/distribution"
-	"github.com/cosmos/evm/precompiles/testutil"
-	testconstants "github.com/cosmos/evm/testutil/constants"
-	"github.com/cosmos/evm/testutil/integration/evm/network"
-	utiltx "github.com/cosmos/evm/testutil/tx"
+	evmaddress "github.com/deep-thought-labs/infinite/encoding/address"
+	cmn "github.com/deep-thought-labs/infinite/precompiles/common"
+	"github.com/deep-thought-labs/infinite/precompiles/distribution"
+	"github.com/deep-thought-labs/infinite/precompiles/testutil"
+	testconstants "github.com/deep-thought-labs/infinite/testutil/constants"
+	"github.com/deep-thought-labs/infinite/testutil/integration/evm/network"
+	utiltx "github.com/deep-thought-labs/infinite/testutil/tx"
 
 	"cosmossdk.io/math"
 

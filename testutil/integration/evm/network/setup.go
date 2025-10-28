@@ -8,12 +8,12 @@ import (
 
 	cmttypes "github.com/cometbft/cometbft/types"
 
-	"github.com/cosmos/evm"
-	"github.com/cosmos/evm/testutil"
-	testconstants "github.com/cosmos/evm/testutil/constants"
-	erc20types "github.com/cosmos/evm/x/erc20/types"
-	feemarkettypes "github.com/cosmos/evm/x/feemarket/types"
-	evmtypes "github.com/cosmos/evm/x/vm/types"
+	"github.com/deep-thought-labs/infinite"
+	"github.com/deep-thought-labs/infinite/testutil"
+	testconstants "github.com/deep-thought-labs/infinite/testutil/constants"
+	erc20types "github.com/deep-thought-labs/infinite/x/erc20/types"
+	feemarkettypes "github.com/deep-thought-labs/infinite/x/feemarket/types"
+	evmtypes "github.com/deep-thought-labs/infinite/x/vm/types"
 	"github.com/cosmos/gogoproto/proto"
 
 	sdkmath "cosmossdk.io/math"

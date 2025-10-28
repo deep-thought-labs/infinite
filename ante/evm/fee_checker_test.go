@@ -8,12 +8,12 @@ import (
 
 	tmproto "github.com/cometbft/cometbft/proto/tendermint/types"
 
-	"github.com/cosmos/evm/ante/evm"
-	"github.com/cosmos/evm/ante/types"
-	"github.com/cosmos/evm/encoding"
-	testconstants "github.com/cosmos/evm/testutil/constants"
-	feemarkettypes "github.com/cosmos/evm/x/feemarket/types"
-	evmtypes "github.com/cosmos/evm/x/vm/types"
+	"github.com/deep-thought-labs/infinite/ante/evm"
+	"github.com/deep-thought-labs/infinite/ante/types"
+	"github.com/deep-thought-labs/infinite/encoding"
+	testconstants "github.com/deep-thought-labs/infinite/testutil/constants"
+	feemarkettypes "github.com/deep-thought-labs/infinite/x/feemarket/types"
+	evmtypes "github.com/deep-thought-labs/infinite/x/vm/types"
 
 	"cosmossdk.io/log"
 	"cosmossdk.io/math"

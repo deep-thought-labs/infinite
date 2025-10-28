@@ -7,8 +7,8 @@ import (
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/core/vm"
 
-	"github.com/cosmos/evm/precompiles/erc20"
-	"github.com/cosmos/evm/precompiles/testutil"
+	"github.com/deep-thought-labs/infinite/precompiles/erc20"
+	"github.com/deep-thought-labs/infinite/precompiles/testutil"
 )
 
 //nolint:dupl // tests are not duplicate between the functions

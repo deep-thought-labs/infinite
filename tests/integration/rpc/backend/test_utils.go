@@ -5,7 +5,7 @@ import (
 
 	"github.com/cometbft/cometbft/proto/tendermint/crypto"
 
-	backend2 "github.com/cosmos/evm/rpc/backend"
+	backend2 "github.com/deep-thought-labs/infinite/rpc/backend"
 )
 
 func mookProofs(num int, withData bool) *crypto.ProofOps {

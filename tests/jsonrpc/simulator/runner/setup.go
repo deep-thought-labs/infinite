@@ -12,10 +12,10 @@ import (
 	"github.com/ethereum/go-ethereum/common"
 	ethtypes "github.com/ethereum/go-ethereum/core/types"
 
-	"github.com/cosmos/evm/tests/jsonrpc/simulator/config"
-	"github.com/cosmos/evm/tests/jsonrpc/simulator/contracts"
-	"github.com/cosmos/evm/tests/jsonrpc/simulator/types"
-	"github.com/cosmos/evm/tests/jsonrpc/simulator/utils"
+	"github.com/deep-thought-labs/infinite/tests/jsonrpc/simulator/config"
+	"github.com/deep-thought-labs/infinite/tests/jsonrpc/simulator/contracts"
+	"github.com/deep-thought-labs/infinite/tests/jsonrpc/simulator/types"
+	"github.com/deep-thought-labs/infinite/tests/jsonrpc/simulator/utils"
 )
 
 // Setup performs the complete setup: fund geth accounts, deploy contracts, and mint tokens

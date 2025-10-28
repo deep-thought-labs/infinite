@@ -1,7 +1,7 @@
 package ante
 
 import (
-	evmante "github.com/cosmos/evm/ante/evm"
+	evmante "github.com/deep-thought-labs/infinite/ante/evm"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 )

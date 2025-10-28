@@ -12,7 +12,7 @@ import (
 	gethaccounts "github.com/ethereum/go-ethereum/accounts"
 	usb "github.com/zondax/hid"
 
-	"github.com/cosmos/evm/wallets/accounts"
+	"github.com/deep-thought-labs/infinite/wallets/accounts"
 )
 
 const (

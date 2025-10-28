@@ -14,8 +14,8 @@ import (
 	"github.com/holiman/uint256"
 	"github.com/stretchr/testify/suite"
 
-	"github.com/cosmos/evm/x/vm/statedb"
-	"github.com/cosmos/evm/x/vm/types/mocks"
+	"github.com/deep-thought-labs/infinite/x/vm/statedb"
+	"github.com/deep-thought-labs/infinite/x/vm/types/mocks"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 )

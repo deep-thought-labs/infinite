@@ -8,7 +8,7 @@ import (
 
 	"github.com/ethereum/go-ethereum/crypto"
 
-	"github.com/cosmos/evm/ethereum/eip712"
+	"github.com/deep-thought-labs/infinite/ethereum/eip712"
 
 	errorsmod "cosmossdk.io/errors"
 

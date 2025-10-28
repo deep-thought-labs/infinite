@@ -7,14 +7,14 @@ import (
 
 	"github.com/ethereum/go-ethereum/common"
 
-	"github.com/cosmos/evm/contracts"
-	testfactory "github.com/cosmos/evm/testutil/integration/evm/factory"
-	testhandler "github.com/cosmos/evm/testutil/integration/evm/grpc"
-	testnetwork "github.com/cosmos/evm/testutil/integration/evm/network"
-	"github.com/cosmos/evm/testutil/integration/evm/utils"
-	testkeyring "github.com/cosmos/evm/testutil/keyring"
-	testutiltypes "github.com/cosmos/evm/testutil/types"
-	evmtypes "github.com/cosmos/evm/x/vm/types"
+	"github.com/deep-thought-labs/infinite/contracts"
+	testfactory "github.com/deep-thought-labs/infinite/testutil/integration/evm/factory"
+	testhandler "github.com/deep-thought-labs/infinite/testutil/integration/evm/grpc"
+	testnetwork "github.com/deep-thought-labs/infinite/testutil/integration/evm/network"
+	"github.com/deep-thought-labs/infinite/testutil/integration/evm/utils"
+	testkeyring "github.com/deep-thought-labs/infinite/testutil/keyring"
+	testutiltypes "github.com/deep-thought-labs/infinite/testutil/types"
+	evmtypes "github.com/deep-thought-labs/infinite/x/vm/types"
 )
 
 func (s *TestSuite) TestGetERC20Balance() {

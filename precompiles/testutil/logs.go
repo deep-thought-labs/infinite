@@ -9,7 +9,7 @@ import (
 
 	abci "github.com/cometbft/cometbft/abci/types"
 
-	evmtypes "github.com/cosmos/evm/x/vm/types"
+	evmtypes "github.com/deep-thought-labs/infinite/x/vm/types"
 )
 
 // CheckLogs checks the logs for the given events and whether the transaction was successful or not.

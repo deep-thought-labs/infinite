@@ -3,8 +3,8 @@ package erc20
 import (
 	"fmt"
 
-	utiltx "github.com/cosmos/evm/testutil/tx"
-	"github.com/cosmos/evm/x/erc20/types"
+	utiltx "github.com/deep-thought-labs/infinite/testutil/tx"
+	"github.com/deep-thought-labs/infinite/x/erc20/types"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 )

@@ -23,7 +23,7 @@ import (
 
 	stderrors "github.com/pkg/errors"
 
-	rpctypes "github.com/cosmos/evm/rpc/types"
+	rpctypes "github.com/deep-thought-labs/infinite/rpc/types"
 )
 
 // StartGoTrace turns on tracing, writing to the given file.

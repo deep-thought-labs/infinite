@@ -8,8 +8,8 @@ import (
 	"github.com/spf13/viper"
 	"github.com/stretchr/testify/require"
 
-	serverconfig "github.com/cosmos/evm/server/config"
-	"github.com/cosmos/evm/testutil/constants"
+	serverconfig "github.com/deep-thought-labs/infinite/server/config"
+	"github.com/deep-thought-labs/infinite/testutil/constants"
 )
 
 func TestDefaultConfig(t *testing.T) {

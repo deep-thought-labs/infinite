@@ -22,8 +22,8 @@ import (
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/core/vm"
 
-	"github.com/cosmos/evm/crypto/secp256r1"
-	evmtypes "github.com/cosmos/evm/x/vm/types"
+	"github.com/deep-thought-labs/infinite/crypto/secp256r1"
+	evmtypes "github.com/deep-thought-labs/infinite/x/vm/types"
 )
 
 var _ vm.PrecompiledContract = &Precompile{}

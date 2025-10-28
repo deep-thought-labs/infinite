@@ -6,9 +6,9 @@ import (
 	"github.com/ethereum/go-ethereum/core/vm"
 	"github.com/holiman/uint256"
 
-	cmn "github.com/cosmos/evm/precompiles/common"
-	"github.com/cosmos/evm/precompiles/distribution"
-	testutiltx "github.com/cosmos/evm/testutil/tx"
+	cmn "github.com/deep-thought-labs/infinite/precompiles/common"
+	"github.com/deep-thought-labs/infinite/precompiles/distribution"
+	testutiltx "github.com/deep-thought-labs/infinite/testutil/tx"
 
 	"cosmossdk.io/math"
 

@@ -7,9 +7,9 @@ import (
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/core/tracing"
 
-	"github.com/cosmos/evm/utils"
-	precisebanktypes "github.com/cosmos/evm/x/precisebank/types"
-	"github.com/cosmos/evm/x/vm/statedb"
+	"github.com/deep-thought-labs/infinite/utils"
+	precisebanktypes "github.com/deep-thought-labs/infinite/x/precisebank/types"
+	"github.com/deep-thought-labs/infinite/x/vm/statedb"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	banktypes "github.com/cosmos/cosmos-sdk/x/bank/types"

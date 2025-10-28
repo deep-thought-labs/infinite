@@ -37,3 +37,8 @@ build/
 tests/systemtests/binaries
 tests/systemtests/testnet
 .testnets
+
+# External testing dependencies
+tests/evm-tools-compatibility/foundry-uniswap-v3/forge-std/
+tests/evm-tools-compatibility/foundry-uniswap-v3/foundry/
+tests/evm-tools-compatibility/foundry/forge-std/
