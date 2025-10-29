@@ -1,6 +1,15 @@
 #!/bin/bash
-# Complete Infinite Drive node health check
-# Save as: infinite_health_check.sh
+#
+# Copyright (c) 2025 Deep Thought Labs
+# All rights reserved.
+#
+# This file is part of the internal tooling for node health monitoring and
+# validation processes.
+#
+# Purpose: Comprehensive health check script for Infinite Drive blockchain nodes.
+#          Verifies node connectivity, block production, chain configuration,
+#          and system status across JSON-RPC, REST API, and Tendermint endpoints.
+#
 
 set -e
 
