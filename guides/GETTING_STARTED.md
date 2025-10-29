@@ -1,8 +1,8 @@
 # Getting Started with Infinite Drive
 
-**🎯 Goal**: Get your blockchain node running in minutes, then learn advanced configuration options.
+**Goal**: Get your blockchain node running in minutes, then learn advanced configuration options.
 
-Infinite Drive is a Cosmos EVM-compatible blockchain featuring the **Improbability (TEA)** token.
+Infinite Drive is a Cosmos EVM-compatible blockchain.
 
 ## Quick Navigation
 
@@ -145,11 +145,11 @@ ls -la
 
 ### 2. Run the Automated Setup Script
 
-**What this script does**: 
+**What this script does**:
 - Compiles the blockchain binary (`infinited`)
 - Creates a test blockchain with sample accounts
 - Starts the node with all necessary services
-- Sets up test tokens for immediate use
+- Initializes token metadata for local testing
 
 ```bash
 # Run the automated setup (this will take 2-3 minutes)
@@ -199,7 +199,7 @@ curl -X POST -H "Content-Type: application/json" \
 # Expected response: {"jsonrpc":"2.0","id":1,"result":"0x66c9a"}
 ```
 
-**🎉 Congratulations!** Your Infinite Drive blockchain is now running with:
+**Setup complete.** The node is running with:
 - ✅ EVM compatibility (Ethereum tools work)
 - ✅ TEA token configured
 - ✅ Test accounts with balances
@@ -264,4 +264,4 @@ Now that your node is running, choose your path forward:
 
 ---
 
-*Welcome to Infinite Drive! You're now ready to explore the improbable world of blockchain technology.*
+*You're ready to proceed.*

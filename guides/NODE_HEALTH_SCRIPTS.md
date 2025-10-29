@@ -1,6 +1,6 @@
 # Infinite Drive Node Health Verification Scripts
 
-This document provides comprehensive scripts and examples for verifying the health and status of your Infinite Drive blockchain node. These scripts help monitor various aspects of node operation, from basic connectivity to advanced blockchain state verification.
+This document provides scripts and examples for verifying the health and status of your Infinite Drive blockchain node. These scripts help monitor various aspects of node operation, from basic connectivity to advanced blockchain state verification.
 
 ## Quick Start - Automated Health Check
 
@@ -11,7 +11,7 @@ This document provides comprehensive scripts and examples for verifying the heal
 ./infinite_health_check.sh
 ```
 
-**What this script does**: Performs 8 automated tests covering all essential node health aspects with colorized output and clear pass/fail indicators.
+**What this script does**: Performs 8 automated tests covering all essential node health aspects with colorized output and pass/fail indicators.
 
 **When to use**: For quick verification, monitoring, or troubleshooting.
 
@@ -619,4 +619,4 @@ These scripts can be integrated with monitoring systems like:
 
 ---
 
-*This document provides comprehensive tools for monitoring your Infinite Drive blockchain node. Regular health checks ensure optimal performance and early detection of issues.*
+*This document provides tools for monitoring your Infinite Drive blockchain node. Regular health checks ensure optimal performance and early detection of issues.*
