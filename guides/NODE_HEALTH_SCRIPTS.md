@@ -2,15 +2,36 @@
 
 This document provides comprehensive scripts and examples for verifying the health and status of your Infinite Drive blockchain node. These scripts help monitor various aspects of node operation, from basic connectivity to advanced blockchain state verification.
 
+## Quick Start - Automated Health Check
+
+**For immediate health verification, use the automated script:**
+
+```bash
+# Run the comprehensive health check script
+./infinite_health_check.sh
+```
+
+**What this script does**: Performs 8 automated tests covering all essential node health aspects with colorized output and clear pass/fail indicators.
+
+**When to use**: For quick verification, monitoring, or troubleshooting.
+
+## Manual Verification Scripts
+
+**What this section covers**: Detailed, step-by-step verification scripts for specific scenarios and learning purposes.
+
+**When to use**: When you need to understand specific checks, troubleshoot particular issues, or customize verification processes.
+
 ## Table of Contents
 
-1. [Basic Connectivity Tests](#basic-connectivity-tests)
-2. [Blockchain State Verification](#blockchain-state-verification)
-3. [Token and Account Verification](#token-and-account-verification)
-4. [Network and Consensus Health](#network-and-consensus-health)
-5. [Performance Monitoring](#performance-monitoring)
-6. [Automated Health Check Script](#automated-health-check-script)
-7. [Troubleshooting Common Issues](#troubleshooting-common-issues)
+1. [Quick Start - Automated Health Check](#quick-start---automated-health-check)
+2. [Manual Verification Scripts](#manual-verification-scripts)
+3. [Basic Connectivity Tests](#basic-connectivity-tests)
+4. [Blockchain State Verification](#blockchain-state-verification)
+5. [Token and Account Verification](#token-and-account-verification)
+6. [Network and Consensus Health](#network-and-consensus-health)
+7. [Performance Monitoring](#performance-monitoring)
+8. [Automated Health Check Script](#automated-health-check-script)
+9. [Troubleshooting Common Issues](#troubleshooting-common-issues)
 
 ## Basic Connectivity Tests
 

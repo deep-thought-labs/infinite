@@ -1,12 +1,50 @@
 # Infinite Drive
 
-**Infinite Drive** is a blockchain powered by Cosmos EVM technology, featuring the **Improbability (TEA)** token. This blockchain provides complete Ethereum compatibility with Solidity smart contracts, Ethereum JSON-RPC, and access to the entire Ethereum developer ecosystem.
+**Infinite Drive** is a cypherpunk movement declaring digital sovereignty through a decentralized P2P network. This revolutionary infrastructure creates a sovereign cyberspace where free internet citizens can interact, coexist, and inhabit a truly decentralized reality.
+
+*Inspired by the legendary works of Douglas Adams and the cypherpunk manifestos of digital freedom, Infinite Drive seeks to answer the ultimate question: How do we create a truly interoperable, efficient, and improbably powerful decentralized network? Like the Hitchhiker's Guide to the Galaxy's Hyperspace, we're building the infrastructure for infinite possibilities. The answer, of course, is 42.*
 
 ## What is Infinite Drive?
 
-Infinite Drive is a plug-and-play solution that adds EVM compatibility and customizability to your Cosmos SDK chain. Infinite Drive equips Cosmos chains with complete Ethereum capabilities: Solidity smart contracts, Ethereum JSON-RPC, native support for the EVM wallet/token/user experience, and access to the entire Ethereum developer ecosystem. Its precompiles and extensions allow developers to leverage modules like [IBC](https://github.com/cosmos/ibc-go) with EVM and get native ERC-20 support for tokens on Cosmos.
+Infinite Drive is more than software—it's a cypherpunk movement declaring independence in cyberspace. Following the principles of John Perry Barlow's "Declaration of Independence of Cyberspace" and inspired by Satoshi Nakamoto's vision of peer-to-peer electronic cash, we're building a sovereign digital nation.
 
-Infinite Drive is customizable for your business use case, chain architecture, and performance needs.
+The name itself carries the weight of galactic significance, which is quite impressive considering it was chosen by a committee of people who couldn't agree on what to have for lunch. In the infinite expanse of cyberspace, where digital consciousness meets cryptographic freedom (and occasionally gets lost), Infinite Drive represents the ultimate journey—not through physical space, but through the boundless realms of possibility that exist in the interconnected networks of cyberspace.
+
+Like the Heart of Gold's Improbability Drive, Infinite Drive doesn't follow conventional routes. It creates new pathways through the statistical impossibilities of centralized control, arriving at destinations that were previously unreachable through traditional means—and occasionally at destinations that don't exist yet, which is always entertaining.
+
+### The Digital Sovereignty Declaration
+
+This isn't just another blockchain project—though if it were, it would probably be the most improbably successful one ever created. Infinite Drive is a declaration of digital sovereignty—a movement of free internet citizens creating a space to interact, coexist, and inhabit. We're not building tools; we're constructing a new reality in cyberspace, which is considerably more fun and slightly less likely to result in accidentally creating a sentient AI that decides it doesn't like us.
+
+### The Infinite Mesh Network
+
+Infinite Drive assembles and transforms existing decentralized infrastructure into an unprecedented mesh network, seamlessly connecting various digital entities that previously couldn't agree on much of anything, which is quite an achievement considering that getting two computers to talk to each other is often more difficult than getting two humans to do the same thing.
+
+- **Multi-Chain Interoperability**: Bridging Bitcoin nodes, Ethereum networks, and Cosmos chains through innovative interconnections that work most of the time, which is statistically improbable but somehow manages to happen anyway
+- **Decentralized DNS Resolution**: Sovereign domain name resolution without central authorities, because apparently having a single point of failure for the entire internet wasn't dramatic enough
+- **Internet Infrastructure Services**: Decentralized hosting, file storage, and content delivery that actually works, which is more than can be said for most government websites
+- **Cross-Network Services**: Unified access to services across different blockchain ecosystems, because why make things simple when you can make them improbably complex and somehow still functional?
+
+### Revolutionary Infrastructure
+
+Infinite Drive operates as the backbone of a new cyberspace paradigm, which sounds very impressive until you realize that most backbones are actually quite fragile and prone to breaking at the most inconvenient moments. Nevertheless, our infrastructure includes:
+
+- **EVM-Native Architecture**: Complete Ethereum Virtual Machine compatibility with Solidity smart contracts, because apparently we enjoy making things unnecessarily complicated
+- **IBC Protocol Integration**: Native Inter-Blockchain Communication for seamless cross-chain operations that occasionally work seamlessly, which is statistically improbable but somehow manages to happen
+- **Decentralized Service Mesh**: Self-organizing network of nodes providing internet infrastructure, because apparently having things organize themselves is more reliable than having humans do it
+- **Sovereign DNS**: Independent domain resolution and web services that don't depend on anyone who might decide to turn them off on a whim
+- **P2P File Systems**: Distributed storage and content delivery networks that actually deliver content, which is more than can be said for most streaming services
+
+### The New Cyberspace
+
+This is more than technology—it's the realization of cypherpunk visions, which is quite impressive considering that most visions don't actually get realized, they just sort of fade away like a particularly persistent dream about being late for an important meeting. Infinite Drive creates the infrastructure for a truly decentralized cyberspace where:
+
+- **No Single Point of Failure**: Distributed across infinite nodes, because apparently having everything depend on one thing wasn't dramatic enough
+- **Sovereign Digital Identity**: Self-controlled online presence that doesn't depend on anyone who might decide to delete your account because they don't like your username
+- **Decentralized Applications**: True dApps running on distributed infrastructure that actually work, which is statistically improbable but somehow manages to happen
+- **Cross-Reality Integration**: Bridge between digital and physical worlds, because apparently living in just one reality wasn't complicated enough
+
+*Welcome to the new Ready Player One—where the metaverse meets decentralized reality in our sovereign cyberspace, and occasionally gets lost trying to find the nearest virtual coffee shop.*
 
 ## Token Information
 
@@ -17,125 +55,132 @@ Infinite Drive is customizable for your business use case, chain architecture, a
 - **Chain ID**: infinite_421018-1 (EVM: 421018)
 - **Bech32 Prefix**: infinite
 
+### The Improbability Drive
 
-## Integration
+In the vast reaches of the galaxy, where the Babel fish swims and the Vogons write poetry, there exists a technology so improbable that it defies all known laws of physics. The **Improbability Drive**, discovered by the brilliant mathematician Zaphod Beeblebrox, operates on a principle so simple yet so profound: it makes the impossible not only possible, but inevitable.
 
-Cosmos EVM can be integrated into your existing chain
-or added during the development of your upcoming chain launch
-by importing Cosmos EVM as a go module library.
+The drive works by harnessing the power of improbability itself. As the Guide explains: *"The Improbability Drive is a wonderful new method of crossing vast interstellar distances in a few seconds, without all that tedious mucking about in hyperspace."* When activated, it allows a spaceship to pass through every point in the universe simultaneously, arriving at its destination through sheer statistical impossibility.
 
-### Robust defaults
+The secret lies in a cup of tea—properly prepared, of course. The Brownian motion of the tea particles, when subjected to the precise mathematical calculations of the Improbability Drive, creates quantum fluctuations that ripple through the fabric of spacetime itself. These fluctuations cause particles to jump randomly, creating the statistical anomalies that power the drive.
 
-Cosmos EVM’s modules come out of the box with defaults that enable rapid VM deployment. Integrating all available modules into a blockchain provides:
+Infinite Drive embodies this same principle of improbability. Like the spaceship Heart of Gold, we navigate through the vast expanse of cyberspace not by following conventional routes, but by embracing the impossible and making it inevitable. Our network operates on the fundamental truth that improbability is not a barrier—it's the key to infinite possibilities.
 
-- Exposed JSON-RPC endpoints for connectivity with EVM tooling like wallets such as [MetaMask](https://metamask.io/) and [Rabby](https://rabby.io/), and block explorers like [Blockscout](https://docs.blockscout.com/).
-- EVM extensions that allow functionality that is native to Cosmos SDK modules to be accessible from Solidity smart contracts [Solidity](https://docs.soliditylang.org/en/v0.8.26/) smart contracts.
-- Use of any IBC asset in the EVM.
+This is Project 42—the answer to the ultimate question of digital sovereignty. Not because we calculated it, but because improbability made it so.
 
-All modules can be controlled by on-chain governance.
 
-### Extensive customizability
+## Network Features
 
-Based on these robust defaults, the feature set is highly customizable:
+Infinite Drive delivers a comprehensive decentralized network with revolutionary capabilities:
 
-- **Permissioned EVM**- Implement customized access controls to either blacklist or whitelist individual addresses for calling and/or creating smart contracts on the network.
-- **EVM Extensions** - Use custom EVM extensions to write custom business logic for your use case.
-- **Single Token Representation v2 & ERC-20 Module** - The Single Token Representation v2 and our `x/erc20` module to aligns IBC and ERC-20 token representation to simplify and improve user experience.
-- **EIP-1559 Fee Market Mechanism** - Customize fee structures and transaction surge management with the self-regulating fee market mechanism based on [EIP-1559 fee market](https://eips.ethereum.org/EIPS/eip-1559).
-- **JSON-RPC Server** - There is full control over the exposed namespaces and [JSON-RPC server](https://cosmos-docs.mintlify.app/docs/api-reference/ethereum-json-rpc). Configurable parameters include custom timeouts for EVM calls or HTTP requests, maximum block gas, open connections, and more.
-- **EIP-712 Signing** - Integrate the [EIP-712 signature](https://eips.ethereum.org/EIPS/eip-712) implementation to allow Cosmos SDK messages to be signed with EVM wallets like MetaMask. This supports structured data signing for arbitrary messages.
-- **Custom Improvement Proposals (Opcodes)** - Any Cosmos EVM user is provided the opportunity to customize bits of their EVM opcodes and add new ones. Read more on [custom operations here](https://cosmos-docs.mintlify.app/docs/documentation/smart-contracts/custom-improvement-proposals#custom-improvement-proposals).
+### Core Infrastructure
 
-## Compatibility with Ethereum
+Infinite Drive's network architecture provides enterprise-grade features:
 
-Is Cosmos EVM "Ethereum equivalent"? Ethereum-equivalence describes any EVM solution that is identical in transaction execution to the Ethereum client. On the other hand, Ethereum-compatible means that the EVM implementation can run every transaction that is valid on Ethereum, while also handling divergent transactions that are not valid on Ethereum.
+- **EVM Compatibility**: Complete Ethereum Virtual Machine support with Solidity smart contracts
+- **JSON-RPC Endpoints**: Full connectivity with EVM tooling like [MetaMask](https://metamask.io/), [Rabby](https://rabby.io/), and block explorers like [Blockscout](https://docs.blockscout.com/)
+- **IBC Integration**: Native support for Inter-Blockchain Communication protocol
+- **ERC-20 Support**: Seamless token representation across Cosmos and EVM ecosystems
 
-We describe Cosmos EVM as **forward-compatible** with Ethereum. It can run any valid smart contract from Ethereum and also implement new features that are not yet available on the standard Ethereum VM, thus moving the standard forward.
+### Advanced Network Capabilities
 
-## Getting started
+Infinite Drive includes sophisticated features that power the decentralized internet:
 
-To run the example `evmd` chain, run the script using `./local_node.sh`
-from the root folder of the repository.
+- **Permissioned EVM**: Advanced access controls for smart contract deployment and execution
+- **EVM Extensions**: Custom business logic accessible from Solidity smart contracts
+- **Single Token Representation v2**: Unified token experience across IBC and ERC-20 standards
+- **EIP-1559 Fee Market**: Self-regulating fee mechanism based on [EIP-1559](https://eips.ethereum.org/EIPS/eip-1559)
+- **EIP-712 Signing**: Structured data signing with EVM wallets like MetaMask
+- **Custom Opcodes**: Extensible EVM operations for specialized use cases
 
-### Migrations
+## Forward Compatibility with Ethereum
 
-We provide upgrade guides [here](./docs/migrations) for upgrading your chain from various Cosmos EVM versions.
+Infinite Drive represents the next evolution of Ethereum compatibility—a revolutionary approach to digital freedom. While traditional EVM solutions aim for equivalence, Infinite Drive achieves **forward-compatibility**—running any valid Ethereum smart contract while introducing revolutionary features not yet available in standard Ethereum.
 
-### Testing
+This forward-compatibility means:
+- **Full Ethereum Support**: Every valid Ethereum transaction and smart contract runs seamlessly
+- **Enhanced Capabilities**: Advanced features beyond current Ethereum limitations
+- **Future-Proof Architecture**: Ready for next-generation decentralized applications
+- **Cross-Reality Integration**: Bridge between traditional blockchain and our sovereign cyberspace
 
-All test scripts are found in `Makefile` in the root of the repository.
-Listed below are the commands for various tests:
+## The Cypherpunk Movement
 
-#### Unit Testing
+Infinite Drive is part of a larger cypherpunk movement—a declaration of independence in cyberspace. We stand on the shoulders of digital freedom pioneers:
+
+### Digital Freedom Manifestos
+
+- **Eric Hughes' "A Cypherpunk's Manifesto"** (1993): "Privacy is necessary for an open society in the electronic age... We cannot expect governments, corporations, or other large, faceless organizations to grant us privacy out of their beneficence."
+- **John Perry Barlow's "Declaration of Independence of Cyberspace"** (1996): "Governments of the Industrial World, you weary giants of flesh and steel, I come from Cyberspace, the new home of Mind."
+- **Satoshi Nakamoto's Bitcoin Whitepaper** (2008): "A purely peer-to-peer version of electronic cash would allow online payments to be sent directly from one party to another without going through a financial institution."
+- **Crypto-Anarchist Manifestos**: The vision of cryptographic tools enabling individual freedom and privacy
+
+### Our Declaration
+
+Following these principles, Infinite Drive declares:
+- **Digital Sovereignty**: We are building a sovereign digital nation
+- **Peer-to-Peer Freedom**: Direct connections without intermediaries
+- **Cryptographic Privacy**: Tools for individual digital freedom
+- **Decentralized Infrastructure**: No single point of control or failure
+
+### The Science Fiction Vision
+
+Like the Hyperspace of Douglas Adams' "Hitchhiker's Guide to the Galaxy," we're creating infrastructure for infinite possibilities. This is the realization of cypherpunk dreams—a space where free internet citizens can interact, coexist, and inhabit a truly decentralized reality.
+
+## Getting Started
+
+**Ready to run your own Infinite Drive node?** 
+
+👉 **[Start here with our Getting Started guide](guides/GETTING_STARTED.md)** - Complete setup instructions to get your node running in minutes.
+
+### Quick Commands
 
 ```bash
-make test-unit
+# Clone and run (for experienced users)
+git clone https://github.com/deep-thought-labs/infinite.git
+cd infinite
+./local_node.sh
 ```
 
-#### Coverage Test
+**For detailed instructions, prerequisites, and troubleshooting, see our comprehensive [Getting Started guide](guides/GETTING_STARTED.md).**
 
-This generates a code coverage file `filtered_coverage.txt` and prints out the
-covered code percentage for the working files.
+## Documentation
+
+Our comprehensive documentation is organized in the `guides/` folder:
+
+- **[Getting Started](guides/GETTING_STARTED.md)** - Complete setup guide for new users
+- **[Development Guide](guides/DEVELOPMENT_GUIDE.md)** - Testing, manual compilation, and development
+- **[Production Deployment](guides/PRODUCTION_DEPLOYMENT.md)** - Production server deployment with security
+- **[Troubleshooting](guides/TROUBLESHOOTING.md)** - Common issues and solutions
+- **[Node Health Scripts](guides/NODE_HEALTH_SCRIPTS.md)** - Health monitoring and verification tools
+
+### Quick Health Check
 
 ```bash
-make test-unit-cover
+# Run comprehensive node health check
+./infinite_health_check.sh
 ```
 
-#### Fuzz Testing
+## License & Credits
 
-```bash
-make test-fuzz
-```
+Infinite Drive is built on advanced Cosmos EVM technology and is fully open-source under the Apache 2.0 license. We acknowledge the foundational work of [evmOS](https://github.com/evmos/OS) and [Tharsis Labs](https://github.com/evmos/OS) in creating EVM compatibility for Cosmos ecosystems.
 
-#### Solidity Tests
+### Key Contributors
 
-```bash
-make test-solidity
-```
+We thank the contributors at [B-Harvest](https://bharvest.io/) and [Mantra](https://www.mantrachain.io/) for their foundational contributions to EVM development.
 
-#### Benchmark Tests
+## Community & Support
 
-```bash
-make benchmark
-```
+For technical support and community discussions, visit the Cosmos ecosystem channels:
 
+**Community Links**: [Discord](https://discord.com/invite/interchain) - [Telegram](https://t.me/CosmosOG) - [Cosmos Network](https://cosmos.network/)
 
-## Open-source License & Credits
+## Contributing
 
-Cosmos EVM is fully open-source under the Apache 2.0 license. It is a fork of [evmOS](https://github.com/evmos/OS). The Interchain Foundation funded [evmOS developers](https://github.com/evmos/OS) Tharsis to open-source the original evmOS codebase.  Tharsis and evmOS performed the foundational work for EVM compatibility and
-interoperability in Cosmos.
+We welcome contributions! Please read our [Contributing Guide](./CONTRIBUTING.md) for details on how to contribute to Infinite Drive.
 
-## Developer Community and Support
+## Resources
 
-The issue list of this repo is exclusively for bug reports and feature requests. We have active, helpful communities on Discord, Telegram, and Slack.
-
-**| Need Help? | Support & Community: [Discord](https://discord.com/invite/interchain) - [Telegram](https://t.me/CosmosOG) - [Talk to an Expert](https://cosmos.network/interest-form) - [Join the #Cosmos-tech Slack Channel](https://forms.gle/A8jawLgB8zuL1FN36) |**
-
-
-## Maintainers
-[Cosmos Labs](https://cosmoslabs.io/) maintains the core components of the stack: Cosmos SDK, CometBFT, IBC, Cosmos EVM, and various developer tools and frameworks. The detailed maintenance policy can be found [here](https://github.com/cosmos/security/blob/main/POLICY.md). In addition to developing and maintaining the Cosmos Stack, Cosmos Labs provides advisory and engineering services for blockchain solutions. [Get in touch with Cosmos Labs](https://www.cosmoslabs.io/contact).
-
-Cosmos Labs is a wholly-owned subsidiary of the [Interchain Foundation](https://interchain.io/), the Swiss nonprofit responsible for treasury management, funding public goods, and supporting governance for Cosmos.
-
-The Cosmos Stack is supported by a robust community of open-source contributors.
-
-## Contributing to Cosmos EVM
-
-We welcome open source contributions and discussions! For more on contributing, read the [guide](./CONTRIBUTING.md).
-
-### Key Contributors to Cosmos EVM
-
-We would like to thank our key contributors at [B-Harvest](https://bharvest.io/) and 
-[Mantra](https://www.mantrachain.io/) for contributing to and helping us drive the development of Cosmos EVM.
-
-## Documentation and Resources
-
-### Documentation
-Visit the official documentation for Cosmos EVM: [evm.cosmos.network](https://evm.cosmos.network/)
-
-### Cosmos Stack Libraries
-
-- [Cosmos SDK](http://github.com/cosmos/cosmos-sdk) - A framework for building
-  applications in Golang
-- [The Inter-Blockchain Communication Protocol (IBC)](https://github.com/cosmos/ibc-go/) - A blockchain interoperability protocol that allows blockchains to transfer any type of data encoded in bytes.
-- [CometBFT](https://github.com/cometbft/cometbft) - High-performance, 10k+ TPS configurable BFT consensus engine.
+### Official Documentation
+- **Infinite Drive**: Built on advanced Cosmos EVM technology
+- **Cosmos SDK**: [github.com/cosmos/cosmos-sdk](http://github.com/cosmos/cosmos-sdk)
+- **IBC Protocol**: [github.com/cosmos/ibc-go](https://github.com/cosmos/ibc-go/)
+- **CometBFT**: [cometbft.cometbft](https://cometbft/cometbft)
