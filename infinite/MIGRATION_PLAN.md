@@ -20,14 +20,14 @@ La migración se hará usando herramientas como edit_file y search_replace para 
 - **Repo URL**: https://github.com/deep-thought-labs/infinite.git
 - **Binario**: infinited
 - **Carpeta de datos**: .infinited
-- **Token Symbol**: TOAST
-- **Token Name**: Improbability Toast
-- **Display Denom**: TOAST
-- **Base Denom**: miga
-- **Relación**: 1 TOAST = 10^18 miga
+- **Token Symbol**: TEA
+- **Token Name**: Improbability
+- **Display Denom**: TEA
+- **Base Denom**: drop
+- **Relación**: 1 TEA = 10^18 drop
 - **Decimales**: 18
 - **Token Description**: The native token of Whole Sort of General Mish Mash
-- **Supply inicial**: 42000000000000000000 (42 TOAST)
+- **Supply inicial**: 42000000000000000000 (42 TEA)
 - **EVM Chain ID**: 421018
 - **Cosmos Chain ID**: infinite_421018-1
 - **Prefijo general**: infinite
@@ -65,10 +65,10 @@ Aplicaré estos cambios en orden para minimizar errores. Cada paso incluye archi
 ### 5. Token y Denominaciones
 - **Archivos**: testutil/constants/constants.go, infinited/genesis.go, local_node.sh.
 - **Acciones**:
-  - Denoms: Cambiar `aatom` a `miga`, `atom` a `TOAST`.
-  - Símbolo y nombre: Actualizar a TOAST / Improbability Toast.
-  - Description: Ajustar a "Improbability Toast: A token powered by the most improbable crumb in the galaxy.".
-  - Supply inicial: Configurar genesis a 42000000000000000000 miga (42 TOAST).
+  - Denoms: Cambiar `aatom` a `drop`, `atom` a `TEA`.
+  - Símbolo y nombre: Actualizar a TEA / Improbability.
+  - Description: Ajustar a "Improbability: A token powered by the most improbable drop in the galaxy.".
+  - Supply inicial: Configurar genesis a 42000000000000000000 drop (42 TEA).
 - **Herramienta**: edit_file y search_replace.
 
 ### 6. Chain IDs

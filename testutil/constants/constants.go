@@ -13,13 +13,13 @@ const (
 	DefaultGasPrice = 20
 
 	// ExampleAttoDenom provides an example denom for use in tests
-	ExampleAttoDenom = "miga"
+	ExampleAttoDenom = "drop"
 
 	// ExampleMicroDenom provides an example denom for use in tests
-	ExampleMicroDenom = "umiga"
+	ExampleMicroDenom = "udrop"
 
 	// ExampleDisplayDenom provides an example display denom for use in tests
-	ExampleDisplayDenom = "TOAST"
+	ExampleDisplayDenom = "TEA"
 
 	// ExampleBech32Prefix provides an example Bech32 prefix for use in tests
 	ExampleBech32Prefix = "infinite"

@@ -18,11 +18,11 @@ import (
 
 var (
 	// DefaultEVMDenom is the default value for the evm denom
-	DefaultEVMDenom = "miga"
+	DefaultEVMDenom = "drop"
 	// DefaultEVMExtendedDenom is the default value for the evm extended denom
-	DefaultEVMExtendedDenom = "miga"
+	DefaultEVMExtendedDenom = "drop"
 	// DefaultEVMDisplayDenom is the default value for the display denom in the bank metadata
-	DefaultEVMDisplayDenom = "TOAST"
+	DefaultEVMDisplayDenom = "TEA"
 	// DefaultEVMChainID is the default value for the evm chain ID
 	DefaultEVMChainID uint64 = 421018
 	// DefaultEVMDecimals is the default value for the evm denom decimal precision

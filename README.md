@@ -1,6 +1,6 @@
 # Infinite Drive
 
-**Infinite Drive** is a blockchain powered by Cosmos EVM technology, featuring the **Improbability Toast (TOAST)** token. This blockchain provides complete Ethereum compatibility with Solidity smart contracts, Ethereum JSON-RPC, and access to the entire Ethereum developer ecosystem.
+**Infinite Drive** is a blockchain powered by Cosmos EVM technology, featuring the **Improbability (TEA)** token. This blockchain provides complete Ethereum compatibility with Solidity smart contracts, Ethereum JSON-RPC, and access to the entire Ethereum developer ecosystem.
 
 ## What is Infinite Drive?
 
@@ -10,9 +10,9 @@ Infinite Drive is customizable for your business use case, chain architecture, a
 
 ## Token Information
 
-- **Name**: Improbability Toast
-- **Symbol**: TOAST
-- **Base Denom**: miga (1 TOAST = 10^18 miga)
+- **Name**: Improbability
+- **Symbol**: TEA
+- **Base Denom**: drop (1 TEA = 10^18 drop)
 - **Decimals**: 18
 - **Chain ID**: infinite_421018-1 (EVM: 421018)
 - **Bech32 Prefix**: infinite

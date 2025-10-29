@@ -28,21 +28,21 @@
 
 ## 💰 TOKEN
 
-**Símbolo**: `TOAST`
+**Símbolo**: `TEA`
 
-**Nombre**: `Improbability Toast`
+**Nombre**: `Improbability`
 
-**Display denom**: `TOAST`
+**Display denom**: `TEA`
 
-**Base denom**: `miga`
+**Base denom**: `drop`
 
-**Relación**: `1 TOAST = 10^18 miga`
+**Relación**: `1 TEA = 10^18 drop`
 
 **Decimales**: `18`
 
 **Descripción**: `The native token of Whole Sort of General Mish Mash`
 
-**Supply inicial**: `42000000000000000000` (42 TOAST)
+**Supply inicial**: `42000000000000000000` (42 TEA)
 
 ---
 

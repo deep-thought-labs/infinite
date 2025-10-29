@@ -164,7 +164,7 @@ write_mnemonics_yaml() {
 # ---------- Add funded account ----------
 add_genesis_funds() {
   local keyname="$1"
-  infinited genesis add-genesis-account "$keyname" 1000000000000000000000miga --keyring-backend "$KEYRING" --home "$CHAINDIR"
+  infinited genesis add-genesis-account "$keyname" 1000000000000000000000drop --keyring-backend "$KEYRING" --home "$CHAINDIR"
 }
 
 # Setup local node if overwrite is set to Yes, otherwise skip setup
@@ -231,21 +231,21 @@ if [[ $overwrite == "y" || $overwrite == "Y" ]]; then
   echo "$VAL_MNEMONIC" | infinited init $MONIKER -o --chain-id "$CHAINID" --home "$CHAINDIR" --recover
 
   # ---------- Genesis customizations ----------
-  jq '.app_state["staking"]["params"]["bond_denom"]="miga"' "$GENESIS" >"$TMP_GENESIS" && mv "$TMP_GENESIS" "$GENESIS"
-  jq '.app_state["gov"]["deposit_params"]["min_deposit"][0]["denom"]="miga"' "$GENESIS" >"$TMP_GENESIS" && mv "$TMP_GENESIS" "$GENESIS"
-  jq '.app_state["gov"]["params"]["min_deposit"][0]["denom"]="miga"' "$GENESIS" >"$TMP_GENESIS" && mv "$TMP_GENESIS" "$GENESIS"
-  jq '.app_state["gov"]["params"]["expedited_min_deposit"][0]["denom"]="miga"' "$GENESIS" >"$TMP_GENESIS" && mv "$TMP_GENESIS" "$GENESIS"
-  jq '.app_state["evm"]["params"]["evm_denom"]="miga"' "$GENESIS" >"$TMP_GENESIS" && mv "$TMP_GENESIS" "$GENESIS"
-  jq '.app_state["mint"]["params"]["mint_denom"]="miga"' "$GENESIS" >"$TMP_GENESIS" && mv "$TMP_GENESIS" "$GENESIS"
+  jq '.app_state["staking"]["params"]["bond_denom"]="drop"' "$GENESIS" >"$TMP_GENESIS" && mv "$TMP_GENESIS" "$GENESIS"
+  jq '.app_state["gov"]["deposit_params"]["min_deposit"][0]["denom"]="drop"' "$GENESIS" >"$TMP_GENESIS" && mv "$TMP_GENESIS" "$GENESIS"
+  jq '.app_state["gov"]["params"]["min_deposit"][0]["denom"]="drop"' "$GENESIS" >"$TMP_GENESIS" && mv "$TMP_GENESIS" "$GENESIS"
+  jq '.app_state["gov"]["params"]["expedited_min_deposit"][0]["denom"]="drop"' "$GENESIS" >"$TMP_GENESIS" && mv "$TMP_GENESIS" "$GENESIS"
+  jq '.app_state["evm"]["params"]["evm_denom"]="drop"' "$GENESIS" >"$TMP_GENESIS" && mv "$TMP_GENESIS" "$GENESIS"
+  jq '.app_state["mint"]["params"]["mint_denom"]="drop"' "$GENESIS" >"$TMP_GENESIS" && mv "$TMP_GENESIS" "$GENESIS"
 
-  jq '.app_state["bank"]["denom_metadata"]=[{"description":"Improbability Toast: A token powered by the most improbable crumb in the galaxy.","denom_units":[{"denom":"miga","exponent":0,"aliases":["crumb","improbability_particle"]},{"denom":"TOAST","exponent":18,"aliases":[]}],"base":"miga","display":"TOAST","name":"Improbability Toast","symbol":"TOAST","uri":"","uri_hash":""}]' "$GENESIS" >"$TMP_GENESIS" && mv "$TMP_GENESIS" "$GENESIS"
+  jq '.app_state["bank"]["denom_metadata"]=[{"description":"Improbability: A token powered by the most improbable drop in the galaxy.","denom_units":[{"denom":"drop","exponent":0,"aliases":["crumb","improbability_particle"]},{"denom":"TEA","exponent":18,"aliases":[]}],"base":"drop","display":"TEA","name":"Improbability","symbol":"TEA","uri":"","uri_hash":""}]' "$GENESIS" >"$TMP_GENESIS" && mv "$TMP_GENESIS" "$GENESIS"
 
   jq '.app_state["evm"]["params"]["active_static_precompiles"]=["0x0000000000000000000000000000000000000100","0x0000000000000000000000000000000000000400","0x0000000000000000000000000000000000000800","0x0000000000000000000000000000000000000801","0x0000000000000000000000000000000000000802","0x0000000000000000000000000000000000000803","0x0000000000000000000000000000000000000804","0x0000000000000000000000000000000000000805", "0x0000000000000000000000000000000000000806", "0x0000000000000000000000000000000000000807"]' "$GENESIS" >"$TMP_GENESIS" && mv "$TMP_GENESIS" "$GENESIS"
 
-  jq '.app_state["evm"]["params"]["evm_denom"]="miga"' "$GENESIS" >"$TMP_GENESIS" && mv "$TMP_GENESIS" "$GENESIS"
+  jq '.app_state["evm"]["params"]["evm_denom"]="drop"' "$GENESIS" >"$TMP_GENESIS" && mv "$TMP_GENESIS" "$GENESIS"
 
   jq '.app_state.erc20.native_precompiles=["0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE"]' "$GENESIS" >"$TMP_GENESIS" && mv "$TMP_GENESIS" "$GENESIS"
-  jq '.app_state.erc20.token_pairs=[{contract_owner:1,erc20_address:"0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE",denom:"miga",enabled:true}]' "$GENESIS" >"$TMP_GENESIS" && mv "$TMP_GENESIS" "$GENESIS"
+  jq '.app_state.erc20.token_pairs=[{contract_owner:1,erc20_address:"0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE",denom:"drop",enabled:true}]' "$GENESIS" >"$TMP_GENESIS" && mv "$TMP_GENESIS" "$GENESIS"
 
   jq '.consensus.params.block.max_gas="10000000"' "$GENESIS" >"$TMP_GENESIS" && mv "$TMP_GENESIS" "$GENESIS"
 
@@ -255,7 +255,7 @@ if [[ $overwrite == "y" || $overwrite == "Y" ]]; then
   sed -i.bak 's/"expedited_voting_period": "86400s"/"expedited_voting_period": "15s"/g' "$GENESIS"
 
   # fund validator (devs already funded in the loop)
-  infinited genesis add-genesis-account "$VAL_KEY" 100000000000000000000000000miga --keyring-backend "$KEYRING" --home "$CHAINDIR"
+  infinited genesis add-genesis-account "$VAL_KEY" 100000000000000000000000000drop --keyring-backend "$KEYRING" --home "$CHAINDIR"
 
   # ---------- Config customizations ----------
   sed -i.bak 's/timeout_propose = "3s"/timeout_propose = "2s"/g' "$CONFIG_TOML"
@@ -323,7 +323,7 @@ if [[ $overwrite == "y" || $overwrite == "Y" ]]; then
   fi
 
   # --------- Finalize genesis ---------
-  infinited genesis gentx "$VAL_KEY" 1000000000000000000000miga --gas-prices ${BASEFEE}miga --keyring-backend "$KEYRING" --chain-id "$CHAINID" --home "$CHAINDIR"
+  infinited genesis gentx "$VAL_KEY" 1000000000000000000000drop --gas-prices ${BASEFEE}drop --keyring-backend "$KEYRING" --chain-id "$CHAINID" --home "$CHAINDIR"
   infinited genesis collect-gentxs --home "$CHAINDIR"
   infinited genesis validate-genesis --home "$CHAINDIR"
 
@@ -341,7 +341,7 @@ fi
 infinited start "$TRACE" \
 	--pruning nothing \
 	--log_level $LOGLEVEL \
-	--minimum-gas-prices=0miga \
+	--minimum-gas-prices=0drop \
 	--evm.min-tip=0 \
 	--home "$CHAINDIR" \
 	--json-rpc.api eth,txpool,personal,net,debug,web3 \

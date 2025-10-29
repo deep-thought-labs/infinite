@@ -107,7 +107,7 @@ build-linux:
 
 # Install into $(BINDIR)
 install: go.sum
-	@echo "🚚  Installing evmd to $(BINDIR) ..."
+	@echo "🚚  Installing infinited to $(BINDIR) ..."
 	@echo "BUILD_FLAGS: $(BUILD_FLAGS)"
 	@cd $(INFINITED_DIR) && CGO_ENABLED="1" \
 	  go install $(BUILD_FLAGS) $(INFINITED_MAIN_PKG)
@@ -138,7 +138,7 @@ vulncheck:
 
 PACKAGES_NOSIMULATION=$(shell go list ./... | grep -v '/simulation')
 PACKAGES_UNIT := $(shell go list ./... | grep -v '/tests/e2e$$' | grep -v '/simulation')
-PACKAGES_EVMD := $(shell cd evmd && go list ./... | grep -v '/simulation')
+PACKAGES_INFINITED := $(shell cd infinited && go list ./... | grep -v '/simulation')
 COVERPKG_EVM  := $(shell go list ./... | grep -v '/tests/e2e$$' | grep -v '/simulation' | paste -sd, -)
 COVERPKG_ALL  := $(COVERPKG_EVM)
 COMMON_COVER_ARGS := -timeout=15m -covermode=atomic
@@ -154,19 +154,19 @@ test-race: ARGS=-race
 test-race: TEST_PACKAGES=$(PACKAGES_UNIT)
 test-race: run-tests
 
-test-evmd: ARGS=-timeout=15m
-test-evmd:
-	@cd evmd && go test -race -tags=test -mod=readonly $(ARGS) $(EXTRA_ARGS) $(PACKAGES_EVMD)
+test-infinited: ARGS=-timeout=15m
+test-infinited:
+	@cd infinited && go test -race -tags=test -mod=readonly $(ARGS) $(EXTRA_ARGS) $(PACKAGES_INFINITED)
 
 test-unit-cover: ARGS=-timeout=15m -coverprofile=coverage.txt -covermode=atomic
 test-unit-cover: TEST_PACKAGES=$(PACKAGES_UNIT)
 test-unit-cover: run-tests
 	@echo "🔍 Running evm (root) coverage..."
 	@go test -race -tags=test $(COMMON_COVER_ARGS) -coverpkg=$(COVERPKG_ALL) -coverprofile=coverage.txt ./...
-	@echo "🔍 Running evmd coverage..."
-	@cd evmd && go test -race -tags=test $(COMMON_COVER_ARGS) -coverpkg=$(COVERPKG_ALL) -coverprofile=coverage_evmd.txt ./...
-	@echo "🔀 Merging evmd coverage into root coverage..."
-	@tail -n +2 evmd/coverage_evmd.txt >> coverage.txt && rm evmd/coverage_evmd.txt
+	@echo "🔍 Running infinited coverage..."
+	@cd infinited && go test -race -tags=test $(COMMON_COVER_ARGS) -coverpkg=$(COVERPKG_ALL) -coverprofile=coverage_infinited.txt ./...
+	@echo "🔀 Merging infinited coverage into root coverage..."
+	@tail -n +2 infinited/coverage_infinited.txt >> coverage.txt && rm infinited/coverage_infinited.txt
 	@echo "🧹 Filtering ignored files from coverage.txt..."
 	@grep -v -E '/cmd/|/client/|/proto/|/testutil/|/mocks/|/test_.*\.go:|\.pb\.go:|\.pb\.gw\.go:|/x/[^/]+/module\.go:|/scripts/|/ibc/testing/|/version/|\.md:|\.pulsar\.go:' coverage.txt > tmp_coverage.txt && mv tmp_coverage.txt coverage.txt
 	@echo "📊 Coverage summary:"
@@ -177,8 +177,8 @@ test: test-unit
 test-all:
 	@echo "🔍 Running evm module tests..."
 	@go test -race -tags=test -mod=readonly -timeout=15m $(PACKAGES_NOSIMULATION)
-	@echo "🔍 Running evmd module tests..."
-	@cd evmd && go test -race -tags=test -mod=readonly -timeout=15m $(PACKAGES_EVMD)
+	@echo "🔍 Running infinited module tests..."
+	@cd infinited && go test -race -tags=test -mod=readonly -timeout=15m $(PACKAGES_INFINITED)
 
 run-tests:
 ifneq (,$(shell which tparse 2>/dev/null))
