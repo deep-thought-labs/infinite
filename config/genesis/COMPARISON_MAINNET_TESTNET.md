@@ -71,7 +71,7 @@ denom:
 token_metadata:
   name: "Improbability"
   symbol: "TEA"
-  description: "Improbability ($TEA) powers the Infinite Improbability Drive. Runs on tea. Properly prepared. Native to Infinite."
+  description: "Improbability (TEA) powers the Infinite Improbability Drive. Runs on tea. Properly prepared. Native to Infinite. Don't panic."
 ```
 
 #### Testnet
@@ -79,7 +79,7 @@ token_metadata:
 token_metadata:
   name: "Improbability test"
   symbol: "TEA-test"
-  description: "Improbability ($TEA) powers the Infinite Improbability Drive. Runs on tea. Properly prepared. Native to Infinite. (testnet)"
+  description: "Improbability (TEA) powers the Infinite Improbability Drive. Runs on tea. Properly prepared. Native to Infinite. Don't panic. (testnet)"
 ```
 
 **✅ Correcto**: Testnet claramente identificado (display y símbolo diferenciados).

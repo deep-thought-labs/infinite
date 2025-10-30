@@ -17,7 +17,7 @@ denom:
 token_metadata:
   name: "Improbability"
   symbol: "TEA"
-  description: "Improbability ($TEA) powers the Infinite Improbability Drive. Runs on tea. Properly prepared. Native to Infinite."
+  description: "Improbability (TEA) powers the Infinite Improbability Drive. Runs on tea. Properly prepared. Native to Infinite. Don't panic."
   uri: ""
   uri_hash: ""
   aliases:

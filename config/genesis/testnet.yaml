@@ -17,7 +17,7 @@ denom:
 token_metadata:
   name: "Improbability test"  # Nombre diferenciado para testnet
   symbol: "TEA-test"          # Símbolo diferenciado para testnet (incluye "test" en minúsculas)
-  description: "Improbability ($TEA) powers the Infinite Improbability Drive. Runs on tea. Properly prepared. Native to Infinite. (testnet)"
+  description: "Improbability (TEA) powers the Infinite Improbability Drive. Runs on tea. Properly prepared. Native to Infinite. Don't panic. (testnet)"
   uri: ""
   uri_hash: ""
   aliases:
