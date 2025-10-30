@@ -45,13 +45,29 @@ Before you begin, ensure your system meets the following requirements:
 **What it is**: Go is the programming language used to build Infinite Drive.  
 **Why you need it**: The blockchain node is written in Go and needs Go to compile.
 
+**Installation Options**:
+
+**Option A: Install via package manager (Recommended)**
 ```bash
-# Install Go 1.25.0 or later
-# Visit https://golang.org/dl/ and download the appropriate version for your OS
+# Ubuntu/Debian:
+sudo apt update
+sudo apt install golang-go
+
+# macOS (with Homebrew):
+brew install go
 
 # Verify installation
 go version
 # Should output: go version go1.25.x linux/amd64 (or your architecture)
+```
+
+**Option B: Manual installation**
+```bash
+# Visit https://golang.org/dl/ and download the appropriate version for your OS
+# Follow the installation instructions for your platform
+
+# Verify installation
+go version
 ```
 
 #### 2. Git
@@ -86,7 +102,23 @@ xcode-select --install
 make --version
 ```
 
-#### 4. jq (JSON Processor) - Optional but Recommended
+#### 4. curl (HTTP Client)
+**What it is**: Command-line tool for making HTTP requests.  
+**Why you need it**: Required for testing APIs and health checks.
+
+```bash
+# Ubuntu/Debian:
+sudo apt install curl
+
+# macOS (usually pre-installed):
+# If not available, install Homebrew first, then:
+brew install curl
+
+# Verify installation
+curl --version
+```
+
+#### 5. jq (JSON Processor) - Optional but Recommended
 **What it is**: Command-line JSON processor for testing API responses.  
 **Why it's useful**: Makes testing the blockchain APIs much easier.
 
@@ -146,11 +178,12 @@ solhint --version
 | **Go** | ✅ YES | Always - compiles the binary |
 | **Git** | ✅ YES | To clone the repository |
 | **Make** | ✅ YES | For build automation |
+| **curl** | ✅ YES | Testing APIs and health checks |
 | **jq** | ⚠️ Recommended | Testing and debugging |
 | **pylint/flake8** | ❌ Optional | Python script development only |
 | **solhint** | ❌ Optional | Smart contract development only |
 
-**Bottom line**: To compile and run `infinited`, you only need Go, Git, and Make. The linters are quality assurance tools for contributing code.
+**Bottom line**: To compile and run `infinited`, you only need Go, Git, Make, and curl. The linters are quality assurance tools for contributing code.
 
 ### Environment Setup
 
