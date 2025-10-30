@@ -1,0 +1,117 @@
+# Infinite Drive - Testnet Genesis Configuration
+# This file contains all configuration parameters for generating the Testnet genesis file.
+
+# Chain Identification
+chain:
+  cosmos_chain_id: "infinite_TESTNET-1"
+  evm_chain_id: "9001"
+  bech32_prefix: "infinite"
+
+# Base Denominations
+denom:
+  base: "drop"
+  display: "TEA"
+  decimals: 18
+
+# Token Metadata
+token_metadata:
+  name: "Improbability"
+  symbol: "TEA"
+  description: "Improbability: A token powered by the most improbable drop in the galaxy. (Testnet)"
+  uri: ""
+  uri_hash: ""
+  aliases:
+    base: ["crumb", "improbability_particle"]
+    display: []
+
+# Staking Module Configuration
+staking:
+  bond_denom: "drop"  # Base denomination for staking
+  max_validators: 100  # Maximum active validators (same as mainnet for consistency)
+  historical_entries: 10000  # Historical delegation entries (same as mainnet)
+  max_entries: 7  # Maximum delegation entries per delegator (same as mainnet)
+  min_commission_rate: "0.000000000000000000"  # No minimum commission (free market)
+  unbonding_time: "86400s"  # 1 day unbonding period (faster for testnet testing)
+
+# Governance Module Configuration (Faster periods for testing)
+governance:
+  min_deposit:
+    denom: "drop"
+    amount: "100000000000000000"  # 0.1 TEA minimum deposit (easy testing)
+  max_deposit_period: "3600s"     # 1 hour deposit period (fast testing)
+  voting_period: "3600s"           # 1 hour voting period (fast testing)
+  quorum: "0.334000000000000000"   # 33.4% quorum (same as mainnet)
+  threshold: "0.500000000000000000" # 50% threshold (same as mainnet)
+  veto_threshold: "0.334000000000000000" # 33.4% veto threshold (same as mainnet)
+  expedited_min_deposit:
+    denom: "drop"
+    amount: "500000000000000000"   # 0.5 TEA for expedited proposals (easy testing)
+  expedited_voting_period: "1800s" # 30 minutes for expedited proposals (fast testing)
+
+# Mint Module Configuration (Inflation for validator rewards - same as mainnet)
+mint:
+  mint_denom: "drop"  # Base denomination for minting
+  inflation_rate_change: "0.130000000000000000"  # 13% annual inflation rate change
+  inflation_max: "0.200000000000000000"  # 20% maximum annual inflation (same as mainnet)
+  inflation_min: "0.070000000000000000"  # 7% minimum annual inflation (same as mainnet)
+  goal_bonded: "0.670000000000000000"   # 67% target staking ratio (same as mainnet)
+  blocks_per_year: "6311520"  # ~6.3M blocks per year (same as mainnet)
+
+# Slashing Module Configuration (More permissive for testnet)
+slashing:
+  signed_blocks_window: "10000"  # 10,000 blocks window (same as mainnet)
+  min_signed_per_window: "0.050000000000000000"  # 5% minimum signatures (same as mainnet)
+  downtime_jail_duration: "60s"  # 1 minute jail duration (quick recovery for testnet)
+  slash_fraction_double_sign: "0.050000000000000000"  # 5% slash for double signing (same as mainnet)
+  slash_fraction_downtime: "0.000100000000000000"     # 0.01% slash for downtime (same as mainnet)
+
+# EVM Module Configuration
+evm:
+  evm_denom: "drop"  # Base denomination for EVM transactions
+  chain_id: "9001"  # EVM Chain ID for testnet (different from mainnet)
+  active_static_precompiles:
+    - "0x0000000000000000000000000000000000000100"  # ECRecover (Ethereum signature recovery)
+    - "0x0000000000000000000000000000000000000400"  # SHA256 (cryptographic hash)
+    - "0x0000000000000000000000000000000000000800"  # Bank precompile (token transfers)
+    - "0x0000000000000000000000000000000000000801"  # Staking precompile (delegation)
+    - "0x0000000000000000000000000000000000000802"  # Distribution precompile (rewards)
+    - "0x0000000000000000000000000000000000000803"  # Governance precompile (voting)
+    - "0x0000000000000000000000000000000000000804"  # ERC20 precompile (token standards)
+    - "0x0000000000000000000000000000000000000805"  # IBC precompile (inter-blockchain)
+    - "0x0000000000000000000000000000000000000806"  # Slashing precompile (penalties)
+    - "0x0000000000000000000000000000000000000807"  # Precision Bank precompile (advanced banking)
+
+# ERC20 Module Configuration
+erc20:
+  token_pairs: []  # Add token pairs for testing (empty by default)
+  native_precompiles: []  # Add native precompiles for testing (empty by default)
+  enable_erc20: true  # Enable ERC20 functionality (same as mainnet)
+  permissionless_registration: true  # Allow anyone to register token pairs (same as mainnet)
+
+# FeeMarket Module Configuration
+feemarket:
+  no_base_fee: true  # Disabled for testnet (allows 0 gas price for easy testing)
+  base_fee: "0"  # No base fee (free transactions for testing)
+  min_gas_price: "0"  # No minimum gas price (no barriers for testing)
+  min_gas_multiplier: "0.500000000000000000"  # 50% multiplier (unused with 0 gas price)
+
+# Consensus Parameters (Tendermint consensus settings - same as mainnet)
+consensus:
+  block:
+    max_bytes: "22020096"  # ~21MB maximum block size (same as mainnet)
+    max_gas: "10000000"     # 10M gas maximum per block (same as mainnet)
+    time_iota_ms: "1000"    # 1 second minimum time between blocks (same as mainnet)
+  evidence:
+    max_age_num_blocks: "100000"  # 100K blocks maximum evidence age (same as mainnet)
+    max_age_duration: "172800000000000"  # 2 days maximum evidence age (same as mainnet)
+    max_bytes: "1048576"  # 1MB maximum evidence size (same as mainnet)
+
+# Initial Accounts (for testnet - can include test accounts)
+# Format: address: amount (in base denom)
+# Example: "infinite1test...": "100000000000000000000000"  # 100,000 TEA for testing
+accounts: []
+
+# Initial Validators (for testnet)
+# Each validator needs: key_name, amount, commission_rate, etc.
+validators: []
+

@@ -1,17 +1,58 @@
-# Command Name Rebranding Scripts
+# Scripts Documentation
 
 > **Copyright (c) 2025 Deep Thought Labs**  
-> Internal tooling for command name rebranding validation and audit processes.
+> Internal tooling and automation scripts.
 
 ---
 
-**Note**: These scripts are internal development tools and are not part of the
+## Genesis Setup Script
+
+**`setup_genesis.sh`** - Generate and configure genesis files for Mainnet or Testnet.
+
+See [config/genesis/README.md](../config/genesis/README.md) for detailed documentation and configuration options.
+
+**Usage:**
+```bash
+./scripts/setup_genesis.sh [mainnet|testnet] <moniker> [output-dir]
+```
+
+**Examples:**
+```bash
+# Generate Mainnet genesis
+./scripts/setup_genesis.sh mainnet my-node
+
+# Generate Testnet genesis  
+./scripts/setup_genesis.sh testnet test-node ~/testnet-genesis
+```
+
+**Prerequisites:**
+- `infinited` binary (built with `make build` or `make install`)
+- `jq` - JSON processor (`sudo apt install jq` or `brew install jq`)
+- `yq` - YAML processor (install from https://github.com/mikefarah/yq/releases or `brew install yq`)
+
+**What it does:**
+- Initializes chain with specified moniker and chain ID
+- Configures all denominations (staking, EVM, mint)
+- Sets up governance parameters (periods, thresholds, deposits)
+- Configures staking, slashing, and mint parameters
+- Sets EVM chain ID and precompiles
+- Configures token metadata
+- Sets consensus parameters
+- Validates the generated genesis file
+
+**Configuration files:**
+- `config/genesis/mainnet.yaml` - Mainnet configuration
+- `config/genesis/testnet.yaml` - Testnet configuration
+
+---
+
+## Command Name Rebranding Scripts
+
+> **Note**: These scripts are internal development tools and are not part of the
 upstream repository. They have been developed for internal validation and
 quality assurance processes.
 
----
-
-## Descripción
+### Descripción
 
 Scripts para ayudar en el proceso seguro de cambio del nombre del comando de `evmd` a `infinited`.
 
