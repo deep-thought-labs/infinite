@@ -21,8 +21,8 @@ type GenesisState map[string]json.RawMessage
 
 // NewEVMGenesisState returns the default genesis state for the EVM module.
 //
-// NOTE: for the example chain implementation we need to set the default EVM denomination,
-// enable ALL precompiles, and include default preinstalls.
+// NOTE: Sets the default EVM denomination, enables ALL precompiles,
+// and includes default preinstalls for Infinite Drive.
 func NewEVMGenesisState() *evmtypes.GenesisState {
 	evmGenState := evmtypes.DefaultGenesisState()
 	evmGenState.Params.ActiveStaticPrecompiles = evmtypes.AvailableStaticPrecompiles
@@ -33,19 +33,22 @@ func NewEVMGenesisState() *evmtypes.GenesisState {
 
 // NewErc20GenesisState returns the default genesis state for the ERC20 module.
 //
-// NOTE: for the example chain implementation we are also adding a default token pair,
-// which is the base denomination of the chain (i.e. the WEVMOS contract).
+// NOTE: By default, token pairs and native precompiles are empty.
+// These should be configured explicitly for each network (mainnet, testnet, etc.)
+// via the genesis JSON file or governance proposals after launch.
 func NewErc20GenesisState() *erc20types.GenesisState {
 	erc20GenState := erc20types.DefaultGenesisState()
-	erc20GenState.TokenPairs = testconstants.ExampleTokenPairs
-	erc20GenState.NativePrecompiles = []string{testconstants.WEVMOSContractMainnet}
+	// Token pairs and native precompiles are intentionally empty by default.
+	// They should be configured during genesis setup for production networks.
+	erc20GenState.TokenPairs = []erc20types.TokenPair{}
+	erc20GenState.NativePrecompiles = []string{}
 
 	return erc20GenState
 }
 
 // NewMintGenesisState returns the default genesis state for the mint module.
 //
-// NOTE: for the example chain implementation we are also adding a default minter.
+// NOTE: Sets the mint denomination to the base denom (drop) for Infinite Drive.
 func NewMintGenesisState() *minttypes.GenesisState {
 	mintGenState := minttypes.DefaultGenesisState()
 
@@ -55,7 +58,8 @@ func NewMintGenesisState() *minttypes.GenesisState {
 
 // NewFeeMarketGenesisState returns the default genesis state for the feemarket module.
 //
-// NOTE: for the example chain implementation we are disabling the base fee.
+// NOTE: Disables the base fee by default. This can be enabled later via governance
+// or by configuring the genesis JSON for production networks.
 func NewFeeMarketGenesisState() *feemarkettypes.GenesisState {
 	feeMarketGenState := feemarkettypes.DefaultGenesisState()
 	feeMarketGenState.Params.NoBaseFee = true

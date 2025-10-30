@@ -133,13 +133,14 @@ import (
 )
 
 func init() {
-	// manually update the power reduction by replacing micro (u) -> atto (a) evmos
+	// Manually update the power reduction to use 18 decimals (drop) instead of the default 6 decimals (micro).
+	// This allows Infinite Drive to use the same precision as Ethereum (1e18) where 1 TEA = 10^18 drop.
 	sdk.DefaultPowerReduction = utils.AttoPowerReduction
 
 	defaultNodeHome = evmconfig.MustGetDefaultNodeHome()
 }
 
-const appName = "evmd"
+const appName = "infinited"
 
 // defaultNodeHome default home directories for the application daemon
 var defaultNodeHome string
@@ -890,8 +891,8 @@ func (app *EVMD) DefaultGenesis() map[string]json.RawMessage {
 	evmGenState := NewEVMGenesisState()
 	genesis[evmtypes.ModuleName] = app.appCodec.MustMarshalJSON(evmGenState)
 
-	// NOTE: for the example chain implementation we are also adding a default token pair,
-	// which is the base denomination of the chain (i.e. the WEVMOS contract)
+	// NOTE: Token pairs and native precompiles are empty by default.
+	// Configure them explicitly in the genesis JSON for production networks.
 	erc20GenState := NewErc20GenesisState()
 	genesis[erc20types.ModuleName] = app.appCodec.MustMarshalJSON(erc20GenState)
 

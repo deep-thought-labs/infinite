@@ -6,15 +6,146 @@ Este documento detalla todos los aspectos que debes contemplar al crear el archi
 
 ## Tabla de Contenidos
 
-1. [Información Básica de la Cadena](#información-básica-de-la-cadena)
-2. [Configuración de Módulos Cosmos SDK](#configuración-de-módulos-cosmos-sdk)
-3. [Configuración de Módulos Específicos de Infinite Drive](#configuración-de-módulos-específicos-de-infinite-drive)
-4. [Parámetros de Consenso (CometBFT/Tendermint)](#parámetros-de-consenso-cometbfttendermint)
-5. [Configuración de Validadores Iniciales](#configuración-de-validadores-iniciales)
-6. [Configuración de Cuentas y Balances](#configuración-de-cuentas-y-balances)
-7. [Seguridad y Parámetros Económicos](#seguridad-y-parámetros-económicos)
-8. [Verificación del Génesis](#verificación-del-génesis)
-9. [Proceso Recomendado de Creación](#proceso-recomendado-de-creación)
+1. [¿Dónde se Configuran los Parámetros del Génesis?](#¿dónde-se-configuran-los-parámetros-del-génesis) - **LEE ESTO PRIMERO**
+2. [Información Básica de la Cadena](#información-básica-de-la-cadena)
+3. [Configuración de Módulos Cosmos SDK](#configuración-de-módulos-cosmos-sdk)
+4. [Configuración de Módulos Específicos de Infinite Drive](#configuración-de-módulos-específicos-de-infinite-drive)
+5. [Parámetros de Consenso (CometBFT/Tendermint)](#parámetros-de-consenso-cometbfttendermint)
+6. [Configuración de Validadores Iniciales](#configuración-de-validadores-iniciales)
+7. [Configuración de Cuentas y Balances](#configuración-de-cuentas-y-balances)
+8. [Seguridad y Parámetros Económicos](#seguridad-y-parámetros-económicos)
+9. [Verificación del Génesis](#verificación-del-génesis)
+10. [Proceso Recomendado de Creación](#proceso-recomendado-de-creación)
+
+---
+
+## ¿Dónde se Configuran los Parámetros del Génesis?
+
+**⚠️ Pregunta Crítica**: ¿Las configuraciones se hacen en el código del proyecto o directamente en el archivo Genesis JSON?
+
+La respuesta es: **AMBAS**. Depende del tipo de parámetro:
+
+### 🔷 Parámetros que Vienen del Código (Valores por Defecto)
+
+Cuando ejecutas `infinited init`, el sistema genera un Genesis inicial usando valores por defecto del código:
+
+1. **Valores por defecto de Cosmos SDK**:
+   - Los módulos estándar (staking, bank, governance, mint, slashing) tienen valores por defecto definidos en el Cosmos SDK
+   - Estos valores están hardcodeados en el código fuente de Cosmos SDK
+   - Ejemplo: `unbonding_time: "1814400s"`, `max_validators: 100`, períodos de governance de `172800s` (2 días)
+
+2. **Valores específicos de Infinite Drive** (modificados en código):
+   - **Precompiles EVM**: Habilitados automáticamente desde `infinited/genesis.go`
+   - **Denominación EVM**: El denom por defecto para EVM se configura en código (`testutil/constants/constants.go`: `ExampleAttoDenom = "drop"`)
+   - **Token pairs ERC20**: Configuración inicial en `infinited/genesis.go`
+
+**Ubicación del código**:
+- `infinited/app.go` → `DefaultGenesis()`: Genera el Genesis base
+- `infinited/genesis.go`: Define valores específicos para módulos EVM, ERC20, Mint, FeeMarket
+- Cosmos SDK: Valores por defecto en los módulos estándar
+
+### 🔷 Parámetros que se Configuran en el Genesis JSON
+
+Después de ejecutar `infinited init`, debes **modificar manualmente** el archivo `genesis.json` para Mainnet:
+
+1. **Denominaciones (Denoms)**:
+   ```bash
+   # Ejemplo usando jq (como en local_node.sh):
+   jq '.app_state["staking"]["params"]["bond_denom"]="drop"' genesis.json > temp.json && mv temp.json genesis.json
+   jq '.app_state["evm"]["params"]["evm_denom"]="drop"' genesis.json > temp.json && mv temp.json genesis.json
+   jq '.app_state["mint"]["params"]["mint_denom"]="drop"' genesis.json > temp.json && mv temp.json genesis.json
+   ```
+   **Dónde**: Directamente en el archivo JSON del Genesis
+
+2. **Parámetros de Governance**:
+   - Períodos de votación (cambiar de `172800s` a valores apropiados)
+   - Depósitos mínimos
+   - Thresholds (quorum, threshold, veto_threshold)
+   ```bash
+   # Ejemplo: cambiar períodos de governance
+   sed -i.bak 's/"max_deposit_period": "172800s"/"max_deposit_period": "172800s"/g' genesis.json
+   sed -i.bak 's/"voting_period": "172800s"/"voting_period": "172800s"/g' genesis.json
+   ```
+   **Dónde**: Directamente en el archivo JSON del Genesis
+
+3. **Metadata del Token**:
+   ```bash
+   jq '.app_state["bank"]["denom_metadata"]=[{...}]' genesis.json > temp.json && mv temp.json genesis.json
+   ```
+   **Dónde**: Directamente en el archivo JSON del Genesis
+
+4. **Balances y Cuentas Iniciales**:
+   ```bash
+   infinited genesis add-genesis-account ADDRESS AMOUNTdrop
+   ```
+   **Dónde**: Usando comandos CLI que modifican el Genesis JSON
+
+5. **Validadores Iniciales**:
+   ```bash
+   infinited genesis gentx validator AMOUNT --chain-id CHAIN_ID
+   infinited genesis collect-gentxs
+   ```
+   **Dónde**: Usando comandos CLI que agregan transacciones al Genesis JSON
+
+6. **Parámetros de Consenso**:
+   ```bash
+   jq '.consensus.params.block.max_gas="10000000"' genesis.json > temp.json && mv temp.json genesis.json
+   ```
+   **Dónde**: Directamente en el archivo JSON del Genesis
+
+### 📋 Resumen: Configuración por Tipo de Parámetro
+
+| Tipo de Parámetro | Dónde se Configura | ¿Se puede Cambiar sin Recompilar? |
+|-------------------|-------------------|----------------------------------|
+| **Valores por defecto de Cosmos SDK** | Código fuente del Cosmos SDK | ❌ No (hardcodeados en Cosmos SDK) |
+| **Estructura de módulos disponibles** | `infinited/app.go` | ❌ No (requiere modificar código y recompilar) |
+| **Precompiles EVM habilitados** | `infinited/genesis.go` | ✅ Sí (modificar JSON directamente) |
+| **Denominaciones (bond_denom, evm_denom)** | Genesis JSON | ✅ Sí (usando jq o edición manual) |
+| **Parámetros de governance** | Genesis JSON | ✅ Sí (usando jq, sed o edición manual) |
+| **Metadata del token** | Genesis JSON | ✅ Sí (usando jq o edición manual) |
+| **Balances iniciales** | Genesis JSON (vía CLI) | ✅ Sí (usando `genesis add-genesis-account`) |
+| **Validadores iniciales** | Genesis JSON (vía CLI) | ✅ Sí (usando `genesis gentx` y `collect-gentxs`) |
+| **Parámetros de consenso** | Genesis JSON | ✅ Sí (usando jq o edición manual) |
+
+### 🔧 Proceso de Configuración Típico
+
+1. **Generar Genesis inicial**:
+   ```bash
+   infinited init my-moniker --chain-id infinite_421018-1
+   ```
+   Esto genera `~/.infinited/config/genesis.json` con valores por defecto del código.
+
+2. **Personalizar para Mainnet**:
+   - Usar `jq` para modificar denoms
+   - Usar `sed` o edición manual para cambiar períodos de governance
+   - Usar comandos CLI para agregar cuentas y validadores
+   - Editar manualmente parámetros específicos
+
+3. **Validar**:
+   ```bash
+   infinited genesis validate-genesis
+   ```
+
+**Ejemplo práctico**: Ver `local_node.sh` líneas 233-256 para ver cómo se personaliza el Genesis después de `infinited init`.
+
+### ⚠️ Limitaciones Importantes
+
+1. **No puedes cambiar**:
+   - Qué módulos Cosmos SDK están disponibles (requiere modificar `app.go` y recompilar)
+   - La estructura básica del Genesis (definida en el código)
+   - Los precompiles disponibles (aunque sí puedes habilitar/deshabilitarlos en el JSON)
+
+2. **Puedes cambiar**:
+   - Cualquier valor de parámetro dentro de los módulos existentes
+   - Balances, cuentas, validadores
+   - Metadata, denoms, períodos
+
+### 🎯 Recomendación para Mainnet
+
+1. **NO modifiques el código** a menos que necesites agregar módulos o funcionalidades nuevas
+2. **SÍ modifica el Genesis JSON** para todos los parámetros específicos de tu Mainnet
+3. **Documenta los cambios** que hagas manualmente para futuras referencias
+4. **Valida siempre** después de cada modificación usando `infinited genesis validate-genesis`
 
 ---
 
