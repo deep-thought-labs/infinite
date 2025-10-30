@@ -3,8 +3,6 @@ package gov
 import (
 	"time"
 
-	"github.com/stretchr/testify/suite"
-
 	evmaddress "github.com/deep-thought-labs/infinite/encoding/address"
 	"github.com/deep-thought-labs/infinite/precompiles/gov"
 	testconstants "github.com/deep-thought-labs/infinite/testutil/constants"
@@ -12,6 +10,7 @@ import (
 	"github.com/deep-thought-labs/infinite/testutil/integration/evm/grpc"
 	"github.com/deep-thought-labs/infinite/testutil/integration/evm/network"
 	testkeyring "github.com/deep-thought-labs/infinite/testutil/keyring"
+	"github.com/stretchr/testify/suite"
 
 	"cosmossdk.io/math"
 

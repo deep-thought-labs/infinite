@@ -6,14 +6,15 @@ import (
 	"slices"
 	"time"
 
-	cmttypes "github.com/cometbft/cometbft/types"
-
 	"github.com/deep-thought-labs/infinite"
 	"github.com/deep-thought-labs/infinite/testutil"
 	testconstants "github.com/deep-thought-labs/infinite/testutil/constants"
 	erc20types "github.com/deep-thought-labs/infinite/x/erc20/types"
 	feemarkettypes "github.com/deep-thought-labs/infinite/x/feemarket/types"
 	evmtypes "github.com/deep-thought-labs/infinite/x/vm/types"
+
+	cmttypes "github.com/cometbft/cometbft/types"
+
 	"github.com/cosmos/gogoproto/proto"
 
 	sdkmath "cosmossdk.io/math"

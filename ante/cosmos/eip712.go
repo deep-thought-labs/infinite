@@ -4,13 +4,12 @@ import (
 	"fmt"
 	"strconv"
 
-	ethcrypto "github.com/ethereum/go-ethereum/crypto"
-	"github.com/ethereum/go-ethereum/crypto/secp256k1"
-	"github.com/ethereum/go-ethereum/signer/core/apitypes"
-
 	anteinterfaces "github.com/deep-thought-labs/infinite/ante/interfaces"
 	"github.com/deep-thought-labs/infinite/crypto/ethsecp256k1"
 	"github.com/deep-thought-labs/infinite/ethereum/eip712"
+	ethcrypto "github.com/ethereum/go-ethereum/crypto"
+	"github.com/ethereum/go-ethereum/crypto/secp256k1"
+	"github.com/ethereum/go-ethereum/signer/core/apitypes"
 
 	errorsmod "cosmossdk.io/errors"
 

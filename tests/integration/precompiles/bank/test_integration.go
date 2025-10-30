@@ -4,14 +4,6 @@ import (
 	"math/big"
 	"testing"
 
-	"github.com/ethereum/go-ethereum/common"
-	"github.com/stretchr/testify/suite"
-
-	//nolint:revive // dot imports are fine for Ginkgo
-	. "github.com/onsi/ginkgo/v2"
-	//nolint:revive // dot imports are fine for Ginkgo
-	. "github.com/onsi/gomega"
-
 	bank2 "github.com/deep-thought-labs/infinite/precompiles/bank"
 	"github.com/deep-thought-labs/infinite/precompiles/bank/testdata"
 	"github.com/deep-thought-labs/infinite/precompiles/testutil"
@@ -23,6 +15,13 @@ import (
 	utiltx "github.com/deep-thought-labs/infinite/testutil/tx"
 	testutiltypes "github.com/deep-thought-labs/infinite/testutil/types"
 	evmtypes "github.com/deep-thought-labs/infinite/x/vm/types"
+	"github.com/ethereum/go-ethereum/common"
+	"github.com/stretchr/testify/suite"
+
+	//nolint:revive // dot imports are fine for Ginkgo
+	. "github.com/onsi/ginkgo/v2"
+	//nolint:revive // dot imports are fine for Ginkgo
+	. "github.com/onsi/gomega"
 
 	"cosmossdk.io/math"
 

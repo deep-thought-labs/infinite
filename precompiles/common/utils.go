@@ -4,11 +4,10 @@ import (
 	"fmt"
 	"math/big"
 
-	"github.com/holiman/uint256"
-
 	"github.com/deep-thought-labs/infinite/utils"
 	precisebanktypes "github.com/deep-thought-labs/infinite/x/precisebank/types"
 	evmtypes "github.com/deep-thought-labs/infinite/x/vm/types"
+	"github.com/holiman/uint256"
 
 	sdkmath "cosmossdk.io/math"
 

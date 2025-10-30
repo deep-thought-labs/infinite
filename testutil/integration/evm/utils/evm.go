@@ -5,12 +5,11 @@ import (
 	"fmt"
 	"math/big"
 
-	"github.com/ethereum/go-ethereum/common"
-	"github.com/ethereum/go-ethereum/common/hexutil"
-
 	"github.com/deep-thought-labs/infinite/contracts"
 	"github.com/deep-thought-labs/infinite/testutil/integration/evm/network"
 	evmtypes "github.com/deep-thought-labs/infinite/x/vm/types"
+	"github.com/ethereum/go-ethereum/common"
+	"github.com/ethereum/go-ethereum/common/hexutil"
 )
 
 // GetERC20Balance returns the token balance of a given account address for

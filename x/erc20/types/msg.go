@@ -1,10 +1,9 @@
 package types
 
 import (
+	erc20api "github.com/deep-thought-labs/infinite/api/cosmos/evm/erc20/v1"
 	"github.com/ethereum/go-ethereum/common"
 	protov2 "google.golang.org/protobuf/proto"
-
-	erc20api "github.com/deep-thought-labs/infinite/api/cosmos/evm/erc20/v1"
 
 	errorsmod "cosmossdk.io/errors"
 	"cosmossdk.io/math"

@@ -6,11 +6,10 @@ import (
 	"testing"
 	"time"
 
+	"github.com/deep-thought-labs/infinite/x/vm/types"
 	"github.com/stretchr/testify/require"
 
 	abci "github.com/cometbft/cometbft/abci/types"
-
-	"github.com/deep-thought-labs/infinite/x/vm/types"
 
 	bam "github.com/cosmos/cosmos-sdk/baseapp"
 	"github.com/cosmos/cosmos-sdk/client"

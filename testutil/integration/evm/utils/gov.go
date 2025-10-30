@@ -5,12 +5,12 @@ import (
 	"fmt"
 	"strconv"
 
-	abcitypes "github.com/cometbft/cometbft/abci/types"
-
 	commonfactory "github.com/deep-thought-labs/infinite/testutil/integration/base/factory"
 	"github.com/deep-thought-labs/infinite/testutil/integration/evm/factory"
 	"github.com/deep-thought-labs/infinite/testutil/integration/evm/network"
 	evmtypes "github.com/deep-thought-labs/infinite/x/vm/types"
+
+	abcitypes "github.com/cometbft/cometbft/abci/types"
 
 	errorsmod "cosmossdk.io/errors"
 	"cosmossdk.io/math"

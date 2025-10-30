@@ -5,13 +5,13 @@ import (
 	"testing"
 	"time"
 
+	evmtypes "github.com/deep-thought-labs/infinite/x/vm/types"
 	"github.com/stretchr/testify/require"
 
 	abci "github.com/cometbft/cometbft/abci/types"
 	cmttypes "github.com/cometbft/cometbft/types"
 
 	dbm "github.com/cosmos/cosmos-db"
-	evmtypes "github.com/deep-thought-labs/infinite/x/vm/types"
 	"github.com/cosmos/ibc-go/v10/modules/core/keeper"
 	ibctesting "github.com/cosmos/ibc-go/v10/testing"
 	"github.com/cosmos/ibc-go/v10/testing/simapp"

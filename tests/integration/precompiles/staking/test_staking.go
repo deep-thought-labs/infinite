@@ -4,12 +4,6 @@ import (
 	"math/big"
 	"time"
 
-	"github.com/ethereum/go-ethereum/accounts/abi"
-	"github.com/ethereum/go-ethereum/common"
-	ethtypes "github.com/ethereum/go-ethereum/core/types"
-	"github.com/ethereum/go-ethereum/core/vm"
-	"github.com/holiman/uint256"
-
 	"github.com/deep-thought-labs/infinite/precompiles/staking"
 	"github.com/deep-thought-labs/infinite/precompiles/testutil"
 	chainutil "github.com/deep-thought-labs/infinite/testutil"
@@ -17,6 +11,11 @@ import (
 	"github.com/deep-thought-labs/infinite/testutil/keyring"
 	"github.com/deep-thought-labs/infinite/x/vm/statedb"
 	evmtypes "github.com/deep-thought-labs/infinite/x/vm/types"
+	"github.com/ethereum/go-ethereum/accounts/abi"
+	"github.com/ethereum/go-ethereum/common"
+	ethtypes "github.com/ethereum/go-ethereum/core/types"
+	"github.com/ethereum/go-ethereum/core/vm"
+	"github.com/holiman/uint256"
 
 	"cosmossdk.io/math"
 

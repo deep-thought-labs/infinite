@@ -7,10 +7,9 @@ import (
 	"fmt"
 	"math/big"
 
+	cmn "github.com/deep-thought-labs/infinite/precompiles/common"
 	"github.com/ethereum/go-ethereum/accounts/abi"
 	"github.com/ethereum/go-ethereum/common"
-
-	cmn "github.com/deep-thought-labs/infinite/precompiles/common"
 
 	"cosmossdk.io/core/address"
 	"cosmossdk.io/math"

@@ -1,9 +1,8 @@
 package types
 
 import (
-	"github.com/ethereum/go-ethereum/core/vm"
-
 	"github.com/deep-thought-labs/infinite/eips"
+	"github.com/ethereum/go-ethereum/core/vm"
 )
 
 // DefaultCosmosEVMActivators defines a map of opcode modifiers associated

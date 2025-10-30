@@ -4,11 +4,6 @@ import (
 	"sync"
 	"testing"
 
-	"github.com/ethereum/go-ethereum/common"
-	"github.com/ethereum/go-ethereum/core/tracing"
-	"github.com/ethereum/go-ethereum/crypto"
-	"github.com/holiman/uint256"
-
 	"github.com/deep-thought-labs/infinite/contracts"
 	"github.com/deep-thought-labs/infinite/crypto/ethsecp256k1"
 	"github.com/deep-thought-labs/infinite/testutil/integration/evm/network"
@@ -16,6 +11,10 @@ import (
 	"github.com/deep-thought-labs/infinite/x/vm"
 	"github.com/deep-thought-labs/infinite/x/vm/statedb"
 	"github.com/deep-thought-labs/infinite/x/vm/types"
+	"github.com/ethereum/go-ethereum/common"
+	"github.com/ethereum/go-ethereum/core/tracing"
+	"github.com/ethereum/go-ethereum/crypto"
+	"github.com/holiman/uint256"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 )

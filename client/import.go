@@ -3,11 +3,10 @@ package client
 import (
 	"bufio"
 
-	"github.com/ethereum/go-ethereum/common"
-	"github.com/spf13/cobra"
-
 	"github.com/deep-thought-labs/infinite/crypto/ethsecp256k1"
 	"github.com/deep-thought-labs/infinite/crypto/hd"
+	"github.com/ethereum/go-ethereum/common"
+	"github.com/spf13/cobra"
 
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/input"

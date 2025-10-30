@@ -3,11 +3,10 @@ package evm
 import (
 	"math"
 
-	"github.com/ethereum/go-ethereum/params"
-
 	cosmosevmtypes "github.com/deep-thought-labs/infinite/ante/types"
 	feemarkettypes "github.com/deep-thought-labs/infinite/x/feemarket/types"
 	evmtypes "github.com/deep-thought-labs/infinite/x/vm/types"
+	"github.com/ethereum/go-ethereum/params"
 
 	errorsmod "cosmossdk.io/errors"
 	sdkmath "cosmossdk.io/math"

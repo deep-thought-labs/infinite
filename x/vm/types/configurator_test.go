@@ -3,11 +3,10 @@ package types_test
 import (
 	"testing"
 
-	"github.com/ethereum/go-ethereum/core/vm"
-	"github.com/stretchr/testify/require"
-
 	testconstants "github.com/deep-thought-labs/infinite/testutil/constants"
 	"github.com/deep-thought-labs/infinite/x/vm/types"
+	"github.com/ethereum/go-ethereum/core/vm"
+	"github.com/stretchr/testify/require"
 )
 
 func TestEVMConfigurator(t *testing.T) {

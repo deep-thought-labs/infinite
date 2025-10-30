@@ -3,12 +3,12 @@ package ics20
 import (
 	"fmt"
 
-	"github.com/ethereum/go-ethereum/common"
-
 	"github.com/deep-thought-labs/infinite"
 	cmn "github.com/deep-thought-labs/infinite/precompiles/common"
 	"github.com/deep-thought-labs/infinite/precompiles/ics20"
 	precompiletestutil "github.com/deep-thought-labs/infinite/precompiles/testutil"
+	"github.com/ethereum/go-ethereum/common"
+
 	transfertypes "github.com/cosmos/ibc-go/v10/modules/apps/transfer/types"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"

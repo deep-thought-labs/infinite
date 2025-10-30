@@ -1,12 +1,11 @@
 package wallets
 
 import (
+	"github.com/deep-thought-labs/infinite/wallets/accounts"
+	"github.com/deep-thought-labs/infinite/wallets/ledger"
 	gethaccounts "github.com/ethereum/go-ethereum/accounts"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/crypto"
-
-	"github.com/deep-thought-labs/infinite/wallets/accounts"
-	"github.com/deep-thought-labs/infinite/wallets/ledger"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	signingtypes "github.com/cosmos/cosmos-sdk/types/tx/signing"

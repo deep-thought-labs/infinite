@@ -1,10 +1,9 @@
 package ante
 
 import (
-	"github.com/stretchr/testify/suite"
-
 	"github.com/deep-thought-labs/infinite/testutil/constants"
 	"github.com/deep-thought-labs/infinite/testutil/integration/evm/network"
+	"github.com/stretchr/testify/suite"
 )
 
 // EvmUniAnteTestSuite aims to test all EVM ante handler unit functions.

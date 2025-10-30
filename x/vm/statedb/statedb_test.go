@@ -5,6 +5,8 @@ import (
 	"math/big"
 	"testing"
 
+	"github.com/deep-thought-labs/infinite/x/vm/statedb"
+	"github.com/deep-thought-labs/infinite/x/vm/types/mocks"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/core/tracing"
 	ethtypes "github.com/ethereum/go-ethereum/core/types"
@@ -13,9 +15,6 @@ import (
 	ethparams "github.com/ethereum/go-ethereum/params"
 	"github.com/holiman/uint256"
 	"github.com/stretchr/testify/suite"
-
-	"github.com/deep-thought-labs/infinite/x/vm/statedb"
-	"github.com/deep-thought-labs/infinite/x/vm/types/mocks"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 )

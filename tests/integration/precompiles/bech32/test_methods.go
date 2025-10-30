@@ -3,10 +3,9 @@ package bech32
 import (
 	"fmt"
 
-	"github.com/ethereum/go-ethereum/common"
-
 	"github.com/deep-thought-labs/infinite/precompiles/bech32"
 	cmn "github.com/deep-thought-labs/infinite/precompiles/common"
+	"github.com/ethereum/go-ethereum/common"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 )

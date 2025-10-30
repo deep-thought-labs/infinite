@@ -3,14 +3,13 @@ package keeper_test
 import (
 	"testing"
 
-	"github.com/stretchr/testify/require"
-
 	evmencoding "github.com/deep-thought-labs/infinite/encoding"
 	testconstants "github.com/deep-thought-labs/infinite/testutil/constants"
 	"github.com/deep-thought-labs/infinite/x/precisebank/keeper"
 	"github.com/deep-thought-labs/infinite/x/precisebank/types"
 	"github.com/deep-thought-labs/infinite/x/precisebank/types/mocks"
 	vmtypes "github.com/deep-thought-labs/infinite/x/vm/types"
+	"github.com/stretchr/testify/require"
 
 	sdkmath "cosmossdk.io/math"
 	storetypes "cosmossdk.io/store/types"

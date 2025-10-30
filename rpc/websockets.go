@@ -15,6 +15,9 @@ import (
 	"strings"
 	"sync"
 
+	rpcfilters "github.com/deep-thought-labs/infinite/rpc/namespaces/ethereum/eth/filters"
+	"github.com/deep-thought-labs/infinite/rpc/stream"
+	"github.com/deep-thought-labs/infinite/server/config"
 	"github.com/ethereum/go-ethereum/common"
 	ethtypes "github.com/ethereum/go-ethereum/core/types"
 	"github.com/ethereum/go-ethereum/eth/filters"
@@ -22,10 +25,6 @@ import (
 	"github.com/gorilla/mux"
 	"github.com/gorilla/websocket"
 	"github.com/pkg/errors"
-
-	rpcfilters "github.com/deep-thought-labs/infinite/rpc/namespaces/ethereum/eth/filters"
-	"github.com/deep-thought-labs/infinite/rpc/stream"
-	"github.com/deep-thought-labs/infinite/server/config"
 
 	"cosmossdk.io/log"
 

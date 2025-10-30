@@ -4,14 +4,13 @@ import (
 	"math/big"
 	"testing"
 
-	"github.com/ethereum/go-ethereum/common"
-	ethtypes "github.com/ethereum/go-ethereum/core/types"
-	"github.com/stretchr/testify/require"
-
 	testconstants "github.com/deep-thought-labs/infinite/testutil/constants"
 	utiltx "github.com/deep-thought-labs/infinite/testutil/tx"
 	"github.com/deep-thought-labs/infinite/x/vm/keeper/testdata"
 	"github.com/deep-thought-labs/infinite/x/vm/types"
+	"github.com/ethereum/go-ethereum/common"
+	ethtypes "github.com/ethereum/go-ethereum/core/types"
+	"github.com/stretchr/testify/require"
 
 	sdkmath "cosmossdk.io/math"
 

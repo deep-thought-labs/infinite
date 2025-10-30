@@ -6,13 +6,12 @@ import (
 	"fmt"
 	"math/big"
 
+	evmapi "github.com/deep-thought-labs/infinite/api/cosmos/evm/vm/v1"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/core"
 	"github.com/ethereum/go-ethereum/core/txpool"
 	ethtypes "github.com/ethereum/go-ethereum/core/types"
 	protov2 "google.golang.org/protobuf/proto"
-
-	evmapi "github.com/deep-thought-labs/infinite/api/cosmos/evm/vm/v1"
 
 	errorsmod "cosmossdk.io/errors"
 	sdkmath "cosmossdk.io/math"

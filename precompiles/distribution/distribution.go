@@ -4,12 +4,11 @@ import (
 	"embed"
 	"fmt"
 
+	cmn "github.com/deep-thought-labs/infinite/precompiles/common"
+	evmtypes "github.com/deep-thought-labs/infinite/x/vm/types"
 	"github.com/ethereum/go-ethereum/accounts/abi"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/core/vm"
-
-	cmn "github.com/deep-thought-labs/infinite/precompiles/common"
-	evmtypes "github.com/deep-thought-labs/infinite/x/vm/types"
 
 	"cosmossdk.io/core/address"
 	storetypes "cosmossdk.io/store/types"

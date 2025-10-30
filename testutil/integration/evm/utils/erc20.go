@@ -3,11 +3,10 @@ package utils
 import (
 	"fmt"
 
-	"github.com/ethereum/go-ethereum/common"
-
 	"github.com/deep-thought-labs/infinite/testutil/integration/evm/factory"
 	"github.com/deep-thought-labs/infinite/testutil/integration/evm/network"
 	erc20types "github.com/deep-thought-labs/infinite/x/erc20/types"
+	"github.com/ethereum/go-ethereum/common"
 
 	errorsmod "cosmossdk.io/errors"
 

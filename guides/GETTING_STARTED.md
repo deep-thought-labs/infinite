@@ -101,6 +101,57 @@ brew install jq
 jq --version
 ```
 
+### Optional Development Tools
+
+**What these are**: Additional tools for comprehensive development, code quality checks, and smart contract work.  
+**Why they're optional**: They are NOT required to compile the main `infinited` binary. Only install if you plan to:
+- Develop or modify smart contracts
+- Work on Python scripts
+- Run full linting checks
+- Contribute code to the project
+
+#### Python Linters (Optional)
+**When you need them**: Only if working on Python scripts (e.g., `scripts/compile_smart_contracts/`).  
+**What they do**: Check Python code quality and style.
+
+```bash
+# Install both Python linters
+pip install pylint flake8
+
+# Verify installation
+pylint --version
+flake8 --version
+```
+
+**Note**: The main binary compiles fine without these. They're only for Python script development.
+
+#### Solidity Linter (Optional)
+**When you need it**: Only if developing or modifying smart contracts in `contracts/`.  
+**What it does**: Checks Solidity contract code quality.
+
+```bash
+# Install solhint (requires Node.js and npm)
+npm install -g solhint@v5.0.5
+
+# Verify installation
+solhint --version
+```
+
+**Note**: Smart contracts are pre-compiled. You only need this if modifying contract code.
+
+#### Summary: What You Actually Need
+
+| Tool | Required for Binary? | When You Need It |
+|------|----------------------|------------------|
+| **Go** | ✅ YES | Always - compiles the binary |
+| **Git** | ✅ YES | To clone the repository |
+| **Make** | ✅ YES | For build automation |
+| **jq** | ⚠️ Recommended | Testing and debugging |
+| **pylint/flake8** | ❌ Optional | Python script development only |
+| **solhint** | ❌ Optional | Smart contract development only |
+
+**Bottom line**: To compile and run `infinited`, you only need Go, Git, and Make. The linters are quality assurance tools for contributing code.
+
 ### Environment Setup
 
 #### Configure Go Environment (REQUIRED)

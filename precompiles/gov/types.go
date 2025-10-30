@@ -4,11 +4,10 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"github.com/ethereum/go-ethereum/accounts/abi"
-	"github.com/ethereum/go-ethereum/common"
-
 	cmn "github.com/deep-thought-labs/infinite/precompiles/common"
 	"github.com/deep-thought-labs/infinite/utils"
+	"github.com/ethereum/go-ethereum/accounts/abi"
+	"github.com/ethereum/go-ethereum/common"
 
 	"cosmossdk.io/core/address"
 	sdkerrors "cosmossdk.io/errors"

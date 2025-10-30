@@ -4,12 +4,11 @@ import (
 	"math/big"
 	"testing"
 
+	evmtypes "github.com/deep-thought-labs/infinite/x/vm/types"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/stretchr/testify/require"
 
 	abci "github.com/cometbft/cometbft/abci/types"
-
-	evmtypes "github.com/deep-thought-labs/infinite/x/vm/types"
 )
 
 func TestParseTxResult(t *testing.T) {

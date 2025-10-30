@@ -8,9 +8,6 @@ import (
 	"sort"
 	"testing"
 
-	corevm "github.com/ethereum/go-ethereum/core/vm"
-	"github.com/stretchr/testify/require"
-
 	testconstants "github.com/deep-thought-labs/infinite/testutil/constants"
 	cosmosevmutils "github.com/deep-thought-labs/infinite/utils"
 	erc20types "github.com/deep-thought-labs/infinite/x/erc20/types"
@@ -18,6 +15,9 @@ import (
 	"github.com/deep-thought-labs/infinite/x/precisebank/types"
 	precisebanktypes "github.com/deep-thought-labs/infinite/x/precisebank/types"
 	evmtypes "github.com/deep-thought-labs/infinite/x/vm/types"
+	corevm "github.com/ethereum/go-ethereum/core/vm"
+	"github.com/stretchr/testify/require"
+
 	ibctransfertypes "github.com/cosmos/ibc-go/v10/modules/apps/transfer/types"
 
 	sdkmath "cosmossdk.io/math"

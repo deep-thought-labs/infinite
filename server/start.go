@@ -9,6 +9,13 @@ import (
 	"path/filepath"
 	"runtime/pprof"
 
+	"github.com/deep-thought-labs/infinite/indexer"
+	evmmempool "github.com/deep-thought-labs/infinite/mempool"
+	evmmetrics "github.com/deep-thought-labs/infinite/metrics"
+	ethdebug "github.com/deep-thought-labs/infinite/rpc/namespaces/ethereum/debug"
+	cosmosevmserverconfig "github.com/deep-thought-labs/infinite/server/config"
+	srvflags "github.com/deep-thought-labs/infinite/server/flags"
+	servertypes "github.com/deep-thought-labs/infinite/server/types"
 	ethmetricsexp "github.com/ethereum/go-ethereum/metrics/exp"
 	"github.com/spf13/cobra"
 	"golang.org/x/sync/errgroup"
@@ -27,13 +34,6 @@ import (
 	cmttypes "github.com/cometbft/cometbft/types"
 
 	dbm "github.com/cosmos/cosmos-db"
-	"github.com/deep-thought-labs/infinite/indexer"
-	evmmempool "github.com/deep-thought-labs/infinite/mempool"
-	evmmetrics "github.com/deep-thought-labs/infinite/metrics"
-	ethdebug "github.com/deep-thought-labs/infinite/rpc/namespaces/ethereum/debug"
-	cosmosevmserverconfig "github.com/deep-thought-labs/infinite/server/config"
-	srvflags "github.com/deep-thought-labs/infinite/server/flags"
-	servertypes "github.com/deep-thought-labs/infinite/server/types"
 
 	errorsmod "cosmossdk.io/errors"
 	"cosmossdk.io/log"

@@ -205,9 +205,26 @@ rm -f $HOME/go/bin/infinited
 **Note**: This is separate from building; it only runs tests, does not compile the binary
 
 ##### `make lint` (Optional - Code Quality Check)
-**What it does**: Checks code for linting issues and style problems  
+**What it does**: Checks code for linting issues and style problems across Go, Python, and Solidity  
 **When to use**: Before committing code or when ensuring code quality standards  
 **Note**: This is a validation step only; it does not compile or modify code
+
+**What gets linted**:
+- **Go code**: Always checked (required - uses golangci-lint)
+- **Python scripts**: Only if `pylint` and `flake8` are installed (optional)
+- **Solidity contracts**: Only if `solhint` is installed (optional)
+
+**If optional tools are missing**: The command will show informative warnings with installation instructions but won't fail. Install them if you want full linting coverage:
+
+```bash
+# Install Python linters (optional - only for Python script development)
+pip install pylint flake8
+
+# Install Solidity linter (optional - only for contract development)
+npm install -g solhint@v5.0.5
+```
+
+**Important**: None of these optional tools are required to build the binary. They're quality assurance tools for code contributors. See [Herramientas de Desarrollo](./HERRAMIENTAS_DESARROLLO.md) for details.
 
 ### 2. Manual Node Configuration (DEVELOPMENT ONLY)
 

@@ -4,6 +4,11 @@ import (
 	"encoding/binary"
 	"math/big"
 
+	evmmempool "github.com/deep-thought-labs/infinite/mempool"
+	"github.com/deep-thought-labs/infinite/utils"
+	"github.com/deep-thought-labs/infinite/x/vm/statedb"
+	"github.com/deep-thought-labs/infinite/x/vm/types"
+	"github.com/deep-thought-labs/infinite/x/vm/wrappers"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/core"
 	"github.com/ethereum/go-ethereum/core/tracing"
@@ -11,12 +16,6 @@ import (
 	"github.com/ethereum/go-ethereum/core/vm"
 	ethparams "github.com/ethereum/go-ethereum/params"
 	"github.com/holiman/uint256"
-
-	evmmempool "github.com/deep-thought-labs/infinite/mempool"
-	"github.com/deep-thought-labs/infinite/utils"
-	"github.com/deep-thought-labs/infinite/x/vm/statedb"
-	"github.com/deep-thought-labs/infinite/x/vm/types"
-	"github.com/deep-thought-labs/infinite/x/vm/wrappers"
 
 	errorsmod "cosmossdk.io/errors"
 	"cosmossdk.io/log"

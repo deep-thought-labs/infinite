@@ -3,9 +3,8 @@ package cli
 import (
 	"context"
 
-	"github.com/spf13/cobra"
-
 	"github.com/deep-thought-labs/infinite/x/erc20/types"
+	"github.com/spf13/cobra"
 
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"

@@ -4,9 +4,6 @@ import (
 	"bytes"
 	"testing"
 
-	"github.com/ethereum/go-ethereum/common"
-	"github.com/stretchr/testify/require"
-
 	"github.com/deep-thought-labs/infinite/contracts"
 	testconstants "github.com/deep-thought-labs/infinite/testutil/constants"
 	"github.com/deep-thought-labs/infinite/testutil/integration/evm/factory"
@@ -15,6 +12,8 @@ import (
 	testKeyring "github.com/deep-thought-labs/infinite/testutil/keyring"
 	testutiltypes "github.com/deep-thought-labs/infinite/testutil/types"
 	"github.com/deep-thought-labs/infinite/x/vm/types"
+	"github.com/ethereum/go-ethereum/common"
+	"github.com/stretchr/testify/require"
 )
 
 func TestIterateContracts(t *testing.T, create network.CreateEvmApp, options ...network.ConfigOption) {

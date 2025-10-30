@@ -3,12 +3,6 @@ package eip7702
 import (
 	"math/big"
 
-	"github.com/ethereum/go-ethereum/common"
-	"github.com/stretchr/testify/suite"
-
-	//nolint:revive // dot imports are fine for Ginkgo
-	. "github.com/onsi/gomega"
-
 	"github.com/deep-thought-labs/infinite/precompiles/testutil"
 	"github.com/deep-thought-labs/infinite/tests/contracts"
 	testconstants "github.com/deep-thought-labs/infinite/testutil/constants"
@@ -18,6 +12,11 @@ import (
 	testkeyring "github.com/deep-thought-labs/infinite/testutil/keyring"
 	testutiltypes "github.com/deep-thought-labs/infinite/testutil/types"
 	evmtypes "github.com/deep-thought-labs/infinite/x/vm/types"
+	"github.com/ethereum/go-ethereum/common"
+	"github.com/stretchr/testify/suite"
+
+	//nolint:revive // dot imports are fine for Ginkgo
+	. "github.com/onsi/gomega"
 
 	sdkmath "cosmossdk.io/math"
 

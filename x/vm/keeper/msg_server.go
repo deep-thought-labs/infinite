@@ -6,11 +6,10 @@ import (
 	"fmt"
 	"strconv"
 
+	"github.com/deep-thought-labs/infinite/x/vm/types"
 	"github.com/hashicorp/go-metrics"
 
 	cmttypes "github.com/cometbft/cometbft/types"
-
-	"github.com/deep-thought-labs/infinite/x/vm/types"
 
 	errorsmod "cosmossdk.io/errors"
 	"cosmossdk.io/math"

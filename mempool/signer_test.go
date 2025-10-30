@@ -4,11 +4,10 @@ import (
 	"math/big"
 	"testing"
 
-	"github.com/stretchr/testify/require"
-	protov2 "google.golang.org/protobuf/proto"
-
 	mempool2 "github.com/deep-thought-labs/infinite/mempool"
 	"github.com/deep-thought-labs/infinite/x/vm/types"
+	"github.com/stretchr/testify/require"
+	protov2 "google.golang.org/protobuf/proto"
 
 	codectypes "github.com/cosmos/cosmos-sdk/codec/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"

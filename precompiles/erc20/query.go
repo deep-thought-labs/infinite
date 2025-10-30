@@ -5,11 +5,10 @@ import (
 	"math"
 	"strings"
 
+	"github.com/deep-thought-labs/infinite/ibc"
 	"github.com/ethereum/go-ethereum/accounts/abi"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/core/vm"
-
-	"github.com/deep-thought-labs/infinite/ibc"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 )

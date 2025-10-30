@@ -4,13 +4,12 @@ import (
 	"fmt"
 	"math/big"
 
-	"github.com/ethereum/go-ethereum/common"
-	ethtypes "github.com/ethereum/go-ethereum/core/types"
-
 	"github.com/deep-thought-labs/infinite/ante/evm"
 	testconstants "github.com/deep-thought-labs/infinite/testutil/constants"
 	testkeyring "github.com/deep-thought-labs/infinite/testutil/keyring"
 	evmtypes "github.com/deep-thought-labs/infinite/x/vm/types"
+	"github.com/ethereum/go-ethereum/common"
+	ethtypes "github.com/ethereum/go-ethereum/core/types"
 
 	"cosmossdk.io/math"
 

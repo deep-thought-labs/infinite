@@ -3,9 +3,8 @@ package keeper
 import (
 	"math/big"
 
-	"github.com/ethereum/go-ethereum/common"
-
 	"github.com/deep-thought-labs/infinite/x/erc20/types"
+	"github.com/ethereum/go-ethereum/common"
 
 	errorsmod "cosmossdk.io/errors"
 	"cosmossdk.io/store/prefix"

@@ -1,13 +1,12 @@
 package erc20
 
 import (
-	"github.com/ethereum/go-ethereum/common"
-	"github.com/ethereum/go-ethereum/crypto"
-	"github.com/holiman/uint256"
-
 	utiltx "github.com/deep-thought-labs/infinite/testutil/tx"
 	"github.com/deep-thought-labs/infinite/x/erc20/types"
 	"github.com/deep-thought-labs/infinite/x/vm/statedb"
+	"github.com/ethereum/go-ethereum/common"
+	"github.com/ethereum/go-ethereum/crypto"
+	"github.com/holiman/uint256"
 
 	"cosmossdk.io/math"
 

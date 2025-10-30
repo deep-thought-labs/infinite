@@ -5,13 +5,12 @@ import (
 	"fmt"
 	"regexp"
 
-	"github.com/stretchr/testify/suite"
-
 	"github.com/deep-thought-labs/infinite/testutil/constants"
 	"github.com/deep-thought-labs/infinite/testutil/integration/evm/network"
 	"github.com/deep-thought-labs/infinite/wallets/ledger"
 	"github.com/deep-thought-labs/infinite/wallets/ledger/mocks"
 	"github.com/deep-thought-labs/infinite/wallets/usbwallet"
+	"github.com/stretchr/testify/suite"
 
 	"cosmossdk.io/math"
 

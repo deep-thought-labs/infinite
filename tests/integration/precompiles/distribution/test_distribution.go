@@ -3,18 +3,17 @@ package distribution
 import (
 	"math/big"
 
-	"github.com/ethereum/go-ethereum/accounts/abi"
-	"github.com/ethereum/go-ethereum/common"
-	gethtypes "github.com/ethereum/go-ethereum/core/types"
-	"github.com/ethereum/go-ethereum/core/vm"
-	"github.com/holiman/uint256"
-
 	cmn "github.com/deep-thought-labs/infinite/precompiles/common"
 	"github.com/deep-thought-labs/infinite/precompiles/distribution"
 	"github.com/deep-thought-labs/infinite/precompiles/testutil"
 	chainutil "github.com/deep-thought-labs/infinite/testutil"
 	"github.com/deep-thought-labs/infinite/testutil/constants"
 	evmtypes "github.com/deep-thought-labs/infinite/x/vm/types"
+	"github.com/ethereum/go-ethereum/accounts/abi"
+	"github.com/ethereum/go-ethereum/common"
+	gethtypes "github.com/ethereum/go-ethereum/core/types"
+	"github.com/ethereum/go-ethereum/core/vm"
+	"github.com/holiman/uint256"
 
 	"cosmossdk.io/math"
 

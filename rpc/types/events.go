@@ -4,13 +4,12 @@ import (
 	"fmt"
 	"strconv"
 
+	"github.com/deep-thought-labs/infinite/server/types"
+	evmtypes "github.com/deep-thought-labs/infinite/x/vm/types"
 	"github.com/ethereum/go-ethereum/common"
 
 	abci "github.com/cometbft/cometbft/abci/types"
 	cmtrpctypes "github.com/cometbft/cometbft/rpc/core/types"
-
-	"github.com/deep-thought-labs/infinite/server/types"
-	evmtypes "github.com/deep-thought-labs/infinite/x/vm/types"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 )

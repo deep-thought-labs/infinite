@@ -3,15 +3,14 @@ package vm
 import (
 	"math"
 
-	"github.com/ethereum/go-ethereum/params"
-	"github.com/stretchr/testify/suite"
-
 	"github.com/deep-thought-labs/infinite/testutil/integration/evm/factory"
 	"github.com/deep-thought-labs/infinite/testutil/integration/evm/grpc"
 	"github.com/deep-thought-labs/infinite/testutil/integration/evm/network"
 	"github.com/deep-thought-labs/infinite/testutil/keyring"
 	feemarkettypes "github.com/deep-thought-labs/infinite/x/feemarket/types"
 	evmtypes "github.com/deep-thought-labs/infinite/x/vm/types"
+	"github.com/ethereum/go-ethereum/params"
+	"github.com/stretchr/testify/suite"
 
 	sdkmath "cosmossdk.io/math"
 

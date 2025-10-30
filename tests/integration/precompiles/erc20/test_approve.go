@@ -3,12 +3,11 @@ package erc20
 import (
 	"math/big"
 
+	"github.com/deep-thought-labs/infinite/precompiles/erc20"
+	"github.com/deep-thought-labs/infinite/precompiles/testutil"
 	"github.com/ethereum/go-ethereum/accounts/abi"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/core/vm"
-
-	"github.com/deep-thought-labs/infinite/precompiles/erc20"
-	"github.com/deep-thought-labs/infinite/precompiles/testutil"
 )
 
 //nolint:dupl // tests are not duplicate between the functions

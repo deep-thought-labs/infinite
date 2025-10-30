@@ -1,9 +1,8 @@
 package keeper
 
 import (
-	ethtypes "github.com/ethereum/go-ethereum/core/types"
-
 	evmtypes "github.com/deep-thought-labs/infinite/x/vm/types"
+	ethtypes "github.com/ethereum/go-ethereum/core/types"
 
 	storetypes "cosmossdk.io/store/types"
 

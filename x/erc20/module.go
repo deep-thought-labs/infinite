@@ -5,15 +5,14 @@ import (
 	"encoding/json"
 	"fmt"
 
+	"github.com/deep-thought-labs/infinite/x/erc20/client/cli"
+	"github.com/deep-thought-labs/infinite/x/erc20/keeper"
+	"github.com/deep-thought-labs/infinite/x/erc20/types"
 	"github.com/gorilla/mux"
 	"github.com/grpc-ecosystem/grpc-gateway/runtime"
 	"github.com/spf13/cobra"
 
 	abci "github.com/cometbft/cometbft/abci/types"
-
-	"github.com/deep-thought-labs/infinite/x/erc20/client/cli"
-	"github.com/deep-thought-labs/infinite/x/erc20/keeper"
-	"github.com/deep-thought-labs/infinite/x/erc20/types"
 
 	"cosmossdk.io/core/appmodule"
 

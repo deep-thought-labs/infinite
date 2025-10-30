@@ -4,13 +4,12 @@ import (
 	"errors"
 	"math/big"
 
-	"github.com/ethereum/go-ethereum/common"
-
-	abcitypes "github.com/cometbft/cometbft/abci/types"
-
 	"github.com/deep-thought-labs/infinite/contracts"
 	testutiltypes "github.com/deep-thought-labs/infinite/testutil/types"
 	evmtypes "github.com/deep-thought-labs/infinite/x/vm/types"
+	"github.com/ethereum/go-ethereum/common"
+
+	abcitypes "github.com/cometbft/cometbft/abci/types"
 )
 
 func (s *KeeperTestSuite) MintERC20Token(contractAddr, to common.Address, amount *big.Int) (abcitypes.ExecTxResult, error) {

@@ -4,14 +4,13 @@ import (
 	"math"
 	"math/big"
 
-	"github.com/ethereum/go-ethereum/common"
-	"github.com/ethereum/go-ethereum/core/txpool"
-	ethtypes "github.com/ethereum/go-ethereum/core/types"
-
 	anteinterfaces "github.com/deep-thought-labs/infinite/ante/interfaces"
 	feemarkettypes "github.com/deep-thought-labs/infinite/x/feemarket/types"
 	evmkeeper "github.com/deep-thought-labs/infinite/x/vm/keeper"
 	evmtypes "github.com/deep-thought-labs/infinite/x/vm/types"
+	"github.com/ethereum/go-ethereum/common"
+	"github.com/ethereum/go-ethereum/core/txpool"
+	ethtypes "github.com/ethereum/go-ethereum/core/types"
 
 	errorsmod "cosmossdk.io/errors"
 	sdkmath "cosmossdk.io/math"

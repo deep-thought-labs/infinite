@@ -6,13 +6,12 @@ import (
 	"crypto/rand"
 	"math/big"
 
+	"github.com/deep-thought-labs/infinite/precompiles/p256"
+	evmtypes "github.com/deep-thought-labs/infinite/x/vm/types"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/core/vm"
 
 	"github.com/cometbft/cometbft/crypto"
-
-	"github.com/deep-thought-labs/infinite/precompiles/p256"
-	evmtypes "github.com/deep-thought-labs/infinite/x/vm/types"
 )
 
 var trueValue = common.LeftPadBytes(common.Big1.Bytes(), 32)

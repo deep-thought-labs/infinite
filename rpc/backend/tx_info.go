@@ -7,6 +7,11 @@ import (
 	"math/big"
 	"time"
 
+	"github.com/deep-thought-labs/infinite/mempool/txpool"
+	rpctypes "github.com/deep-thought-labs/infinite/rpc/types"
+	servertypes "github.com/deep-thought-labs/infinite/server/types"
+	"github.com/deep-thought-labs/infinite/utils"
+	evmtypes "github.com/deep-thought-labs/infinite/x/vm/types"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/common/hexutil"
 	ethtypes "github.com/ethereum/go-ethereum/core/types"
@@ -17,12 +22,6 @@ import (
 
 	cmtrpcclient "github.com/cometbft/cometbft/rpc/client"
 	cmtrpctypes "github.com/cometbft/cometbft/rpc/core/types"
-
-	"github.com/deep-thought-labs/infinite/mempool/txpool"
-	rpctypes "github.com/deep-thought-labs/infinite/rpc/types"
-	servertypes "github.com/deep-thought-labs/infinite/server/types"
-	"github.com/deep-thought-labs/infinite/utils"
-	evmtypes "github.com/deep-thought-labs/infinite/x/vm/types"
 
 	errorsmod "cosmossdk.io/errors"
 

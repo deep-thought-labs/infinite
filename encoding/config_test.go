@@ -4,12 +4,11 @@ import (
 	"math/big"
 	"testing"
 
-	ethtypes "github.com/ethereum/go-ethereum/core/types"
-	"github.com/stretchr/testify/require"
-
 	"github.com/deep-thought-labs/infinite/encoding"
 	utiltx "github.com/deep-thought-labs/infinite/testutil/tx"
 	evmtypes "github.com/deep-thought-labs/infinite/x/vm/types"
+	ethtypes "github.com/ethereum/go-ethereum/core/types"
+	"github.com/stretchr/testify/require"
 )
 
 func TestTxEncoding(t *testing.T) {

@@ -6,14 +6,13 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/stretchr/testify/require"
-
 	"github.com/deep-thought-labs/infinite/encoding"
 	evmaddress "github.com/deep-thought-labs/infinite/encoding/address"
 	"github.com/deep-thought-labs/infinite/ethereum/eip712"
 	"github.com/deep-thought-labs/infinite/testutil/constants"
 	utiltx "github.com/deep-thought-labs/infinite/testutil/tx"
 	evmtypes "github.com/deep-thought-labs/infinite/x/vm/types"
+	"github.com/stretchr/testify/require"
 
 	"cosmossdk.io/math"
 

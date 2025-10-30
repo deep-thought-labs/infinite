@@ -4,6 +4,11 @@ import (
 	"fmt"
 	"math/big"
 
+	antetypes "github.com/deep-thought-labs/infinite/ante/types"
+	rpctypes "github.com/deep-thought-labs/infinite/rpc/types"
+	"github.com/deep-thought-labs/infinite/utils"
+	"github.com/deep-thought-labs/infinite/x/vm/statedb"
+	"github.com/deep-thought-labs/infinite/x/vm/types"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/core"
 	"github.com/ethereum/go-ethereum/core/tracing"
@@ -13,12 +18,6 @@ import (
 	"github.com/ethereum/go-ethereum/params"
 
 	cmttypes "github.com/cometbft/cometbft/types"
-
-	antetypes "github.com/deep-thought-labs/infinite/ante/types"
-	rpctypes "github.com/deep-thought-labs/infinite/rpc/types"
-	"github.com/deep-thought-labs/infinite/utils"
-	"github.com/deep-thought-labs/infinite/x/vm/statedb"
-	"github.com/deep-thought-labs/infinite/x/vm/types"
 
 	errorsmod "cosmossdk.io/errors"
 	"cosmossdk.io/math"

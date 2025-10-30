@@ -1,14 +1,13 @@
 package erc20
 
 import (
-	"github.com/ethereum/go-ethereum/params"
-	"github.com/stretchr/testify/suite"
-
 	"github.com/deep-thought-labs/infinite/testutil/integration/evm/factory"
 	"github.com/deep-thought-labs/infinite/testutil/integration/evm/grpc"
 	"github.com/deep-thought-labs/infinite/testutil/integration/evm/network"
 	"github.com/deep-thought-labs/infinite/testutil/keyring"
 	"github.com/deep-thought-labs/infinite/x/erc20/types"
+	"github.com/ethereum/go-ethereum/params"
+	"github.com/stretchr/testify/suite"
 
 	sdkmath "cosmossdk.io/math"
 

@@ -3,13 +3,12 @@ package erc20
 import (
 	"math/big"
 
-	"github.com/ethereum/go-ethereum/common"
-
 	"github.com/deep-thought-labs/infinite/contracts"
 	testutiltypes "github.com/deep-thought-labs/infinite/testutil/types"
 	"github.com/deep-thought-labs/infinite/x/erc20/keeper/testdata"
 	"github.com/deep-thought-labs/infinite/x/erc20/types"
 	evmtypes "github.com/deep-thought-labs/infinite/x/vm/types"
+	"github.com/ethereum/go-ethereum/common"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"

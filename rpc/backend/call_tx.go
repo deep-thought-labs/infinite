@@ -8,6 +8,9 @@ import (
 	"math/big"
 	"strings"
 
+	"github.com/deep-thought-labs/infinite/mempool"
+	rpctypes "github.com/deep-thought-labs/infinite/rpc/types"
+	evmtypes "github.com/deep-thought-labs/infinite/x/vm/types"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/common/hexutil"
 	ethtypes "github.com/ethereum/go-ethereum/core/types"
@@ -15,10 +18,6 @@ import (
 	"github.com/pkg/errors"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
-
-	"github.com/deep-thought-labs/infinite/mempool"
-	rpctypes "github.com/deep-thought-labs/infinite/rpc/types"
-	evmtypes "github.com/deep-thought-labs/infinite/x/vm/types"
 
 	errorsmod "cosmossdk.io/errors"
 

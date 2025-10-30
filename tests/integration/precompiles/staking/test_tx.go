@@ -5,16 +5,15 @@ import (
 	"fmt"
 	"math/big"
 
-	"github.com/ethereum/go-ethereum/common"
-	"github.com/ethereum/go-ethereum/core/vm"
-	"github.com/ethereum/go-ethereum/crypto"
-
 	cmn "github.com/deep-thought-labs/infinite/precompiles/common"
 	"github.com/deep-thought-labs/infinite/precompiles/staking"
 	"github.com/deep-thought-labs/infinite/precompiles/testutil"
 	testkeyring "github.com/deep-thought-labs/infinite/testutil/keyring"
 	cosmosevmutiltx "github.com/deep-thought-labs/infinite/testutil/tx"
 	"github.com/deep-thought-labs/infinite/x/vm/statedb"
+	"github.com/ethereum/go-ethereum/common"
+	"github.com/ethereum/go-ethereum/core/vm"
+	"github.com/ethereum/go-ethereum/crypto"
 
 	"cosmossdk.io/math"
 

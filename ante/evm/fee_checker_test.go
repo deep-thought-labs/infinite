@@ -4,16 +4,15 @@ import (
 	"math/big"
 	"testing"
 
-	"github.com/stretchr/testify/require"
-
-	tmproto "github.com/cometbft/cometbft/proto/tendermint/types"
-
 	"github.com/deep-thought-labs/infinite/ante/evm"
 	"github.com/deep-thought-labs/infinite/ante/types"
 	"github.com/deep-thought-labs/infinite/encoding"
 	testconstants "github.com/deep-thought-labs/infinite/testutil/constants"
 	feemarkettypes "github.com/deep-thought-labs/infinite/x/feemarket/types"
 	evmtypes "github.com/deep-thought-labs/infinite/x/vm/types"
+	"github.com/stretchr/testify/require"
+
+	tmproto "github.com/cometbft/cometbft/proto/tendermint/types"
 
 	"cosmossdk.io/log"
 	"cosmossdk.io/math"

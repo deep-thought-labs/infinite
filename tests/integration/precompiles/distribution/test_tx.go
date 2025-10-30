@@ -4,9 +4,6 @@ import (
 	"fmt"
 	"math/big"
 
-	"github.com/ethereum/go-ethereum/common"
-	"github.com/ethereum/go-ethereum/core/vm"
-
 	evmaddress "github.com/deep-thought-labs/infinite/encoding/address"
 	cmn "github.com/deep-thought-labs/infinite/precompiles/common"
 	"github.com/deep-thought-labs/infinite/precompiles/distribution"
@@ -14,6 +11,8 @@ import (
 	testconstants "github.com/deep-thought-labs/infinite/testutil/constants"
 	"github.com/deep-thought-labs/infinite/testutil/integration/evm/network"
 	utiltx "github.com/deep-thought-labs/infinite/testutil/tx"
+	"github.com/ethereum/go-ethereum/common"
+	"github.com/ethereum/go-ethereum/core/vm"
 
 	"cosmossdk.io/math"
 

@@ -1,12 +1,11 @@
 package feemarket
 
 import (
-	"github.com/stretchr/testify/suite"
-
 	"github.com/deep-thought-labs/infinite/testutil/integration/evm/factory"
 	"github.com/deep-thought-labs/infinite/testutil/integration/evm/grpc"
 	"github.com/deep-thought-labs/infinite/testutil/integration/evm/network"
 	testkeyring "github.com/deep-thought-labs/infinite/testutil/keyring"
+	"github.com/stretchr/testify/suite"
 
 	"github.com/cosmos/cosmos-sdk/baseapp"
 )

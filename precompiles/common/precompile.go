@@ -3,12 +3,11 @@ package common
 import (
 	"errors"
 
+	"github.com/deep-thought-labs/infinite/x/vm/statedb"
 	"github.com/ethereum/go-ethereum/accounts/abi"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/core/tracing"
 	"github.com/ethereum/go-ethereum/core/vm"
-
-	"github.com/deep-thought-labs/infinite/x/vm/statedb"
 
 	storetypes "cosmossdk.io/store/types"
 

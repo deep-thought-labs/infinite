@@ -3,8 +3,6 @@ package keeper
 import (
 	"math/big"
 
-	"github.com/ethereum/go-ethereum/common"
-
 	"github.com/deep-thought-labs/infinite/contracts"
 	"github.com/deep-thought-labs/infinite/ibc"
 	callbacksabi "github.com/deep-thought-labs/infinite/precompiles/callbacks"
@@ -13,6 +11,8 @@ import (
 	"github.com/deep-thought-labs/infinite/x/ibc/callbacks/types"
 	evmante "github.com/deep-thought-labs/infinite/x/vm/ante"
 	evmtypes "github.com/deep-thought-labs/infinite/x/vm/types"
+	"github.com/ethereum/go-ethereum/common"
+
 	callbacktypes "github.com/cosmos/ibc-go/v10/modules/apps/callbacks/types"
 	transfertypes "github.com/cosmos/ibc-go/v10/modules/apps/transfer/types"
 	clienttypes "github.com/cosmos/ibc-go/v10/modules/core/02-client/types"

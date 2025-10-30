@@ -4,14 +4,14 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/stretchr/testify/mock"
-
 	"github.com/deep-thought-labs/infinite/testutil/integration/evm/utils"
 	testutils "github.com/deep-thought-labs/infinite/testutil/integration/evm/utils"
 	"github.com/deep-thought-labs/infinite/testutil/keyring"
 	erc20types "github.com/deep-thought-labs/infinite/x/erc20/types"
 	transferkeeper "github.com/deep-thought-labs/infinite/x/ibc/transfer/keeper"
 	evmtypes "github.com/deep-thought-labs/infinite/x/vm/types"
+	"github.com/stretchr/testify/mock"
+
 	"github.com/cosmos/ibc-go/v10/modules/apps/transfer/types"
 	channeltypes "github.com/cosmos/ibc-go/v10/modules/core/04-channel/types"
 

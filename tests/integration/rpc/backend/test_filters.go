@@ -1,14 +1,13 @@
 package backend
 
 import (
+	"github.com/deep-thought-labs/infinite/rpc/backend/mocks"
+	ethrpc "github.com/deep-thought-labs/infinite/rpc/types"
+	evmtypes "github.com/deep-thought-labs/infinite/x/vm/types"
 	"github.com/ethereum/go-ethereum/common"
 	ethtypes "github.com/ethereum/go-ethereum/core/types"
 
 	cmttypes "github.com/cometbft/cometbft/types"
-
-	"github.com/deep-thought-labs/infinite/rpc/backend/mocks"
-	ethrpc "github.com/deep-thought-labs/infinite/rpc/types"
-	evmtypes "github.com/deep-thought-labs/infinite/x/vm/types"
 )
 
 func (s *TestSuite) TestGetLogs() {

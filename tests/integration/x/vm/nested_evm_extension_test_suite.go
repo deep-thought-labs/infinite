@@ -3,9 +3,6 @@ package vm
 import (
 	"math/big"
 
-	"github.com/ethereum/go-ethereum/common"
-	"github.com/stretchr/testify/suite"
-
 	"github.com/deep-thought-labs/infinite/contracts"
 	testcontracts "github.com/deep-thought-labs/infinite/precompiles/testutil/contracts"
 	"github.com/deep-thought-labs/infinite/testutil/integration/evm/factory"
@@ -14,6 +11,8 @@ import (
 	testkeyring "github.com/deep-thought-labs/infinite/testutil/keyring"
 	testutiltypes "github.com/deep-thought-labs/infinite/testutil/types"
 	evmtypes "github.com/deep-thought-labs/infinite/x/vm/types"
+	"github.com/ethereum/go-ethereum/common"
+	"github.com/stretchr/testify/suite"
 
 	"cosmossdk.io/math"
 )

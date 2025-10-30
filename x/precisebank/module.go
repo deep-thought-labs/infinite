@@ -4,14 +4,13 @@ import (
 	"context"
 	"encoding/json"
 
+	"github.com/deep-thought-labs/infinite/x/precisebank/client/cli"
+	"github.com/deep-thought-labs/infinite/x/precisebank/keeper"
+	"github.com/deep-thought-labs/infinite/x/precisebank/types"
 	"github.com/grpc-ecosystem/grpc-gateway/runtime"
 	"github.com/spf13/cobra"
 
 	abci "github.com/cometbft/cometbft/abci/types"
-
-	"github.com/deep-thought-labs/infinite/x/precisebank/client/cli"
-	"github.com/deep-thought-labs/infinite/x/precisebank/keeper"
-	"github.com/deep-thought-labs/infinite/x/precisebank/types"
 
 	"cosmossdk.io/core/appmodule"
 

@@ -4,10 +4,9 @@ import (
 	"context"
 	"errors"
 
+	evmtypes "github.com/deep-thought-labs/infinite/x/vm/types"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/core/vm"
-
-	evmtypes "github.com/deep-thought-labs/infinite/x/vm/types"
 
 	sdktypes "github.com/cosmos/cosmos-sdk/types"
 )

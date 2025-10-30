@@ -4,12 +4,11 @@ import (
 	"fmt"
 	"math/big"
 
-	"github.com/ethereum/go-ethereum/common"
-	"github.com/ethereum/go-ethereum/core/tracing"
-
 	"github.com/deep-thought-labs/infinite/utils"
 	precisebanktypes "github.com/deep-thought-labs/infinite/x/precisebank/types"
 	"github.com/deep-thought-labs/infinite/x/vm/statedb"
+	"github.com/ethereum/go-ethereum/common"
+	"github.com/ethereum/go-ethereum/core/tracing"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	banktypes "github.com/cosmos/cosmos-sdk/x/bank/types"

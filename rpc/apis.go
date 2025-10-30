@@ -3,8 +3,6 @@ package rpc
 import (
 	"fmt"
 
-	"github.com/ethereum/go-ethereum/rpc"
-
 	evmmempool "github.com/deep-thought-labs/infinite/mempool"
 	"github.com/deep-thought-labs/infinite/rpc/backend"
 	"github.com/deep-thought-labs/infinite/rpc/namespaces/ethereum/debug"
@@ -17,6 +15,7 @@ import (
 	"github.com/deep-thought-labs/infinite/rpc/namespaces/ethereum/web3"
 	"github.com/deep-thought-labs/infinite/rpc/stream"
 	servertypes "github.com/deep-thought-labs/infinite/server/types"
+	"github.com/ethereum/go-ethereum/rpc"
 
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/server"

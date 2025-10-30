@@ -3,12 +3,11 @@ package client
 import (
 	"bufio"
 
+	clientkeys "github.com/deep-thought-labs/infinite/client/keys"
+	"github.com/deep-thought-labs/infinite/crypto/hd"
 	"github.com/spf13/cobra"
 
 	"github.com/cometbft/cometbft/libs/cli"
-
-	clientkeys "github.com/deep-thought-labs/infinite/client/keys"
-	"github.com/deep-thought-labs/infinite/crypto/hd"
 
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"

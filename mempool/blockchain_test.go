@@ -6,17 +6,16 @@ import (
 	"testing"
 	"time"
 
-	"github.com/ethereum/go-ethereum/common"
-	"github.com/stretchr/testify/mock"
-	"github.com/stretchr/testify/require"
-
-	cmtproto "github.com/cometbft/cometbft/proto/tendermint/types"
-
 	"github.com/deep-thought-labs/infinite/mempool"
 	"github.com/deep-thought-labs/infinite/mempool/mocks"
 	"github.com/deep-thought-labs/infinite/testutil/constants"
 	"github.com/deep-thought-labs/infinite/x/vm/statedb"
 	vmtypes "github.com/deep-thought-labs/infinite/x/vm/types"
+	"github.com/ethereum/go-ethereum/common"
+	"github.com/stretchr/testify/mock"
+	"github.com/stretchr/testify/require"
+
+	cmtproto "github.com/cometbft/cometbft/proto/tendermint/types"
 
 	"cosmossdk.io/log"
 	storetypes "cosmossdk.io/store/types"

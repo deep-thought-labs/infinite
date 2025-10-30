@@ -3,15 +3,15 @@ package indexer
 import (
 	"fmt"
 
+	rpctypes "github.com/deep-thought-labs/infinite/rpc/types"
+	servertypes "github.com/deep-thought-labs/infinite/server/types"
+	evmtypes "github.com/deep-thought-labs/infinite/x/vm/types"
 	"github.com/ethereum/go-ethereum/common"
 
 	abci "github.com/cometbft/cometbft/abci/types"
 	cmttypes "github.com/cometbft/cometbft/types"
 
 	dbm "github.com/cosmos/cosmos-db"
-	rpctypes "github.com/deep-thought-labs/infinite/rpc/types"
-	servertypes "github.com/deep-thought-labs/infinite/server/types"
-	evmtypes "github.com/deep-thought-labs/infinite/x/vm/types"
 
 	errorsmod "cosmossdk.io/errors"
 	"cosmossdk.io/log"

@@ -1,9 +1,8 @@
 package ante
 
 import (
-	"github.com/ethereum/go-ethereum/common"
-
 	evmtypes "github.com/deep-thought-labs/infinite/x/vm/types"
+	"github.com/ethereum/go-ethereum/common"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 )

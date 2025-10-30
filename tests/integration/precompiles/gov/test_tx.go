@@ -3,13 +3,12 @@ package gov
 import (
 	"fmt"
 
-	"github.com/ethereum/go-ethereum/common"
-	"github.com/ethereum/go-ethereum/core/vm"
-
 	cmn "github.com/deep-thought-labs/infinite/precompiles/common"
 	"github.com/deep-thought-labs/infinite/precompiles/gov"
 	"github.com/deep-thought-labs/infinite/precompiles/testutil"
 	utiltx "github.com/deep-thought-labs/infinite/testutil/tx"
+	"github.com/ethereum/go-ethereum/common"
+	"github.com/ethereum/go-ethereum/core/vm"
 
 	"cosmossdk.io/math"
 

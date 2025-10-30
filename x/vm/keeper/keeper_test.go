@@ -3,12 +3,6 @@ package keeper_test
 import (
 	"testing"
 
-	"github.com/stretchr/testify/mock"
-	"github.com/stretchr/testify/suite"
-
-	cmtproto "github.com/cometbft/cometbft/proto/tendermint/types"
-	cmttime "github.com/cometbft/cometbft/types/time"
-
 	"github.com/deep-thought-labs/infinite/testutil/constants"
 	erc20types "github.com/deep-thought-labs/infinite/x/erc20/types"
 	feemarkettypes "github.com/deep-thought-labs/infinite/x/feemarket/types"
@@ -16,6 +10,12 @@ import (
 	vmkeeper "github.com/deep-thought-labs/infinite/x/vm/keeper"
 	vmtypes "github.com/deep-thought-labs/infinite/x/vm/types"
 	"github.com/deep-thought-labs/infinite/x/vm/types/mocks"
+	"github.com/stretchr/testify/mock"
+	"github.com/stretchr/testify/suite"
+
+	cmtproto "github.com/cometbft/cometbft/proto/tendermint/types"
+	cmttime "github.com/cometbft/cometbft/types/time"
+
 	ibctransfertypes "github.com/cosmos/ibc-go/v10/modules/apps/transfer/types"
 	ibcexported "github.com/cosmos/ibc-go/v10/modules/core/exported"
 

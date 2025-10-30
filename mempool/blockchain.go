@@ -5,17 +5,16 @@ import (
 	"math/big"
 	"sync"
 
+	"github.com/deep-thought-labs/infinite/mempool/txpool"
+	"github.com/deep-thought-labs/infinite/mempool/txpool/legacypool"
+	"github.com/deep-thought-labs/infinite/x/vm/statedb"
+	evmtypes "github.com/deep-thought-labs/infinite/x/vm/types"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/core"
 	"github.com/ethereum/go-ethereum/core/types"
 	"github.com/ethereum/go-ethereum/core/vm"
 	"github.com/ethereum/go-ethereum/event"
 	"github.com/ethereum/go-ethereum/params"
-
-	"github.com/deep-thought-labs/infinite/mempool/txpool"
-	"github.com/deep-thought-labs/infinite/mempool/txpool/legacypool"
-	"github.com/deep-thought-labs/infinite/x/vm/statedb"
-	evmtypes "github.com/deep-thought-labs/infinite/x/vm/types"
 
 	sdkerrors "cosmossdk.io/errors"
 	"cosmossdk.io/log"

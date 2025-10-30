@@ -1,12 +1,11 @@
 package evm
 
 import (
-	"github.com/ethereum/go-ethereum/common"
-	ethtypes "github.com/ethereum/go-ethereum/core/types"
-
 	anteinterfaces "github.com/deep-thought-labs/infinite/ante/interfaces"
 	"github.com/deep-thought-labs/infinite/x/vm/keeper"
 	"github.com/deep-thought-labs/infinite/x/vm/statedb"
+	"github.com/ethereum/go-ethereum/common"
+	ethtypes "github.com/ethereum/go-ethereum/core/types"
 
 	errorsmod "cosmossdk.io/errors"
 	sdkmath "cosmossdk.io/math"

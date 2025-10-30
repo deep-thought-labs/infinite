@@ -3,13 +3,12 @@ package keeper
 import (
 	"math/big"
 
-	"github.com/ethereum/go-ethereum/accounts/abi"
-	"github.com/ethereum/go-ethereum/common"
-	"github.com/ethereum/go-ethereum/crypto"
-
 	"github.com/deep-thought-labs/infinite/contracts"
 	"github.com/deep-thought-labs/infinite/utils"
 	"github.com/deep-thought-labs/infinite/x/erc20/types"
+	"github.com/ethereum/go-ethereum/accounts/abi"
+	"github.com/ethereum/go-ethereum/common"
+	"github.com/ethereum/go-ethereum/crypto"
 
 	errorsmod "cosmossdk.io/errors"
 

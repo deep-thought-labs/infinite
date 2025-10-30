@@ -4,13 +4,12 @@ import (
 	"fmt"
 	"sync"
 
+	"github.com/deep-thought-labs/infinite/x/vm/keeper"
+	"github.com/deep-thought-labs/infinite/x/vm/types"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/crypto"
 
 	abci "github.com/cometbft/cometbft/abci/types"
-
-	"github.com/deep-thought-labs/infinite/x/vm/keeper"
-	"github.com/deep-thought-labs/infinite/x/vm/types"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 )

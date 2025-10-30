@@ -3,12 +3,11 @@ package ante_test
 import (
 	"testing"
 
-	"github.com/stretchr/testify/require"
-
 	"github.com/deep-thought-labs/infinite/ante"
 	"github.com/deep-thought-labs/infinite/crypto/ethsecp256k1"
 	"github.com/deep-thought-labs/infinite/encoding"
 	"github.com/deep-thought-labs/infinite/server/config"
+	"github.com/stretchr/testify/require"
 
 	storetypes "cosmossdk.io/store/types"
 

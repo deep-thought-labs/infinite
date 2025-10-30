@@ -5,11 +5,6 @@ import (
 	"math/big"
 	"testing"
 
-	"github.com/ethereum/go-ethereum/common"
-	"github.com/ethereum/go-ethereum/params"
-	"github.com/onsi/ginkgo/v2"
-	"github.com/onsi/gomega"
-
 	"github.com/deep-thought-labs/infinite/eips"
 	"github.com/deep-thought-labs/infinite/eips/testdata"
 	"github.com/deep-thought-labs/infinite/testutil/integration/evm/factory"
@@ -19,6 +14,10 @@ import (
 	"github.com/deep-thought-labs/infinite/testutil/keyring"
 	types2 "github.com/deep-thought-labs/infinite/testutil/types"
 	types3 "github.com/deep-thought-labs/infinite/x/vm/types"
+	"github.com/ethereum/go-ethereum/common"
+	"github.com/ethereum/go-ethereum/params"
+	"github.com/onsi/ginkgo/v2"
+	"github.com/onsi/gomega"
 
 	"github.com/cosmos/cosmos-sdk/crypto/types"
 )

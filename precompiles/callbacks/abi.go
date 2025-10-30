@@ -3,9 +3,8 @@ package callbacks
 import (
 	"embed"
 
-	"github.com/ethereum/go-ethereum/accounts/abi"
-
 	cmn "github.com/deep-thought-labs/infinite/precompiles/common"
+	"github.com/ethereum/go-ethereum/accounts/abi"
 )
 
 // Embed abi json file to the executable binary. Needed when importing as dependency.

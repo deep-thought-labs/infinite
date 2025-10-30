@@ -6,14 +6,13 @@ import (
 	"crypto/rand"
 	"errors"
 
+	"github.com/deep-thought-labs/infinite/precompiles/p256"
+	"github.com/deep-thought-labs/infinite/testutil/integration/evm/network"
 	"github.com/stretchr/testify/suite"
 	"golang.org/x/crypto/cryptobyte"
 	"golang.org/x/crypto/cryptobyte/asn1"
 
 	"github.com/cometbft/cometbft/crypto"
-
-	"github.com/deep-thought-labs/infinite/precompiles/p256"
-	"github.com/deep-thought-labs/infinite/testutil/integration/evm/network"
 )
 
 type PrecompileTestSuite struct {

@@ -3,9 +3,6 @@ package erc20
 import (
 	"math/big"
 
-	"github.com/ethereum/go-ethereum/core/vm"
-	"github.com/holiman/uint256"
-
 	cmn "github.com/deep-thought-labs/infinite/precompiles/common"
 	"github.com/deep-thought-labs/infinite/precompiles/common/mocks"
 	"github.com/deep-thought-labs/infinite/precompiles/erc20"
@@ -13,6 +10,8 @@ import (
 	erc20types "github.com/deep-thought-labs/infinite/x/erc20/types"
 	"github.com/deep-thought-labs/infinite/x/vm/statedb"
 	vmtypes "github.com/deep-thought-labs/infinite/x/vm/types"
+	"github.com/ethereum/go-ethereum/core/vm"
+	"github.com/holiman/uint256"
 
 	"cosmossdk.io/math"
 

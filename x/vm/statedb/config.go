@@ -3,10 +3,9 @@ package statedb
 import (
 	"math/big"
 
-	"github.com/ethereum/go-ethereum/common"
-
 	feemarkettypes "github.com/deep-thought-labs/infinite/x/feemarket/types"
 	"github.com/deep-thought-labs/infinite/x/vm/types"
+	"github.com/ethereum/go-ethereum/common"
 )
 
 // TxConfig encapulates the readonly information of current tx for `StateDB`.

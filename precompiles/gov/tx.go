@@ -3,10 +3,9 @@ package gov
 import (
 	"fmt"
 
+	cmn "github.com/deep-thought-labs/infinite/precompiles/common"
 	"github.com/ethereum/go-ethereum/accounts/abi"
 	"github.com/ethereum/go-ethereum/core/vm"
-
-	cmn "github.com/deep-thought-labs/infinite/precompiles/common"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 )

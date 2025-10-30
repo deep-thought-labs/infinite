@@ -7,15 +7,6 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/ethereum/go-ethereum/common"
-	ethtypes "github.com/ethereum/go-ethereum/core/types"
-	"github.com/ethereum/go-ethereum/trie"
-	"github.com/stretchr/testify/suite"
-
-	abci "github.com/cometbft/cometbft/abci/types"
-	cmtrpctypes "github.com/cometbft/cometbft/rpc/core/types"
-
-	dbm "github.com/cosmos/cosmos-db"
 	"github.com/deep-thought-labs/infinite/crypto/hd"
 	"github.com/deep-thought-labs/infinite/encoding"
 	"github.com/deep-thought-labs/infinite/indexer"
@@ -26,6 +17,15 @@ import (
 	"github.com/deep-thought-labs/infinite/testutil/integration/evm/network"
 	utiltx "github.com/deep-thought-labs/infinite/testutil/tx"
 	evmtypes "github.com/deep-thought-labs/infinite/x/vm/types"
+	"github.com/ethereum/go-ethereum/common"
+	ethtypes "github.com/ethereum/go-ethereum/core/types"
+	"github.com/ethereum/go-ethereum/trie"
+	"github.com/stretchr/testify/suite"
+
+	abci "github.com/cometbft/cometbft/abci/types"
+	cmtrpctypes "github.com/cometbft/cometbft/rpc/core/types"
+
+	dbm "github.com/cosmos/cosmos-db"
 
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/crypto/keyring"

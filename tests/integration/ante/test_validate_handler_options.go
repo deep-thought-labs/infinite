@@ -3,12 +3,11 @@ package ante
 import (
 	"testing"
 
-	"github.com/ethereum/go-ethereum/common"
-	"github.com/stretchr/testify/require"
-
 	"github.com/deep-thought-labs/infinite/ante"
 	antetypes "github.com/deep-thought-labs/infinite/ante/types"
 	"github.com/deep-thought-labs/infinite/testutil/integration/evm/network"
+	"github.com/ethereum/go-ethereum/common"
+	"github.com/stretchr/testify/require"
 )
 
 //nolint:thelper // RunValidateHandlerOptionsTest is not a helper function; it's an externally called benchmark entry point

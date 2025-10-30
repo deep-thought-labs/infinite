@@ -3,6 +3,11 @@ package backend
 import (
 	"fmt"
 
+	"github.com/deep-thought-labs/infinite/crypto/ethsecp256k1"
+	"github.com/deep-thought-labs/infinite/indexer"
+	"github.com/deep-thought-labs/infinite/rpc/backend/mocks"
+	rpctypes "github.com/deep-thought-labs/infinite/rpc/types"
+	evmtypes "github.com/deep-thought-labs/infinite/x/vm/types"
 	"github.com/ethereum/go-ethereum/common"
 	ethtypes "github.com/ethereum/go-ethereum/core/types"
 	mock "github.com/stretchr/testify/mock"
@@ -12,11 +17,6 @@ import (
 	"github.com/cometbft/cometbft/types"
 
 	dbm "github.com/cosmos/cosmos-db"
-	"github.com/deep-thought-labs/infinite/crypto/ethsecp256k1"
-	"github.com/deep-thought-labs/infinite/indexer"
-	"github.com/deep-thought-labs/infinite/rpc/backend/mocks"
-	rpctypes "github.com/deep-thought-labs/infinite/rpc/types"
-	evmtypes "github.com/deep-thought-labs/infinite/x/vm/types"
 
 	"cosmossdk.io/log"
 

@@ -4,10 +4,9 @@ import (
 	"fmt"
 	"slices"
 
+	"github.com/deep-thought-labs/infinite/x/vm/types"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/core/vm"
-
-	"github.com/deep-thought-labs/infinite/x/vm/types"
 )
 
 // WithStaticPrecompiles sets the available static precompiled contracts.

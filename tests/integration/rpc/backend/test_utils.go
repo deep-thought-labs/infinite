@@ -3,9 +3,9 @@ package backend
 import (
 	"fmt"
 
-	"github.com/cometbft/cometbft/proto/tendermint/crypto"
-
 	backend2 "github.com/deep-thought-labs/infinite/rpc/backend"
+
+	"github.com/cometbft/cometbft/proto/tendermint/crypto"
 )
 
 func mookProofs(num int, withData bool) *crypto.ProofOps {

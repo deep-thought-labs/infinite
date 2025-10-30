@@ -3,11 +3,10 @@ package keeper
 import (
 	"context"
 
-	"google.golang.org/grpc/codes"
-	"google.golang.org/grpc/status"
-
 	"github.com/deep-thought-labs/infinite/utils"
 	"github.com/deep-thought-labs/infinite/x/erc20/types"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 
 	"cosmossdk.io/store/prefix"
 

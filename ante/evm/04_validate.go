@@ -4,10 +4,9 @@ import (
 	"errors"
 	"math/big"
 
-	ethtypes "github.com/ethereum/go-ethereum/core/types"
-
 	anteinterfaces "github.com/deep-thought-labs/infinite/ante/interfaces"
 	evmtypes "github.com/deep-thought-labs/infinite/x/vm/types"
+	ethtypes "github.com/ethereum/go-ethereum/core/types"
 
 	errorsmod "cosmossdk.io/errors"
 	sdkmath "cosmossdk.io/math"

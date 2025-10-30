@@ -3,12 +3,11 @@ package distribution
 import (
 	"fmt"
 
-	"github.com/ethereum/go-ethereum/core/vm"
-	"github.com/holiman/uint256"
-
 	cmn "github.com/deep-thought-labs/infinite/precompiles/common"
 	"github.com/deep-thought-labs/infinite/precompiles/distribution"
 	testutiltx "github.com/deep-thought-labs/infinite/testutil/tx"
+	"github.com/ethereum/go-ethereum/core/vm"
+	"github.com/holiman/uint256"
 
 	"cosmossdk.io/math"
 

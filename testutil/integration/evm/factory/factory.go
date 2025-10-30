@@ -5,12 +5,6 @@ import (
 	"math/big"
 	"strings"
 
-	"github.com/ethereum/go-ethereum/common"
-	"github.com/ethereum/go-ethereum/core"
-	"github.com/ethereum/go-ethereum/core/vm"
-
-	abcitypes "github.com/cometbft/cometbft/abci/types"
-
 	"github.com/deep-thought-labs/infinite/precompiles/testutil"
 	chainutil "github.com/deep-thought-labs/infinite/testutil"
 	basefactory "github.com/deep-thought-labs/infinite/testutil/integration/base/factory"
@@ -18,6 +12,12 @@ import (
 	"github.com/deep-thought-labs/infinite/testutil/integration/evm/network"
 	"github.com/deep-thought-labs/infinite/testutil/types"
 	evmtypes "github.com/deep-thought-labs/infinite/x/vm/types"
+	"github.com/ethereum/go-ethereum/common"
+	"github.com/ethereum/go-ethereum/core"
+	"github.com/ethereum/go-ethereum/core/vm"
+
+	abcitypes "github.com/cometbft/cometbft/abci/types"
+
 	"github.com/cosmos/gogoproto/proto"
 
 	errorsmod "cosmossdk.io/errors"

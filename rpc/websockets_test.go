@@ -7,11 +7,10 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/gorilla/websocket"
-	"github.com/stretchr/testify/require"
-
 	"github.com/deep-thought-labs/infinite/rpc/stream"
 	"github.com/deep-thought-labs/infinite/server/config"
+	"github.com/gorilla/websocket"
+	"github.com/stretchr/testify/require"
 
 	"cosmossdk.io/log"
 

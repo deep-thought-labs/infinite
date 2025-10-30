@@ -6,11 +6,6 @@ import (
 	"math/big"
 	"testing"
 
-	"github.com/ethereum/go-ethereum/common"
-	ethtypes "github.com/ethereum/go-ethereum/core/types"
-	"github.com/ethereum/go-ethereum/params"
-	"github.com/stretchr/testify/require"
-
 	cryptocodec "github.com/deep-thought-labs/infinite/crypto/codec"
 	"github.com/deep-thought-labs/infinite/crypto/ethsecp256k1"
 	"github.com/deep-thought-labs/infinite/crypto/hd"
@@ -19,6 +14,10 @@ import (
 	"github.com/deep-thought-labs/infinite/utils"
 	feemarkettypes "github.com/deep-thought-labs/infinite/x/feemarket/types"
 	evmtypes "github.com/deep-thought-labs/infinite/x/vm/types"
+	"github.com/ethereum/go-ethereum/common"
+	ethtypes "github.com/ethereum/go-ethereum/core/types"
+	"github.com/ethereum/go-ethereum/params"
+	"github.com/stretchr/testify/require"
 
 	sdkmath "cosmossdk.io/math"
 

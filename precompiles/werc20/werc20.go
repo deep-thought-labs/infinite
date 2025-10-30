@@ -4,13 +4,12 @@ import (
 	"embed"
 	"slices"
 
-	"github.com/ethereum/go-ethereum/accounts/abi"
-	"github.com/ethereum/go-ethereum/core/vm"
-
 	ibcutils "github.com/deep-thought-labs/infinite/ibc"
 	cmn "github.com/deep-thought-labs/infinite/precompiles/common"
 	erc20 "github.com/deep-thought-labs/infinite/precompiles/erc20"
 	erc20types "github.com/deep-thought-labs/infinite/x/erc20/types"
+	"github.com/ethereum/go-ethereum/accounts/abi"
+	"github.com/ethereum/go-ethereum/core/vm"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 )

@@ -3,10 +3,10 @@ package factory
 import (
 	"fmt"
 
-	abcitypes "github.com/cometbft/cometbft/abci/types"
-
 	"github.com/deep-thought-labs/infinite/testutil/integration/base/network"
 	"github.com/deep-thought-labs/infinite/testutil/integration/evm/grpc"
+
+	abcitypes "github.com/cometbft/cometbft/abci/types"
 
 	errorsmod "cosmossdk.io/errors"
 

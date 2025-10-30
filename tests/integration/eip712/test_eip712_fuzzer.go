@@ -4,12 +4,11 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/deep-thought-labs/infinite/ethereum/eip712"
 	"github.com/tidwall/gjson"
 	"github.com/tidwall/sjson"
 
 	"github.com/cometbft/cometbft/libs/rand"
-
-	"github.com/deep-thought-labs/infinite/ethereum/eip712"
 )
 
 type FuzzTestParams struct {

@@ -4,10 +4,9 @@ import (
 	"bytes"
 	"sort"
 
+	"github.com/deep-thought-labs/infinite/x/vm/types"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/holiman/uint256"
-
-	"github.com/deep-thought-labs/infinite/x/vm/types"
 )
 
 // Account is the Ethereum consensus representation of accounts.

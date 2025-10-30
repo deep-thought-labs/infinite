@@ -4,13 +4,12 @@ import (
 	"maps"
 	"testing"
 
-	"github.com/ethereum/go-ethereum/common"
-	"github.com/ethereum/go-ethereum/common/hexutil"
-	"github.com/ethereum/go-ethereum/core/vm"
-
 	rpc "github.com/deep-thought-labs/infinite/rpc/types"
 	"github.com/deep-thought-labs/infinite/x/vm/statedb"
 	"github.com/deep-thought-labs/infinite/x/vm/types/mocks"
+	"github.com/ethereum/go-ethereum/common"
+	"github.com/ethereum/go-ethereum/common/hexutil"
+	"github.com/ethereum/go-ethereum/core/vm"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 )

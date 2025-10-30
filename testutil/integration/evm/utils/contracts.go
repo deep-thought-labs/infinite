@@ -4,10 +4,10 @@ import (
 	"fmt"
 	"slices"
 
-	abcitypes "github.com/cometbft/cometbft/abci/types"
-
 	testutiltypes "github.com/deep-thought-labs/infinite/testutil/types"
 	evmtypes "github.com/deep-thought-labs/infinite/x/vm/types"
+
+	abcitypes "github.com/cometbft/cometbft/abci/types"
 )
 
 // CheckTxTopics checks if all expected topics are present in the transaction response

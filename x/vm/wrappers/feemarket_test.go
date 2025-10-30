@@ -4,14 +4,13 @@ import (
 	"math/big"
 	"testing"
 
-	"github.com/stretchr/testify/require"
-	"go.uber.org/mock/gomock"
-
 	testconstants "github.com/deep-thought-labs/infinite/testutil/constants"
 	feemarkettypes "github.com/deep-thought-labs/infinite/x/feemarket/types"
 	evmtypes "github.com/deep-thought-labs/infinite/x/vm/types"
 	"github.com/deep-thought-labs/infinite/x/vm/wrappers"
 	"github.com/deep-thought-labs/infinite/x/vm/wrappers/testutil"
+	"github.com/stretchr/testify/require"
+	"go.uber.org/mock/gomock"
 
 	sdkmath "cosmossdk.io/math"
 

@@ -5,15 +5,14 @@ import (
 	"encoding/json"
 	"fmt"
 
+	"github.com/deep-thought-labs/infinite/x/feemarket/client/cli"
+	"github.com/deep-thought-labs/infinite/x/feemarket/keeper"
+	"github.com/deep-thought-labs/infinite/x/feemarket/types"
 	"github.com/gorilla/mux"
 	"github.com/grpc-ecosystem/grpc-gateway/runtime"
 	"github.com/spf13/cobra"
 
 	abci "github.com/cometbft/cometbft/abci/types"
-
-	"github.com/deep-thought-labs/infinite/x/feemarket/client/cli"
-	"github.com/deep-thought-labs/infinite/x/feemarket/keeper"
-	"github.com/deep-thought-labs/infinite/x/feemarket/types"
 
 	"cosmossdk.io/core/appmodule"
 

@@ -1,8 +1,6 @@
 package distribution
 
 import (
-	"github.com/stretchr/testify/suite"
-
 	evmaddress "github.com/deep-thought-labs/infinite/encoding/address"
 	"github.com/deep-thought-labs/infinite/precompiles/distribution"
 	testconstants "github.com/deep-thought-labs/infinite/testutil/constants"
@@ -11,6 +9,7 @@ import (
 	"github.com/deep-thought-labs/infinite/testutil/integration/evm/network"
 	testkeyring "github.com/deep-thought-labs/infinite/testutil/keyring"
 	evmtypes "github.com/deep-thought-labs/infinite/x/vm/types"
+	"github.com/stretchr/testify/suite"
 
 	"cosmossdk.io/math"
 	sdkmath "cosmossdk.io/math"

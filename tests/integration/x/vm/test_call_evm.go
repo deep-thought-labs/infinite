@@ -3,13 +3,12 @@ package vm
 import (
 	"fmt"
 
-	"github.com/ethereum/go-ethereum/common"
-
 	"github.com/deep-thought-labs/infinite/contracts"
 	testconstants "github.com/deep-thought-labs/infinite/testutil/constants"
 	utiltx "github.com/deep-thought-labs/infinite/testutil/tx"
 	"github.com/deep-thought-labs/infinite/x/erc20/types"
 	evmtypes "github.com/deep-thought-labs/infinite/x/vm/types"
+	"github.com/ethereum/go-ethereum/common"
 )
 
 func (s *KeeperTestSuite) TestCallEVM() {

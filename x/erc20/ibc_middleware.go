@@ -5,6 +5,7 @@ import (
 
 	"github.com/deep-thought-labs/infinite/ibc"
 	erc20types "github.com/deep-thought-labs/infinite/x/erc20/types"
+
 	transfertypes "github.com/cosmos/ibc-go/v10/modules/apps/transfer/types"
 	channeltypes "github.com/cosmos/ibc-go/v10/modules/core/04-channel/types"
 	porttypes "github.com/cosmos/ibc-go/v10/modules/core/05-port/types"

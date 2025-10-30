@@ -6,6 +6,8 @@ import (
 	"math/big"
 	"testing"
 
+	filtermocks "github.com/deep-thought-labs/infinite/rpc/namespaces/ethereum/eth/filters/mocks"
+	rpctypes "github.com/deep-thought-labs/infinite/rpc/types"
 	"github.com/ethereum/go-ethereum/common"
 	ethtypes "github.com/ethereum/go-ethereum/core/types"
 	"github.com/ethereum/go-ethereum/eth/filters"
@@ -14,9 +16,6 @@ import (
 
 	cmtrpctypes "github.com/cometbft/cometbft/rpc/core/types"
 	comettypes "github.com/cometbft/cometbft/types"
-
-	filtermocks "github.com/deep-thought-labs/infinite/rpc/namespaces/ethereum/eth/filters/mocks"
-	rpctypes "github.com/deep-thought-labs/infinite/rpc/types"
 
 	"cosmossdk.io/log"
 )

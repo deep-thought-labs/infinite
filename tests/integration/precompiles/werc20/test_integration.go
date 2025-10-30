@@ -4,13 +4,6 @@ import (
 	"math/big"
 	"testing"
 
-	"github.com/ethereum/go-ethereum/common"
-
-	//nolint:revive // dot imports are fine for Ginkgo
-	. "github.com/onsi/ginkgo/v2"
-	//nolint:revive // dot imports are fine for Ginkgo
-	. "github.com/onsi/gomega"
-
 	"github.com/deep-thought-labs/infinite/precompiles/erc20"
 	"github.com/deep-thought-labs/infinite/precompiles/testutil"
 	"github.com/deep-thought-labs/infinite/precompiles/werc20"
@@ -26,6 +19,12 @@ import (
 	feemarkettypes "github.com/deep-thought-labs/infinite/x/feemarket/types"
 	precisebanktypes "github.com/deep-thought-labs/infinite/x/precisebank/types"
 	evmtypes "github.com/deep-thought-labs/infinite/x/vm/types"
+	"github.com/ethereum/go-ethereum/common"
+
+	//nolint:revive // dot imports are fine for Ginkgo
+	. "github.com/onsi/ginkgo/v2"
+	//nolint:revive // dot imports are fine for Ginkgo
+	. "github.com/onsi/gomega"
 
 	"cosmossdk.io/math"
 

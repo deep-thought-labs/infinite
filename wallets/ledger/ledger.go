@@ -6,12 +6,11 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/ethereum/go-ethereum/crypto"
-	"github.com/ethereum/go-ethereum/signer/core/apitypes"
-
 	"github.com/deep-thought-labs/infinite/ethereum/eip712"
 	"github.com/deep-thought-labs/infinite/wallets/accounts"
 	"github.com/deep-thought-labs/infinite/wallets/usbwallet"
+	"github.com/ethereum/go-ethereum/crypto"
+	"github.com/ethereum/go-ethereum/signer/core/apitypes"
 
 	sdkledger "github.com/cosmos/cosmos-sdk/crypto/ledger"
 	sdk "github.com/cosmos/cosmos-sdk/types"

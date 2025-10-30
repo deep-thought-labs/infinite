@@ -1,13 +1,13 @@
 package types
 
 import (
-	"github.com/ethereum/go-ethereum/common"
-	"github.com/ethereum/go-ethereum/core/vm"
-
 	evmaddress "github.com/deep-thought-labs/infinite/encoding/address"
 	cmn "github.com/deep-thought-labs/infinite/precompiles/common"
 	erc20Keeper "github.com/deep-thought-labs/infinite/x/erc20/keeper"
 	transferkeeper "github.com/deep-thought-labs/infinite/x/ibc/transfer/keeper"
+	"github.com/ethereum/go-ethereum/common"
+	"github.com/ethereum/go-ethereum/core/vm"
+
 	channelkeeper "github.com/cosmos/ibc-go/v10/modules/core/04-channel/keeper"
 
 	"cosmossdk.io/core/address"

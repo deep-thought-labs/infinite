@@ -3,10 +3,10 @@ package callbacks
 import (
 	"fmt"
 
-	"github.com/ethereum/go-ethereum/common"
-
 	"github.com/deep-thought-labs/infinite/testutil/keyring"
 	"github.com/deep-thought-labs/infinite/x/ibc/callbacks/types"
+	"github.com/ethereum/go-ethereum/common"
+
 	cbtypes "github.com/cosmos/ibc-go/v10/modules/apps/callbacks/types"
 	transfertypes "github.com/cosmos/ibc-go/v10/modules/apps/transfer/types"
 	clienttypes "github.com/cosmos/ibc-go/v10/modules/core/02-client/types"

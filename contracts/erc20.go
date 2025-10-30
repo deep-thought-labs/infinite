@@ -1,10 +1,10 @@
 package contracts
 
 import (
-	_ "embed"
-
 	contractutils "github.com/deep-thought-labs/infinite/contracts/utils"
 	evmtypes "github.com/deep-thought-labs/infinite/x/vm/types"
+
+	_ "embed"
 )
 
 var (

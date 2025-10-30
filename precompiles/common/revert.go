@@ -1,9 +1,8 @@
 package common
 
 import (
-	"github.com/ethereum/go-ethereum/core/vm"
-
 	evmtypes "github.com/deep-thought-labs/infinite/x/vm/types"
+	"github.com/ethereum/go-ethereum/core/vm"
 )
 
 // ReturnRevertError returns a ExecutionReverted error with revert reason

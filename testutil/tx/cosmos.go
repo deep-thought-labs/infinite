@@ -1,10 +1,9 @@
 package tx
 
 import (
-	protov2 "google.golang.org/protobuf/proto"
-
 	"github.com/deep-thought-labs/infinite"
 	"github.com/deep-thought-labs/infinite/testutil/constants"
+	protov2 "google.golang.org/protobuf/proto"
 
 	sdkmath "cosmossdk.io/math"
 

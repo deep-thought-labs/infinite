@@ -3,12 +3,11 @@ package precisebank
 import (
 	"fmt"
 
-	"github.com/stretchr/testify/suite"
-
 	testconstants "github.com/deep-thought-labs/infinite/testutil/constants"
 	"github.com/deep-thought-labs/infinite/testutil/integration/evm/network"
 	"github.com/deep-thought-labs/infinite/x/precisebank"
 	"github.com/deep-thought-labs/infinite/x/precisebank/types"
+	"github.com/stretchr/testify/suite"
 
 	sdkmath "cosmossdk.io/math"
 

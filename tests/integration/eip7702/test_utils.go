@@ -4,12 +4,11 @@ import (
 	"fmt"
 	"math/big"
 
+	"github.com/deep-thought-labs/infinite/crypto/ethsecp256k1"
+	evmtypes "github.com/deep-thought-labs/infinite/x/vm/types"
 	"github.com/ethereum/go-ethereum/accounts/abi"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/crypto"
-
-	"github.com/deep-thought-labs/infinite/crypto/ethsecp256k1"
-	evmtypes "github.com/deep-thought-labs/infinite/x/vm/types"
 
 	cryptotypes "github.com/cosmos/cosmos-sdk/crypto/types"
 )

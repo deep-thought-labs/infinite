@@ -8,6 +8,11 @@ import (
 	"math/big"
 	"time"
 
+	rpctypes "github.com/deep-thought-labs/infinite/rpc/types"
+	"github.com/deep-thought-labs/infinite/utils"
+	evmante "github.com/deep-thought-labs/infinite/x/vm/ante"
+	"github.com/deep-thought-labs/infinite/x/vm/statedb"
+	"github.com/deep-thought-labs/infinite/x/vm/types"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/common/hexutil"
 	"github.com/ethereum/go-ethereum/core"
@@ -20,12 +25,6 @@ import (
 	"google.golang.org/grpc/status"
 
 	tmproto "github.com/cometbft/cometbft/proto/tendermint/types"
-
-	rpctypes "github.com/deep-thought-labs/infinite/rpc/types"
-	"github.com/deep-thought-labs/infinite/utils"
-	evmante "github.com/deep-thought-labs/infinite/x/vm/ante"
-	"github.com/deep-thought-labs/infinite/x/vm/statedb"
-	"github.com/deep-thought-labs/infinite/x/vm/types"
 
 	sdkmath "cosmossdk.io/math"
 	storetypes "cosmossdk.io/store/types"

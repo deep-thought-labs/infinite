@@ -6,16 +6,15 @@ import (
 	"strings"
 	"time"
 
-	"github.com/ethereum/go-ethereum/common"
-	"github.com/ethereum/go-ethereum/core/types"
-	ethparams "github.com/ethereum/go-ethereum/params"
-	"github.com/holiman/uint256"
-
 	ethante "github.com/deep-thought-labs/infinite/ante/evm"
 	"github.com/deep-thought-labs/infinite/testutil"
 	testconstants "github.com/deep-thought-labs/infinite/testutil/constants"
 	utiltx "github.com/deep-thought-labs/infinite/testutil/tx"
 	evmtypes "github.com/deep-thought-labs/infinite/x/vm/types"
+	"github.com/ethereum/go-ethereum/common"
+	"github.com/ethereum/go-ethereum/core/types"
+	ethparams "github.com/ethereum/go-ethereum/params"
+	"github.com/holiman/uint256"
 
 	sdkmath "cosmossdk.io/math"
 

@@ -3,12 +3,11 @@ package mempool
 import (
 	"math/big"
 
-	ethtypes "github.com/ethereum/go-ethereum/core/types"
-	"github.com/holiman/uint256"
-
 	"github.com/deep-thought-labs/infinite/mempool/miner"
 	"github.com/deep-thought-labs/infinite/mempool/txpool"
 	msgtypes "github.com/deep-thought-labs/infinite/x/vm/types"
+	ethtypes "github.com/ethereum/go-ethereum/core/types"
+	"github.com/holiman/uint256"
 
 	"cosmossdk.io/log"
 	"cosmossdk.io/math"

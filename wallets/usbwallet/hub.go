@@ -9,10 +9,9 @@ import (
 	"sync/atomic"
 	"time"
 
+	"github.com/deep-thought-labs/infinite/wallets/accounts"
 	gethaccounts "github.com/ethereum/go-ethereum/accounts"
 	usb "github.com/zondax/hid"
-
-	"github.com/deep-thought-labs/infinite/wallets/accounts"
 )
 
 const (

@@ -4,9 +4,6 @@ import (
 	"fmt"
 	"maps"
 
-	"github.com/ethereum/go-ethereum/common"
-	"github.com/ethereum/go-ethereum/core/vm"
-
 	bankprecompile "github.com/deep-thought-labs/infinite/precompiles/bank"
 	"github.com/deep-thought-labs/infinite/precompiles/bech32"
 	cmn "github.com/deep-thought-labs/infinite/precompiles/common"
@@ -18,6 +15,9 @@ import (
 	stakingprecompile "github.com/deep-thought-labs/infinite/precompiles/staking"
 	erc20Keeper "github.com/deep-thought-labs/infinite/x/erc20/keeper"
 	transferkeeper "github.com/deep-thought-labs/infinite/x/ibc/transfer/keeper"
+	"github.com/ethereum/go-ethereum/common"
+	"github.com/ethereum/go-ethereum/core/vm"
+
 	channelkeeper "github.com/cosmos/ibc-go/v10/modules/core/04-channel/keeper"
 
 	"github.com/cosmos/cosmos-sdk/codec"

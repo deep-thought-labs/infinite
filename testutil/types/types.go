@@ -1,9 +1,8 @@
 package types
 
 import (
-	"github.com/ethereum/go-ethereum/accounts/abi"
-
 	evmtypes "github.com/deep-thought-labs/infinite/x/vm/types"
+	"github.com/ethereum/go-ethereum/accounts/abi"
 
 	sdkmath "cosmossdk.io/math"
 

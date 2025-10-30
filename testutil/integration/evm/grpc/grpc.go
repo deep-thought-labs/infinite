@@ -1,12 +1,11 @@
 package grpc
 
 import (
-	"github.com/ethereum/go-ethereum/common"
-
 	basegrpc "github.com/deep-thought-labs/infinite/testutil/integration/base/grpc"
 	"github.com/deep-thought-labs/infinite/testutil/integration/evm/network"
 	feemarkettypes "github.com/deep-thought-labs/infinite/x/feemarket/types"
 	evmtypes "github.com/deep-thought-labs/infinite/x/vm/types"
+	"github.com/ethereum/go-ethereum/common"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	govtypes "github.com/cosmos/cosmos-sdk/x/gov/types/v1"

@@ -3,12 +3,11 @@ package erc20
 import (
 	"math/big"
 
-	"github.com/ethereum/go-ethereum/common"
-	"github.com/ethereum/go-ethereum/crypto"
-
 	cmn "github.com/deep-thought-labs/infinite/precompiles/common"
 	"github.com/deep-thought-labs/infinite/precompiles/erc20"
 	utiltx "github.com/deep-thought-labs/infinite/testutil/tx"
+	"github.com/ethereum/go-ethereum/common"
+	"github.com/ethereum/go-ethereum/crypto"
 )
 
 //nolint:dupl // this is not a duplicate of the approval events test

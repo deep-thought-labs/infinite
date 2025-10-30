@@ -6,16 +6,15 @@ import (
 	"fmt"
 	"sync"
 
-	ethtypes "github.com/ethereum/go-ethereum/core/types"
-	"github.com/holiman/uint256"
-
-	cmttypes "github.com/cometbft/cometbft/types"
-
 	"github.com/deep-thought-labs/infinite/mempool/miner"
 	"github.com/deep-thought-labs/infinite/mempool/txpool"
 	"github.com/deep-thought-labs/infinite/mempool/txpool/legacypool"
 	"github.com/deep-thought-labs/infinite/rpc/stream"
 	evmtypes "github.com/deep-thought-labs/infinite/x/vm/types"
+	ethtypes "github.com/ethereum/go-ethereum/core/types"
+	"github.com/holiman/uint256"
+
+	cmttypes "github.com/cometbft/cometbft/types"
 
 	"cosmossdk.io/log"
 	"cosmossdk.io/math"

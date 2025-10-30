@@ -3,12 +3,11 @@ package slashing
 import (
 	"fmt"
 
-	"github.com/ethereum/go-ethereum/common"
-
 	cmn "github.com/deep-thought-labs/infinite/precompiles/common"
 	"github.com/deep-thought-labs/infinite/precompiles/slashing"
 	"github.com/deep-thought-labs/infinite/precompiles/testutil"
 	utiltx "github.com/deep-thought-labs/infinite/testutil/tx"
+	"github.com/ethereum/go-ethereum/common"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 )

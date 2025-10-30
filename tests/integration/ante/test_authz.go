@@ -5,14 +5,13 @@ import (
 	"math/big"
 	"time"
 
-	ethtypes "github.com/ethereum/go-ethereum/core/types"
-
-	abci "github.com/cometbft/cometbft/abci/types"
-
 	"github.com/deep-thought-labs/infinite/testutil"
 	"github.com/deep-thought-labs/infinite/testutil/integration/base/factory"
 	utiltx "github.com/deep-thought-labs/infinite/testutil/tx"
 	evmtypes "github.com/deep-thought-labs/infinite/x/vm/types"
+	ethtypes "github.com/ethereum/go-ethereum/core/types"
+
+	abci "github.com/cometbft/cometbft/abci/types"
 
 	"cosmossdk.io/math"
 

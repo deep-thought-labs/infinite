@@ -3,11 +3,11 @@ package ics20
 import (
 	"testing"
 
-	"github.com/stretchr/testify/suite"
-
 	"github.com/deep-thought-labs/infinite"
 	"github.com/deep-thought-labs/infinite/precompiles/ics20"
 	evmibctesting "github.com/deep-thought-labs/infinite/testutil/ibc"
+	"github.com/stretchr/testify/suite"
+
 	ibctesting "github.com/cosmos/ibc-go/v10/testing"
 )
 

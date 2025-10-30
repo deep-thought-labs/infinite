@@ -6,9 +6,8 @@ import (
 	"crypto/subtle"
 	"fmt"
 
-	"github.com/ethereum/go-ethereum/crypto"
-
 	"github.com/deep-thought-labs/infinite/ethereum/eip712"
+	"github.com/ethereum/go-ethereum/crypto"
 
 	errorsmod "cosmossdk.io/errors"
 

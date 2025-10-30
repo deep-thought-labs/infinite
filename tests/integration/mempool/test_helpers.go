@@ -6,13 +6,13 @@ import (
 	"math/big"
 	"time"
 
-	abci "github.com/cometbft/cometbft/abci/types"
-	"github.com/cometbft/cometbft/crypto/tmhash"
-
 	evmmempool "github.com/deep-thought-labs/infinite/mempool"
 	"github.com/deep-thought-labs/infinite/testutil/integration/base/factory"
 	"github.com/deep-thought-labs/infinite/testutil/keyring"
 	evmtypes "github.com/deep-thought-labs/infinite/x/vm/types"
+
+	abci "github.com/cometbft/cometbft/abci/types"
+	"github.com/cometbft/cometbft/crypto/tmhash"
 
 	sdkmath "cosmossdk.io/math"
 

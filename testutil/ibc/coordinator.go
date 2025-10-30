@@ -6,9 +6,9 @@ import (
 	"testing"
 	"time"
 
+	"github.com/deep-thought-labs/infinite/x/vm/types"
 	"github.com/stretchr/testify/require"
 
-	"github.com/deep-thought-labs/infinite/x/vm/types"
 	ibctesting "github.com/cosmos/ibc-go/v10/testing"
 )
 

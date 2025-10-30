@@ -5,11 +5,10 @@ import (
 	"math/big"
 	"testing"
 
-	"github.com/holiman/uint256"
-	"github.com/stretchr/testify/require"
-
 	testconstants "github.com/deep-thought-labs/infinite/testutil/constants"
 	evmtypes "github.com/deep-thought-labs/infinite/x/vm/types"
+	"github.com/holiman/uint256"
+	"github.com/stretchr/testify/require"
 
 	"cosmossdk.io/math"
 

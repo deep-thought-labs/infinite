@@ -4,11 +4,6 @@ import (
 	"fmt"
 	"math/big"
 
-	"github.com/ethereum/go-ethereum/common"
-	"github.com/holiman/uint256"
-	"github.com/stretchr/testify/mock"
-	"go.uber.org/mock/gomock"
-
 	"github.com/deep-thought-labs/infinite/testutil/integration/base/factory"
 	"github.com/deep-thought-labs/infinite/testutil/integration/evm/utils"
 	"github.com/deep-thought-labs/infinite/x/erc20/keeper"
@@ -16,6 +11,10 @@ import (
 	erc20mocks "github.com/deep-thought-labs/infinite/x/erc20/types/mocks"
 	"github.com/deep-thought-labs/infinite/x/vm/statedb"
 	evmtypes "github.com/deep-thought-labs/infinite/x/vm/types"
+	"github.com/ethereum/go-ethereum/common"
+	"github.com/holiman/uint256"
+	"github.com/stretchr/testify/mock"
+	"go.uber.org/mock/gomock"
 
 	"cosmossdk.io/math"
 

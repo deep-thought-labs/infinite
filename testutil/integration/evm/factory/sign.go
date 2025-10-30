@@ -3,10 +3,9 @@ package factory
 import (
 	"math/big"
 
-	gethtypes "github.com/ethereum/go-ethereum/core/types"
-
 	"github.com/deep-thought-labs/infinite/testutil/tx"
 	evmtypes "github.com/deep-thought-labs/infinite/x/vm/types"
+	gethtypes "github.com/ethereum/go-ethereum/core/types"
 
 	errorsmod "cosmossdk.io/errors"
 

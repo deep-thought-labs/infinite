@@ -3,10 +3,9 @@ package erc20
 import (
 	"math/big"
 
-	"github.com/ethereum/go-ethereum/common"
-
 	utiltx "github.com/deep-thought-labs/infinite/testutil/tx"
 	"github.com/deep-thought-labs/infinite/x/erc20/types"
+	"github.com/ethereum/go-ethereum/common"
 
 	"cosmossdk.io/math"
 

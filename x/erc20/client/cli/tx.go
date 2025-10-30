@@ -3,11 +3,10 @@ package cli
 import (
 	"fmt"
 
-	"github.com/ethereum/go-ethereum/common"
-	"github.com/spf13/cobra"
-
 	"github.com/deep-thought-labs/infinite/utils"
 	"github.com/deep-thought-labs/infinite/x/erc20/types"
+	"github.com/ethereum/go-ethereum/common"
+	"github.com/spf13/cobra"
 
 	"cosmossdk.io/math"
 

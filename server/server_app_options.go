@@ -4,11 +4,10 @@ import (
 	"math"
 	"path/filepath"
 
-	"github.com/holiman/uint256"
-	"github.com/spf13/cast"
-
 	"github.com/deep-thought-labs/infinite/mempool/txpool/legacypool"
 	srvflags "github.com/deep-thought-labs/infinite/server/flags"
+	"github.com/holiman/uint256"
+	"github.com/spf13/cast"
 
 	"cosmossdk.io/log"
 

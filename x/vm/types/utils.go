@@ -7,12 +7,12 @@ import (
 	"math/big"
 	"sort"
 
+	feemarkettypes "github.com/deep-thought-labs/infinite/x/feemarket/types"
 	"github.com/ethereum/go-ethereum/common"
 	ethtypes "github.com/ethereum/go-ethereum/core/types"
 	"github.com/ethereum/go-ethereum/crypto"
 	"github.com/ethereum/go-ethereum/params"
 
-	feemarkettypes "github.com/deep-thought-labs/infinite/x/feemarket/types"
 	"github.com/cosmos/gogoproto/proto"
 
 	errorsmod "cosmossdk.io/errors"

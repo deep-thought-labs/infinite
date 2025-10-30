@@ -6,6 +6,8 @@ import (
 	"sync"
 	"time"
 
+	"github.com/deep-thought-labs/infinite/rpc/stream"
+	"github.com/deep-thought-labs/infinite/rpc/types"
 	"github.com/ethereum/go-ethereum/common"
 	ethtypes "github.com/ethereum/go-ethereum/core/types"
 	"github.com/ethereum/go-ethereum/eth/filters"
@@ -13,9 +15,6 @@ import (
 	"github.com/pkg/errors"
 
 	coretypes "github.com/cometbft/cometbft/rpc/core/types"
-
-	"github.com/deep-thought-labs/infinite/rpc/stream"
-	"github.com/deep-thought-labs/infinite/rpc/types"
 
 	"cosmossdk.io/log"
 
