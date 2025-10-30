@@ -129,34 +129,85 @@ The Infinite Drive project uses a Makefile-based build system that:
 3. **Installs dependencies**: Downloads and compiles all Go modules
 4. **Creates executables**: Places binaries in `$HOME/go/bin/`
 
-#### Build Commands
+#### Standard Build Process
+
+**Recommended workflow**: Compile and install the binary.
 
 ```bash
-# Full compilation and installation
+# Compile and install the binary
 make install
-
-# Compile without installing
-make build
-
-# Clean build artifacts
-make clean
-
-# Run tests
-make test
-
-# Check for linting issues
-make lint
 ```
 
-#### Build Output
+**What happens**: The `make install` command will:
+1. Compile the `infinited` binary with all necessary dependencies
+2. Install it to `$HOME/go/bin/infinited`
+3. The binary becomes immediately available if `$HOME/go/bin` is in your PATH
 
-After successful compilation, you should see:
+**Note**: If you need to clean previous builds, you can manually remove build artifacts:
+```bash
+# Optional: Remove build directory (if exists)
+rm -rf build/
+
+# Optional: Remove previously installed binary (if you want a fresh install)
+rm -f $HOME/go/bin/infinited
+```
+
+Then run `make install` to build and install fresh.
+
+**Expected output**:
 ```
 🚚  Installing infinited to '/Users/yourusername/go'/bin ...
 BUILD_FLAGS: -tags netgo -ldflags '-X github.com/cosmos/cosmos-sdk/version.Name=infinite ...'
 ```
 
-The binary will be installed to: `$HOME/go/bin/infinited`
+**Binary location**: After successful installation, the binary is located at:
+```
+$HOME/go/bin/infinited
+```
+
+You can verify the installation:
+```bash
+which infinited
+infinited version
+```
+
+#### Build Commands Reference
+
+The following commands are available for different build scenarios. **Note**: These are individual commands, not sequential steps. Use them based on your needs.
+
+##### `make install` (Primary - Recommended)
+**What it does**: Compiles and installs the binary to `$HOME/go/bin/infinited`  
+**When to use**: Standard way to build and install the binary  
+**Output location**: `$HOME/go/bin/infinited`
+
+##### `make build` (Optional - Compile Only)
+**What it does**: Compiles the binary but does NOT install it. Creates the binary in `./build/infinited`  
+**When to use**: If you only want to compile without installing, or want the binary in a specific location  
+**Output location**: `./build/infinited`  
+**Note**: You'll need to manually copy or move this binary if you want to use it system-wide
+
+##### Manual Clean (Optional - Clean Build Artifacts)
+**What it does**: Manually remove build artifacts and compiled binaries  
+**When to use**: Before rebuilding to ensure a fresh build, or to free up disk space  
+**How to do it**:
+```bash
+# Remove build directory
+rm -rf build/
+
+# Remove installed binary (optional)
+rm -f $HOME/go/bin/infinited
+```
+**Note**: Recommended before `make install` if you've made significant code changes or want to ensure a completely fresh build
+
+##### `make test` (Optional - Run Tests)
+**What it does**: Executes unit tests to verify code functionality  
+**When to use**: Before committing changes or when troubleshooting issues  
+**Note**: This is separate from building; it only runs tests, does not compile the binary
+
+##### `make lint` (Optional - Code Quality Check)
+**What it does**: Checks code for linting issues and style problems  
+**When to use**: Before committing code or when ensuring code quality standards  
+**Note**: This is a validation step only; it does not compile or modify code
 
 ### 2. Manual Node Configuration (DEVELOPMENT ONLY)
 

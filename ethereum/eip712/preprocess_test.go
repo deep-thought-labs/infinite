@@ -31,16 +31,21 @@ var (
 	// chainID is used in EIP-712 tests.
 	chainID = uint64(constants.EighteenDecimalsChainID)
 
-	ctx = client.Context{}.WithTxConfig(
-		encoding.MakeConfig(chainID).TxConfig,
-	)
-
 	// feePayerAddress is the address of the fee payer used in EIP-712 tests.
 	feePayerAddress = fmt.Sprintf(
-		"%s17xpfvakm2amg962yls6f84z3kell8c5lserqta",
+		"%s17xpfvakm2amg962yls6f84z3kell8c5leh4u3z",
 		constants.ExampleBech32Prefix,
 	)
 )
+
+// getCtx returns a client context with the correct bech32 prefix configured
+func getCtx() client.Context {
+	// Ensure bech32 prefix is set before creating config
+	sdk.GetConfig().SetBech32PrefixForAccount(constants.ExampleBech32Prefix, "")
+	return client.Context{}.WithTxConfig(
+		encoding.MakeConfig(chainID).TxConfig,
+	)
+}
 
 type TestCaseStruct struct {
 	txBuilder              client.TxBuilder
@@ -53,16 +58,17 @@ type TestCaseStruct struct {
 }
 
 func TestLedgerPreprocessing(t *testing.T) {
-	// Update bech32 prefix
+	// Update bech32 prefix (ensure it's set for the test)
 	sdk.GetConfig().SetBech32PrefixForAccount(constants.ExampleBech32Prefix, "")
 	evmConfigurator := evmtypes.NewEVMConfigurator().
 		WithEVMCoinInfo(constants.ExampleChainCoinInfo[constants.ExampleChainID])
 	err := evmConfigurator.Configure()
 	require.NoError(t, err)
 
+	ctx := getCtx()
 	testCases := []TestCaseStruct{
-		createBasicTestCase(t),
-		createPopulatedTestCase(t),
+		createBasicTestCase(t, ctx),
+		createPopulatedTestCase(t, ctx),
 	}
 
 	for _, tc := range testCases {
@@ -81,7 +87,7 @@ func TestLedgerPreprocessing(t *testing.T) {
 		require.True(t, len(hasExtOptsTx.GetExtensionOptions()) == 1)
 
 		expectedExt := eip712.ExtensionOptionsWeb3Tx{
-			TypedDataChainID: 9001,
+			TypedDataChainID: chainID,
 			FeePayer:         feePayerAddress,
 			FeePayerSig:      tc.expectedSignatureBytes,
 		}
@@ -127,6 +133,7 @@ func TestLedgerPreprocessing(t *testing.T) {
 }
 
 func TestBlankTxBuilder(t *testing.T) {
+	ctx := getCtx()
 	txBuilder := ctx.TxConfig.NewTxBuilder()
 
 	err := eip712.PreprocessLedgerTx(
@@ -139,6 +146,7 @@ func TestBlankTxBuilder(t *testing.T) {
 }
 
 func TestNonLedgerTxBuilder(t *testing.T) {
+	ctx := getCtx()
 	txBuilder := ctx.TxConfig.NewTxBuilder()
 
 	err := eip712.PreprocessLedgerTx(
@@ -151,6 +159,7 @@ func TestNonLedgerTxBuilder(t *testing.T) {
 }
 
 func TestInvalidChainId(t *testing.T) {
+	ctx := getCtx()
 	txBuilder := ctx.TxConfig.NewTxBuilder()
 
 	err := eip712.PreprocessLedgerTx(
@@ -162,7 +171,7 @@ func TestInvalidChainId(t *testing.T) {
 	require.Error(t, err)
 }
 
-func createBasicTestCase(t *testing.T) TestCaseStruct {
+func createBasicTestCase(t *testing.T, ctx client.Context) TestCaseStruct {
 	t.Helper()
 	txBuilder := ctx.TxConfig.NewTxBuilder()
 
@@ -200,9 +209,9 @@ func createBasicTestCase(t *testing.T) TestCaseStruct {
 	}
 }
 
-func createPopulatedTestCase(t *testing.T) TestCaseStruct {
+func createPopulatedTestCase(t *testing.T, ctx client.Context) TestCaseStruct {
 	t.Helper()
-	basicTestCase := createBasicTestCase(t)
+	basicTestCase := createBasicTestCase(t, ctx)
 	txBuilder := basicTestCase.txBuilder
 
 	gasLimit := uint64(200000)

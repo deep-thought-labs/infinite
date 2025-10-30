@@ -225,7 +225,7 @@ lint: lint-go lint-python lint-contracts
 lint-go:
 	@echo "--> Running linter"
 	@go install github.com/golangci/golangci-lint/v2/cmd/golangci-lint@$(golangci_version)
-	@$(golangci_lint_cmd) run --timeout=15m
+	@$(shell go env GOPATH)/bin/golangci-lint run --timeout=15m
 
 lint-python:
 	find . -name "*.py" -type f -not -path "*/node_modules/*" | xargs pylint
@@ -236,7 +236,7 @@ lint-contracts:
 
 lint-fix:
 	@go install github.com/golangci/golangci-lint/v2/cmd/golangci-lint@$(golangci_version)
-	@$(golangci_lint_cmd) run --timeout=15m --fix
+	@$(shell go env GOPATH)/bin/golangci-lint run --timeout=15m --fix
 
 lint-fix-contracts:
 	solhint --fix contracts/**/*.sol
