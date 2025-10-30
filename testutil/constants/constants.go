@@ -41,12 +41,7 @@ const (
 // that allows initializing the app with different coin info based on the
 // chain id
 var ChainsCoinInfo = map[uint64]evmtypes.EvmCoinInfo{ // TODO:VLAD - deduplicate this for tests
-	EighteenDecimalsChainID: {
-		Denom:         ExampleAttoDenom,
-		ExtendedDenom: ExampleAttoDenom,
-		DisplayDenom:  ExampleDisplayDenom,
-		Decimals:      evmtypes.EighteenDecimals.Uint32(),
-	},
+    // NOTE: Do not add EighteenDecimalsChainID here as it duplicates config.DefaultEVMChainID (421018)
 	// SixDecimalsChainID provides a chain ID which is being set up with 6 decimals
 	SixDecimalsChainID.EVMChainID: {
 		Denom:         "utest",
