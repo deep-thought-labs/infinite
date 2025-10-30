@@ -8,8 +8,8 @@ Este documento compara las configuraciones entre `mainnet.yaml` y `testnet.yaml`
 
 | Aspecto | Mainnet | Testnet | Justificación |
 |---------|---------|---------|---------------|
-| **Chain ID (Cosmos)** | `infinite_421018-1` | `infinite_TESTNET-1` | Identificación única de red |
-| **Chain ID (EVM)** | `421018` | `9001` | EVM Chain ID diferente |
+| **Chain ID (Cosmos)** | `infinite_421018-1` | `infinite_421018001-1` | Mismo origen agregando 001 |
+| **Chain ID (EVM)** | `421018` | `421018001` | Variante derivada del mainnet agregando 001 |
 | **Governance Periods** | 2 días | 1 hora | Mainnet: seguridad, Testnet: velocidad |
 | **Unbonding Time** | 21 días | 1 día | Mainnet: seguridad, Testnet: agilidad |
 | **Jail Duration** | 10 minutos | 1 minuto | Mainnet: penalización real, Testnet: rápida recuperación |
@@ -33,9 +33,9 @@ chain:
 #### Testnet
 ```yaml
 chain:
-  cosmos_chain_id: "infinite_TESTNET-1" # ID único para testnet
-  evm_chain_id: "9001"                  # EVM Chain ID para testnet
-  bech32_prefix: "infinite"             # Mismo prefijo (compatibilidad)
+  cosmos_chain_id: "infinite_421018001-1" # ID derivado del mainnet agregando 001
+  evm_chain_id: "421018001"               # EVM Chain ID derivado del mainnet agregando 001
+  bech32_prefix: "infinitetest"           # Prefijo diferenciado para testnet
 ```
 
 **✅ Correcto**: IDs únicos para evitar conflictos entre redes.
@@ -44,7 +44,7 @@ chain:
 
 ### 2. Denominations
 
-#### Ambas redes (idénticas)
+#### Mainnet
 ```yaml
 denom:
   base: "drop"      # Denominación base (18 decimales)
@@ -52,7 +52,15 @@ denom:
   decimals: 18      # Precisión estándar (compatible con Ethereum)
 ```
 
-**✅ Correcto**: Mismas denominaciones para consistencia.
+#### Testnet
+```yaml
+denom:
+  base: "drop"        # Denominación base igual (compatibilidad técnica)
+  display: "TEA-test"  # Denominación de display diferenciada para testnet
+  decimals: 18
+```
+
+**✅ Correcto**: Misma base para compatibilidad, display diferenciado para evitar confusión.
 
 ---
 
@@ -63,18 +71,18 @@ denom:
 token_metadata:
   name: "Improbability"
   symbol: "TEA"
-  description: "Improbability: A token powered by the most improbable drop in the galaxy."
+  description: "Improbability ($TEA) powers the Infinite Improbability Drive. Runs on tea. Properly prepared. Native to Infinite."
 ```
 
 #### Testnet
 ```yaml
 token_metadata:
-  name: "Improbability"
-  symbol: "TEA"
-  description: "Improbability: A token powered by the most improbable drop in the galaxy. (Testnet)"
+  name: "Improbability test"
+  symbol: "TEA-test"
+  description: "Improbability ($TEA) powers the Infinite Improbability Drive. Runs on tea. Properly prepared. Native to Infinite. (testnet)"
 ```
 
-**✅ Correcto**: Testnet claramente identificado como tal.
+**✅ Correcto**: Testnet claramente identificado (display y símbolo diferenciados).
 
 ---
 
@@ -214,7 +222,7 @@ evm:
 ```yaml
 evm:
   evm_denom: "drop"
-  chain_id: "9001"                      # EVM Chain ID para testnet
+  chain_id: "421018001"                 # EVM Chain ID para testnet (derivado del mainnet)
   active_static_precompiles: [...]      # Mismos precompiles (consistencia)
 ```
 
@@ -254,8 +262,8 @@ feemarket:
 # Para mainnet (recomendado):
 feemarket:
   no_base_fee: false                    # Habilitar base fee
-  base_fee: "1000000000"                # 1 gwei base fee
-  min_gas_price: "1000000000"           # 1 gwei gas price mínimo
+  base_fee: "1000000000"                # 1e9 drop (0.000000001 TEA) base fee
+  min_gas_price: "1000000000"           # 1e9 drop (0.000000001 TEA) gas price mínimo
   min_gas_multiplier: "0.500000000000000000"
 ```
 
@@ -287,15 +295,15 @@ consensus:
 # En mainnet.yaml, cambiar:
 feemarket:
   no_base_fee: false                    # Habilitar base fee
-  base_fee: "1000000000"                # 1 gwei (incentivo para validadores)
-  min_gas_price: "1000000000"           # 1 gwei mínimo
+  base_fee: "1000000000"                # 1e9 drop (0.000000001 TEA) - incentivo para validadores
+  min_gas_price: "1000000000"           # 1e9 drop (0.000000001 TEA) mínimo
   min_gas_multiplier: "0.500000000000000000"
 ```
 
 ### 2. Gas Prices en app.toml
 Para mainnet, configurar en `app.toml`:
 ```toml
-minimum-gas-prices = "1000000000drop"  # 1 gwei
+minimum-gas-prices = "1000000000drop"  # 1e9 drop (0.000000001 TEA)
 ```
 
 Para testnet:

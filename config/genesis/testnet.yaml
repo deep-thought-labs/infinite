@@ -3,21 +3,21 @@
 
 # Chain Identification
 chain:
-  cosmos_chain_id: "infinite_TESTNET-1"
-  evm_chain_id: "9001"
-  bech32_prefix: "infinite"
+  cosmos_chain_id: "infinite_421018001-1"  # Cosmos Chain ID derivado del mainnet (agregando 001)
+  evm_chain_id: "421018001"                # EVM Chain ID derivado del mainnet (agregando 001)
+  bech32_prefix: "infinitetest"            # Prefijo Bech32 diferenciado para testnet
 
 # Base Denominations
 denom:
-  base: "drop"
-  display: "TEA"
+  base: "drop"        # Unidad mínima (igual que mainnet)
+  display: "TEA-test"  # Denominación de display diferenciada para testnet
   decimals: 18
 
 # Token Metadata
 token_metadata:
-  name: "Improbability"
-  symbol: "TEA"
-  description: "Improbability: A token powered by the most improbable drop in the galaxy. (Testnet)"
+  name: "Improbability test"  # Nombre diferenciado para testnet
+  symbol: "TEA-test"          # Símbolo diferenciado para testnet (incluye "test" en minúsculas)
+  description: "Improbability ($TEA) powers the Infinite Improbability Drive. Runs on tea. Properly prepared. Native to Infinite. (testnet)"
   uri: ""
   uri_hash: ""
   aliases:
@@ -68,7 +68,7 @@ slashing:
 # EVM Module Configuration
 evm:
   evm_denom: "drop"  # Base denomination for EVM transactions
-  chain_id: "9001"  # EVM Chain ID for testnet (different from mainnet)
+  chain_id: "421018001"  # EVM Chain ID for testnet (derived from mainnet)
   active_static_precompiles:
     - "0x0000000000000000000000000000000000000100"  # ECRecover (Ethereum signature recovery)
     - "0x0000000000000000000000000000000000000400"  # SHA256 (cryptographic hash)

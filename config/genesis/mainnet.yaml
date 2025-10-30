@@ -17,7 +17,7 @@ denom:
 token_metadata:
   name: "Improbability"
   symbol: "TEA"
-  description: "Improbability: A token powered by the most improbable drop in the galaxy."
+  description: "Improbability ($TEA) powers the Infinite Improbability Drive. Runs on tea. Properly prepared. Native to Infinite."
   uri: ""
   uri_hash: ""
   aliases:
@@ -91,8 +91,8 @@ erc20:
 # FeeMarket Module Configuration
 feemarket:
   no_base_fee: false  # EIP-1559 style fee market enabled for mainnet (incentivizes validators)
-  base_fee: "1000000000"  # 1 gwei base fee (realistic for mainnet)
-  min_gas_price: "1000000000"  # 1 gwei minimum gas price (incentivizes validators)
+  base_fee: "1000000000"  # 1e9 drop (0.000000001 TEA) base fee (realistic for mainnet)
+  min_gas_price: "1000000000"  # 1e9 drop (0.000000001 TEA) minimum gas price (incentivizes validators)
   min_gas_multiplier: "0.500000000000000000"  # 50% multiplier for priority fees
 
 # Consensus Parameters (Tendermint consensus settings)

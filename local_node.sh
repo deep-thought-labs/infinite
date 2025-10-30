@@ -238,7 +238,7 @@ if [[ $overwrite == "y" || $overwrite == "Y" ]]; then
   jq '.app_state["evm"]["params"]["evm_denom"]="drop"' "$GENESIS" >"$TMP_GENESIS" && mv "$TMP_GENESIS" "$GENESIS"
   jq '.app_state["mint"]["params"]["mint_denom"]="drop"' "$GENESIS" >"$TMP_GENESIS" && mv "$TMP_GENESIS" "$GENESIS"
 
-  jq '.app_state["bank"]["denom_metadata"]=[{"description":"Improbability: A token powered by the most improbable drop in the galaxy.","denom_units":[{"denom":"drop","exponent":0,"aliases":["crumb","improbability_particle"]},{"denom":"TEA","exponent":18,"aliases":[]}],"base":"drop","display":"TEA","name":"Improbability","symbol":"TEA","uri":"","uri_hash":""}]' "$GENESIS" >"$TMP_GENESIS" && mv "$TMP_GENESIS" "$GENESIS"
+  jq '.app_state["bank"]["denom_metadata"]=[{"description":"Improbability ($TEA) powers the Infinite Improbability Drive. Runs on tea. Properly prepared. Native to Infinite.","denom_units":[{"denom":"drop","exponent":0,"aliases":["crumb","improbability_particle"]},{"denom":"TEA","exponent":18,"aliases":[]}],"base":"drop","display":"TEA","name":"Improbability","symbol":"TEA","uri":"","uri_hash":""}]' "$GENESIS" >"$TMP_GENESIS" && mv "$TMP_GENESIS" "$GENESIS"
 
   jq '.app_state["evm"]["params"]["active_static_precompiles"]=["0x0000000000000000000000000000000000000100","0x0000000000000000000000000000000000000400","0x0000000000000000000000000000000000000800","0x0000000000000000000000000000000000000801","0x0000000000000000000000000000000000000802","0x0000000000000000000000000000000000000803","0x0000000000000000000000000000000000000804","0x0000000000000000000000000000000000000805", "0x0000000000000000000000000000000000000806", "0x0000000000000000000000000000000000000807"]' "$GENESIS" >"$TMP_GENESIS" && mv "$TMP_GENESIS" "$GENESIS"
 

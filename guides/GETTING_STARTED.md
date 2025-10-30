@@ -280,7 +280,7 @@ curl -X POST -H "Content-Type: application/json" \
   --data '{"jsonrpc":"2.0","method":"eth_chainId","params":[],"id":1}' \
   http://localhost:8545
 
-# Expected response: {"jsonrpc":"2.0","id":1,"result":"0x66c9a"}
+# Expected response: a hex chain ID (e.g., mainnet 0x66c9a for 421018, or testnet 0x1919b571 for 421018001)
 ```
 
 **Setup complete.** The node is running with:
@@ -315,12 +315,25 @@ Your node is running three services simultaneously:
 - **REST API (Port 1317)**: Cosmos SDK API for blockchain queries  
 - **Tendermint RPC (Port 26657)**: Low-level blockchain RPC
 
-### 4. Test Configuration
-The script created a development blockchain with:
-- **Chain ID**: `infinite_421018-1` (Cosmos) / `421018` (EVM)
-- **Token**: Improbability (TEA) with base unit `drop`
-- **Test Accounts**: Pre-funded accounts for testing
-- **Genesis State**: Initial blockchain state with sample data
+### 4. Network & Genesis Notes
+The script creates a local development blockchain. In real networks you MUST use the official genesis files provided by Infinite:
+
+- **Mainnet**:
+  - Cosmos Chain ID: `infinite_421018-1`
+  - EVM Chain ID: `421018`
+  - Bech32 prefix: `infinite`
+  - Token: Improbability (display `TEA`, base `drop`)
+
+- **Testnet**:
+  - Cosmos Chain ID: `infinite_421018001-1`
+  - EVM Chain ID: `421018001`
+  - Bech32 prefix: `infinitetest`
+  - Token: Improbability (display `TEA-test`, base `drop`)
+
+IMPORTANT:
+- Always use the officially published `genesis.json` for the target network.
+- Do NOT mix mainnet/testnet chain IDs or prefixes.
+- The examples in this guide are for local development only.
 
 ## Next Steps
 
