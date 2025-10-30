@@ -249,7 +249,11 @@ Type=simple
 User=infinited
 Group=infinited
 WorkingDirectory=/opt/infinited
-ExecStart=/opt/infinited/infinited start --json-rpc.api eth,txpool,personal,net,debug,web3 --home /opt/infinited
+ExecStart=/opt/infinited/infinited start \
+  --chain-id infinite_421018-1 \
+  --evm.evm-chain-id 421018 \
+  --json-rpc.api eth,txpool,personal,net,debug,web3 \
+  --home /opt/infinited
 Restart=always
 RestartSec=3
 LimitNOFILE=4096

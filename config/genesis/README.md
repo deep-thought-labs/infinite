@@ -7,21 +7,6 @@ This directory contains YAML configuration files for generating genesis files fo
 - `mainnet.yaml` - Configuration for Mainnet production network
 - `testnet.yaml` - Configuration for Testnet network
 
-## Usage
-
-Use these configuration files with the `setup_genesis.sh` script:
-
-```bash
-# Generate Mainnet genesis
-./scripts/setup_genesis.sh mainnet my-moniker
-
-# Generate Testnet genesis
-./scripts/setup_genesis.sh testnet test-moniker
-
-# Generate to custom directory
-./scripts/setup_genesis.sh mainnet my-moniker ~/custom-genesis
-```
-
 ## Configuration Structure
 
 Each YAML file contains:
@@ -70,6 +55,27 @@ sudo apt install jq
 - Governance periods differ between mainnet (2 days) and testnet (1 hour)
 - All denoms will be set to `drop` as configured in the YAML
 
+
+## Usage
+
+Before running the commands below, review the sections on pre-configuration and customization to ensure the genesis parameters match your environment:
+- See "Configuration Structure" and "Customization" in this document
+- See guides/GENESIS_MAINNET_CONFIGURATION.md (network-specific guidance)
+- Ensure you will use the official genesis files for production networks
+
+Use these configuration files with the `setup_genesis.sh` script:
+
+```bash
+# Generate Mainnet genesis
+./scripts/setup_genesis.sh mainnet my-moniker
+
+# Generate Testnet genesis
+./scripts/setup_genesis.sh testnet test-moniker
+
+# Generate to custom directory
+./scripts/setup_genesis.sh mainnet my-moniker ~/custom-genesis
+```
+
 ## Adding Validators
 
 After running the script, you must add validators:
@@ -101,3 +107,59 @@ jq '.app_state.staking.validators | length' ~/.infinited/config/genesis.json
 
 See `guides/VALIDATORS_GENESIS.md` and `guides/TOKEN_SUPPLY_GENESIS.md` for complete instructions.
 
+## Ready to Use / Next Steps
+
+At this point, your `genesis.json` is ready to be used. To launch nodes:
+
+1. Distribute the final `genesis.json` to all nodes. Typical locations:
+   - Mainnet: `~/.infinited/config/genesis.json`
+   - Testnet: `~/.infinited_testnet/config/genesis.json`
+
+2. Start the node specifying the expected Chain IDs via flags (recommended):
+   - Always pass the Cosmos `--chain-id` and the EVM `--evm.evm-chain-id`.
+   - If omitted:
+     - Cosmos chain-id will be read from `genesis.json`.
+     - EVM chain-id will default to Mainnet (`421018`).
+     - Home will default to Mainnet path: `~/.infinited`.
+
+3. Optionally set minimum gas prices in `app.toml`:
+   - Mainnet (example): `minimum-gas-prices = "1000000000drop"`
+   - Testnet: `minimum-gas-prices = "0drop"`
+
+4. Start the node (examples):
+
+   Default home (uses `~/.infinited/config/genesis.json`):
+   ```bash
+   # Mainnet
+   infinited start \
+     --chain-id infinite_421018-1 \
+     --evm.evm-chain-id 421018
+
+   # Testnet
+   infinited start \
+     --chain-id infinite_421018001-1 \
+     --evm.evm-chain-id 421018001
+   ```
+
+   Using a custom data directory.
+   On this case, the testnet path.
+   ```bash
+   # Save in local variable the custom home
+   HOME_DIR=~/.infinited_testnet
+ 
+   # (Optional) You always can initialize a new node, it will create basic data structure with the base genesis file. After run it, you can edit the genesis file with the script, or replace it with another file.   
+   infinited init my-node --chain-id infinite_421018001-1 --home "$HOME_DIR"
+
+   # Start the node pointing to that data dir (always pass both chain IDs)
+   infinited start \
+     --home "$HOME_DIR" \
+     --chain-id infinite_421018001-1 \
+     --evm.evm-chain-id 421018001
+   ```
+
+5. Verify the node is running and connected (JSON-RPC/REST/Tendermint RPC).
+
+Further guidance:
+- Quick setup and health checks: `guides/GETTING_STARTED.md`
+- Production rollout: `guides/PRODUCTION_DEPLOYMENT.md`
+- Network parameters and differences: `config/genesis/COMPARISON_MAINNET_TESTNET.md`

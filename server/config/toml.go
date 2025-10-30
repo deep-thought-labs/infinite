@@ -19,7 +19,8 @@ max-tx-gas-wanted = {{ .EVM.MaxTxGasWanted }}
 # EnablePreimageRecording enables tracking of SHA3 preimages in the VM
 cache-preimage = {{ .EVM.EnablePreimageRecording }}
 
-# EVMChainID is the EIP-155 compatible replay protection chain ID. This is separate from the Cosmos chain ID.
+# EVMChainID is the EIP-155 compatible replay protection chain ID.
+# Configure per network (e.g., mainnet 421018, testnet 421018001).
 evm-chain-id = {{ .EVM.EVMChainID }}
 
 # MinTip defines the minimum priority fee for the mempool.

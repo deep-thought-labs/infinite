@@ -763,6 +763,20 @@ infinited genesis validate-genesis --home /ruta/a/config
 
 El archivo `genesis.json` debe ser distribuido a TODOS los nodos de la red antes del lanzamiento.
 
+### Arranque del nodo (siempre especificando ambos Chain IDs)
+
+```bash
+# Mainnet
+infinited start \
+  --chain-id infinite_421018-1 \
+  --evm.evm-chain-id 421018
+
+# Testnet
+infinited start \
+  --chain-id infinite_421018001-1 \
+  --evm.evm-chain-id 421018001
+```
+
 ---
 
 ## Diferencias Clave: Desarrollo vs Producción

@@ -333,7 +333,25 @@ The script creates a local development blockchain. In real networks you MUST use
 IMPORTANT:
 - Always use the officially published `genesis.json` for the target network.
 - Do NOT mix mainnet/testnet chain IDs or prefixes.
+- Start nodes always passing both chain IDs via flags:
+  - Mainnet:
+    ```bash
+    infinited start \
+      --chain-id infinite_421018-1 \
+      --evm.evm-chain-id 421018
+    ```
+  - Testnet:
+    ```bash
+    infinited start \
+      --chain-id infinite_421018001-1 \
+      --evm.evm-chain-id 421018001
+    ```
 - The examples in this guide are for local development only.
+
+Defaults (when flags are omitted):
+- Cosmos chain-id: read from `genesis.json` in the selected home
+- EVM chain-id: defaults to Mainnet `421018`
+- Home directory: defaults to `~/.infinited` (Mainnet path)
 
 ## Next Steps
 

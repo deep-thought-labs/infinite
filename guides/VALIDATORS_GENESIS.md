@@ -17,7 +17,9 @@ Si intentas iniciar una cadena con un Genesis sin validadores:
 ### Comportamiento esperado:
 
 ```
-$ infinited start
+$ infinited start \
+  --chain-id infinite_421018-1 \
+  --evm.evm-chain-id 421018
 ...
 I[2025-01-XX|...] starting ABCI with CometBFT
 I[2025-01-XX|...] Starting node

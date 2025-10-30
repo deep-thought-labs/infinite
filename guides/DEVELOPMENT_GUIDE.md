@@ -270,7 +270,11 @@ infinited genesis collect-gentxs
 
 ```bash
 # Start the node with all APIs enabled (DEVELOPMENT CONFIGURATION)
-infinited start --json-rpc.api eth,txpool,personal,net,debug,web3 --minimum-gas-prices=0drop
+infinited start \
+  --chain-id infinite_421018-1 \
+  --evm.evm-chain-id 421018 \
+  --json-rpc.api eth,txpool,personal,net,debug,web3 \
+  --minimum-gas-prices=0drop
 ```
 
 **Note**: This creates a development blockchain with test accounts. For production, you would use proper genesis files and secure key management.

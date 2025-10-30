@@ -170,10 +170,9 @@ setup_genesis() {
        "$GENESIS_FILE" > "$TMP_GENESIS" && mv "$TMP_GENESIS" "$GENESIS_FILE"
     
     # Step 3: Configure EVM chain ID
-    print_info "Configuring EVM chain ID..."
-    jq --arg chain_id "$evm_chain_id" \
-       '.app_state.evm.params.chain_config.chain_id = $chain_id' \
-       "$GENESIS_FILE" > "$TMP_GENESIS" && mv "$TMP_GENESIS" "$GENESIS_FILE"
+    # NOTE: EVM chain ID is not written in genesis in this codebase.
+    #       Configure it via app.toml (evm-chain-id) or --evm.evm-chain-id flag at node start.
+    print_info "Configuring EVM chain ID... (skipped in genesis; set in app.toml or --evm.evm-chain-id)"
     
     # Step 4: Configure token metadata
     print_info "Configuring token metadata..."
