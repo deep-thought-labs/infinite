@@ -65,8 +65,6 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y gcc-aarch64-linux-gnu gcc-x86-64-linux-gnu
-          # For macOS cross-compilation (if needed)
-          # Note: macOS cross-compilation from Linux requires additional setup
 
       - name: Run GoReleaser
         uses: goreleaser/goreleaser-action@v5

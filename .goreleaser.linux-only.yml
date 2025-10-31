@@ -45,10 +45,12 @@ builds:
     tags:
       - netgo
     # Linux targets: AMD64 and ARM64
-    # Note: ARM64 may fail on Mac M1 with Docker emulation, but works in GitHub Actions
+    # Note: ARM64 requires cross-compilation toolchain
+    # Works in GitHub Actions with gcc-aarch64-linux-gnu
+    # May require additional setup on Mac M1 (QEMU for emulation)
     targets:
-      - linux_amd64      # Should work in all environments
-      - linux_arm64      # May fail on Mac M1 Docker emulation, works in Ubuntu native
+      - linux_amd64      # Native on AMD64 hosts
+      - linux_arm64      # Cross-compiled, native on ARM64 hosts
 
 # Archive configuration
 archives:

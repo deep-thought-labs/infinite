@@ -46,27 +46,16 @@ builds:
       - -X github.com/cosmos/cosmos-sdk/version.BuildTags=netgo
     tags:
       - netgo
-    # Cross-compilation support for CGO
+    # Focus on Linux only
     goos:
       - linux
-      - darwin
-      - windows
     goarch:
       - amd64
       - arm64
-    # Specify explicit targets to avoid CGO compiler conflicts
-    # Using explicit targets helps goreleaser-cross select correct cross-compilers
-    # Specifying targets without goamd64 variants avoids compiler selection issues
+    # Explicit targets for Linux AMD64 and ARM64
     targets:
       - linux_amd64
       - linux_arm64
-      - darwin_amd64
-      - darwin_arm64
-      - windows_amd64
-    # Ignore unsupported combinations
-    ignore:
-      - goos: windows
-        goarch: arm64  # Windows ARM64 is not commonly supported yet
 
 # Archive configuration
 archives:
@@ -81,11 +70,7 @@ archives:
       {{- else }}{{ .Arch }}{{ end }}
     # Format determines archive format
     format_overrides:
-      - goos: windows
-        format: zip
       - goos: linux
-        format: tar.gz
-      - goos: darwin
         format: tar.gz
     # Files to include in the archive (if they exist)
     files:
