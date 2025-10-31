@@ -130,8 +130,9 @@ release:
     ---
     
     **Full Changelog**: https://github.com/deep-thought-labs/infinite/compare/{{ .PreviousTag }}...{{ .Tag }}
-  # Mode: replace updates existing release, skip skips if exists
-  mode: replace
+  # Mode: auto creates release if doesn't exist, updates if exists
+  # Options: keep_existing, skip, replace, auto
+  mode: auto
 
 # NFPM configuration (for .deb and .rpm packages - optional)
 # Uncomment if you want to create Linux packages
