@@ -105,7 +105,7 @@ fi
 # Optional: Check cross-compilation toolchains (Linux AMD64 only)
 if [ "$(uname)" = "Linux" ] && [ "$(uname -m)" = "x86_64" ]; then
     echo -n "Cross-compilation toolchains (for ARM64 builds): "
-    if command -v gcc-aarch64-linux-gnu >/dev/null 2>&1 && command -v gcc-x86-64-linux-gnu >/dev/null 2>&1; then
+    if command -v aarch64-linux-gnu-gcc >/dev/null 2>&1 && command -v x86_64-linux-gnu-gcc >/dev/null 2>&1; then
         echo -e "${GREEN}✅ Installed${NC}"
     else
         echo -e "${YELLOW}⚠️  Missing (optional for local ARM64 cross-compilation)${NC}"
