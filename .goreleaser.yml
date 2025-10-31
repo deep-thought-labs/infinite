@@ -26,9 +26,8 @@ project_name: infinite
 
 # Build configuration
 builds:
-  # Main binary: infinited
-  - id: infinited
-    # Path to the main package in the infinited submodule
+  # Build for Linux AMD64
+  - id: infinited_amd64
     dir: infinited
     main: ./cmd/infinited
     binary: infinited
@@ -46,12 +45,31 @@ builds:
       - -X github.com/cosmos/cosmos-sdk/version.BuildTags=netgo
     tags:
       - netgo
-    # Explicit targets for Linux AMD64 and ARM64
-    # Note: When targets are specified, goos/goarch are ignored by GoReleaser
-    # ARM64 may fail on Mac M1 with Docker emulation, but works in GitHub Actions (Ubuntu native)
     targets:
-      - linux_amd64      # Works in all environments
-      - linux_arm64       # May fail on Mac M1 Docker emulation, works in Ubuntu native
+      - linux_amd64
+
+  # Build for Linux ARM64 with explicit cross-compiler
+  - id: infinited_arm64
+    dir: infinited
+    main: ./cmd/infinited
+    binary: infinited
+    env:
+      - CGO_ENABLED=1
+      - CC=aarch64-linux-gnu-gcc  # Explicit cross-compiler for ARM64 CGO cross-compilation
+    flags:
+      - -trimpath
+    ldflags:
+      - -s -w
+      - -X github.com/cosmos/cosmos-sdk/version.Name=infinite
+      - -X github.com/cosmos/cosmos-sdk/version.AppName=infinited
+      - -X github.com/cosmos/cosmos-sdk/version.Version={{ .Version }}
+      - -X github.com/cosmos/cosmos-sdk/version.Commit={{ .Commit }}
+      - -X github.com/cometbft/cometbft/version.TMCoreSemVer={{ .Env.TMVERSION }}
+      - -X github.com/cosmos/cosmos-sdk/version.BuildTags=netgo
+    tags:
+      - netgo
+    targets:
+      - linux_arm64
 
 # Archive configuration
 archives:
