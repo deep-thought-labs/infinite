@@ -1,0 +1,153 @@
+# GoReleaser configuration for Infinite Drive
+#
+# Copyright (c) 2025 Deep Thought Labs
+# All rights reserved.
+#
+# This file is part of the Infinite Drive blockchain tooling.
+#
+# Purpose: Configure automated multi-platform builds for production releases
+#          Supports: Linux (amd64, arm64), macOS (amd64, arm64), Windows (amd64)
+#
+# Usage:
+#   - make release-dry-run        # Test build locally (all platforms)
+#   - make release                # Create official release (requires .release-env)
+#   - GitHub Actions triggers automatically on version tags (v*.*.*)
+#
+# Important Notes:
+#   - Requires CGO_ENABLED=1 for cryptographic functions (secp256k1)
+#   - Cross-compilation from Mac M1 may be slow due to Docker emulation
+#   - ARM64 builds may fail on Mac M1 with Docker emulation, but work in GitHub Actions
+#   - Official releases are built in GitHub Actions on Ubuntu (native environment)
+#
+# See: guides/BUILDING_AND_RELEASES.md for detailed documentation
+#
+version: 2
+project_name: infinite
+
+# Build configuration
+builds:
+  # Main binary: infinited
+  - id: infinited
+    # Path to the main package in the infinited submodule
+    dir: infinited
+    main: ./cmd/infinited
+    binary: infinited
+    env:
+      - CGO_ENABLED=1
+    flags:
+      - -trimpath
+    ldflags:
+      - -s -w
+      - -X github.com/cosmos/cosmos-sdk/version.Name=infinite
+      - -X github.com/cosmos/cosmos-sdk/version.AppName=infinited
+      - -X github.com/cosmos/cosmos-sdk/version.Version={{ .Version }}
+      - -X github.com/cosmos/cosmos-sdk/version.Commit={{ .Commit }}
+      - -X github.com/cometbft/cometbft/version.TMCoreSemVer={{ .Env.TMVERSION }}
+      - -X github.com/cosmos/cosmos-sdk/version.BuildTags=netgo
+    tags:
+      - netgo
+    # Cross-compilation support for CGO
+    goos:
+      - linux
+      - darwin
+      - windows
+    goarch:
+      - amd64
+      - arm64
+    # Specify explicit targets to avoid CGO compiler conflicts
+    # Using explicit targets helps goreleaser-cross select correct cross-compilers
+    # Specifying targets without goamd64 variants avoids compiler selection issues
+    targets:
+      - linux_amd64
+      - linux_arm64
+      - darwin_amd64
+      - darwin_arm64
+      - windows_amd64
+    # Ignore unsupported combinations
+    ignore:
+      - goos: windows
+        goarch: arm64  # Windows ARM64 is not commonly supported yet
+
+# Archive configuration
+archives:
+  - id: default
+    name_template: >-
+      {{ .ProjectName }}_
+      {{- if eq .Os "darwin" }}macOS
+      {{- else if eq .Os "windows" }}Windows
+      {{- else }}{{ title .Os }}{{ end }}_
+      {{- if eq .Arch "amd64" }}x86_64
+      {{- else if eq .Arch "arm64" }}ARM64
+      {{- else }}{{ .Arch }}{{ end }}
+    # Format determines archive format
+    format_overrides:
+      - goos: windows
+        format: zip
+      - goos: linux
+        format: tar.gz
+      - goos: darwin
+        format: tar.gz
+    # Files to include in the archive (if they exist)
+    files:
+      - README.md
+      - LICENSE
+      - CHANGELOG.md
+    # Don't wrap binaries in a directory
+    wrap_in_directory: false
+
+# Checksums configuration
+checksum:
+  name_template: 'checksums.txt'
+  algorithm: sha256
+
+# Snapshot configuration (for development builds)
+snapshot:
+  name_template: "{{ .Tag }}-next"
+
+# Changelog configuration
+changelog:
+  sort: asc
+  filters:
+    exclude:
+      - '^docs:'
+      - '^test:'
+      - 'Merge pull request'
+      - 'Merge branch'
+
+# Release configuration
+release:
+  # GitHub release settings
+  github:
+    owner: deep-thought-labs
+    name: infinite
+  # Release notes header
+  header: |
+    ## Infinite Drive {{ .Tag }}
+    
+    Release {{ .Tag }} of Infinite Drive.
+  # Footer for release notes
+  footer: |
+    ---
+    
+    **Full Changelog**: https://github.com/deep-thought-labs/infinite/compare/{{ .PreviousTag }}...{{ .Tag }}
+  # Mode: replace updates existing release, skip skips if exists
+  mode: replace
+
+# NFPM configuration (for .deb and .rpm packages - optional)
+# Uncomment if you want to create Linux packages
+# nfpms:
+#   - id: infinited
+#     package_name: infinited
+#     file_name_template: >-
+#       {{ .ConventionalFileName }}
+#     formats:
+#       - deb
+#       - rpm
+#     dependencies:
+#       - libc6
+#     description: Infinite Drive blockchain node
+#     maintainer: Deep Thought Labs <contact@example.com>
+#     homepage: https://github.com/deep-thought-labs/infinite
+#     license: Apache-2.0
+#     bindir: /usr/bin
+

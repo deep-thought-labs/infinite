@@ -105,6 +105,50 @@ build: go.sum $(BUILDDIR)/
 build-linux:
 	GOOS=linux GOARCH=amd64 $(MAKE) build
 
+# Cross-compilation builds for releases
+# NOTE: These require CGO_ENABLED=1 for cryptographic functions (secp256k1)
+# For best cross-compilation support, use GoReleaser or build on native platforms
+# These commands work best when building for the same OS (e.g., Linux to Linux, macOS to macOS)
+
+build-cross-linux-amd64:
+	@echo "🏗️  Building binary for Linux AMD64 (requires cross-compilation tools)..."
+	@echo "⚠️  Note: Cross-compilation with CGO from macOS to Linux may require additional setup"
+	@mkdir -p $(BUILDDIR)
+	@cd $(INFINITED_DIR) && CGO_ENABLED=1 GOOS=linux GOARCH=amd64 \
+	  go build $(BUILD_FLAGS) -o $(BUILDDIR)/infinited-linux-amd64 $(INFINITED_MAIN_PKG)
+
+build-cross-linux-arm64:
+	@echo "🏗️  Building binary for Linux ARM64 (requires cross-compilation tools)..."
+	@mkdir -p $(BUILDDIR)
+	@cd $(INFINITED_DIR) && CGO_ENABLED=1 GOOS=linux GOARCH=arm64 \
+	  go build $(BUILD_FLAGS) -o $(BUILDDIR)/infinited-linux-arm64 $(INFINITED_MAIN_PKG)
+
+build-cross-darwin-amd64:
+	@echo "🏗️  Building binary for macOS Intel..."
+	@mkdir -p $(BUILDDIR)
+	@cd $(INFINITED_DIR) && CGO_ENABLED=1 GOOS=darwin GOARCH=amd64 \
+	  go build $(BUILD_FLAGS) -o $(BUILDDIR)/infinited-darwin-amd64 $(INFINITED_MAIN_PKG)
+
+build-cross-darwin-arm64:
+	@echo "🏗️  Building binary for macOS Apple Silicon..."
+	@mkdir -p $(BUILDDIR)
+	@cd $(INFINITED_DIR) && CGO_ENABLED=1 GOOS=darwin GOARCH=arm64 \
+	  go build $(BUILD_FLAGS) -o $(BUILDDIR)/infinited-darwin-arm64 $(INFINITED_MAIN_PKG)
+
+build-cross-windows-amd64:
+	@echo "🏗️  Building binary for Windows AMD64 (requires cross-compilation tools)..."
+	@echo "⚠️  Note: Cross-compilation to Windows from macOS/Linux may require additional setup"
+	@mkdir -p $(BUILDDIR)
+	@cd $(INFINITED_DIR) && CGO_ENABLED=1 GOOS=windows GOARCH=amd64 \
+	  go build $(BUILD_FLAGS) -o $(BUILDDIR)/infinited-windows-amd64.exe $(INFINITED_MAIN_PKG)
+
+# Simple build from infinited directory (works reliably)
+# Use this when you need to build manually and can change to the infinited directory
+build-from-infinited:
+	@echo "🏗️  Building from infinited directory..."
+	@echo "💡 Tip: Run 'cd infinited && go build ./cmd/infinited' for direct control"
+	@cd $(INFINITED_DIR) && go build $(BUILD_FLAGS) -o $(BUILDDIR)/infinited $(INFINITED_MAIN_PKG)
+
 # Install into $(BINDIR)
 install: go.sum
 	@echo "🚚  Installing infinited to $(BINDIR) ..."
@@ -116,7 +160,9 @@ $(BUILDDIR)/:
 	mkdir -p $(BUILDDIR)/
 
 # Default & all target
-.PHONY: all build build-linux install
+.PHONY: all build build-linux install build-cross-linux-amd64 build-cross-linux-arm64 \
+        build-cross-darwin-amd64 build-cross-darwin-arm64 build-cross-windows-amd64 \
+        build-from-infinited
 all: build
 
 ###############################################################################
@@ -328,10 +374,15 @@ PACKAGE_NAME:=github.com/cosmos/evm
 GOLANG_CROSS_VERSION  = v1.22
 GOPATH ?= '$(HOME)/go'
 release-dry-run:
+	@echo "Getting CometBFT version..."
+	@echo "TMVERSION=$(TMVERSION)"
+	@echo "ℹ️  GoReleaser mostrará el progreso de cada build..."
 	docker run \
 		--rm \
 		--privileged \
+		--platform linux/amd64 \
 		-e CGO_ENABLED=1 \
+		-e TMVERSION=$(TMVERSION) \
 		-v /var/run/docker.sock:/var/run/docker.sock \
 		-v `pwd`:/go/src/$(PACKAGE_NAME) \
 		-v ${GOPATH}/pkg:/go/pkg \
@@ -339,15 +390,43 @@ release-dry-run:
 		ghcr.io/goreleaser/goreleaser-cross:${GOLANG_CROSS_VERSION} \
 		--clean --skip validate --skip publish --snapshot
 
+# Release dry-run solo para Linux (más rápido para desarrollo)
+# NOTE: Linux ARM64 builds may fail on Mac M1 with Docker emulation
+#       This is expected - ARM64 builds work correctly in GitHub Actions (Ubuntu native)
+release-dry-run-linux:
+	@echo "Getting CometBFT version..."
+	@echo "TMVERSION=$(TMVERSION)"
+	@echo "ℹ️  Compilando solo para Linux (amd64 y arm64)..."
+	@echo "⚠️  Nota: Builds ARM64 pueden fallar en Mac M1 con Docker emulado"
+	@echo "          Esto es normal - ARM64 funciona correctamente en GitHub Actions"
+	@echo "ℹ️  GoReleaser mostrará el progreso de cada build..."
+	docker run \
+		--rm \
+		--privileged \
+		--platform linux/amd64 \
+		-e CGO_ENABLED=1 \
+		-e TMVERSION=$(TMVERSION) \
+		-v /var/run/docker.sock:/var/run/docker.sock \
+		-v `pwd`:/go/src/$(PACKAGE_NAME) \
+		-v ${GOPATH}/pkg:/go/pkg \
+		-w /go/src/$(PACKAGE_NAME) \
+		ghcr.io/goreleaser/goreleaser-cross:${GOLANG_CROSS_VERSION} \
+		--clean --skip validate --skip publish --snapshot \
+		--config .goreleaser.linux-only.yml
+
 release:
 	@if [ ! -f ".release-env" ]; then \
 		echo "\033[91m.release-env is required for release\033[0m";\
 		exit 1;\
 	fi
+	@echo "Getting CometBFT version..."
+	@echo "TMVERSION=$(TMVERSION)"
 	docker run \
 		--rm \
 		--privileged \
+		--platform linux/amd64 \
 		-e CGO_ENABLED=1 \
+		-e TMVERSION=$(TMVERSION) \
 		--env-file .release-env \
 		-v /var/run/docker.sock:/var/run/docker.sock \
 		-v `pwd`:/go/src/$(PACKAGE_NAME) \
@@ -355,7 +434,7 @@ release:
 		ghcr.io/goreleaser/goreleaser-cross:${GOLANG_CROSS_VERSION} \
 		release --clean --skip validate
 
-.PHONY: release-dry-run release
+.PHONY: release-dry-run release-dry-run-linux release
 
 ###############################################################################
 ###                        Compile Solidity Contracts                       ###

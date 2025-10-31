@@ -33,6 +33,7 @@ contracts/@openzeppelin/*
 evmd/build/
 
 build/
+dist/
 
 tests/systemtests/binaries
 tests/systemtests/testnet
