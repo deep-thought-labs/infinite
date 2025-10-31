@@ -46,16 +46,12 @@ builds:
       - -X github.com/cosmos/cosmos-sdk/version.BuildTags=netgo
     tags:
       - netgo
-    # Focus on Linux only
-    goos:
-      - linux
-    goarch:
-      - amd64
-      - arm64
     # Explicit targets for Linux AMD64 and ARM64
+    # Note: When targets are specified, goos/goarch are ignored by GoReleaser
+    # ARM64 may fail on Mac M1 with Docker emulation, but works in GitHub Actions (Ubuntu native)
     targets:
-      - linux_amd64
-      - linux_arm64
+      - linux_amd64      # Works in all environments
+      - linux_arm64       # May fail on Mac M1 Docker emulation, works in Ubuntu native
 
 # Archive configuration
 archives:
