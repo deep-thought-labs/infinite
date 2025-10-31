@@ -13,24 +13,91 @@ This guide covers common issues you might encounter and how to solve them.
 
 ## Common Issues
 
+### PATH Configuration Issues (Fixes Most "Command Not Found" Errors)
+
+**What this fixes**: Resolves multiple "command not found" errors including:
+- `infinited: command not found`
+- `go: command not found`
+- Other Go-related binaries not being found
+
+**Why this happens**: Go binaries are installed to `$HOME/go/bin/` and Go itself may be installed in `/usr/local/go/bin/`, but these directories aren't in your PATH by default.
+
+**Permanent Solution**: Configure your PATH to include all necessary Go directories. This fix is **permanent** and will work in all new terminal sessions.
+
+#### For macOS
+
+```bash
+# Add Go binary directory to PATH (if Go is installed manually)
+echo 'export PATH="$PATH:/usr/local/go/bin"' >> ~/.zshrc
+echo 'export PATH="$PATH:/usr/local/go/bin"' >> ~/.zprofile
+
+# Set GOPATH (though Go 1.11+ uses modules, some tools still reference it)
+echo 'export GOPATH="$HOME/go"' >> ~/.zshrc
+echo 'export GOPATH="$HOME/go"' >> ~/.zprofile
+
+# Add Go bin directory (where make install places binaries like infinited)
+echo 'export PATH="$PATH:$GOPATH/bin"' >> ~/.zshrc
+echo 'export PATH="$PATH:$GOPATH/bin"' >> ~/.zprofile
+
+# Reload configuration in current session
+source ~/.zshrc
+```
+
+**Note**: If Go was installed via Homebrew, the `/usr/local/go/bin` path may not be needed (Homebrew usually handles this automatically). You can skip those lines if `go version` already works.
+
+#### For Ubuntu/Linux
+
+```bash
+# Add Go binary directory to PATH (if Go is installed manually)
+echo 'export PATH="$PATH:/usr/local/go/bin"' >> ~/.bashrc
+echo 'export PATH="$PATH:/usr/local/go/bin"' >> ~/.profile
+
+# Set GOPATH (though Go 1.11+ uses modules, some tools still reference it)
+echo 'export GOPATH="$HOME/go"' >> ~/.bashrc
+echo 'export GOPATH="$HOME/go"' >> ~/.profile
+
+# Add Go bin directory (where make install places binaries like infinited)
+echo 'export PATH="$PATH:$GOPATH/bin"' >> ~/.bashrc
+echo 'export PATH="$PATH:$GOPATH/bin"' >> ~/.profile
+
+# Reload configuration in current session
+source ~/.bashrc
+```
+
+**Note**: If Go was installed via `apt`, it's usually already in PATH at `/usr/bin/go`. You can skip the `/usr/local/go/bin` lines if `go version` already works without them.
+
+#### Temporary Fix (Current Session Only)
+
+If you need a quick fix for the current terminal session only:
+
+```bash
+# For current session only (won't persist in new terminals)
+export PATH="$PATH:/usr/local/go/bin"
+export GOPATH="$HOME/go"
+export PATH="$PATH:$GOPATH/bin"
+```
+
+#### Verifying the Fix
+
+After applying the permanent fix, **open a new terminal window** and verify:
+
+```bash
+# Check that Go is accessible
+go version
+
+# If infinited is already compiled, check that it's accessible
+which infinited
+```
+
+If these commands work in the new terminal without any export commands, the fix is complete.
+
 ### 1. "infinited: command not found"
 
 **What this means**: The system can't find the `infinited` binary.
 
 **Why this happens**: The binary is installed to `$HOME/go/bin/` but this directory isn't in your PATH.
 
-**Solution**:
-```bash
-# Temporary fix (for current session)
-export PATH=$HOME/go/bin:$PATH
-
-# Permanent fix (add to shell configuration)
-echo 'export PATH=$HOME/go/bin:$PATH' >> ~/.bashrc
-source ~/.bashrc
-
-# Verify it works
-which infinited
-```
+**Solution**: Follow the [PATH Configuration](#path-configuration-issues-fixes-most-command-not-found-errors) instructions above. This will permanently fix this issue.
 
 ### 2. "go: command not found"
 
@@ -38,12 +105,12 @@ which infinited
 
 **Why this happens**: Go wasn't installed properly or PATH wasn't configured.
 
-**Solution**:
-```bash
-# Install Go from https://golang.org/dl/
-# Then add to PATH as shown in Prerequisites section
-export PATH=$PATH:/usr/local/go/bin
-```
+**Solution**: 
+1. **If Go is not installed**: Install it first:
+   - **macOS**: `brew install go` (if using Homebrew) or download from https://golang.org/dl/
+   - **Ubuntu**: `sudo apt update && sudo apt install golang-go` or download from https://golang.org/dl/
+
+2. **If Go is installed but not in PATH**: Follow the [PATH Configuration](#path-configuration-issues-fixes-most-command-not-found-errors) instructions above.
 
 ### 3. "make: command not found"
 

@@ -191,25 +191,53 @@ solhint --version
 **What this does**: Sets up your system to find Go and compiled binaries.  
 **Why it's important**: Without this, you'll get "command not found" errors when trying to run `infinited`.
 
+#### For macOS
+
 ```bash
-# Add Go to your PATH permanently
-echo 'export PATH=$PATH:/usr/local/go/bin' >> ~/.bashrc
-echo 'export GOPATH=$HOME/go' >> ~/.bashrc
-echo 'export PATH=$PATH:$GOPATH/bin' >> ~/.bashrc
+# Add Go to your PATH permanently (if Go is installed manually)
+echo 'export PATH="$PATH:/usr/local/go/bin"' >> ~/.zshrc
+echo 'export PATH="$PATH:/usr/local/go/bin"' >> ~/.zprofile
+
+# Set GOPATH (though Go 1.11+ uses modules, some tools still reference it)
+echo 'export GOPATH="$HOME/go"' >> ~/.zshrc
+echo 'export GOPATH="$HOME/go"' >> ~/.zprofile
+
+# Add Go bin directory (where make install places binaries like infinited)
+echo 'export PATH="$PATH:$GOPATH/bin"' >> ~/.zshrc
+echo 'export PATH="$PATH:$GOPATH/bin"' >> ~/.zprofile
 
 # Reload your shell configuration
-source ~/.bashrc  # or ~/.zshrc
-
-# Verify the setup
-go version
-echo $GOPATH
-echo $PATH | grep -o "$HOME/go/bin"
+source ~/.zshrc
 ```
 
+**Note**: If Go was installed via Homebrew, the `/usr/local/go/bin` path may not be needed (Homebrew usually handles this automatically). You can skip those lines if `go version` already works.
+
+#### For Ubuntu/Linux
+
+```bash
+# Add Go to your PATH permanently (if Go is installed manually)
+echo 'export PATH="$PATH:/usr/local/go/bin"' >> ~/.bashrc
+echo 'export PATH="$PATH:/usr/local/go/bin"' >> ~/.profile
+
+# Set GOPATH (though Go 1.11+ uses modules, some tools still reference it)
+echo 'export GOPATH="$HOME/go"' >> ~/.bashrc
+echo 'export GOPATH="$HOME/go"' >> ~/.profile
+
+# Add Go bin directory (where make install places binaries like infinited)
+echo 'export PATH="$PATH:$GOPATH/bin"' >> ~/.bashrc
+echo 'export PATH="$PATH:$GOPATH/bin"' >> ~/.profile
+
+# Reload your shell configuration
+source ~/.bashrc
+```
+
+**Note**: If Go was installed via `apt`, it's usually already in PATH at `/usr/bin/go`. You can skip the `/usr/local/go/bin` lines if `go version` already works without them.
+
 **Important Notes**:
-- The `$GOPATH/bin` directory is where compiled binaries will be installed
+- The `$GOPATH/bin` directory is where compiled binaries will be installed (like `infinited`)
 - This ensures that when you run `make install`, the `infinited` binary will be accessible from anywhere
-- **This is the definitive fix** - you won't need to export PATH again in future sessions
+- After applying this configuration, **open a new terminal window** and run `go version` to verify it persists
+- For troubleshooting PATH issues, see the [PATH Configuration section in Troubleshooting](TROUBLESHOOTING.md#path-configuration-issues-fixes-most-command-not-found-errors)
 
 ## Quick Start
 

@@ -65,15 +65,22 @@ Before running the commands below, review the sections on pre-configuration and 
 
 Use these configuration files with the `setup_genesis.sh` script:
 
+**Prerequisites:** The node must be initialized first with `infinited init`.
+
 ```bash
-# Generate Mainnet genesis
-./scripts/setup_genesis.sh mainnet my-moniker
+# Step 1: Initialize the node first
+infinited init my-moniker --chain-id infinite_421018-1 --home ~/.infinited
 
-# Generate Testnet genesis
-./scripts/setup_genesis.sh testnet test-moniker
+# Step 2: Configure the genesis file using the script
+./scripts/setup_genesis.sh mainnet ~/.infinited/config/genesis.json
 
-# Generate to custom directory
-./scripts/setup_genesis.sh mainnet my-moniker ~/custom-genesis
+# For Testnet:
+infinited init test-moniker --chain-id infinite_421018001-1 --home ~/.infinited_testnet
+./scripts/setup_genesis.sh testnet ~/.infinited_testnet/config/genesis.json
+
+# Custom directory:
+infinited init my-moniker --chain-id infinite_421018-1 --home /custom/path/.infinited
+./scripts/setup_genesis.sh mainnet /custom/path/.infinited/config/genesis.json
 ```
 
 ## Adding Validators

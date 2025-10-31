@@ -289,25 +289,14 @@ infinited start \
 
 **What happens**: The most common issue users encounter is the `infinited: command not found` error. This happens because the binary is installed to `$HOME/go/bin/` but this directory is not in your system's PATH.
 
-### Solution: Export PATH
+### Solution
 
+For complete PATH configuration instructions that fix this and other related "command not found" errors, see the [PATH Configuration Issues section in the Troubleshooting guide](TROUBLESHOOTING.md#path-configuration-issues-fixes-most-command-not-found-errors).
+
+**Quick temporary fix (current session only)**:
 ```bash
-# Add Go bin directory to PATH
+# This only works in the current terminal session
 export PATH=$HOME/go/bin:$PATH
-
-# Verify infinited is now accessible
-which infinited
-infinited version
-```
-
-### Permanent PATH Fix
-
-To avoid this issue in the future, add the following to your shell configuration file:
-
-```bash
-# Add to ~/.bashrc, ~/.zshrc, or ~/.profile
-echo 'export PATH=$HOME/go/bin:$PATH' >> ~/.bashrc
-source ~/.bashrc
 ```
 
 ### Binary Location Consistency

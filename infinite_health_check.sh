@@ -65,16 +65,73 @@ fi
 
 # Test 4: Chain ID verification
 echo "4. Verifying Chain IDs..."
-EVM_CHAIN_ID=$(curl -s -X POST -H "Content-Type: application/json" \
+
+# Known Chain IDs
+MAINNET_EVM_HEX="0x66c9a"
+MAINNET_EVM_DECIMAL="421018"
+MAINNET_COSMOS_NUMERIC="421018"
+
+TESTNET_EVM_HEX="0x19183991"
+TESTNET_EVM_DECIMAL="421018001"
+TESTNET_COSMOS_NUMERIC="421018001"
+
+# Get Chain IDs from node
+EVM_CHAIN_ID_HEX=$(curl -s -X POST -H "Content-Type: application/json" \
   --data '{"jsonrpc":"2.0","method":"eth_chainId","params":[],"id":1}' \
   http://localhost:8545 | jq -r '.result' 2>/dev/null || echo "error")
 
-COSMOS_CHAIN_ID=$(curl -s http://localhost:1317/cosmos/base/tendermint/v1beta1/node_info | jq -r '.default_node_info.network' 2>/dev/null || echo "error")
+COSMOS_CHAIN_ID_FULL=$(curl -s http://localhost:1317/cosmos/base/tendermint/v1beta1/node_info | jq -r '.default_node_info.network' 2>/dev/null || echo "error")
 
-if [ "$EVM_CHAIN_ID" = "0x66c9a" ] && [ "$COSMOS_CHAIN_ID" = "421018" ]; then
-    print_status 0 "Chain IDs correct (EVM: $EVM_CHAIN_ID, Cosmos: $COSMOS_CHAIN_ID)"
+# Extract numeric part from Cosmos Chain ID (e.g., "infinite_421018-1" -> "421018")
+if [ "$COSMOS_CHAIN_ID_FULL" != "error" ] && [ -n "$COSMOS_CHAIN_ID_FULL" ]; then
+    # Extract number between underscore and dash (or end of string)
+    # Pattern: prefix_number[-suffix] -> extract number
+    COSMOS_CHAIN_ID_NUMERIC=$(echo "$COSMOS_CHAIN_ID_FULL" | sed -E 's/.*_([0-9]+)(-.*)?$/\1/' 2>/dev/null || echo "error")
 else
-    print_status 1 "Chain ID mismatch (EVM: $EVM_CHAIN_ID, Cosmos: $COSMOS_CHAIN_ID)"
+    COSMOS_CHAIN_ID_NUMERIC="error"
+fi
+
+# Convert EVM Chain ID from hex to decimal for comparison
+if [ "$EVM_CHAIN_ID_HEX" != "error" ] && [ -n "$EVM_CHAIN_ID_HEX" ]; then
+    # Remove 0x prefix if present and convert hex to decimal
+    HEX_WITHOUT_PREFIX=$(echo "$EVM_CHAIN_ID_HEX" | sed 's/^0x//' 2>/dev/null || echo "")
+    if [ -n "$HEX_WITHOUT_PREFIX" ]; then
+        # Convert to uppercase for bc compatibility (if needed)
+        HEX_UPPER=$(echo "$HEX_WITHOUT_PREFIX" | tr '[:lower:]' '[:upper:]' 2>/dev/null || echo "$HEX_WITHOUT_PREFIX")
+        # Use bc for conversion (more portable for large numbers)
+        if command -v bc >/dev/null 2>&1; then
+            EVM_CHAIN_ID_DECIMAL=$(echo "ibase=16; $HEX_UPPER" | bc 2>/dev/null || echo "error")
+        else
+            # Fallback to arithmetic expansion (works for numbers that fit in bash's int range)
+            EVM_CHAIN_ID_DECIMAL=$((0x${HEX_WITHOUT_PREFIX})) 2>/dev/null || echo "error"
+        fi
+    else
+        EVM_CHAIN_ID_DECIMAL="error"
+    fi
+else
+    EVM_CHAIN_ID_DECIMAL="error"
+fi
+
+# Verify Chain IDs against known networks
+NETWORK_DETECTED=""
+CHAIN_ID_MATCH=false
+
+if [ "$EVM_CHAIN_ID_HEX" = "$MAINNET_EVM_HEX" ] && [ "$EVM_CHAIN_ID_DECIMAL" = "$MAINNET_EVM_DECIMAL" ] && \
+   [ "$COSMOS_CHAIN_ID_NUMERIC" = "$MAINNET_COSMOS_NUMERIC" ]; then
+    NETWORK_DETECTED="MAINNET"
+    CHAIN_ID_MATCH=true
+elif [ "$EVM_CHAIN_ID_HEX" = "$TESTNET_EVM_HEX" ] && [ "$EVM_CHAIN_ID_DECIMAL" = "$TESTNET_EVM_DECIMAL" ] && \
+     [ "$COSMOS_CHAIN_ID_NUMERIC" = "$TESTNET_COSMOS_NUMERIC" ]; then
+    NETWORK_DETECTED="TESTNET"
+    CHAIN_ID_MATCH=true
+fi
+
+if [ "$CHAIN_ID_MATCH" = true ] && [ -n "$NETWORK_DETECTED" ]; then
+    print_status 0 "Chain IDs correct - Network: $NETWORK_DETECTED (EVM: $EVM_CHAIN_ID_HEX / $EVM_CHAIN_ID_DECIMAL, Cosmos: $COSMOS_CHAIN_ID_FULL -> $COSMOS_CHAIN_ID_NUMERIC)"
+else
+    print_status 1 "Chain ID mismatch (EVM: $EVM_CHAIN_ID_HEX / $EVM_CHAIN_ID_DECIMAL, Cosmos: $COSMOS_CHAIN_ID_FULL -> $COSMOS_CHAIN_ID_NUMERIC)"
+    echo -e "   Expected: Mainnet (EVM: $MAINNET_EVM_HEX / $MAINNET_EVM_DECIMAL, Cosmos: ..._${MAINNET_COSMOS_NUMERIC}_...) or"
+    echo -e "             Testnet (EVM: $TESTNET_EVM_HEX / $TESTNET_EVM_DECIMAL, Cosmos: ..._${TESTNET_COSMOS_NUMERIC}_...)"
 fi
 
 # Test 5: Block production

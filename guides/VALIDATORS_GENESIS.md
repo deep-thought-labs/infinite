@@ -37,10 +37,13 @@ I[2025-01-XX|...] Starting node
 Agregar validadores al Genesis **antes del lanzamiento**:
 
 ```bash
-# 1. Generar Genesis base (con el script setup_genesis.sh)
-./scripts/setup_genesis.sh mainnet my-moniker
+# 1. Inicializar el nodo primero
+infinited init my-moniker --chain-id infinite_421018-1 --home ~/.infinited
 
-# 2. Para cada validador inicial:
+# 2. Configurar el Genesis con el script setup_genesis.sh
+./scripts/setup_genesis.sh mainnet ~/.infinited/config/genesis.json
+
+# 3. Para cada validador inicial:
 #    a. Crear clave del validador
 infinited keys add validator-1 --keyring-backend file
 
