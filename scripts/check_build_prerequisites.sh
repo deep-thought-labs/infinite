@@ -102,6 +102,18 @@ else
     FAILED=1
 fi
 
+# Optional: Check cross-compilation toolchains (Linux AMD64 only)
+if [ "$(uname)" = "Linux" ] && [ "$(uname -m)" = "x86_64" ]; then
+    echo -n "Cross-compilation toolchains (for ARM64 builds): "
+    if command -v gcc-aarch64-linux-gnu >/dev/null 2>&1 && command -v gcc-x86-64-linux-gnu >/dev/null 2>&1; then
+        echo -e "${GREEN}✅ Installed${NC}"
+    else
+        echo -e "${YELLOW}⚠️  Missing (optional for local ARM64 cross-compilation)${NC}"
+        echo "   Install: sudo apt-get update && sudo apt-get install -y gcc-aarch64-linux-gnu gcc-x86-64-linux-gnu"
+        echo "   Note: Required only for compiling ARM64 binaries from AMD64 host. Not needed for GitHub Actions."
+    fi
+fi
+
 # Check Make
 echo -n "Make installation: "
 if make --version >/dev/null 2>&1; then
