@@ -5,11 +5,11 @@
 #
 # This file is part of the Infinite Drive blockchain tooling.
 #
-# Purpose: Configure automated multi-platform builds for production releases
-#          Supports: Linux (amd64, arm64), macOS (amd64, arm64), Windows (amd64)
+# Purpose: Configure automated builds for production releases
+#          Supports: Linux (amd64, arm64) only
 #
 # Usage:
-#   - make release-dry-run        # Test build locally (all platforms)
+#   - make release-dry-run        # Test build locally (Linux only)
 #   - make release                # Create official release (requires .release-env)
 #   - GitHub Actions triggers automatically on version tags (v*.*.*)
 #

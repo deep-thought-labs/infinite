@@ -16,8 +16,9 @@
 #      This is expected due to cross-compilation toolchain limitations in emulated Docker
 #      ARM64 builds will work correctly in GitHub Actions (Ubuntu native environment)
 #   - Linux AMD64 builds should work correctly in all environments
-#   - For production releases, use .goreleaser.yml (includes all platforms)
+#   - Both .goreleaser.yml and this file now target only Linux (amd64, arm64)
 #   - This configuration is primarily for faster local development testing
+#   - Main .goreleaser.yml is used by GitHub Actions for production releases
 #
 # See: guides/BUILDING_AND_RELEASES.md for detailed documentation
 #
@@ -45,12 +46,10 @@ builds:
     tags:
       - netgo
     # Linux targets: AMD64 and ARM64
-    # Note: ARM64 requires cross-compilation toolchain
-    # Works in GitHub Actions with gcc-aarch64-linux-gnu
-    # May require additional setup on Mac M1 (QEMU for emulation)
+    # Note: ARM64 may fail on Mac M1 with Docker emulation, but works in GitHub Actions
     targets:
-      - linux_amd64      # Native on AMD64 hosts
-      - linux_arm64      # Cross-compiled, native on ARM64 hosts
+      - linux_amd64      # Should work in all environments
+      - linux_arm64      # May fail on Mac M1 Docker emulation, works in Ubuntu native
 
 # Archive configuration
 archives:
@@ -102,5 +101,6 @@ release:
     ---
     
     **Full Changelog**: https://github.com/deep-thought-labs/infinite/compare/{{ .PreviousTag }}...{{ .Tag }}
-  mode: replace
+  # Mode: auto creates release if doesn't exist, updates if exists (consistent with .goreleaser.yml)
+  mode: auto
 
