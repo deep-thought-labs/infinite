@@ -21,7 +21,7 @@
 #
 # See: guides/BUILDING_AND_RELEASES.md for detailed documentation
 #
-version: 2
+version: 1
 project_name: infinite
 
 # Build configuration
@@ -131,7 +131,6 @@ release:
     
     **Full Changelog**: https://github.com/deep-thought-labs/infinite/compare/{{ .PreviousTag }}...{{ .Tag }}
   # Mode: auto creates release if doesn't exist, updates if exists
-  # Options: keep_existing, skip, replace, auto
   mode: auto
 
 # NFPM configuration (for .deb and .rpm packages - optional)

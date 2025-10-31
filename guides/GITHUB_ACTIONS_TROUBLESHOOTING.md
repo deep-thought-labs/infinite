@@ -254,32 +254,104 @@ git push origin v0.02.0
 **Síntoma**:
 ```
 failed to publish artifacts: no releases were created: 
-github.com client: GET https://api.github.com/repos/.../releases/tags/v0.02.0: 404 Not Found
+github.com client: GET https://api.github.com/repos/.../releases/tags/v0.1.4: 404 Not Found
 ```
 
-**Causa**: GoReleaser está configurado con `mode: replace`, que intenta **actualizar** un release existente. Si el release no existe (primera vez), falla con 404.
+**Posibles Causas**:
 
-**Solución**:
+1. **Mode configurado incorrectamente**: `mode: replace` intenta actualizar un release existente, falla si no existe
+2. **Comportamiento de GoReleaser**: Incluso con `mode: auto`, GoReleaser puede hacer GET primero para verificar existencia
+3. **Permisos del GITHUB_TOKEN**: Puede no tener permisos para crear releases
+4. **Tag apunta a commit incorrecto**: Tag puede apuntar a commit que no tiene el fix
 
-Cambiar el modo de release en `.goreleaser.yml`:
+### Solución
+
+#### Opción 1: Omitir mode (Recomendado)
+
+Dejar que GoReleaser use su comportamiento por defecto (crear si no existe):
 
 ```yaml
 release:
-  mode: auto  # Cambiar de "replace" a "auto"
+  github:
+    owner: deep-thought-labs
+    name: infinite
+  # Mode: omitido - usa comportamiento por defecto (crear si no existe)
+```
+
+#### Opción 2: Usar mode: auto
+
+Si el comportamiento por defecto no funciona:
+
+```yaml
+release:
+  mode: auto  # Crea si no existe, actualiza si existe
+```
+
+#### Opción 3: Verificar permisos
+
+Asegúrate de que el workflow tenga permisos correctos:
+
+```yaml
+permissions:
+  contents: write  # Requerido para crear releases
+```
+
+#### Opción 4: Verificar que la tag apunta al commit correcto
+
+```bash
+# Ver a qué commit apunta la tag
+git log v0.1.4 --oneline -1
+
+# Verificar que ese commit tenga el fix
+git show v0.1.4:.goreleaser.yml | grep -A 2 "release:"
 ```
 
 **Modos disponibles**:
-- `auto` - Crea release si no existe, actualiza si existe (recomendado)
+- **(omitted)** - Comportamiento por defecto: crea si no existe (recomendado)
+- `auto` - Crea si no existe, actualiza si existe
 - `replace` - Solo actualiza releases existentes (falla si no existe)
 - `skip` - No crea ni actualiza releases
 - `keep_existing` - No modifica releases existentes
 
-**Cambio realizado**: Ya cambié `mode: replace` a `mode: auto` en `.goreleaser.yml`.
+**Cambio realizado**: Eliminada la línea `mode:` en `.goreleaser.yml` para usar comportamiento por defecto.
+
+**Si el problema persiste**:
+1. Verifica que la tag apunta al commit correcto (con el fix)
+2. Verifica permisos del GITHUB_TOKEN en el repositorio
+3. Intenta crear el release manualmente en GitHub una vez para verificar permisos
+4. Revisa los logs completos del workflow para más detalles
+
+---
+
+## Error: "only configurations files on version: 1 are supported, yours is version: 2"
+
+### Problema
+
+**Síntoma**:
+```
+⨯ release failed after 0s
+error=only configurations files on version: 1 are supported, yours is version: 2, please update your configuration
+```
+
+**Causa**: GoReleaser versión 1.26.2 (usada en GitHub Actions) solo soporta archivos de configuración versión 1, pero el archivo `.goreleaser.yml` tiene `version: 2`.
+
+**Solución**:
+
+Cambiar la versión del archivo de configuración a 1:
+
+```yaml
+# En .goreleaser.yml y .goreleaser.linux-only.yml
+version: 1  # Cambiar de 2 a 1
+```
+
+**Nota**: La versión 2 de GoReleaser config es más reciente, pero GitHub Actions usa la versión 1.26.2 que solo soporta versión 1 del archivo de configuración.
+
+**Cambio realizado**: Ya cambié `version: 2` a `version: 1` en ambos archivos de configuración.
 
 **Próximos pasos**:
-1. Commit el cambio: `git add .goreleaser.yml && git commit -m "fix: Change release mode to auto"`
-2. Push el cambio al branch
-3. Crear nueva tag o esperar a la próxima tag para que funcione
+1. Commit el cambio
+2. Push al branch
+3. Crear nueva tag o esperar a la próxima tag
 
 ---
 

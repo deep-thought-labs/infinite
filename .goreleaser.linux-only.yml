@@ -21,7 +21,7 @@
 #
 # See: guides/BUILDING_AND_RELEASES.md for detailed documentation
 #
-version: 2
+version: 1
 project_name: infinite
 
 # Build configuration - Solo Linux
