@@ -2,6 +2,10 @@ name: Push to Buf Schema Registry
 # This workflow runs when a new version tag is pushed to the repository.
 # It then pushes the Protobuf files corresponding to that tag on to the
 # Buf Schema Registry at https://buf.build/cosmos/evm
+#
+# NOTE: This workflow requires BUF_TOKEN secret to be configured in GitHub.
+# If you're not using Buf Schema Registry, disable this workflow or configure the token.
+# See: guides/GITHUB_BUF_TOKEN_SETUP.md for setup instructions
 on:
   push:
     tags:
@@ -11,6 +15,10 @@ permissions: read-all
 jobs:
   push:
     runs-on: ubuntu-latest
+    # Currently disabled: Not using Buf Schema Registry at this time
+    # To enable: Configure BUF_TOKEN secret in GitHub Settings → Secrets → Actions
+    # See: guides/GITHUB_SECRETS_SETUP.md for instructions
+    if: false  # Disabled - change to remove this line when ready to use Buf Schema Registry
     steps:
       - uses: actions/checkout@v4
       - uses: bufbuild/buf-setup-action@v1.50.0
