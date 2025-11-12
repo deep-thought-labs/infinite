@@ -1,10 +1,12 @@
-# Infinite Improbability Chain
+# Infinite Improbability Drive
+
+> *"Governments of the Industrial World, you weary giants of flesh and steel — we are building the infrastructure you cannot control."*
 
 **Part of Infinite Drive** — A cypherpunk nation in cyberspace. Powered by improbability.
 
-> Infinite Drive is the complete ecosystem: **Infinite Improbability Chain** and **Drive**, the infrastructure management client. Part of **Project 42**. Developed by [Deep Thought Labs](https://deep-thought.computer).
+> Infinite Drive is the complete ecosystem: **Infinite Improbability Drive** and **Drive**, the infrastructure management client. Part of **Project 42**. Developed by [Deep Thought Labs](https://deep-thought.computer).
 
-> *"Governments of the Industrial World, you weary giants of flesh and steel — we are building the infrastructure you cannot control."*
+
 
 ---
 
@@ -21,15 +23,74 @@
 
 ---
 
-## Infinite Improbability Chain
+## Infinite Improbability Drive
 
 - **Chain Name**: `infinite`
 - **Chain ID**: `infinite_421018-1`
-- **Token**: Improbability (TEA)
-- **1 TEA = 10¹⁸ drop**
+- **Token**: Improbability (42)
+- **1 42 = 10¹⁸ drop**
 - **Bech32**: `infinite`
 
 > *The drive runs on tea. Properly prepared.*
+
+---
+
+## Tokenomics – Rubro Allocation (Executive Summary)
+
+**Total Supply (Initial):** `100,000,000 Improbability [42]`**  
+**Initial Circulating Supply:** `100 Improbability [42]`** – **Dedicated exclusively to bootstrap the initial validator set**  
+**Vesting:** Gradual linear unlocking over extended periods (tailored per rubro, e.g., 10–20 years for perpetual sustainability)**  
+**Sole Controller:** On-chain DAO from block 1, with lab oversight on development operations  
+**Inflation:** Dynamic, target-bonded, and governance-adjustable
+
+| **Rubro** | **% of Supply** | **Tokens Locked** | **Annual Unlock (Approx.)** | **Operational Mandate** |
+|----------|------------------|-------------------|-----------------------------|--------------------------|
+| **A. Consensus & Network Security** | 50 % | 50,000,000 Improbability [42] | 5,000,000 Improbability [42] | Perpetual validator & staker rewards |
+| **B. Distributed Infrastructure** | 25 % | 25,000,000 Improbability [42] | 2,500,000 Improbability [42] | P2P nodes, relays, storage, IBC |
+| **C. Development & Evolution** | 18 % | 18,000,000 Improbability [42] | 1,800,000 Improbability [42] | Upgrades, audits, R&D |
+| **D. Governance & Ecosystem** | 5 % | 5,000,000 Improbability [42] | 500,000 Improbability [42] | Technical grants, proposals, docs |
+| **E. Continuity Reserve** | 2 % | 2,000,000 Improbability [42] | 200,000 Improbability [42] | Systemic emergencies, succession |
+
+---
+
+### **Genesis Bootstrap (100 [42])**
+> **100 Improbability [42] are minted liquid at genesis.**  
+> **Sole purpose:** Distributed pro-rata to the **initial validator set** to enable immediate block production and staking.  
+> From this seed, **inflation begins**, and the network self-sustains.
+
+---
+
+### **Dynamic Inflation Model (Target-Bonded)**
+
+- **Base Inflation:** Starts at `7%` annually on circulating supply  
+- **Target Stake Ratio:** `67%` of total liquid supply staked  
+- **Automatic Adjustment:**  
+  - If **staking < 60%** → inflation **increases** (max `10%`)  
+  - If **staking > 75%** → inflation **decreases** (min `3%`)  
+  - Adjustment occurs **per epoch** (automated via on-chain logic)  
+- **Governance Override:** DAO can adjust:  
+  - Inflation bounds  
+  - Target stake ratio  
+  - Adjustment sensitivity  
+  via **on-chain parameter change proposals**
+
+---
+
+### **Market Birth & Liquidity Path**
+1. **Block 1:** `100 [42]` → initial validators → staking begins  
+2. **Inflation kicks in** → new tokens minted per block  
+3. **Year 1+:** Rubro A unlocks `5 M [42]/year` → delegated via DAO → validators  
+4. **Validators control market release** → Bitcoin-style organic liquidity
+
+---
+
+### **Perpetual Commitment**
+- **All rubros unlock gradually over decades**, aligned with operational horizons  
+- **DAO governs destination of every unlock and inflation stream**  
+- **Lab retains operational control over Rubro C (development)**  
+- **Each rubro’s accounts are continuously refilled via block fees + inflation**  
+- **No token enters circulation without validator custody first**  
+- **Security, alignment, and long-term resilience from genesis**
 
 ---
 
@@ -37,7 +98,7 @@
 
 ### Option 1: Using Drive (Recommended)
 
-The easiest way to run a node is using **[Drive](https://github.com/deep-thought-labs/drive)**, the infrastructure management client for **Infinite Improbability Chain**:
+The easiest way to run a node is using **[Drive](https://github.com/deep-thought-labs/drive)**, the infrastructure management client for **Infinite Improbability Drive**:
 
 ```bash
 git clone https://github.com/deep-thought-labs/drive.git
