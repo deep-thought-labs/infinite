@@ -75,7 +75,8 @@ If you see significantly more or different files, generate a fresh comparison re
   - `NewGovGenesisState()`: Sets `gov.params.min_deposit[].denom` and `gov.params.expedited_min_deposit[].denom` to "drop"
 - `infinited/app.go`: `DefaultGenesis()` function that applies the custom genesis states above
 - `infinited/tests/integration/create_app.go`: Test app creation with identity configuration
-- `local_node.sh`: Token metadata in genesis
+- `scripts/customize_genesis.sh`: Standalone script to customize generated genesis.json with all Infinite Drive personalizations (denominations, token metadata, EVM config, etc.)
+- `local_node.sh`: Token metadata in genesis (uses customize_genesis.sh logic)
 - `assets/pre-mainet-genesis.json`: Token metadata
 
 ## Chain IDs
