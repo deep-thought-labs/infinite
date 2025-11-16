@@ -250,11 +250,14 @@ echo ""
 echo "5. Testing infinited CLI query..."
 
 if command -v infinited >/dev/null 2>&1; then
-    CLI_METADATA=$(infinited q bank denom-metadata drop 2>/dev/null || echo "")
+    # Use --output json to ensure JSON format for jq parsing
+    CLI_METADATA=$(infinited q bank denom-metadata drop --output json 2>/dev/null || echo "")
     if [ -n "$CLI_METADATA" ]; then
-        CLI_SYMBOL=$(echo "$CLI_METADATA" | jq -r '.symbol // "missing"' 2>/dev/null || echo "error")
-        CLI_DISPLAY=$(echo "$CLI_METADATA" | jq -r '.display // "missing"' 2>/dev/null || echo "error")
-        CLI_BASE=$(echo "$CLI_METADATA" | jq -r '.base // "missing"' 2>/dev/null || echo "error")
+        # Extract metadata object from the response
+        METADATA_OBJ=$(echo "$CLI_METADATA" | jq -r '.metadata // .' 2>/dev/null || echo "$CLI_METADATA")
+        CLI_SYMBOL=$(echo "$METADATA_OBJ" | jq -r '.symbol // "missing"' 2>/dev/null || echo "error")
+        CLI_DISPLAY=$(echo "$METADATA_OBJ" | jq -r '.display // "missing"' 2>/dev/null || echo "error")
+        CLI_BASE=$(echo "$METADATA_OBJ" | jq -r '.base // "missing"' 2>/dev/null || echo "error")
         
         if [ "$CLI_SYMBOL" = "$EXPECTED_SYMBOL" ] && [ "$CLI_DISPLAY" = "$EXPECTED_DISPLAY" ] && [ "$CLI_BASE" = "$EXPECTED_BASE" ]; then
             print_status 0 "CLI query successful (symbol: $CLI_SYMBOL, display: $CLI_DISPLAY, base: $CLI_BASE)"
