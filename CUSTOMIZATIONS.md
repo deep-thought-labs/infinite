@@ -2,6 +2,43 @@
 
 > Quick reference for all Infinite Drive customizations. Use this to validate during merges.
 
+## ⚠️ CRITICAL RULES - READ FIRST
+
+### Core Principle: Identity Only, Technical Upstream Priority
+
+**We ONLY customize identity-related aspects. All technical and operational aspects MUST prioritize the upstream repository.**
+
+### What We Customize (Identity Only)
+
+✅ **Token Configuration**:** Denominations, symbols, names, metadata  
+✅ **Chain IDs**: Cosmos Chain ID and EVM Chain ID  
+✅ **Bech32 Prefixes**: Account, validator, consensus prefixes  
+✅ **Binary/Directory Names**: `infinited` instead of `evmd`  
+✅ **Branding**: Copyright, README, documentation  
+✅ **Custom Files**: Scripts, guides, configuration files we added
+
+### What We DO NOT Customize (Upstream Priority)
+
+❌ **Go Modules**: `go.mod` and `go.sum` must match upstream (except module name in `infinited/go.mod`)  
+❌ **Dependencies**: All dependencies must match upstream versions  
+❌ **Package Paths**: Use `github.com/cosmos/evm` (upstream), NOT `github.com/deep-thought-labs/infinite`  
+❌ **Functional Code**: Core application logic, features, bug fixes from upstream  
+❌ **Technical Configuration**: Build systems, CI/CD (except branding), technical parameters
+
+### Module Path Rules
+
+- **Root `go.mod`**: Must be `github.com/cosmos/evm` (upstream)
+- **`infinited/go.mod`**: Must be `module github.com/cosmos/evm/infinited` (submodule, like upstream's `evmd`)
+- **All imports**: Must use `github.com/cosmos/evm/...` (upstream paths)
+- **Replace directive**: `github.com/cosmos/evm => ./` (for local development only)
+
+### During Merges
+
+1. **Always prioritize upstream** for technical/functional changes
+2. **Only preserve identity** customizations (tokens, chain IDs, bech32, names)
+3. **Revert everything else** to match upstream exactly
+4. **Validate** using `./scripts/validate_customizations.sh` after merge
+
 ## Token Configuration
 
 ### Values
@@ -43,18 +80,20 @@
 
 ## Rebranding
 
-### Package Paths
-- Old: `github.com/cosmos/evm`
-- New: `github.com/deep-thought-labs/infinite`
+### ⚠️ IMPORTANT: Package Paths
+- **Module Path**: `github.com/cosmos/evm` (upstream - DO NOT CHANGE)
+- **Submodule Path**: `github.com/cosmos/evm/infinited` (like upstream's `evmd`)
+- **All imports**: Must use `github.com/cosmos/evm/...` (upstream paths)
+- **NOT**: `github.com/deep-thought-labs/infinite` (this is incorrect)
 
 ### Binary/Directory Names
 - Old: `evmd`, `evmd/`
 - New: `infinited`, `infinited/`
 
-### Files (All Go files with imports)
-- All `.go` files importing `github.com/deep-thought-labs/infinite`
+### Files
 - `Makefile`: test-infinited, INFINITED_DIR, EXAMPLE_BINARY
 - `NOTICE`: Copyright Deep Thought Labs
+- `README.md`: Branding and project description
 
 ## Technical Configuration
 
@@ -117,6 +156,7 @@ This will show:
 
 ## Validation Commands
 
+### Identity Customizations
 ```bash
 # Token values
 grep -r "Improbability\|drop\|42" --include="*.go" --include="*.sh" --include="*.json"
@@ -127,11 +167,20 @@ grep -r "421018\|infinite_421018" --include="*.go" --include="*.sh"
 # Bech32
 grep -r "infinitevaloper\|infinitevalcons" --include="*.go"
 
-# Package paths
-grep -r "deep-thought-labs/infinite" --include="*.go" --include="*.mod"
-
 # Binary names
 grep -r "infinited" --include="Makefile" --include="*.sh"
+```
+
+### ⚠️ Critical: Verify Upstream Compliance
+```bash
+# Verify NO incorrect package paths (should find nothing)
+grep -r "deep-thought-labs/infinite" --include="*.go" --include="*.mod" || echo "✅ No incorrect paths found"
+
+# Verify go.mod matches upstream (except module name)
+git diff upstream/main go.mod | grep -v "^module" | grep -v "^+++" | grep -v "^---" || echo "✅ go.mod matches upstream"
+
+# Verify go.sum matches upstream
+git diff upstream/main go.sum | head -5 || echo "✅ go.sum matches upstream"
 ```
 
 ## Quick Validation
