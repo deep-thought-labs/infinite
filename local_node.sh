@@ -241,7 +241,7 @@ if [[ $overwrite == "y" || $overwrite == "Y" ]]; then
   jq '.app_state["evm"]["params"]["evm_denom"]="drop"' "$GENESIS" >"$TMP_GENESIS" && mv "$TMP_GENESIS" "$GENESIS"
   jq '.app_state["mint"]["params"]["mint_denom"]="drop"' "$GENESIS" >"$TMP_GENESIS" && mv "$TMP_GENESIS" "$GENESIS"
 
-  jq '.app_state["bank"]["denom_metadata"]=[{"description":"Improbability Token — Project 42: Sovereign, Perpetual, DAO-Governed","denom_units":[{"denom":"drop","exponent":0,"aliases":[]},{"denom":"42","exponent":18,"aliases":["improbability"]}],"base":"drop","display":"42","name":"Improbability","symbol":"42","uri":"https://infinitedrive.xyz/logo.png","uri_hash":""}]' "$GENESIS" >"$TMP_GENESIS" && mv "$TMP_GENESIS" "$GENESIS"
+  jq '.app_state["bank"]["denom_metadata"]=[{"description":"Improbability Token — Project 42: Sovereign, Perpetual, DAO-Governed","denom_units":[{"denom":"drop","exponent":0,"aliases":[]},{"denom":"Improbability","exponent":18,"aliases":["improbability"]}],"base":"drop","display":"Improbability","name":"Improbability","symbol":"42","uri":"https://infinitedrive.xyz/logo.png","uri_hash":""}]' "$GENESIS" >"$TMP_GENESIS" && mv "$TMP_GENESIS" "$GENESIS"
 
   jq '.app_state["evm"]["params"]["active_static_precompiles"]=["0x0000000000000000000000000000000000000100","0x0000000000000000000000000000000000000400","0x0000000000000000000000000000000000000800","0x0000000000000000000000000000000000000801","0x0000000000000000000000000000000000000802","0x0000000000000000000000000000000000000803","0x0000000000000000000000000000000000000804","0x0000000000000000000000000000000000000805", "0x0000000000000000000000000000000000000806", "0x0000000000000000000000000000000000000807"]' "$GENESIS" >"$TMP_GENESIS" && mv "$TMP_GENESIS" "$GENESIS"
 

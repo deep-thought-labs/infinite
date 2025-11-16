@@ -99,18 +99,19 @@ curl -s http://localhost:1317/cosmos/bank/v1beta1/denoms_metadata | jq '.metadat
 #   "name": "Improbability",
 #   "symbol": "42", 
 #   "base": "drop",
-#   "display": "42",
+#   "display": "Improbability",
 #   "denom_units": [
 #     {"denom": "drop", "exponent": 0},
-#     {"denom": "42", "exponent": 18}
+#     {"denom": "Improbability", "exponent": 18}
 #   ]
 # }
 ```
 
 **Understanding the token**:
 - **Base unit**: `drop` (smallest unit, like wei in Ethereum)
-- **Display unit**: `42` (what users see, like ETH)
-- **Conversion**: 1 42 = 10^18 drop (18 decimals)
+- **Display unit**: `Improbability` (what users see, like ETH)
+- **Symbol**: `42` (visual symbol shown in UIs)
+- **Conversion**: 1 Improbability = 10^18 drop (18 decimals)
 
 ## Manual Compilation & Configuration
 

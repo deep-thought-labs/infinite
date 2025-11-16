@@ -177,12 +177,13 @@ Configuración del token nativo:
   - Se usa para todas las operaciones internas
 
 - **Display Denom**: La unidad mostrada a usuarios
-  - Ejemplo: `42`
+  - Ejemplo: `Improbability`
   - Equivalente a "ETH" en Ethereum
+  - **IMPORTANTE**: Debe empezar con letra (no puede empezar con número)
 
 - **Decimales**: Cantidad de decimales
   - Ejemplo: `18` (standard para compatibilidad EVM)
-  - 1 42 = 10^18 drop
+  - 1 Improbability = 10^18 drop
 
 **Metadata del Token** (para el módulo Bank):
 ```json
@@ -195,13 +196,13 @@ Configuración del token nativo:
       "aliases": []
     },
     {
-      "denom": "42",
+      "denom": "Improbability",
       "exponent": 18,
       "aliases": ["improbability"]
     }
   ],
   "base": "drop",
-  "display": "42",
+  "display": "Improbability",
   "name": "Improbability",
   "symbol": "42",
   "uri": "https://infinitedrive.xyz/logo.png"

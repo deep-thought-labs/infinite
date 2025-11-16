@@ -350,13 +350,13 @@ The script creates a local development blockchain. In real networks you MUST use
   - Cosmos Chain ID: `infinite_421018-1`
   - EVM Chain ID: `421018`
   - Bech32 prefix: `infinite`
-  - Token: Improbability (display `42`, base `drop`)
+  - Token: Improbability (display `Improbability`, symbol `42`, base `drop`)
 
 - **Testnet**:
   - Cosmos Chain ID: `infinite_421018001-1`
   - EVM Chain ID: `421018001`
   - Bech32 prefix: `infinitetest`
-  - Token: Improbability (display `42-test`, base `drop`)
+  - Token: Improbability (display `Improbability`, symbol `42`, base `drop`)
 
 IMPORTANT:
 - Always use the officially published `genesis.json` for the target network.

@@ -26,7 +26,7 @@ func GenerateBankGenesisMetadata(evmChainID uint64) []banktypes.Metadata {
 	denomConfig := testconstants.ChainsCoinInfo[evmChainID]
 
 	// Basic denom settings
-	displayDenom := denomConfig.DisplayDenom // e.g., "42"
+	displayDenom := denomConfig.DisplayDenom // e.g., "Improbability"
 	evmDenom := denomConfig.Denom            // e.g., "drop"
 	extDenom := denomConfig.ExtendedDenom    // always 18-decimals base denom
 	evmDecimals := denomConfig.Decimals      // native decimal precision, e.g., 6, 12, ..., or 18

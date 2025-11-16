@@ -171,11 +171,11 @@ SYMBOL=$(echo "$METADATA" | jq -r '.symbol')
 DISPLAY=$(echo "$METADATA" | jq -r '.display')
 BASE=$(echo "$METADATA" | jq -r '.base')
 
-if [ "$NAME" = "Improbability" ] && [ "$SYMBOL" = "42" ] && [ "$DISPLAY" = "42" ] && [ "$BASE" = "drop" ]; then
+if [ "$NAME" = "Improbability" ] && [ "$SYMBOL" = "42" ] && [ "$DISPLAY" = "Improbability" ] && [ "$BASE" = "drop" ]; then
     echo "✅ Token metadata is correct"
 else
     echo "❌ Token metadata mismatch"
-    echo "Expected: Improbability/42/42/drop"
+    echo "Expected: Improbability/42/Improbability/drop"
     echo "Found: $NAME/$SYMBOL/$DISPLAY/$BASE"
 fi
 ```
@@ -588,7 +588,7 @@ curl -s http://localhost:26657/status | jq '.'
 - ✅ All three RPC endpoints responding
 - ✅ Chain IDs: EVM=0x66bca (421018), Cosmos=infinite_421018-1
 - ✅ Block height increasing over time
-- ✅ Token metadata: Improbability/42/42/drop
+- ✅ Token metadata: Improbability/42/Improbability/drop
 - ✅ Infinited process running
 - ✅ Data directory exists and growing
 

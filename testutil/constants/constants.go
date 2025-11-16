@@ -18,7 +18,7 @@ const (
 	ExampleMicroDenom = "udrop"
 
 	// ExampleDisplayDenom provides an example display denom for use in tests
-	ExampleDisplayDenom = "42"
+	ExampleDisplayDenom = "Improbability"
 
 	// ExampleBech32Prefix provides an example Bech32 prefix for use in tests
 	ExampleBech32Prefix = "infinite"
@@ -44,7 +44,7 @@ var ChainsCoinInfo = map[uint64]evmtypes.EvmCoinInfo{ // TODO:VLAD - deduplicate
 	421018: {
 		Denom:         "drop",
 		ExtendedDenom: "drop",
-		DisplayDenom:  "42",
+		DisplayDenom:  "Improbability",
 		Decimals:      evmtypes.EighteenDecimals.Uint32(),
 	},
 	// SixDecimalsChainID provides a chain ID which is being set up with 6 decimals
