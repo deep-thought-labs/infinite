@@ -38,7 +38,7 @@
 2. **Only preserve identity** customizations (tokens, chain IDs, bech32, names)
 3. **Revert everything else** to match upstream exactly
 4. **Validate** using `./scripts/validate_customizations.sh` after merge
-5. **Compare** using `COMPARISON_REPORT.md` as reference for expected changes
+5. **Compare** using `./scripts/list_all_customizations.sh main` to see current differences
 
 ### Expected Change Statistics
 
@@ -49,7 +49,10 @@ Based on comparison between `migration` and `main`:
 - **Branding files:** 5 files (Makefile, NOTICE, README.md, go.mod, go.sum)
 - **Total expected differences:** ~122 files
 
-If you see significantly more or different files, review against `COMPARISON_REPORT.md`.
+If you see significantly more or different files, generate a fresh comparison report:
+```bash
+./scripts/list_all_customizations.sh main
+```
 
 ## Token Configuration
 
@@ -161,7 +164,6 @@ All files in `evmd/` directory were renamed to `infinited/`:
 ### Other
 - `ante/evm/10_gas_wanted.go` (deleted in upstream, kept in fork)
 - `CUSTOMIZATIONS.md` (this file)
-- `COMPARISON_REPORT.md` (comparison analysis document)
 
 ## Complete File List
 
@@ -182,23 +184,34 @@ This will show:
 
 **Note**: This script compares against the upstream remote (original repository), not your fork's main branch. This ensures accurate comparison even after merging your customizations to main.
 
-### Comparison Report
+### Generating Comparison Reports
 
-For a detailed comparison between your current branch and `main` (your fork's base), see:
-- `COMPARISON_REPORT.md` - Detailed analysis of all differences
+To generate a detailed comparison report when needed, use:
+```bash
+# Compare current branch vs main (your fork's base)
+./scripts/list_all_customizations.sh main
 
-**Current Statistics** (migration vs main):
-- **Total files different:** 141
-- **Added:** 55 files
-- **Modified:** 9 files
-- **Renamed:** 55 files (evmd/ → infinited/)
-- **Deleted:** 22 files (renamed, not actually deleted)
+# Compare current branch vs upstream/main (original repository)
+./scripts/list_all_customizations.sh upstream/main
+
+# Save to file if needed
+./scripts/list_all_customizations.sh main > comparison_report.txt
+```
+
+**Expected Statistics** (based on migration vs main):
+- **Total files different:** ~141
+- **Added:** ~55 files
+- **Modified:** ~9 files
+- **Renamed:** ~55 files (evmd/ → infinited/)
+- **Deleted:** ~22 files (renamed, not actually deleted)
 
 **Breakdown:**
 - Identity files: 7 files
 - Custom files added: 55 files
 - Renamed files: 55 files
 - Branding files: 5 files (Makefile, NOTICE, README.md, go.mod, go.sum)
+
+**Note:** These statistics are based on a snapshot comparison. Use the script above to generate current statistics.
 
 ## Validation Commands
 
