@@ -52,7 +52,7 @@
       ],
       "denom_metadata": [
         {
-          "description": "Improbability Token — Project 42: Sovereign, Perpetual, DAO-Governed",
+          "description": "Improbability (TEA) powers the Infinite Improbability Drive. Runs on tea. Properly prepared. Native to Infinite. Don't panic.",
           "denom_units": [
             {
               "denom": "drop",
@@ -60,16 +60,16 @@
               "aliases": []
             },
             {
-              "denom": "Improbability",
+              "denom": "TEA",
               "exponent": 18,
-              "aliases": ["improbability"]
+              "aliases": []
             }
           ],
           "base": "drop",
-          "display": "Improbability",
+          "display": "TEA",
           "name": "Improbability",
-          "symbol": "42",
-          "uri": "https://assets.infinitedrive.xyz/tokens/42/icon.png",
+          "symbol": "TEA",
+          "uri": "",
           "uri_hash": ""
         }
       ],
