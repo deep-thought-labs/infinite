@@ -64,6 +64,22 @@ check "Makefile" "infinited" "Binary name in Makefile"
 echo "Copyright..."
 check "NOTICE" "Deep Thought Labs" "Copyright in NOTICE"
 
+# Added files - Critical documentation
+echo "Added files - Documentation..."
+check "guides/GETTING_STARTED.md" "infinite_421018-1" "Getting started guide"
+check "assets/pre-mainet-genesis.json" "Improbability" "Genesis template"
+
+# Added files - Scripts
+echo "Added files - Scripts..."
+check "scripts/validate_customizations.sh" "validate_customizations" "Validation script"
+check "scripts/infinite_health_check.sh" "infinite_health_check" "Health check script"
+check "local_node.sh" "infinite_421018-1" "Local node script"
+
+# Build configuration
+echo "Build configuration..."
+check ".goreleaser.yml" "infinite" "GoReleaser config"
+check "Makefile" "infinited" "Makefile binary name"
+
 echo ""
 if [ $FAILED -eq 0 ]; then
     echo "✅ All customizations validated"

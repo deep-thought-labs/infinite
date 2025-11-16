@@ -63,6 +63,58 @@
 - Value: `sdk.DefaultPowerReduction = utils.AttoPowerReduction`
 - Comment: `1 42 = 10^18 drop`
 
+## Added Files (Not in upstream)
+
+### Documentation
+- `guides/*.md` (14 files: BUILDING_AND_RELEASES, DEVELOPMENT_GUIDE, DOCKER_*, GENESIS_MAINNET_CONFIGURATION, GETTING_STARTED, GITHUB_*, LOCAL_BUILD_TESTING, NODE_HEALTH_SCRIPTS, PRODUCTION_DEPLOYMENT, TOKEN_SUPPLY_GENESIS, TROUBLESHOOTING, VALIDATORS_GENESIS)
+
+### Scripts
+- `scripts/audit_command_name.sh`
+- `scripts/check_build_prerequisites.sh`
+- `scripts/compare_outputs.sh`
+- `scripts/infinite_health_check.sh`
+- `scripts/list_all_customizations.sh`
+- `scripts/test_outputs_before.sh`
+- `scripts/validate_customizations.sh`
+- `scripts/validate_token_config.sh`
+- `scripts/verify_command_name.sh`
+- `scripts/README_SCRIPTS.md`
+
+### Configuration
+- `assets/pre-mainet-genesis.json`
+- `.goreleaser.yml`
+- `.goreleaser.linux-only.yml`
+- `.github/workflows/release.yml`
+- `local_node.sh`
+
+### Test Files
+- `infinited/interfaces.go`
+- `infinited/tests/integration/*` (30+ test files)
+- `tests/integration/ante/test_evm_fee_market.go`
+- `tests/integration/ante/test_evm_unit_10_gas_wanted.go`
+- `tests/systemtests/mempool/interface.go`
+
+### Other
+- `ante/evm/10_gas_wanted.go` (deleted in upstream, kept in fork)
+- `CUSTOMIZATIONS.md` (this file)
+
+## Complete File List
+
+To see complete list of all files that differ from upstream repository:
+```bash
+./scripts/list_all_customizations.sh [upstream-branch]
+```
+
+Default: compares against `upstream/main` (original repository)
+Example: `./scripts/list_all_customizations.sh upstream/main`
+
+This will show:
+- All added files (A)
+- All modified files (M)
+- Files deleted in upstream but kept in fork (D)
+
+**Note**: This script compares against the upstream remote (original repository), not your fork's main branch. This ensures accurate comparison even after merging your customizations to main.
+
 ## Validation Commands
 
 ```bash
@@ -91,3 +143,4 @@ Run the validation script:
 
 This script checks all critical customizations and reports any missing values.
 
+**Note**: This script does NOT depend on branch names. It validates values in files directly, so it works regardless of which branch you're on or which branch you compare against.
