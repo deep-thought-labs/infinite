@@ -153,8 +153,8 @@ METADATA=$(curl -s http://localhost:1317/cosmos/bank/v1beta1/denoms_metadata | j
 if [ -n "$METADATA" ]; then
     NAME=$(echo "$METADATA" | jq -r '.name')
     SYMBOL=$(echo "$METADATA" | jq -r '.symbol')
-    if [ "$NAME" = "Improbability" ] && [ "$SYMBOL" = "TEA" ]; then
-        print_status 0 "Token metadata correct (Improbability/TEA)"
+    if [ "$NAME" = "Improbability" ] && [ "$SYMBOL" = "42" ]; then
+        print_status 0 "Token metadata correct (Improbability/42)"
     else
         print_status 1 "Token metadata incorrect ($NAME/$SYMBOL)"
     fi

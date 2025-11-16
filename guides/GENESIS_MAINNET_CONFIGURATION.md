@@ -177,17 +177,17 @@ Configuración del token nativo:
   - Se usa para todas las operaciones internas
 
 - **Display Denom**: La unidad mostrada a usuarios
-  - Ejemplo: `TEA`
+  - Ejemplo: `42`
   - Equivalente a "ETH" en Ethereum
 
 - **Decimales**: Cantidad de decimales
   - Ejemplo: `18` (standard para compatibilidad EVM)
-  - 1 TEA = 10^18 drop
+  - 1 42 = 10^18 drop
 
 **Metadata del Token** (para el módulo Bank):
 ```json
 {
-  "description": "Descripción oficial del token",
+  "description": "Improbability Token — Project 42: Sovereign, Perpetual, DAO-Governed",
   "denom_units": [
     {
       "denom": "drop",
@@ -195,15 +195,16 @@ Configuración del token nativo:
       "aliases": []
     },
     {
-      "denom": "TEA",
+      "denom": "42",
       "exponent": 18,
-      "aliases": []
+      "aliases": ["improbability"]
     }
   ],
   "base": "drop",
-  "display": "TEA",
-  "name": "Nombre del Token",
-  "symbol": "TEA"
+  "display": "42",
+  "name": "Improbability",
+  "symbol": "42",
+  "uri": "https://infinitedrive.xyz/logo.png"
 }
 ```
 

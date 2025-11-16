@@ -1,6 +1,9 @@
 #!/bin/bash
 
-CHAINID="${CHAIN_ID:-421018}"
+# CHAINID is the Cosmos Chain ID (e.g., infinite_421018-1)
+# EVM_CHAIN_ID is the EVM Chain ID (e.g., 421018)
+CHAINID="${CHAIN_ID:-infinite_421018-1}"
+EVM_CHAIN_ID="${EVM_CHAIN_ID:-421018}"
 MONIKER="localtestnet"
 # Remember to change to other types of keyring like 'file' in-case exposing to outside world,
 # otherwise your balance will be wiped quickly
@@ -238,7 +241,7 @@ if [[ $overwrite == "y" || $overwrite == "Y" ]]; then
   jq '.app_state["evm"]["params"]["evm_denom"]="drop"' "$GENESIS" >"$TMP_GENESIS" && mv "$TMP_GENESIS" "$GENESIS"
   jq '.app_state["mint"]["params"]["mint_denom"]="drop"' "$GENESIS" >"$TMP_GENESIS" && mv "$TMP_GENESIS" "$GENESIS"
 
-  jq '.app_state["bank"]["denom_metadata"]=[{"description":"Improbability (TEA) powers the Infinite Improbability Drive. Runs on tea. Properly prepared. Native to Infinite. Don't panic.","denom_units":[{"denom":"drop","exponent":0,"aliases":["crumb","improbability_particle"]},{"denom":"TEA","exponent":18,"aliases":[]}],"base":"drop","display":"TEA","name":"Improbability","symbol":"TEA","uri":"","uri_hash":""}]' "$GENESIS" >"$TMP_GENESIS" && mv "$TMP_GENESIS" "$GENESIS"
+  jq '.app_state["bank"]["denom_metadata"]=[{"description":"Improbability Token — Project 42: Sovereign, Perpetual, DAO-Governed","denom_units":[{"denom":"drop","exponent":0,"aliases":[]},{"denom":"42","exponent":18,"aliases":["improbability"]}],"base":"drop","display":"42","name":"Improbability","symbol":"42","uri":"https://infinitedrive.xyz/logo.png","uri_hash":""}]' "$GENESIS" >"$TMP_GENESIS" && mv "$TMP_GENESIS" "$GENESIS"
 
   jq '.app_state["evm"]["params"]["active_static_precompiles"]=["0x0000000000000000000000000000000000000100","0x0000000000000000000000000000000000000400","0x0000000000000000000000000000000000000800","0x0000000000000000000000000000000000000801","0x0000000000000000000000000000000000000802","0x0000000000000000000000000000000000000803","0x0000000000000000000000000000000000000804","0x0000000000000000000000000000000000000805", "0x0000000000000000000000000000000000000806", "0x0000000000000000000000000000000000000807"]' "$GENESIS" >"$TMP_GENESIS" && mv "$TMP_GENESIS" "$GENESIS"
 
@@ -345,4 +348,5 @@ infinited start "$TRACE" \
 	--evm.min-tip=0 \
 	--home "$CHAINDIR" \
 	--json-rpc.api eth,txpool,personal,net,debug,web3 \
-	--chain-id "$CHAINID"
+	--chain-id "$CHAINID" \
+	--evm.evm-chain-id "$EVM_CHAIN_ID"

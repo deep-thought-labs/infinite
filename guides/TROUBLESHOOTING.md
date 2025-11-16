@@ -235,7 +235,7 @@ cat ~/.infinited/config/genesis.json | jq '.chain_id'
 
 ### 10. Token Metadata Issues
 
-**What this means**: TEA token metadata is incorrect or missing.
+**What this means**: 42 token metadata is incorrect or missing.
 
 **Why this happens**: Genesis configuration issues or metadata not properly set.
 
@@ -244,7 +244,7 @@ cat ~/.infinited/config/genesis.json | jq '.chain_id'
 # Check token metadata
 curl -s http://localhost:1317/cosmos/bank/v1beta1/denoms_metadata | jq '.metadatas[] | select(.base == "drop")'
 
-# Expected to show TEA token with proper metadata
+# Expected to show 42 token with proper metadata
 # If missing, check genesis file
 cat ~/.infinited/config/genesis.json | jq '.app_state.bank.denom_metadata'
 ```

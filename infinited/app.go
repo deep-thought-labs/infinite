@@ -134,7 +134,7 @@ import (
 
 func init() {
 	// Manually update the power reduction to use 18 decimals (drop) instead of the default 6 decimals (micro).
-	// This allows Infinite Drive to use the same precision as Ethereum (1e18) where 1 TEA = 10^18 drop.
+	// This allows Infinite Drive to use the same precision as Ethereum (1e18) where 1 42 = 10^18 drop.
 	sdk.DefaultPowerReduction = utils.AttoPowerReduction
 
 	defaultNodeHome = evmconfig.MustGetDefaultNodeHome()

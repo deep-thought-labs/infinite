@@ -33,7 +33,7 @@ This guide covers testing, manual compilation, and development-specific configur
 ✅ Tendermint RPC responding
 ✅ Chain IDs correct (EVM: 0x66c9a, Cosmos: 421018)
 ✅ Blocks being produced (height: XXX)
-✅ Token metadata correct (Improbability/TEA)
+✅ Token metadata correct (Improbability/42)
 ✅ Infinited process running
 ✅ Data directory exists
 ```
@@ -72,7 +72,7 @@ curl -s http://localhost:1317/cosmos/base/tendermint/v1beta1/node_info | jq '.'
 # Get latest block height
 curl -s http://localhost:1317/cosmos/base/tendermint/v1beta1/blocks/latest | jq '.block.header.height'
 
-# Get TEA token metadata
+# Get 42 token metadata
 curl -s http://localhost:1317/cosmos/bank/v1beta1/denoms_metadata | jq '.metadatas[] | select(.base == "drop")'
 ```
 
@@ -88,7 +88,7 @@ curl -s http://localhost:26657/status | jq '.result.node_info.network'
 
 ### 3. Token Verification
 
-**What this verifies**: That the TEA token is properly configured.
+**What this verifies**: That the 42 token is properly configured.
 
 ```bash
 # Check token metadata
@@ -97,20 +97,20 @@ curl -s http://localhost:1317/cosmos/bank/v1beta1/denoms_metadata | jq '.metadat
 # Expected response:
 # {
 #   "name": "Improbability",
-#   "symbol": "TEA", 
+#   "symbol": "42", 
 #   "base": "drop",
-#   "display": "TEA",
+#   "display": "42",
 #   "denom_units": [
 #     {"denom": "drop", "exponent": 0},
-#     {"denom": "TEA", "exponent": 18}
+#     {"denom": "42", "exponent": 18}
 #   ]
 # }
 ```
 
 **Understanding the token**:
 - **Base unit**: `drop` (smallest unit, like wei in Ethereum)
-- **Display unit**: `TEA` (what users see, like ETH)
-- **Conversion**: 1 TEA = 10^18 drop (18 decimals)
+- **Display unit**: `42` (what users see, like ETH)
+- **Conversion**: 1 42 = 10^18 drop (18 decimals)
 
 ## Manual Compilation & Configuration
 

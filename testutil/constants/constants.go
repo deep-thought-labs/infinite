@@ -19,7 +19,7 @@ const (
 	ExampleMicroDenom = "udrop"
 
 	// ExampleDisplayDenom provides an example display denom for use in tests
-	ExampleDisplayDenom = "TEA"
+	ExampleDisplayDenom = "42"
 
 	// ExampleBech32Prefix provides an example Bech32 prefix for use in tests
 	ExampleBech32Prefix = "infinite"
@@ -41,7 +41,13 @@ const (
 // that allows initializing the app with different coin info based on the
 // chain id
 var ChainsCoinInfo = map[uint64]evmtypes.EvmCoinInfo{ // TODO:VLAD - deduplicate this for tests
-    // NOTE: Do not add EighteenDecimalsChainID here as it duplicates config.DefaultEVMChainID (421018)
+	// Mainnet chain ID (421018) - Infinite Drive mainnet
+	421018: {
+		Denom:         "drop",
+		ExtendedDenom: "drop",
+		DisplayDenom:  "42",
+		Decimals:      evmtypes.EighteenDecimals.Uint32(),
+	},
 	// SixDecimalsChainID provides a chain ID which is being set up with 6 decimals
 	SixDecimalsChainID.EVMChainID: {
 		Denom:         "utest",

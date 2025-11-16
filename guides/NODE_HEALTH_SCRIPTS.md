@@ -157,8 +157,8 @@ echo "✅ Genesis state verification complete"
 
 ```bash
 #!/bin/bash
-# Verify TEA token metadata
-echo "Verifying TEA token metadata..."
+# Verify 42 token metadata
+echo "Verifying 42 token metadata..."
 
 METADATA=$(curl -s http://localhost:1317/cosmos/bank/v1beta1/denoms_metadata | jq '.metadatas[] | select(.base == "drop")')
 
@@ -171,11 +171,11 @@ SYMBOL=$(echo "$METADATA" | jq -r '.symbol')
 DISPLAY=$(echo "$METADATA" | jq -r '.display')
 BASE=$(echo "$METADATA" | jq -r '.base')
 
-if [ "$NAME" = "Improbability" ] && [ "$SYMBOL" = "TEA" ] && [ "$DISPLAY" = "TEA" ] && [ "$BASE" = "drop" ]; then
+if [ "$NAME" = "Improbability" ] && [ "$SYMBOL" = "42" ] && [ "$DISPLAY" = "42" ] && [ "$BASE" = "drop" ]; then
     echo "✅ Token metadata is correct"
 else
     echo "❌ Token metadata mismatch"
-    echo "Expected: Improbability/TEA/TEA/drop"
+    echo "Expected: Improbability/42/42/drop"
     echo "Found: $NAME/$SYMBOL/$DISPLAY/$BASE"
 fi
 ```
@@ -198,12 +198,12 @@ BALANCE=$(curl -s http://localhost:1317/cosmos/bank/v1beta1/balances/$VALIDATOR_
 echo "Validator balance:"
 echo "$BALANCE" | jq '.'
 
-# Convert to TEA (divide by 10^18)
-TEA_BALANCE=$(echo "$BALANCE" | jq -r '.amount' | awk '{print $1/1000000000000000000}')
-echo "Balance in TEA: $TEA_BALANCE"
+# Convert to 42 (divide by 10^18)
+BALANCE_42=$(echo "$BALANCE" | jq -r '.amount' | awk '{print $1/1000000000000000000}')
+echo "Balance in 42: $BALANCE_42"
 
-if [ "$(echo "$TEA_BALANCE > 0" | bc)" -eq 1 ]; then
-    echo "✅ Account has TEA balance"
+if [ "$(echo "$BALANCE_42 > 0" | bc)" -eq 1 ]; then
+    echo "✅ Account has 42 balance"
 else
     echo "❌ Account balance is zero or invalid"
 fi
@@ -232,9 +232,9 @@ EVM_BALANCE=$(curl -s -X POST -H "Content-Type: application/json" \
 
 echo "EVM balance (wei): $EVM_BALANCE"
 
-# Convert to TEA
-TEA_BALANCE=$(printf "%d" "$EVM_BALANCE" | awk '{print $1/1000000000000000000}')
-echo "EVM balance in TEA: $TEA_BALANCE"
+# Convert to 42
+BALANCE_42=$(printf "%d" "$EVM_BALANCE" | awk '{print $1/1000000000000000000}')
+echo "EVM balance in 42: $BALANCE_42"
 
 echo "✅ EVM account verification complete"
 ```
@@ -456,8 +456,8 @@ METADATA=$(curl -s http://localhost:1317/cosmos/bank/v1beta1/denoms_metadata | j
 if [ -n "$METADATA" ]; then
     NAME=$(echo "$METADATA" | jq -r '.name')
     SYMBOL=$(echo "$METADATA" | jq -r '.symbol')
-    if [ "$NAME" = "Improbability" ] && [ "$SYMBOL" = "TEA" ]; then
-        print_status 0 "Token metadata correct (Improbability/TEA)"
+    if [ "$NAME" = "Improbability" ] && [ "$SYMBOL" = "42" ]; then
+        print_status 0 "Token metadata correct (Improbability/42)"
     else
         print_status 1 "Token metadata incorrect ($NAME/$SYMBOL)"
     fi
@@ -588,7 +588,7 @@ curl -s http://localhost:26657/status | jq '.'
 - ✅ All three RPC endpoints responding
 - ✅ Chain IDs: EVM=0x66bca (421018), Cosmos=infinite_421018-1
 - ✅ Block height increasing over time
-- ✅ Token metadata: Improbability/TEA/TEA/drop
+- ✅ Token metadata: Improbability/42/42/drop
 - ✅ Infinited process running
 - ✅ Data directory exists and growing
 

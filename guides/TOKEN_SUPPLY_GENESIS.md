@@ -129,14 +129,14 @@ infinited keys add validator-1 --keyring-backend file
 ### 2. Agregar cuenta con fondos (crea tokens de la nada)
 ```bash
 infinited genesis add-genesis-account validator-1 1000000000000000000000drop
-# ↑ Esto crea 1000 TEA de la nada y los asigna a validator-1
+# ↑ Esto crea 1000 42 de la nada y los asigna a validator-1
 ```
 
 ### 3. Crear gentx (usa los tokens existentes)
 ```bash
 infinited genesis gentx validator-1 1000000000000000000000drop \
   --chain-id infinite_421018-1
-# ↑ Esto usa los 1000 TEA que ya tiene validator-1 para staking
+# ↑ Esto usa los 1000 42 que ya tiene validator-1 para staking
 ```
 
 ### 4. Recolectar gentxs
@@ -153,27 +153,27 @@ infinited genesis collect-gentxs
 
 ```bash
 # Cuenta principal del equipo (para operaciones)
-infinited genesis add-genesis-account team-wallet 10000000000000000000000000drop  # 10M TEA
+infinited genesis add-genesis-account team-wallet 10000000000000000000000000drop  # 10M 42
 
 # Validador 1
-infinited genesis add-genesis-account validator-1 1000000000000000000000000drop   # 1M TEA
+infinited genesis add-genesis-account validator-1 1000000000000000000000000drop   # 1M 42
 
 # Validador 2  
-infinited genesis add-genesis-account validator-2 1000000000000000000000000drop   # 1M TEA
+infinited genesis add-genesis-account validator-2 1000000000000000000000000drop   # 1M 42
 
 # Validador 3
-infinited genesis add-genesis-account validator-3 1000000000000000000000000drop   # 1M TEA
+infinited genesis add-genesis-account validator-3 1000000000000000000000000drop   # 1M 42
 
-# Total supply: 13M TEA
+# Total supply: 13M 42
 ```
 
 ### Para Testnet (ejemplo):
 
 ```bash
 # Cuentas de prueba (más generosas)
-infinited genesis add-genesis-account test-account-1 100000000000000000000000000drop  # 100M TEA
-infinited genesis add-genesis-account test-account-2 100000000000000000000000000drop  # 100M TEA
-infinited genesis add-genesis-account validator-1 10000000000000000000000000drop     # 10M TEA
+infinited genesis add-genesis-account test-account-1 100000000000000000000000000drop  # 100M 42
+infinited genesis add-genesis-account test-account-2 100000000000000000000000000drop  # 100M 42
+infinited genesis add-genesis-account validator-1 10000000000000000000000000drop     # 10M 42
 ```
 
 ---
