@@ -292,6 +292,77 @@ make install
 
 ---
 
+## Genesis Customization Script
+
+### `scripts/customize_genesis.sh`
+
+**Purpose**: Apply all Infinite Drive personalizations to a generated `genesis.json` file.
+
+**What it does**:
+- Sets all module denominations to "drop" (staking, mint, gov, evm)
+- Adds complete token metadata for Improbability (42) token
+- Enables all EVM static precompiles
+- Configures ERC20 native token pair
+- Sets consensus max_gas parameter
+- Creates automatic backup before modifications
+
+**When to use**:
+- After running `infinited init` to customize the generated genesis
+- When preparing a genesis file for testnet or mainnet
+- As part of a deployment pipeline
+- When you need to ensure all Infinite Drive customizations are applied
+
+**Usage**:
+```bash
+./scripts/customize_genesis.sh <genesis_file_path>
+```
+
+**Example**:
+```bash
+# After initializing a node
+infinited init my-moniker --chain-id infinite_421018-1
+
+# Customize the generated genesis
+./scripts/customize_genesis.sh ~/.infinited/config/genesis.json
+
+# Validate the customized genesis
+infinited genesis validate-genesis
+```
+
+**Expected output**:
+```
+ℹ Customizing Genesis file: ~/.infinited/config/genesis.json
+ℹ Backup created: ~/.infinited/config/genesis.json.backup.20251116_170222
+ℹ Customizing module denominations to 'drop'...
+ℹ Staking bond_denom → drop
+ℹ Mint mint_denom → drop
+ℹ Governance min_deposit → drop
+ℹ Governance expedited_min_deposit → drop
+ℹ EVM evm_denom → drop
+ℹ Adding token metadata for Improbability (42) token...
+ℹ Token metadata added
+ℹ Configuring EVM static precompiles...
+ℹ EVM static precompiles enabled
+ℹ Configuring ERC20 native token pair...
+ℹ ERC20 native precompiles configured
+ℹ ERC20 native token pair configured
+ℹ Configuring consensus parameters...
+ℹ Consensus max_gas → 10000000
+ℹ Genesis file customized successfully!
+```
+
+**Prerequisites**:
+- `jq` must be installed
+- Valid `genesis.json` file must exist
+
+**Notes**:
+- The script creates a timestamped backup automatically
+- All modifications are applied safely with error handling
+- The script validates the genesis file before making changes
+- This script extracts the genesis customization logic from `local_node.sh` into a standalone tool
+
+---
+
 ## 🧪 Testing Scripts
 
 ### 10. Compatibility Scripts
