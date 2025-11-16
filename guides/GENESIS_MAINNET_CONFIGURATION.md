@@ -205,7 +205,7 @@ Configuración del token nativo:
   "display": "Improbability",
   "name": "Improbability",
   "symbol": "42",
-  "uri": "https://infinitedrive.xyz/logo.png"
+  "uri": "https://assets.infinitedrive.xyz/tokens/42/icon.png"
 }
 ```
 
