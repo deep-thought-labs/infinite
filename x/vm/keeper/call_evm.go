@@ -23,7 +23,7 @@ func (k Keeper) CallEVM(
 	commit bool,
 	gasCap *big.Int,
 	method string,
-	args ...interface{},
+	args ...any,
 ) (*types.MsgEthereumTxResponse, error) {
 	data, err := abi.Pack(method, args...)
 	if err != nil {

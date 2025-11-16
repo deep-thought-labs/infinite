@@ -71,7 +71,6 @@ func (s *KeeperTestSuite) TestEvmHooks() {
 		vmdb := statedb.New(ctx, k, statedb.NewTxConfig(
 			txHash,
 			0,
-			0,
 		))
 
 		vmdb.AddLog(&ethtypes.Log{
@@ -109,10 +108,6 @@ func (s *KeeperTestSuite) TestPostTxProcessingFailureLogReversion() {
 	err = s.Network.App.GetBankKeeper().SendCoinsFromModuleToAccount(ctx, "mint", sender.AccAddr, coins)
 	s.Require().NoError(err)
 
-	// Store original transient state
-	originalBloom := k.GetBlockBloomTransient(ctx)
-	originalLogSize := k.GetLogSizeTransient(ctx)
-
 	// Create a simple transfer transaction
 	transferArgs := types.EvmTxArgs{
 		To:       &recipient,
@@ -135,13 +130,4 @@ func (s *KeeperTestSuite) TestPostTxProcessingFailureLogReversion() {
 
 	// Critical test: Verify logs are completely cleared
 	s.Require().Nil(res.Logs, "res.Logs should be nil after PostTxProcessing failure")
-
-	// Critical test: Verify transient state was not updated when PostTx failed
-	finalBloom := k.GetBlockBloomTransient(ctx)
-	finalLogSize := k.GetLogSizeTransient(ctx)
-
-	s.Require().Equal(originalBloom.String(), finalBloom.String(),
-		"BlockBloomTransient should not be updated when PostTxProcessing fails")
-	s.Require().Equal(originalLogSize, finalLogSize,
-		"LogSizeTransient should not be updated when PostTxProcessing fails")
 }

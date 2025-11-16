@@ -1,7 +1,6 @@
 package common
 
 import (
-	"embed"
 	"fmt"
 	"math/big"
 	"reflect"
@@ -126,19 +125,4 @@ func PackNum(value reflect.Value) []byte {
 	default:
 		panic("abi: fatal error")
 	}
-}
-
-// LoadABI read the ABI file described by the path and parse it as JSON.
-func LoadABI(fs embed.FS, path string) (abi.ABI, error) {
-	abiBz, err := fs.ReadFile(path)
-	if err != nil {
-		return abi.ABI{}, fmt.Errorf("error loading the ABI %s", err)
-	}
-
-	contract, err := contractutils.ConvertPrecompileHardhatBytesToCompiledContract(abiBz)
-	if err != nil {
-		return abi.ABI{}, fmt.Errorf(ErrInvalidABI, err)
-	}
-
-	return contract.ABI, nil
 }
