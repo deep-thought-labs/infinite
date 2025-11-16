@@ -1,7 +1,6 @@
 package constants
 
 import (
-	"github.com/deep-thought-labs/infinite/server/config"
 	erc20types "github.com/deep-thought-labs/infinite/x/erc20/types"
 	evmtypes "github.com/deep-thought-labs/infinite/x/vm/types"
 
@@ -55,13 +54,7 @@ var ChainsCoinInfo = map[uint64]evmtypes.EvmCoinInfo{ // TODO:VLAD - deduplicate
 		DisplayDenom:  "test",
 		Decimals:      evmtypes.SixDecimals.Uint32(),
 	},
-	// EVMChainID provides a chain ID used for internal testing
-	config.DefaultEVMChainID: {
-		Denom:         "atest",
-		ExtendedDenom: "atest",
-		DisplayDenom:  "test",
-		Decimals:      evmtypes.EighteenDecimals.Uint32(),
-	},
+	// Note: DefaultEVMChainID (421018) is already covered by the mainnet entry above
 	TwelveDecimalsChainID.EVMChainID: {
 		Denom:         "ptest2",
 		ExtendedDenom: "atest2",
