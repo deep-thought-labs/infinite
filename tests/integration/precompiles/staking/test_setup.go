@@ -1,14 +1,15 @@
 package staking
 
 import (
-	evmaddress "github.com/deep-thought-labs/infinite/encoding/address"
-	"github.com/deep-thought-labs/infinite/precompiles/staking"
-	testconstants "github.com/deep-thought-labs/infinite/testutil/constants"
-	"github.com/deep-thought-labs/infinite/testutil/integration/evm/factory"
-	"github.com/deep-thought-labs/infinite/testutil/integration/evm/grpc"
-	"github.com/deep-thought-labs/infinite/testutil/integration/evm/network"
-	testkeyring "github.com/deep-thought-labs/infinite/testutil/keyring"
 	"github.com/stretchr/testify/suite"
+
+	evmaddress "github.com/cosmos/evm/encoding/address"
+	"github.com/cosmos/evm/precompiles/staking"
+	testconstants "github.com/cosmos/evm/testutil/constants"
+	"github.com/cosmos/evm/testutil/integration/evm/factory"
+	"github.com/cosmos/evm/testutil/integration/evm/grpc"
+	"github.com/cosmos/evm/testutil/integration/evm/network"
+	testkeyring "github.com/cosmos/evm/testutil/keyring"
 
 	sdkmath "cosmossdk.io/math"
 

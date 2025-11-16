@@ -9,8 +9,8 @@ import (
 	"github.com/ethereum/go-ethereum/common"
 	ethtypes "github.com/ethereum/go-ethereum/core/types"
 
-	"github.com/deep-thought-labs/infinite/tests/jsonrpc/simulator/config"
-	"github.com/deep-thought-labs/infinite/tests/jsonrpc/simulator/types"
+	"github.com/cosmos/evm/tests/jsonrpc/simulator/config"
+	"github.com/cosmos/evm/tests/jsonrpc/simulator/types"
 )
 
 // TransferTokensToAccount transfers ERC20 tokens from owner to a specific account

@@ -3,9 +3,9 @@ package config
 import (
 	"encoding/json"
 
-	testconstants "github.com/deep-thought-labs/infinite/testutil/constants"
-	erc20types "github.com/deep-thought-labs/infinite/x/erc20/types"
-	evmtypes "github.com/deep-thought-labs/infinite/x/vm/types"
+	testconstants "github.com/cosmos/evm/testutil/constants"
+	erc20types "github.com/cosmos/evm/x/erc20/types"
+	evmtypes "github.com/cosmos/evm/x/vm/types"
 )
 
 // GenesisState of the blockchain is represented here as a map of raw json

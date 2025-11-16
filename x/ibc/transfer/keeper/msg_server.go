@@ -4,10 +4,10 @@ import (
 	"context"
 	"strings"
 
-	erc20types "github.com/deep-thought-labs/infinite/x/erc20/types"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/hashicorp/go-metrics"
 
+	erc20types "github.com/cosmos/evm/x/erc20/types"
 	"github.com/cosmos/ibc-go/v10/modules/apps/transfer/types"
 
 	storetypes "cosmossdk.io/store/types"

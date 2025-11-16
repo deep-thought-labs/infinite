@@ -1,9 +1,9 @@
 package runner
 
 import (
-	ns "github.com/deep-thought-labs/infinite/tests/jsonrpc/simulator/namespaces"
-	"github.com/deep-thought-labs/infinite/tests/jsonrpc/simulator/types"
-	"github.com/deep-thought-labs/infinite/tests/jsonrpc/simulator/utils"
+	ns "github.com/cosmos/evm/tests/jsonrpc/simulator/namespaces"
+	"github.com/cosmos/evm/tests/jsonrpc/simulator/types"
+	"github.com/cosmos/evm/tests/jsonrpc/simulator/utils"
 )
 
 // GetTestCase returns the comprehensive test configuration organized by namespace

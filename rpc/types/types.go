@@ -5,14 +5,15 @@ import (
 	"fmt"
 	"math/big"
 
-	"github.com/deep-thought-labs/infinite/x/vm/statedb"
-	evmtypes "github.com/deep-thought-labs/infinite/x/vm/types"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/common/hexutil"
 	"github.com/ethereum/go-ethereum/core/tracing"
 	ethtypes "github.com/ethereum/go-ethereum/core/types"
 	"github.com/ethereum/go-ethereum/core/vm"
 	"github.com/holiman/uint256"
+
+	"github.com/cosmos/evm/x/vm/statedb"
+	evmtypes "github.com/cosmos/evm/x/vm/types"
 )
 
 // Copied the Account and StorageResult types since they are registered under an

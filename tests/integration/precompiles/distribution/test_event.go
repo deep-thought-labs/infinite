@@ -3,15 +3,16 @@ package distribution
 import (
 	"math/big"
 
-	cmn "github.com/deep-thought-labs/infinite/precompiles/common"
-	"github.com/deep-thought-labs/infinite/precompiles/distribution"
-	"github.com/deep-thought-labs/infinite/precompiles/testutil"
-	"github.com/deep-thought-labs/infinite/testutil/constants"
-	"github.com/deep-thought-labs/infinite/x/vm/statedb"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/core/vm"
 	"github.com/ethereum/go-ethereum/crypto"
 	"github.com/holiman/uint256"
+
+	cmn "github.com/cosmos/evm/precompiles/common"
+	"github.com/cosmos/evm/precompiles/distribution"
+	"github.com/cosmos/evm/precompiles/testutil"
+	"github.com/cosmos/evm/testutil/constants"
+	"github.com/cosmos/evm/x/vm/statedb"
 
 	"cosmossdk.io/math"
 	storetypes "cosmossdk.io/store/types"

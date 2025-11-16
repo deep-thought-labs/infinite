@@ -5,15 +5,6 @@ import (
 	"math/big"
 	"testing"
 
-	cmn "github.com/deep-thought-labs/infinite/precompiles/common"
-	"github.com/deep-thought-labs/infinite/precompiles/gov"
-	"github.com/deep-thought-labs/infinite/precompiles/testutil"
-	"github.com/deep-thought-labs/infinite/precompiles/testutil/contracts"
-	commonfactory "github.com/deep-thought-labs/infinite/testutil/integration/base/factory"
-	"github.com/deep-thought-labs/infinite/testutil/integration/evm/network"
-	testutiltx "github.com/deep-thought-labs/infinite/testutil/tx"
-	testutiltypes "github.com/deep-thought-labs/infinite/testutil/types"
-	evmtypes "github.com/deep-thought-labs/infinite/x/vm/types"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/core/vm"
 
@@ -21,6 +12,16 @@ import (
 	. "github.com/onsi/ginkgo/v2"
 	//nolint:revive // dot imports are fine for Ginkgo
 	. "github.com/onsi/gomega"
+
+	cmn "github.com/cosmos/evm/precompiles/common"
+	"github.com/cosmos/evm/precompiles/gov"
+	"github.com/cosmos/evm/precompiles/testutil"
+	"github.com/cosmos/evm/precompiles/testutil/contracts"
+	commonfactory "github.com/cosmos/evm/testutil/integration/base/factory"
+	"github.com/cosmos/evm/testutil/integration/evm/network"
+	testutiltx "github.com/cosmos/evm/testutil/tx"
+	testutiltypes "github.com/cosmos/evm/testutil/types"
+	evmtypes "github.com/cosmos/evm/x/vm/types"
 
 	"cosmossdk.io/math"
 

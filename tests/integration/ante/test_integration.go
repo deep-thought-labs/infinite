@@ -3,20 +3,21 @@ package ante
 import (
 	"testing"
 
-	testconstants "github.com/deep-thought-labs/infinite/testutil/constants"
-	commonfactory "github.com/deep-thought-labs/infinite/testutil/integration/base/factory"
-	"github.com/deep-thought-labs/infinite/testutil/integration/evm/factory"
-	"github.com/deep-thought-labs/infinite/testutil/integration/evm/grpc"
-	"github.com/deep-thought-labs/infinite/testutil/integration/evm/network"
-	"github.com/deep-thought-labs/infinite/testutil/integration/evm/utils"
-	testkeyring "github.com/deep-thought-labs/infinite/testutil/keyring"
-	testutiltx "github.com/deep-thought-labs/infinite/testutil/tx"
 	"github.com/stretchr/testify/suite"
 
 	//nolint:revive // dot imports are fine for Ginkgo
 	. "github.com/onsi/ginkgo/v2"
 	//nolint:revive // dot imports are fine for Ginkgo
 	. "github.com/onsi/gomega"
+
+	testconstants "github.com/cosmos/evm/testutil/constants"
+	commonfactory "github.com/cosmos/evm/testutil/integration/base/factory"
+	"github.com/cosmos/evm/testutil/integration/evm/factory"
+	"github.com/cosmos/evm/testutil/integration/evm/grpc"
+	"github.com/cosmos/evm/testutil/integration/evm/network"
+	"github.com/cosmos/evm/testutil/integration/evm/utils"
+	testkeyring "github.com/cosmos/evm/testutil/keyring"
+	testutiltx "github.com/cosmos/evm/testutil/tx"
 
 	"cosmossdk.io/math"
 

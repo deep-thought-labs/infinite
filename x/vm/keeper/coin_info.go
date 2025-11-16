@@ -3,7 +3,7 @@ package keeper
 import (
 	"fmt"
 
-	"github.com/deep-thought-labs/infinite/x/vm/types"
+	"github.com/cosmos/evm/x/vm/types"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 )

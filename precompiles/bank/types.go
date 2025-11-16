@@ -4,8 +4,9 @@ import (
 	"fmt"
 	"math/big"
 
-	cmn "github.com/deep-thought-labs/infinite/precompiles/common"
 	"github.com/ethereum/go-ethereum/common"
+
+	cmn "github.com/cosmos/evm/precompiles/common"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 )

@@ -4,8 +4,9 @@ import (
 	"math/big"
 	"testing"
 
-	"github.com/deep-thought-labs/infinite/x/precisebank/types"
 	"github.com/stretchr/testify/require"
+
+	"github.com/cosmos/evm/x/precisebank/types"
 
 	sdkmath "cosmossdk.io/math"
 )

@@ -5,13 +5,13 @@ import (
 	"fmt"
 	"math/big"
 
-	evmmempool "github.com/deep-thought-labs/infinite/mempool"
-	"github.com/deep-thought-labs/infinite/testutil/integration/base/factory"
-	"github.com/deep-thought-labs/infinite/testutil/keyring"
-	evmtypes "github.com/deep-thought-labs/infinite/x/vm/types"
-
 	abci "github.com/cometbft/cometbft/abci/types"
 	"github.com/cometbft/cometbft/crypto/tmhash"
+
+	evmmempool "github.com/cosmos/evm/mempool"
+	"github.com/cosmos/evm/testutil/integration/base/factory"
+	"github.com/cosmos/evm/testutil/keyring"
+	evmtypes "github.com/cosmos/evm/x/vm/types"
 
 	sdkmath "cosmossdk.io/math"
 

@@ -5,11 +5,12 @@ import (
 	"math/big"
 	"time"
 
-	feemarkettypes "github.com/deep-thought-labs/infinite/x/feemarket/types"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/core"
 	ethtypes "github.com/ethereum/go-ethereum/core/types"
 	"github.com/ethereum/go-ethereum/core/vm"
+
+	feemarkettypes "github.com/cosmos/evm/x/feemarket/types"
 
 	"cosmossdk.io/core/address"
 	"cosmossdk.io/math"

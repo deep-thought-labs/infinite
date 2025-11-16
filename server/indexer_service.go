@@ -4,12 +4,12 @@ import (
 	"context"
 	"time"
 
-	servertypes "github.com/deep-thought-labs/infinite/server/types"
-
 	"github.com/cometbft/cometbft/libs/service"
 	rpcclient "github.com/cometbft/cometbft/rpc/client"
 	coretypes "github.com/cometbft/cometbft/rpc/core/types"
 	"github.com/cometbft/cometbft/types"
+
+	servertypes "github.com/cosmos/evm/server/types"
 )
 
 const (

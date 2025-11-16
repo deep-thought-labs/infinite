@@ -4,10 +4,11 @@ import (
 	"context"
 	"math/big"
 
-	"github.com/deep-thought-labs/infinite/contracts"
-	"github.com/deep-thought-labs/infinite/x/erc20/types"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/hashicorp/go-metrics"
+
+	"github.com/cosmos/evm/contracts"
+	"github.com/cosmos/evm/x/erc20/types"
 
 	sdkerrors "cosmossdk.io/errors"
 	"cosmossdk.io/math"

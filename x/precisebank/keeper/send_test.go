@@ -3,8 +3,9 @@ package keeper_test
 import (
 	"testing"
 
-	"github.com/deep-thought-labs/infinite/x/precisebank/types"
 	"github.com/stretchr/testify/require"
+
+	"github.com/cosmos/evm/x/precisebank/types"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"

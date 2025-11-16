@@ -4,9 +4,10 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/deep-thought-labs/infinite/utils"
 	"github.com/ethereum/go-ethereum/common"
 	ethtypes "github.com/ethereum/go-ethereum/core/types"
+
+	"github.com/cosmos/evm/utils"
 )
 
 // NewTransactionLogs creates a new NewTransactionLogs instance.

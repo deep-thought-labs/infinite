@@ -5,10 +5,11 @@ import (
 	"math/big"
 	"testing"
 
-	evmaddress "github.com/deep-thought-labs/infinite/encoding/address"
-	cmn "github.com/deep-thought-labs/infinite/precompiles/common"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/stretchr/testify/require"
+
+	evmaddress "github.com/cosmos/evm/encoding/address"
+	cmn "github.com/cosmos/evm/precompiles/common"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 )

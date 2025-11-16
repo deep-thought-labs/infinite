@@ -1,15 +1,18 @@
+//go:build system_test
+
 package accountabstraction
 
 import (
 	"fmt"
-	"github.com/deep-thought-labs/infinite/tests/systemtests/clients"
 	"math/big"
+
+	"github.com/cosmos/evm/tests/systemtests/clients"
 
 	"github.com/ethereum/go-ethereum/accounts/abi"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/crypto"
 
-	"github.com/deep-thought-labs/infinite/crypto/ethsecp256k1"
+	"github.com/cosmos/evm/crypto/ethsecp256k1"
 
 	cryptotypes "github.com/cosmos/cosmos-sdk/crypto/types"
 )

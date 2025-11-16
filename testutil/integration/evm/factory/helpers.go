@@ -3,9 +3,10 @@ package factory
 import (
 	"strings"
 
-	"github.com/deep-thought-labs/infinite/precompiles/testutil"
-	evmtypes "github.com/deep-thought-labs/infinite/x/vm/types"
 	"github.com/ethereum/go-ethereum/common"
+
+	"github.com/cosmos/evm/precompiles/testutil"
+	evmtypes "github.com/cosmos/evm/x/vm/types"
 
 	errorsmod "cosmossdk.io/errors"
 )

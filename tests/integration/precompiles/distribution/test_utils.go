@@ -1,9 +1,9 @@
 package distribution
 
 import (
-	evmaddress "github.com/deep-thought-labs/infinite/encoding/address"
-	"github.com/deep-thought-labs/infinite/precompiles/staking"
-	"github.com/deep-thought-labs/infinite/testutil/keyring"
+	evmaddress "github.com/cosmos/evm/encoding/address"
+	"github.com/cosmos/evm/precompiles/staking"
+	"github.com/cosmos/evm/testutil/keyring"
 
 	"cosmossdk.io/math"
 

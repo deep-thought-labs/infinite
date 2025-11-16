@@ -4,11 +4,6 @@ import (
 	"fmt"
 	"math/big"
 
-	"github.com/deep-thought-labs/infinite/crypto/ethsecp256k1"
-	"github.com/deep-thought-labs/infinite/precompiles/testutil"
-	testkeyring "github.com/deep-thought-labs/infinite/testutil/keyring"
-	testutiltypes "github.com/deep-thought-labs/infinite/testutil/types"
-	evmtypes "github.com/deep-thought-labs/infinite/x/vm/types"
 	"github.com/ethereum/go-ethereum/common"
 	ethtypes "github.com/ethereum/go-ethereum/core/types"
 	"github.com/holiman/uint256"
@@ -17,6 +12,12 @@ import (
 	. "github.com/onsi/gomega"
 
 	abcitypes "github.com/cometbft/cometbft/abci/types"
+
+	"github.com/cosmos/evm/crypto/ethsecp256k1"
+	"github.com/cosmos/evm/precompiles/testutil"
+	testkeyring "github.com/cosmos/evm/testutil/keyring"
+	testutiltypes "github.com/cosmos/evm/testutil/types"
+	evmtypes "github.com/cosmos/evm/x/vm/types"
 )
 
 func (s *IntegrationTestSuite) createSetCodeAuthorization(chainID, nonce uint64, contractAddr common.Address) ethtypes.SetCodeAuthorization {

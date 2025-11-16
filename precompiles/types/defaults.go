@@ -1,13 +1,14 @@
 package types
 
 import (
-	evmaddress "github.com/deep-thought-labs/infinite/encoding/address"
-	cmn "github.com/deep-thought-labs/infinite/precompiles/common"
-	erc20Keeper "github.com/deep-thought-labs/infinite/x/erc20/keeper"
-	transferkeeper "github.com/deep-thought-labs/infinite/x/ibc/transfer/keeper"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/core/vm"
 
+	evmaddress "github.com/cosmos/evm/encoding/address"
+	ibcutils "github.com/cosmos/evm/ibc"
+	cmn "github.com/cosmos/evm/precompiles/common"
+	erc20Keeper "github.com/cosmos/evm/x/erc20/keeper"
+	transferkeeper "github.com/cosmos/evm/x/ibc/transfer/keeper"
 	channelkeeper "github.com/cosmos/ibc-go/v10/modules/core/04-channel/keeper"
 
 	"cosmossdk.io/core/address"
@@ -69,6 +70,7 @@ func DefaultStaticPrecompiles(
 	erc20Keeper *erc20Keeper.Keeper,
 	transferKeeper *transferkeeper.Keeper,
 	channelKeeper *channelkeeper.Keeper,
+	clientKeeper ibcutils.ClientKeeper,
 	govKeeper govkeeper.Keeper,
 	slashingKeeper slashingkeeper.Keeper,
 	codec codec.Codec,
@@ -80,6 +82,7 @@ func DefaultStaticPrecompiles(
 		WithBech32Precompile().
 		WithStakingPrecompile(stakingKeeper, bankKeeper, opts...).
 		WithDistributionPrecompile(distributionKeeper, stakingKeeper, bankKeeper, opts...).
+		WithICS02Precompile(codec, clientKeeper).
 		WithICS20Precompile(bankKeeper, stakingKeeper, transferKeeper, channelKeeper).
 		WithBankPrecompile(bankKeeper, erc20Keeper).
 		WithGovPrecompile(govKeeper, bankKeeper, codec, opts...).

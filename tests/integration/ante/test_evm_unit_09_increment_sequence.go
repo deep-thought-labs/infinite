@@ -1,12 +1,12 @@
 package ante
 
 import (
-	"github.com/deep-thought-labs/infinite/ante/evm"
-	"github.com/deep-thought-labs/infinite/mempool"
-	testconstants "github.com/deep-thought-labs/infinite/testutil/constants"
-	"github.com/deep-thought-labs/infinite/testutil/integration/evm/grpc"
-	"github.com/deep-thought-labs/infinite/testutil/integration/evm/network"
-	testkeyring "github.com/deep-thought-labs/infinite/testutil/keyring"
+	"github.com/cosmos/evm/ante/evm"
+	"github.com/cosmos/evm/mempool"
+	testconstants "github.com/cosmos/evm/testutil/constants"
+	"github.com/cosmos/evm/testutil/integration/evm/grpc"
+	"github.com/cosmos/evm/testutil/integration/evm/network"
+	testkeyring "github.com/cosmos/evm/testutil/keyring"
 
 	sdktypes "github.com/cosmos/cosmos-sdk/types"
 )

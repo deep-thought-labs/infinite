@@ -9,11 +9,12 @@ import (
 	"math/big"
 	"strings"
 
-	"github.com/deep-thought-labs/infinite/utils"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/common/hexutil"
 	"github.com/spf13/cast"
 	"google.golang.org/grpc/metadata"
+
+	"github.com/cosmos/evm/utils"
 
 	grpctypes "github.com/cosmos/cosmos-sdk/types/grpc"
 )

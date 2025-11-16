@@ -17,7 +17,7 @@ import (
 	"github.com/ethereum/go-ethereum/crypto"
 	"github.com/ethereum/go-ethereum/rpc"
 
-	"github.com/deep-thought-labs/infinite/tests/jsonrpc/simulator/types"
+	"github.com/cosmos/evm/tests/jsonrpc/simulator/types"
 )
 
 const (

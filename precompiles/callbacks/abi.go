@@ -1,22 +1,24 @@
 package callbacks
 
 import (
-	"embed"
+	"bytes"
 
-	cmn "github.com/deep-thought-labs/infinite/precompiles/common"
 	"github.com/ethereum/go-ethereum/accounts/abi"
+
+	_ "embed"
 )
 
 // Embed abi json file to the executable binary. Needed when importing as dependency.
-//
-//go:embed abi.json
-var f embed.FS
+var (
+	//go:embed abi.json
+	f   []byte
+	ABI abi.ABI
+)
 
-func LoadABI() (*abi.ABI, error) {
-	newABI, err := cmn.LoadABI(f, "abi.json")
+func init() {
+	var err error
+	ABI, err = abi.JSON(bytes.NewReader(f))
 	if err != nil {
-		return nil, err
+		panic(err)
 	}
-
-	return &newABI, nil
 }

@@ -6,9 +6,6 @@ import (
 	"math/big"
 	"sync"
 
-	rpctypes "github.com/deep-thought-labs/infinite/rpc/types"
-	feemarkettypes "github.com/deep-thought-labs/infinite/x/feemarket/types"
-	evmtypes "github.com/deep-thought-labs/infinite/x/vm/types"
 	"github.com/ethereum/go-ethereum/common/hexutil"
 	"github.com/ethereum/go-ethereum/common/math"
 	ethtypes "github.com/ethereum/go-ethereum/core/types"
@@ -18,6 +15,10 @@ import (
 
 	cmtrpcclient "github.com/cometbft/cometbft/rpc/client"
 	cmtrpctypes "github.com/cometbft/cometbft/rpc/core/types"
+
+	rpctypes "github.com/cosmos/evm/rpc/types"
+	feemarkettypes "github.com/cosmos/evm/x/feemarket/types"
+	evmtypes "github.com/cosmos/evm/x/vm/types"
 
 	errorsmod "cosmossdk.io/errors"
 	sdkmath "cosmossdk.io/math"

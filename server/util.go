@@ -4,13 +4,14 @@ import (
 	"net"
 	"net/http"
 
-	"github.com/deep-thought-labs/infinite/server/config"
 	"github.com/gorilla/mux"
 	"github.com/improbable-eng/grpc-web/go/grpcweb"
 	"github.com/spf13/cobra"
 	"golang.org/x/net/netutil"
 
 	tmcmd "github.com/cometbft/cometbft/cmd/cometbft/commands"
+
+	"github.com/cosmos/evm/server/config"
 
 	"cosmossdk.io/log"
 

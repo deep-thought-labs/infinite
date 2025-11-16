@@ -4,15 +4,15 @@ import (
 	"fmt"
 	"math/big"
 
-	evmaddress "github.com/deep-thought-labs/infinite/encoding/address"
-	cmn "github.com/deep-thought-labs/infinite/precompiles/common"
-	"github.com/deep-thought-labs/infinite/precompiles/distribution"
-	"github.com/deep-thought-labs/infinite/precompiles/testutil"
-	testconstants "github.com/deep-thought-labs/infinite/testutil/constants"
-	"github.com/deep-thought-labs/infinite/testutil/integration/evm/network"
-	utiltx "github.com/deep-thought-labs/infinite/testutil/tx"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/core/vm"
+
+	cmn "github.com/cosmos/evm/precompiles/common"
+	"github.com/cosmos/evm/precompiles/distribution"
+	"github.com/cosmos/evm/precompiles/testutil"
+	testconstants "github.com/cosmos/evm/testutil/constants"
+	"github.com/cosmos/evm/testutil/integration/evm/network"
+	utiltx "github.com/cosmos/evm/testutil/tx"
 
 	"cosmossdk.io/math"
 
@@ -676,7 +676,7 @@ func (s *PrecompileTestSuite) TestDepositValidatorRewardsPoolMethod() {
 				s.Require().True(success, "expected true, got false")
 
 				val := s.network.GetValidators()[0]
-				valCodec := evmaddress.NewEvmCodec("cosmosvaloper")
+				valCodec := s.network.App.GetStakingKeeper().ValidatorAddressCodec()
 				valBz, err := valCodec.StringToBytes(val.GetOperator())
 				s.Require().NoError(err)
 

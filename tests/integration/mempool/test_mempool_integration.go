@@ -3,13 +3,14 @@ package mempool
 import (
 	"math/big"
 
-	"github.com/deep-thought-labs/infinite/testutil/integration/evm/network"
-	"github.com/deep-thought-labs/infinite/testutil/keyring"
-	evmtypes "github.com/deep-thought-labs/infinite/x/vm/types"
 	"github.com/ethereum/go-ethereum/common"
 	ethtypes "github.com/ethereum/go-ethereum/core/types"
 	"github.com/ethereum/go-ethereum/crypto"
 	"github.com/stretchr/testify/require"
+
+	"github.com/cosmos/evm/testutil/integration/evm/network"
+	"github.com/cosmos/evm/testutil/keyring"
+	evmtypes "github.com/cosmos/evm/x/vm/types"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/mempool"

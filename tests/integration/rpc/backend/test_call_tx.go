@@ -6,16 +6,17 @@ import (
 	"fmt"
 	"math/big"
 
-	"github.com/deep-thought-labs/infinite/rpc/backend/mocks"
-	rpctypes "github.com/deep-thought-labs/infinite/rpc/types"
-	"github.com/deep-thought-labs/infinite/testutil/constants"
-	utiltx "github.com/deep-thought-labs/infinite/testutil/tx"
-	evmtypes "github.com/deep-thought-labs/infinite/x/vm/types"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/common/hexutil"
 	ethtypes "github.com/ethereum/go-ethereum/core/types"
 	"github.com/ethereum/go-ethereum/rlp"
 	"google.golang.org/grpc/metadata"
+
+	"github.com/cosmos/evm/rpc/backend/mocks"
+	rpctypes "github.com/cosmos/evm/rpc/types"
+	"github.com/cosmos/evm/testutil/constants"
+	utiltx "github.com/cosmos/evm/testutil/tx"
+	evmtypes "github.com/cosmos/evm/x/vm/types"
 
 	"cosmossdk.io/math"
 

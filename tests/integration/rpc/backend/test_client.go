@@ -4,9 +4,6 @@ import (
 	"context"
 	"testing"
 
-	"github.com/deep-thought-labs/infinite/rpc/backend/mocks"
-	rpc "github.com/deep-thought-labs/infinite/rpc/types"
-	evmtypes "github.com/deep-thought-labs/infinite/x/vm/types"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/gogo/protobuf/proto"
 	"github.com/stretchr/testify/mock"
@@ -20,6 +17,10 @@ import (
 	coretypes "github.com/cometbft/cometbft/rpc/core/types"
 	"github.com/cometbft/cometbft/types"
 	"github.com/cometbft/cometbft/version"
+
+	"github.com/cosmos/evm/rpc/backend/mocks"
+	rpc "github.com/cosmos/evm/rpc/types"
+	evmtypes "github.com/cosmos/evm/x/vm/types"
 
 	"github.com/cosmos/cosmos-sdk/client"
 	codectypes "github.com/cosmos/cosmos-sdk/codec/types"

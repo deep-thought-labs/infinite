@@ -3,10 +3,11 @@ package vm
 import (
 	"math/big"
 
-	"github.com/deep-thought-labs/infinite/testutil/integration/evm/utils"
-	"github.com/deep-thought-labs/infinite/x/vm/types"
 	ethtypes "github.com/ethereum/go-ethereum/core/types"
 	"github.com/holiman/uint256"
+
+	"github.com/cosmos/evm/testutil/integration/evm/utils"
+	"github.com/cosmos/evm/x/vm/types"
 
 	sdkmath "cosmossdk.io/math"
 

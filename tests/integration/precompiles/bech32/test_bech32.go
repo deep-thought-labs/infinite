@@ -1,10 +1,11 @@
 package bech32
 
 import (
-	"github.com/deep-thought-labs/infinite/precompiles/bech32"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/core/vm"
 	"github.com/holiman/uint256"
+
+	"github.com/cosmos/evm/precompiles/bech32"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 )

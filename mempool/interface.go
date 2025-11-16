@@ -3,9 +3,10 @@ package mempool
 import (
 	"math/big"
 
-	"github.com/deep-thought-labs/infinite/x/vm/statedb"
-	vmtypes "github.com/deep-thought-labs/infinite/x/vm/types"
 	"github.com/ethereum/go-ethereum/common"
+
+	"github.com/cosmos/evm/x/vm/statedb"
+	vmtypes "github.com/cosmos/evm/x/vm/types"
 
 	storetypes "cosmossdk.io/store/types"
 

@@ -1,7 +1,7 @@
 package eip712
 
 import (
-	antetypes "github.com/deep-thought-labs/infinite/ante/types"
+	antetypes "github.com/cosmos/evm/ante/types"
 
 	codectypes "github.com/cosmos/cosmos-sdk/codec/types"
 	sdktypes "github.com/cosmos/cosmos-sdk/types"

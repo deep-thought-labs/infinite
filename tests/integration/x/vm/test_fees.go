@@ -3,14 +3,15 @@ package vm
 import (
 	"math/big"
 
-	utiltx "github.com/deep-thought-labs/infinite/testutil/tx"
-	"github.com/deep-thought-labs/infinite/x/vm/keeper"
-	evmtypes "github.com/deep-thought-labs/infinite/x/vm/types"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/core/tracing"
 	ethtypes "github.com/ethereum/go-ethereum/core/types"
 	ethparams "github.com/ethereum/go-ethereum/params"
 	"github.com/holiman/uint256"
+
+	utiltx "github.com/cosmos/evm/testutil/tx"
+	"github.com/cosmos/evm/x/vm/keeper"
+	evmtypes "github.com/cosmos/evm/x/vm/types"
 
 	sdkmath "cosmossdk.io/math"
 

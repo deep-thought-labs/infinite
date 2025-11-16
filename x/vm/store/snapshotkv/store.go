@@ -3,7 +3,7 @@ package snapshotkv
 import (
 	"fmt"
 
-	"github.com/deep-thought-labs/infinite/x/vm/store/types"
+	"github.com/cosmos/evm/x/vm/store/types"
 
 	storetypes "cosmossdk.io/store/types"
 )

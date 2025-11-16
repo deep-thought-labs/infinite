@@ -5,7 +5,6 @@ import (
 	"math/big"
 	"reflect"
 
-	contractutils "github.com/deep-thought-labs/infinite/contracts/utils"
 	"github.com/ethereum/go-ethereum/accounts/abi"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/common/math"

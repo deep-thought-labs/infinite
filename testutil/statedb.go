@@ -1,8 +1,8 @@
 package testutil
 
 import (
-	anteinterfaces "github.com/deep-thought-labs/infinite/ante/interfaces"
-	"github.com/deep-thought-labs/infinite/x/vm/statedb"
+	anteinterfaces "github.com/cosmos/evm/ante/interfaces"
+	"github.com/cosmos/evm/x/vm/statedb"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 )

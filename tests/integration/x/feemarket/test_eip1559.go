@@ -3,14 +3,15 @@ package feemarket
 import (
 	"math/big"
 
-	"github.com/deep-thought-labs/infinite/testutil/integration"
-	"github.com/deep-thought-labs/infinite/testutil/integration/evm/network"
-	"github.com/deep-thought-labs/infinite/x/feemarket/keeper"
-	feemarkettypes "github.com/deep-thought-labs/infinite/x/feemarket/types"
-	evmtypes "github.com/deep-thought-labs/infinite/x/vm/types"
 	"github.com/stretchr/testify/require"
 
 	tmproto "github.com/cometbft/cometbft/proto/tendermint/types"
+
+	"github.com/cosmos/evm/testutil/integration"
+	"github.com/cosmos/evm/testutil/integration/evm/network"
+	"github.com/cosmos/evm/x/feemarket/keeper"
+	feemarkettypes "github.com/cosmos/evm/x/feemarket/types"
+	evmtypes "github.com/cosmos/evm/x/vm/types"
 
 	"cosmossdk.io/math"
 

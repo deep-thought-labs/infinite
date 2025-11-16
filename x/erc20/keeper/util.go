@@ -1,9 +1,10 @@
 package keeper
 
 import (
-	types2 "github.com/deep-thought-labs/infinite/x/erc20/types"
-	"github.com/deep-thought-labs/infinite/x/vm/types"
 	"github.com/ethereum/go-ethereum/common"
+
+	types2 "github.com/cosmos/evm/x/erc20/types"
+	"github.com/cosmos/evm/x/vm/types"
 
 	"cosmossdk.io/errors"
 )

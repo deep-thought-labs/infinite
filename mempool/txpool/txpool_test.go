@@ -6,12 +6,12 @@ import (
 	"testing"
 	"time"
 
-	"github.com/deep-thought-labs/infinite/mempool/txpool"
-	"github.com/deep-thought-labs/infinite/mempool/txpool/legacypool"
-	legacypool_mocks "github.com/deep-thought-labs/infinite/mempool/txpool/legacypool/mocks"
-	statedb_mocks "github.com/deep-thought-labs/infinite/x/vm/statedb/mocks"
+	"github.com/cosmos/evm/mempool/txpool"
+	"github.com/cosmos/evm/mempool/txpool/legacypool"
+	legacypool_mocks "github.com/cosmos/evm/mempool/txpool/legacypool/mocks"
+	statedb_mocks "github.com/cosmos/evm/x/vm/statedb/mocks"
 
-	"github.com/deep-thought-labs/infinite/mempool/txpool/mocks"
+	"github.com/cosmos/evm/mempool/txpool/mocks"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/core"
 	"github.com/ethereum/go-ethereum/core/types"

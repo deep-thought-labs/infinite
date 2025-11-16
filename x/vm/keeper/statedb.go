@@ -4,10 +4,11 @@ import (
 	"errors"
 	"math/big"
 
-	"github.com/deep-thought-labs/infinite/x/vm/statedb"
-	"github.com/deep-thought-labs/infinite/x/vm/types"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/holiman/uint256"
+
+	"github.com/cosmos/evm/x/vm/statedb"
+	"github.com/cosmos/evm/x/vm/types"
 
 	"cosmossdk.io/store/prefix"
 	storetypes "cosmossdk.io/store/types"

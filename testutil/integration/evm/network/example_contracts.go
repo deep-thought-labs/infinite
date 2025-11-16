@@ -1,7 +1,7 @@
 package network
 
 import (
-	testconstants "github.com/deep-thought-labs/infinite/testutil/constants"
+	testconstants "github.com/cosmos/evm/testutil/constants"
 )
 
 // chainsWEVMOSHex is an utility map used to retrieve the WEVMOS contract

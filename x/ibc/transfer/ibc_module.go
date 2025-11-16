@@ -1,8 +1,7 @@
 package transfer
 
 import (
-	"github.com/deep-thought-labs/infinite/x/ibc/transfer/keeper"
-
+	"github.com/cosmos/evm/x/ibc/transfer/keeper"
 	ibctransfer "github.com/cosmos/ibc-go/v10/modules/apps/transfer"
 	porttypes "github.com/cosmos/ibc-go/v10/modules/core/05-port/types"
 )

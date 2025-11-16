@@ -6,13 +6,6 @@ import (
 	"crypto/rand"
 	"testing"
 
-	"github.com/deep-thought-labs/infinite/precompiles/p256"
-	"github.com/deep-thought-labs/infinite/testutil/integration/evm/factory"
-	"github.com/deep-thought-labs/infinite/testutil/integration/evm/grpc"
-	"github.com/deep-thought-labs/infinite/testutil/integration/evm/network"
-	"github.com/deep-thought-labs/infinite/testutil/integration/evm/utils"
-	testkeyring "github.com/deep-thought-labs/infinite/testutil/keyring"
-	evmtypes "github.com/deep-thought-labs/infinite/x/vm/types"
 	"github.com/ethereum/go-ethereum/common"
 
 	//nolint:revive // dot imports are fine for Ginkgo
@@ -21,6 +14,15 @@ import (
 	. "github.com/onsi/gomega"
 
 	"github.com/cometbft/cometbft/crypto"
+
+	"github.com/cosmos/evm/precompiles/p256"
+	"github.com/cosmos/evm/testutil/constants"
+	"github.com/cosmos/evm/testutil/integration/evm/factory"
+	"github.com/cosmos/evm/testutil/integration/evm/grpc"
+	"github.com/cosmos/evm/testutil/integration/evm/network"
+	"github.com/cosmos/evm/testutil/integration/evm/utils"
+	testkeyring "github.com/cosmos/evm/testutil/keyring"
+	evmtypes "github.com/cosmos/evm/x/vm/types"
 )
 
 type IntegrationTestSuite struct {
@@ -122,6 +124,7 @@ func TestPrecompileIntegrationTestSuite(t *testing.T, create network.CreateEvmAp
 		When("the precompile is not enabled in the EVM params", func() {
 			BeforeAll(func() {
 				customGenesis := evmtypes.DefaultGenesisState()
+				customGenesis.Params.EvmDenom = constants.ChainsCoinInfo[constants.EighteenDecimalsChainID].Denom
 				customGenesis.Params.ActiveStaticPrecompiles = evmtypes.AvailableStaticPrecompiles
 				params := customGenesis.Params
 				addr := s.precompileAddress.String()

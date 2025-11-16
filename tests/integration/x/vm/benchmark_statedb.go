@@ -3,13 +3,14 @@ package vm
 import (
 	"testing"
 
-	utiltx "github.com/deep-thought-labs/infinite/testutil/tx"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/core/tracing"
 	ethtypes "github.com/ethereum/go-ethereum/core/types"
 	"github.com/ethereum/go-ethereum/crypto"
 	"github.com/holiman/uint256"
 	"github.com/stretchr/testify/require"
+
+	utiltx "github.com/cosmos/evm/testutil/tx"
 )
 
 func BenchmarkCreateAccountNew(b *testing.B) {

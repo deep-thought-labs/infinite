@@ -1,8 +1,7 @@
 package keeper
 
 import (
-	"github.com/deep-thought-labs/infinite/x/ibc/transfer/types"
-
+	"github.com/cosmos/evm/x/ibc/transfer/types"
 	"github.com/cosmos/ibc-go/v10/modules/apps/transfer/keeper"
 	transfertypes "github.com/cosmos/ibc-go/v10/modules/apps/transfer/types"
 

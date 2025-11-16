@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/deep-thought-labs/infinite/tests/jsonrpc/simulator/types"
+	"github.com/cosmos/evm/tests/jsonrpc/simulator/types"
 )
 
 const (

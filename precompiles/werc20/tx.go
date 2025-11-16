@@ -4,9 +4,10 @@ import (
 	"fmt"
 	"math/big"
 
-	"github.com/deep-thought-labs/infinite/x/precisebank/types"
-	evmtypes "github.com/deep-thought-labs/infinite/x/vm/types"
 	"github.com/ethereum/go-ethereum/core/vm"
+
+	"github.com/cosmos/evm/x/precisebank/types"
+	evmtypes "github.com/cosmos/evm/x/vm/types"
 
 	"cosmossdk.io/math"
 

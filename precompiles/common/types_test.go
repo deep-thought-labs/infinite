@@ -3,9 +3,10 @@ package common_test
 import (
 	"testing"
 
-	"github.com/deep-thought-labs/infinite/precompiles/common"
-	"github.com/deep-thought-labs/infinite/testutil/constants"
 	"github.com/stretchr/testify/require"
+
+	"github.com/cosmos/evm/precompiles/common"
+	"github.com/cosmos/evm/testutil/constants"
 
 	"cosmossdk.io/math"
 

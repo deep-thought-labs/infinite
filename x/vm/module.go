@@ -6,14 +6,15 @@ import (
 	"fmt"
 	"sync"
 
-	"github.com/deep-thought-labs/infinite/x/vm/client/cli"
-	"github.com/deep-thought-labs/infinite/x/vm/keeper"
-	"github.com/deep-thought-labs/infinite/x/vm/types"
 	"github.com/gorilla/mux"
 	"github.com/grpc-ecosystem/grpc-gateway/runtime"
 	"github.com/spf13/cobra"
 
 	abci "github.com/cometbft/cometbft/abci/types"
+
+	"github.com/cosmos/evm/x/vm/client/cli"
+	"github.com/cosmos/evm/x/vm/keeper"
+	"github.com/cosmos/evm/x/vm/types"
 
 	"cosmossdk.io/core/address"
 	"cosmossdk.io/core/appmodule"

@@ -3,7 +3,7 @@ package grpc
 import (
 	"context"
 
-	precisebanktypes "github.com/deep-thought-labs/infinite/x/precisebank/types"
+	precisebanktypes "github.com/cosmos/evm/x/precisebank/types"
 
 	sdktypes "github.com/cosmos/cosmos-sdk/types"
 )

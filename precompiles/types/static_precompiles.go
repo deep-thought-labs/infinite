@@ -4,20 +4,22 @@ import (
 	"fmt"
 	"maps"
 
-	bankprecompile "github.com/deep-thought-labs/infinite/precompiles/bank"
-	"github.com/deep-thought-labs/infinite/precompiles/bech32"
-	cmn "github.com/deep-thought-labs/infinite/precompiles/common"
-	distprecompile "github.com/deep-thought-labs/infinite/precompiles/distribution"
-	govprecompile "github.com/deep-thought-labs/infinite/precompiles/gov"
-	ics20precompile "github.com/deep-thought-labs/infinite/precompiles/ics20"
-	"github.com/deep-thought-labs/infinite/precompiles/p256"
-	slashingprecompile "github.com/deep-thought-labs/infinite/precompiles/slashing"
-	stakingprecompile "github.com/deep-thought-labs/infinite/precompiles/staking"
-	erc20Keeper "github.com/deep-thought-labs/infinite/x/erc20/keeper"
-	transferkeeper "github.com/deep-thought-labs/infinite/x/ibc/transfer/keeper"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/core/vm"
 
+	ibcutils "github.com/cosmos/evm/ibc"
+	bankprecompile "github.com/cosmos/evm/precompiles/bank"
+	"github.com/cosmos/evm/precompiles/bech32"
+	cmn "github.com/cosmos/evm/precompiles/common"
+	distprecompile "github.com/cosmos/evm/precompiles/distribution"
+	govprecompile "github.com/cosmos/evm/precompiles/gov"
+	ics02precompile "github.com/cosmos/evm/precompiles/ics02"
+	ics20precompile "github.com/cosmos/evm/precompiles/ics20"
+	"github.com/cosmos/evm/precompiles/p256"
+	slashingprecompile "github.com/cosmos/evm/precompiles/slashing"
+	stakingprecompile "github.com/cosmos/evm/precompiles/staking"
+	erc20Keeper "github.com/cosmos/evm/x/erc20/keeper"
+	transferkeeper "github.com/cosmos/evm/x/ibc/transfer/keeper"
 	channelkeeper "github.com/cosmos/ibc-go/v10/modules/core/04-channel/keeper"
 
 	"github.com/cosmos/cosmos-sdk/codec"
@@ -96,6 +98,19 @@ func (s StaticPrecompiles) WithDistributionPrecompile(
 	)
 
 	s[distributionPrecompile.Address()] = distributionPrecompile
+	return s
+}
+
+func (s StaticPrecompiles) WithICS02Precompile(
+	codec codec.Codec,
+	clientKeeper ibcutils.ClientKeeper,
+) StaticPrecompiles {
+	ibcClientPrecompile := ics02precompile.NewPrecompile(
+		codec,
+		clientKeeper,
+	)
+
+	s[ibcClientPrecompile.Address()] = ibcClientPrecompile
 	return s
 }
 

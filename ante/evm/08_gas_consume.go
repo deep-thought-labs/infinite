@@ -3,11 +3,12 @@ package evm
 import (
 	"math/big"
 
-	anteinterfaces "github.com/deep-thought-labs/infinite/ante/interfaces"
-	antetypes "github.com/deep-thought-labs/infinite/ante/types"
-	evmtypes "github.com/deep-thought-labs/infinite/x/vm/types"
 	"github.com/ethereum/go-ethereum/common"
 	ethtypes "github.com/ethereum/go-ethereum/core/types"
+
+	anteinterfaces "github.com/cosmos/evm/ante/interfaces"
+	antetypes "github.com/cosmos/evm/ante/types"
+	evmtypes "github.com/cosmos/evm/x/vm/types"
 
 	errorsmod "cosmossdk.io/errors"
 

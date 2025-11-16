@@ -4,11 +4,11 @@ import (
 	"fmt"
 	"math/big"
 
-	testconstants "github.com/deep-thought-labs/infinite/testutil/constants"
-	testtx "github.com/deep-thought-labs/infinite/testutil/tx"
-	evmtypes "github.com/deep-thought-labs/infinite/x/vm/types"
-
 	cmtproto "github.com/cometbft/cometbft/proto/tendermint/types"
+
+	testconstants "github.com/cosmos/evm/testutil/constants"
+	testtx "github.com/cosmos/evm/testutil/tx"
+	evmtypes "github.com/cosmos/evm/x/vm/types"
 
 	"cosmossdk.io/math"
 

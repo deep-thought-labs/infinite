@@ -3,10 +3,10 @@ package integration
 import (
 	"fmt"
 
-	"github.com/deep-thought-labs/infinite"
-	"github.com/deep-thought-labs/infinite/testutil/tx"
-
 	abci "github.com/cometbft/cometbft/abci/types"
+
+	"github.com/cosmos/evm"
+	"github.com/cosmos/evm/testutil/tx"
 
 	errorsmod "cosmossdk.io/errors"
 

@@ -3,7 +3,7 @@ package keeper
 import (
 	"context"
 
-	"github.com/deep-thought-labs/infinite/x/feemarket/types"
+	"github.com/cosmos/evm/x/feemarket/types"
 
 	errorsmod "cosmossdk.io/errors"
 

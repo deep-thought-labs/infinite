@@ -7,10 +7,6 @@ import (
 	"sort"
 	"strings"
 
-	"github.com/deep-thought-labs/infinite/rpc/types"
-	"github.com/deep-thought-labs/infinite/utils"
-	feemarkettypes "github.com/deep-thought-labs/infinite/x/feemarket/types"
-	evmtypes "github.com/deep-thought-labs/infinite/x/vm/types"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/common/hexutil"
 	"github.com/ethereum/go-ethereum/consensus/misc/eip4844"
@@ -21,6 +17,11 @@ import (
 	abci "github.com/cometbft/cometbft/abci/types"
 	"github.com/cometbft/cometbft/proto/tendermint/crypto"
 	cmtrpctypes "github.com/cometbft/cometbft/rpc/core/types"
+
+	"github.com/cosmos/evm/rpc/types"
+	"github.com/cosmos/evm/utils"
+	feemarkettypes "github.com/cosmos/evm/x/feemarket/types"
+	evmtypes "github.com/cosmos/evm/x/vm/types"
 
 	"cosmossdk.io/log"
 

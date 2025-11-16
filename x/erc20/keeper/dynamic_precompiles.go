@@ -1,10 +1,11 @@
 package keeper
 
 import (
-	"github.com/deep-thought-labs/infinite/x/erc20/types"
-	"github.com/deep-thought-labs/infinite/x/vm/statedb"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/crypto"
+
+	"github.com/cosmos/evm/x/erc20/types"
+	"github.com/cosmos/evm/x/vm/statedb"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 )

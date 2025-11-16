@@ -4,12 +4,13 @@ import (
 	"fmt"
 	"math/big"
 
-	cmn "github.com/deep-thought-labs/infinite/precompiles/common"
-	"github.com/deep-thought-labs/infinite/precompiles/staking"
-	testutiltx "github.com/deep-thought-labs/infinite/testutil/tx"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/core/vm"
 	"github.com/holiman/uint256"
+
+	cmn "github.com/cosmos/evm/precompiles/common"
+	"github.com/cosmos/evm/precompiles/staking"
+	testutiltx "github.com/cosmos/evm/testutil/tx"
 
 	"cosmossdk.io/math"
 

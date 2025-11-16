@@ -5,12 +5,13 @@ import (
 	"testing"
 	"time"
 
-	"github.com/deep-thought-labs/infinite/ante/cosmos"
-	"github.com/deep-thought-labs/infinite/encoding"
-	"github.com/deep-thought-labs/infinite/testutil"
-	"github.com/deep-thought-labs/infinite/testutil/constants"
-	evmtypes "github.com/deep-thought-labs/infinite/x/vm/types"
 	"github.com/stretchr/testify/require"
+
+	"github.com/cosmos/evm/ante/cosmos"
+	"github.com/cosmos/evm/encoding"
+	"github.com/cosmos/evm/testutil"
+	"github.com/cosmos/evm/testutil/constants"
+	evmtypes "github.com/cosmos/evm/x/vm/types"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"

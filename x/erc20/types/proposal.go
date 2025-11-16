@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/deep-thought-labs/infinite/utils"
+	"github.com/cosmos/evm/utils"
 
 	errorsmod "cosmossdk.io/errors"
 

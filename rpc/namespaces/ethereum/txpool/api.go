@@ -1,10 +1,11 @@
 package txpool
 
 import (
-	"github.com/deep-thought-labs/infinite/rpc/backend"
-	"github.com/deep-thought-labs/infinite/rpc/types"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/common/hexutil"
+
+	"github.com/cosmos/evm/rpc/backend"
+	"github.com/cosmos/evm/rpc/types"
 
 	"cosmossdk.io/log"
 )

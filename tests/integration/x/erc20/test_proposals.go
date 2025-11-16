@@ -3,15 +3,16 @@ package erc20
 import (
 	"fmt"
 
-	"github.com/deep-thought-labs/infinite/contracts"
-	"github.com/deep-thought-labs/infinite/testutil/integration/evm/utils"
-	testutiltypes "github.com/deep-thought-labs/infinite/testutil/types"
-	"github.com/deep-thought-labs/infinite/x/erc20/keeper"
-	"github.com/deep-thought-labs/infinite/x/erc20/types"
-	erc20mocks "github.com/deep-thought-labs/infinite/x/erc20/types/mocks"
-	evmtypes "github.com/deep-thought-labs/infinite/x/vm/types"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/stretchr/testify/mock"
+
+	"github.com/cosmos/evm/contracts"
+	"github.com/cosmos/evm/testutil/integration/evm/utils"
+	testutiltypes "github.com/cosmos/evm/testutil/types"
+	"github.com/cosmos/evm/x/erc20/keeper"
+	"github.com/cosmos/evm/x/erc20/types"
+	erc20mocks "github.com/cosmos/evm/x/erc20/types/mocks"
+	evmtypes "github.com/cosmos/evm/x/vm/types"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"

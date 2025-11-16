@@ -4,12 +4,13 @@ import (
 	"errors"
 	"math/big"
 
-	"github.com/deep-thought-labs/infinite/x/vm/keeper"
-	"github.com/deep-thought-labs/infinite/x/vm/statedb"
-	"github.com/deep-thought-labs/infinite/x/vm/types"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/core"
 	ethtypes "github.com/ethereum/go-ethereum/core/types"
+
+	"github.com/cosmos/evm/x/vm/keeper"
+	"github.com/cosmos/evm/x/vm/statedb"
+	"github.com/cosmos/evm/x/vm/types"
 
 	sdkmath "cosmossdk.io/math"
 

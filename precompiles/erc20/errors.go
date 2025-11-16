@@ -4,9 +4,10 @@ import (
 	"errors"
 	"strings"
 
-	"github.com/deep-thought-labs/infinite/ibc"
-	cmn "github.com/deep-thought-labs/infinite/precompiles/common"
 	"github.com/ethereum/go-ethereum/core/vm"
+
+	"github.com/cosmos/evm/ibc"
+	cmn "github.com/cosmos/evm/precompiles/common"
 )
 
 // Errors that have formatted information are defined here as a string.

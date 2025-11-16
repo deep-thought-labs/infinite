@@ -1,10 +1,10 @@
 package feemarket
 
 import (
-	"github.com/deep-thought-labs/infinite/x/feemarket/keeper"
-	"github.com/deep-thought-labs/infinite/x/feemarket/types"
-
 	abci "github.com/cometbft/cometbft/abci/types"
+
+	"github.com/cosmos/evm/x/feemarket/keeper"
+	"github.com/cosmos/evm/x/feemarket/types"
 
 	errorsmod "cosmossdk.io/errors"
 

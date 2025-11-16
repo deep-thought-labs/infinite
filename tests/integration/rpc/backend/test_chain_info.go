@@ -4,11 +4,6 @@ import (
 	"fmt"
 	"math/big"
 
-	"github.com/deep-thought-labs/infinite/rpc/backend/mocks"
-	rpc "github.com/deep-thought-labs/infinite/rpc/types"
-	"github.com/deep-thought-labs/infinite/testutil/constants"
-	utiltx "github.com/deep-thought-labs/infinite/testutil/tx"
-	evmtypes "github.com/deep-thought-labs/infinite/x/vm/types"
 	"github.com/ethereum/go-ethereum/common/hexutil"
 	"github.com/ethereum/go-ethereum/common/math"
 	ethrpc "github.com/ethereum/go-ethereum/rpc"
@@ -16,6 +11,12 @@ import (
 
 	"github.com/cometbft/cometbft/abci/types"
 	cmtrpctypes "github.com/cometbft/cometbft/rpc/core/types"
+
+	"github.com/cosmos/evm/rpc/backend/mocks"
+	rpc "github.com/cosmos/evm/rpc/types"
+	"github.com/cosmos/evm/testutil/constants"
+	utiltx "github.com/cosmos/evm/testutil/tx"
+	evmtypes "github.com/cosmos/evm/x/vm/types"
 
 	sdkmath "cosmossdk.io/math"
 

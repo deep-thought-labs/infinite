@@ -5,8 +5,9 @@ import (
 	"os"
 	"testing"
 
-	evmtypes "github.com/deep-thought-labs/infinite/x/vm/types"
 	"github.com/stretchr/testify/require"
+
+	evmtypes "github.com/cosmos/evm/x/vm/types"
 )
 
 func TestHardhatCompiledContract(t *testing.T) {

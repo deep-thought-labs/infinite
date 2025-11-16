@@ -6,8 +6,6 @@ import (
 	"fmt"
 	"math/big"
 
-	"github.com/deep-thought-labs/infinite/rpc/backend"
-	"github.com/deep-thought-labs/infinite/rpc/types"
 	"github.com/ethereum/go-ethereum/common"
 	ethtypes "github.com/ethereum/go-ethereum/core/types"
 	"github.com/ethereum/go-ethereum/crypto"
@@ -16,6 +14,9 @@ import (
 	"github.com/pkg/errors"
 
 	cmtrpctypes "github.com/cometbft/cometbft/rpc/core/types"
+
+	"github.com/cosmos/evm/rpc/backend"
+	"github.com/cosmos/evm/rpc/types"
 
 	"cosmossdk.io/log"
 )

@@ -4,12 +4,6 @@ import (
 	"math/big"
 	"testing"
 
-	"github.com/deep-thought-labs/infinite/crypto/ethsecp256k1"
-	"github.com/deep-thought-labs/infinite/indexer"
-	"github.com/deep-thought-labs/infinite/testutil/constants"
-	"github.com/deep-thought-labs/infinite/testutil/integration/evm/network"
-	utiltx "github.com/deep-thought-labs/infinite/testutil/tx"
-	"github.com/deep-thought-labs/infinite/x/vm/types"
 	"github.com/ethereum/go-ethereum/common"
 	ethtypes "github.com/ethereum/go-ethereum/core/types"
 	"github.com/stretchr/testify/require"
@@ -18,6 +12,12 @@ import (
 	cmttypes "github.com/cometbft/cometbft/types"
 
 	dbm "github.com/cosmos/cosmos-db"
+	"github.com/cosmos/evm/crypto/ethsecp256k1"
+	"github.com/cosmos/evm/indexer"
+	"github.com/cosmos/evm/testutil/constants"
+	"github.com/cosmos/evm/testutil/integration/evm/network"
+	utiltx "github.com/cosmos/evm/testutil/tx"
+	"github.com/cosmos/evm/x/vm/types"
 
 	"cosmossdk.io/log"
 

@@ -1,8 +1,8 @@
 package testdata
 
 import (
-	contractutils "github.com/deep-thought-labs/infinite/contracts/utils"
-	evmtypes "github.com/deep-thought-labs/infinite/x/vm/types"
+	contractutils "github.com/cosmos/evm/contracts/utils"
+	evmtypes "github.com/cosmos/evm/x/vm/types"
 )
 
 // LoadWEVMOS9Contract load the WEVMOS9 contract from the json representation of

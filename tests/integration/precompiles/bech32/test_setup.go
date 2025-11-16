@@ -1,10 +1,11 @@
 package bech32
 
 import (
-	"github.com/deep-thought-labs/infinite/precompiles/bech32"
-	"github.com/deep-thought-labs/infinite/testutil/integration/evm/network"
-	testkeyring "github.com/deep-thought-labs/infinite/testutil/keyring"
 	"github.com/stretchr/testify/suite"
+
+	"github.com/cosmos/evm/precompiles/bech32"
+	"github.com/cosmos/evm/testutil/integration/evm/network"
+	testkeyring "github.com/cosmos/evm/testutil/keyring"
 )
 
 // PrecompileTestSuite is the implementation of the TestSuite interface for ERC20 precompile

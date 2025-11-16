@@ -3,8 +3,9 @@ package address
 import (
 	"strings"
 
-	"github.com/deep-thought-labs/infinite/utils"
 	"github.com/ethereum/go-ethereum/common"
+
+	"github.com/cosmos/evm/utils"
 
 	"cosmossdk.io/core/address"
 

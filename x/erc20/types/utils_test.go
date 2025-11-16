@@ -4,8 +4,9 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/deep-thought-labs/infinite/x/erc20/types"
 	"github.com/stretchr/testify/require"
+
+	"github.com/cosmos/evm/x/erc20/types"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	banktypes "github.com/cosmos/cosmos-sdk/x/bank/types"

@@ -8,7 +8,7 @@ import (
 
 	mock "github.com/stretchr/testify/mock"
 
-	rpctypes "github.com/deep-thought-labs/infinite/rpc/types"
+	rpctypes "github.com/cosmos/evm/rpc/types"
 
 	types "github.com/ethereum/go-ethereum/core/types"
 )

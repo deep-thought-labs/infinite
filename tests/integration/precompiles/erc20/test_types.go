@@ -3,8 +3,8 @@ package erc20
 import (
 	"math/big"
 
-	"github.com/deep-thought-labs/infinite/precompiles/erc20"
-	utiltx "github.com/deep-thought-labs/infinite/testutil/tx"
+	"github.com/cosmos/evm/precompiles/erc20"
+	utiltx "github.com/cosmos/evm/testutil/tx"
 )
 
 //nolint:dupl // these tests are not duplicates

@@ -5,9 +5,10 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/deep-thought-labs/infinite/x/precisebank/types"
-	evmtypes "github.com/deep-thought-labs/infinite/x/vm/types"
 	"github.com/hashicorp/go-metrics"
+
+	"github.com/cosmos/evm/x/precisebank/types"
+	evmtypes "github.com/cosmos/evm/x/vm/types"
 
 	errorsmod "cosmossdk.io/errors"
 	sdkmath "cosmossdk.io/math"

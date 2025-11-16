@@ -10,9 +10,9 @@ import (
 	"github.com/fatih/color"
 	"github.com/xuri/excelize/v2"
 
-	"github.com/deep-thought-labs/infinite/tests/jsonrpc/simulator/config"
-	"github.com/deep-thought-labs/infinite/tests/jsonrpc/simulator/types"
-	"github.com/deep-thought-labs/infinite/tests/jsonrpc/simulator/utils"
+	"github.com/cosmos/evm/tests/jsonrpc/simulator/config"
+	"github.com/cosmos/evm/tests/jsonrpc/simulator/types"
+	"github.com/cosmos/evm/tests/jsonrpc/simulator/utils"
 )
 
 const totalWidth = 63

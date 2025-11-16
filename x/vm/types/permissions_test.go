@@ -3,10 +3,11 @@ package types_test
 import (
 	"testing"
 
-	testkeyring "github.com/deep-thought-labs/infinite/testutil/keyring"
-	"github.com/deep-thought-labs/infinite/x/vm/types"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/stretchr/testify/suite"
+
+	testkeyring "github.com/cosmos/evm/testutil/keyring"
+	"github.com/cosmos/evm/x/vm/types"
 )
 
 type UnitTestSuite struct {

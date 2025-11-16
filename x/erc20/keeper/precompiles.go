@@ -4,11 +4,12 @@ import (
 	"fmt"
 	"slices"
 
-	"github.com/deep-thought-labs/infinite/precompiles/erc20"
-	"github.com/deep-thought-labs/infinite/precompiles/werc20"
-	"github.com/deep-thought-labs/infinite/x/erc20/types"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/core/vm"
+
+	"github.com/cosmos/evm/precompiles/erc20"
+	"github.com/cosmos/evm/precompiles/werc20"
+	"github.com/cosmos/evm/x/erc20/types"
 
 	errorsmod "cosmossdk.io/errors"
 	"cosmossdk.io/store/prefix"

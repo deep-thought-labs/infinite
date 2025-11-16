@@ -1,9 +1,9 @@
 package vm
 
 import (
-	"github.com/deep-thought-labs/infinite/testutil/integration/evm/network"
-	testkeyring "github.com/deep-thought-labs/infinite/testutil/keyring"
-	evmtypes "github.com/deep-thought-labs/infinite/x/vm/types"
+	"github.com/cosmos/evm/testutil/integration/evm/network"
+	testkeyring "github.com/cosmos/evm/testutil/keyring"
+	evmtypes "github.com/cosmos/evm/x/vm/types"
 )
 
 func (s *KeeperTestSuite) TestEndBlock() {

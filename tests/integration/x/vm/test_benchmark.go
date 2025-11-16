@@ -4,18 +4,19 @@ import (
 	"math/big"
 	"testing"
 
-	testconstants "github.com/deep-thought-labs/infinite/testutil/constants"
-	utiltx "github.com/deep-thought-labs/infinite/testutil/tx"
-	"github.com/deep-thought-labs/infinite/x/vm/keeper/testdata"
-	"github.com/deep-thought-labs/infinite/x/vm/types"
 	"github.com/ethereum/go-ethereum/common"
 	ethtypes "github.com/ethereum/go-ethereum/core/types"
 	"github.com/stretchr/testify/require"
 
+	testconstants "github.com/cosmos/evm/testutil/constants"
+	utiltx "github.com/cosmos/evm/testutil/tx"
+	vmkeeper "github.com/cosmos/evm/x/vm/keeper"
+	"github.com/cosmos/evm/x/vm/keeper/testdata"
+	"github.com/cosmos/evm/x/vm/types"
+
 	sdkmath "cosmossdk.io/math"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	authante "github.com/cosmos/cosmos-sdk/x/auth/ante"
 )
 
 func SetupContract(b *testing.B) (*KeeperTestSuite, common.Address) {
@@ -72,7 +73,7 @@ func DoBenchmark(b *testing.B, txBuilder TxBuilder) {
 		ctx, _ := suite.Network.GetContext().CacheContext()
 
 		fees := sdk.Coins{sdk.NewCoin(suite.EvmDenom(), sdkmath.NewIntFromBigInt(msg.GetFee()))}
-		err = authante.DeductFees(suite.Network.App.GetBankKeeper(), suite.Network.GetContext(), suite.Network.App.GetAccountKeeper().GetAccount(ctx, msg.GetFrom()), fees)
+		err = vmkeeper.DeductFees(suite.Network.App.GetBankKeeper(), suite.Network.App.GetEVMKeeper(), suite.Network.GetContext(), suite.Network.App.GetAccountKeeper().GetAccount(ctx, msg.GetFrom()), fees)
 		require.NoError(b, err)
 
 		rsp, err := suite.Network.App.GetEVMKeeper().EthereumTx(ctx, msg)
@@ -197,7 +198,7 @@ func BenchmarkMessageCall(b *testing.B) {
 		ctx, _ := suite.Network.GetContext().CacheContext()
 
 		fees := sdk.Coins{sdk.NewCoin(suite.EvmDenom(), sdkmath.NewIntFromBigInt(msg.GetFee()))}
-		err = authante.DeductFees(suite.Network.App.GetBankKeeper(), suite.Network.GetContext(), suite.Network.App.GetAccountKeeper().GetAccount(ctx, msg.GetFrom()), fees)
+		err = vmkeeper.DeductFees(suite.Network.App.GetBankKeeper(), suite.Network.App.GetEVMKeeper(), suite.Network.GetContext(), suite.Network.App.GetAccountKeeper().GetAccount(ctx, msg.GetFrom()), fees)
 		require.NoError(b, err)
 
 		rsp, err := suite.Network.App.GetEVMKeeper().EthereumTx(ctx, msg)

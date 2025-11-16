@@ -1,8 +1,8 @@
 package vm
 
 import (
-	"github.com/deep-thought-labs/infinite/testutil/integration/evm/network"
-	evmante "github.com/deep-thought-labs/infinite/x/vm/ante"
+	"github.com/cosmos/evm/testutil/integration/evm/network"
+	evmante "github.com/cosmos/evm/x/vm/ante"
 
 	storetypes "cosmossdk.io/store/types"
 )

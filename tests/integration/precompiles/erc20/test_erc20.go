@@ -3,7 +3,7 @@ package erc20
 import (
 	"math/big"
 
-	"github.com/deep-thought-labs/infinite/precompiles/erc20"
+	"github.com/cosmos/evm/precompiles/erc20"
 )
 
 func (s *PrecompileTestSuite) TestIsTransaction() {

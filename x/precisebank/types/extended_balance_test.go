@@ -3,10 +3,11 @@ package types_test
 import (
 	"testing"
 
-	testconstants "github.com/deep-thought-labs/infinite/testutil/constants"
-	"github.com/deep-thought-labs/infinite/x/precisebank/types"
-	evmtypes "github.com/deep-thought-labs/infinite/x/vm/types"
 	"github.com/stretchr/testify/require"
+
+	testconstants "github.com/cosmos/evm/testutil/constants"
+	"github.com/cosmos/evm/x/precisebank/types"
+	evmtypes "github.com/cosmos/evm/x/vm/types"
 
 	sdkmath "cosmossdk.io/math"
 

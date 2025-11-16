@@ -3,16 +3,19 @@ package ante
 import (
 	"testing"
 
-	"github.com/deep-thought-labs/infinite/ante"
-	antetypes "github.com/deep-thought-labs/infinite/ante/types"
-	"github.com/deep-thought-labs/infinite/testutil/integration/evm/network"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/stretchr/testify/require"
+
+	evm "github.com/cosmos/evm"
+	"github.com/cosmos/evm/ante"
+	antetypes "github.com/cosmos/evm/ante/types"
+	"github.com/cosmos/evm/testutil/integration/evm/network"
 )
 
 //nolint:thelper // RunValidateHandlerOptionsTest is not a helper function; it's an externally called benchmark entry point
 func RunValidateHandlerOptionsTest(t *testing.T, create network.CreateEvmApp, options ...network.ConfigOption) {
 	nw := network.NewUnitTestNetwork(create, options...)
+	ibcKeeper := nw.App.(evm.IBCKeeperProvider).GetIBCKeeper()
 	cases := []struct {
 		name    string
 		options ante.HandlerOptions
@@ -56,7 +59,7 @@ func RunValidateHandlerOptionsTest(t *testing.T, create network.CreateEvmApp, op
 				Cdc:             nw.App.AppCodec(),
 				AccountKeeper:   nw.App.GetAccountKeeper(),
 				BankKeeper:      nw.App.GetBankKeeper(),
-				IBCKeeper:       nw.App.GetIBCKeeper(),
+				IBCKeeper:       ibcKeeper,
 				FeeMarketKeeper: nil,
 			},
 			false,
@@ -67,7 +70,7 @@ func RunValidateHandlerOptionsTest(t *testing.T, create network.CreateEvmApp, op
 				Cdc:             nw.App.AppCodec(),
 				AccountKeeper:   nw.App.GetAccountKeeper(),
 				BankKeeper:      nw.App.GetBankKeeper(),
-				IBCKeeper:       nw.App.GetIBCKeeper(),
+				IBCKeeper:       ibcKeeper,
 				FeeMarketKeeper: nw.App.GetFeeMarketKeeper(),
 				EvmKeeper:       nil,
 			},
@@ -79,7 +82,7 @@ func RunValidateHandlerOptionsTest(t *testing.T, create network.CreateEvmApp, op
 				Cdc:             nw.App.AppCodec(),
 				AccountKeeper:   nw.App.GetAccountKeeper(),
 				BankKeeper:      nw.App.GetBankKeeper(),
-				IBCKeeper:       nw.App.GetIBCKeeper(),
+				IBCKeeper:       ibcKeeper,
 				FeeMarketKeeper: nw.App.GetFeeMarketKeeper(),
 				EvmKeeper:       nw.App.GetEVMKeeper(),
 				SigGasConsumer:  nil,
@@ -92,7 +95,7 @@ func RunValidateHandlerOptionsTest(t *testing.T, create network.CreateEvmApp, op
 				Cdc:             nw.App.AppCodec(),
 				AccountKeeper:   nw.App.GetAccountKeeper(),
 				BankKeeper:      nw.App.GetBankKeeper(),
-				IBCKeeper:       nw.App.GetIBCKeeper(),
+				IBCKeeper:       ibcKeeper,
 				FeeMarketKeeper: nw.App.GetFeeMarketKeeper(),
 				EvmKeeper:       nw.App.GetEVMKeeper(),
 				SigGasConsumer:  ante.SigVerificationGasConsumer,
@@ -106,7 +109,7 @@ func RunValidateHandlerOptionsTest(t *testing.T, create network.CreateEvmApp, op
 				Cdc:             nw.App.AppCodec(),
 				AccountKeeper:   nw.App.GetAccountKeeper(),
 				BankKeeper:      nw.App.GetBankKeeper(),
-				IBCKeeper:       nw.App.GetIBCKeeper(),
+				IBCKeeper:       ibcKeeper,
 				FeeMarketKeeper: nw.App.GetFeeMarketKeeper(),
 				EvmKeeper:       nw.App.GetEVMKeeper(),
 				SigGasConsumer:  ante.SigVerificationGasConsumer,
@@ -123,7 +126,7 @@ func RunValidateHandlerOptionsTest(t *testing.T, create network.CreateEvmApp, op
 				ExtensionOptionChecker: antetypes.HasDynamicFeeExtensionOption,
 				EvmKeeper:              nw.App.GetEVMKeeper(),
 				FeegrantKeeper:         nw.App.GetFeeGrantKeeper(),
-				IBCKeeper:              nw.App.GetIBCKeeper(),
+				IBCKeeper:              ibcKeeper,
 				FeeMarketKeeper:        nw.App.GetFeeMarketKeeper(),
 				SignModeHandler:        nw.GetEncodingConfig().TxConfig.SignModeHandler(),
 				SigGasConsumer:         ante.SigVerificationGasConsumer,
@@ -142,7 +145,7 @@ func RunValidateHandlerOptionsTest(t *testing.T, create network.CreateEvmApp, op
 				ExtensionOptionChecker: antetypes.HasDynamicFeeExtensionOption,
 				EvmKeeper:              nw.App.GetEVMKeeper(),
 				FeegrantKeeper:         nw.App.GetFeeGrantKeeper(),
-				IBCKeeper:              nw.App.GetIBCKeeper(),
+				IBCKeeper:              ibcKeeper,
 				FeeMarketKeeper:        nw.App.GetFeeMarketKeeper(),
 				SignModeHandler:        nw.GetEncodingConfig().TxConfig.SignModeHandler(),
 				SigGasConsumer:         ante.SigVerificationGasConsumer,

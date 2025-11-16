@@ -3,9 +3,10 @@ package erc20
 import (
 	"fmt"
 
-	"github.com/deep-thought-labs/infinite/x/erc20/keeper"
-	"github.com/deep-thought-labs/infinite/x/erc20/types"
 	"github.com/ethereum/go-ethereum/common"
+
+	"github.com/cosmos/evm/x/erc20/keeper"
+	"github.com/cosmos/evm/x/erc20/types"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	authkeeper "github.com/cosmos/cosmos-sdk/x/auth/keeper"

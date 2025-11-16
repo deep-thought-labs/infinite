@@ -61,9 +61,8 @@ const (
 	// DefaultMaxTxGasWanted is the default gas wanted for each eth tx returned in ante handler in check tx mode
 	DefaultMaxTxGasWanted = 0
 
-    // DefaultEVMChainID is the default EVM Chain ID if one is not provided
-    // Set to Infinite Drive mainnet EVM Chain ID
-    DefaultEVMChainID = 421018
+	// DefaultEVMChainID is the default EVM Chain ID if one is not provided
+	DefaultEVMChainID = 262144
 
 	// DefaultEVMMinTip is the default minimum priority fee for the mempool
 	DefaultEVMMinTip = 0

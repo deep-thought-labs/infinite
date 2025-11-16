@@ -3,8 +3,9 @@ package types_test
 import (
 	"testing"
 
-	"github.com/deep-thought-labs/infinite/x/vm/types"
 	"github.com/stretchr/testify/require"
+
+	"github.com/cosmos/evm/x/vm/types"
 
 	sdkmath "cosmossdk.io/math"
 )

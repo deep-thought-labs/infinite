@@ -3,11 +3,11 @@ package utils
 import (
 	"fmt"
 
-	"github.com/deep-thought-labs/infinite/testutil/integration/evm/factory"
-	"github.com/deep-thought-labs/infinite/testutil/integration/evm/network"
-	erc20types "github.com/deep-thought-labs/infinite/x/erc20/types"
-	feemarkettypes "github.com/deep-thought-labs/infinite/x/feemarket/types"
-	evmtypes "github.com/deep-thought-labs/infinite/x/vm/types"
+	"github.com/cosmos/evm/testutil/integration/evm/factory"
+	"github.com/cosmos/evm/testutil/integration/evm/network"
+	erc20types "github.com/cosmos/evm/x/erc20/types"
+	feemarkettypes "github.com/cosmos/evm/x/feemarket/types"
+	evmtypes "github.com/cosmos/evm/x/vm/types"
 
 	cryptotypes "github.com/cosmos/cosmos-sdk/crypto/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"

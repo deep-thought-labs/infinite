@@ -5,17 +5,6 @@ import (
 	"math/big"
 	"testing"
 
-	cmn "github.com/deep-thought-labs/infinite/precompiles/common"
-	"github.com/deep-thought-labs/infinite/precompiles/distribution"
-	"github.com/deep-thought-labs/infinite/precompiles/staking"
-	"github.com/deep-thought-labs/infinite/precompiles/testutil"
-	"github.com/deep-thought-labs/infinite/precompiles/testutil/contracts"
-	testconstants "github.com/deep-thought-labs/infinite/testutil/constants"
-	"github.com/deep-thought-labs/infinite/testutil/integration/evm/network"
-	"github.com/deep-thought-labs/infinite/testutil/integration/evm/utils"
-	testutiltx "github.com/deep-thought-labs/infinite/testutil/tx"
-	testutiltypes "github.com/deep-thought-labs/infinite/testutil/types"
-	evmtypes "github.com/deep-thought-labs/infinite/x/vm/types"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/core/vm"
 
@@ -23,6 +12,18 @@ import (
 	. "github.com/onsi/ginkgo/v2"
 	//nolint:revive // dot imports are fine for Ginkgo
 	. "github.com/onsi/gomega"
+
+	cmn "github.com/cosmos/evm/precompiles/common"
+	"github.com/cosmos/evm/precompiles/distribution"
+	"github.com/cosmos/evm/precompiles/staking"
+	"github.com/cosmos/evm/precompiles/testutil"
+	"github.com/cosmos/evm/precompiles/testutil/contracts"
+	testconstants "github.com/cosmos/evm/testutil/constants"
+	"github.com/cosmos/evm/testutil/integration/evm/network"
+	"github.com/cosmos/evm/testutil/integration/evm/utils"
+	testutiltx "github.com/cosmos/evm/testutil/tx"
+	testutiltypes "github.com/cosmos/evm/testutil/types"
+	evmtypes "github.com/cosmos/evm/x/vm/types"
 
 	"cosmossdk.io/math"
 

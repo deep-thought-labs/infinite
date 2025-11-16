@@ -1,8 +1,8 @@
 package feemarket
 
 import (
-	"github.com/deep-thought-labs/infinite/testutil/integration/evm/network"
-	"github.com/deep-thought-labs/infinite/x/feemarket/types"
+	"github.com/cosmos/evm/testutil/integration/evm/network"
+	"github.com/cosmos/evm/x/feemarket/types"
 
 	sdkmath "cosmossdk.io/math"
 

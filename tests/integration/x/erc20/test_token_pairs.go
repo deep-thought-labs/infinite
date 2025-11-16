@@ -3,10 +3,11 @@ package erc20
 import (
 	"fmt"
 
-	testconstants "github.com/deep-thought-labs/infinite/testutil/constants"
-	utiltx "github.com/deep-thought-labs/infinite/testutil/tx"
-	"github.com/deep-thought-labs/infinite/x/erc20/types"
 	"github.com/ethereum/go-ethereum/common"
+
+	testconstants "github.com/cosmos/evm/testutil/constants"
+	utiltx "github.com/cosmos/evm/testutil/tx"
+	"github.com/cosmos/evm/x/erc20/types"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 )

@@ -6,15 +6,6 @@ import (
 	"testing"
 	"time"
 
-	"github.com/deep-thought-labs/infinite/ante/evm"
-	"github.com/deep-thought-labs/infinite/crypto/ethsecp256k1"
-	"github.com/deep-thought-labs/infinite/encoding"
-	"github.com/deep-thought-labs/infinite/testutil/constants"
-	utiltx "github.com/deep-thought-labs/infinite/testutil/tx"
-	feemarkettypes "github.com/deep-thought-labs/infinite/x/feemarket/types"
-	"github.com/deep-thought-labs/infinite/x/vm/statedb"
-	evmsdktypes "github.com/deep-thought-labs/infinite/x/vm/types"
-	vmtypes "github.com/deep-thought-labs/infinite/x/vm/types/mocks"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/core"
 	"github.com/ethereum/go-ethereum/core/tracing"
@@ -24,6 +15,16 @@ import (
 	"github.com/stretchr/testify/require"
 
 	tmproto "github.com/cometbft/cometbft/proto/tendermint/types"
+
+	"github.com/cosmos/evm/ante/evm"
+	"github.com/cosmos/evm/crypto/ethsecp256k1"
+	"github.com/cosmos/evm/encoding"
+	"github.com/cosmos/evm/testutil/constants"
+	utiltx "github.com/cosmos/evm/testutil/tx"
+	feemarkettypes "github.com/cosmos/evm/x/feemarket/types"
+	"github.com/cosmos/evm/x/vm/statedb"
+	evmsdktypes "github.com/cosmos/evm/x/vm/types"
+	vmtypes "github.com/cosmos/evm/x/vm/types/mocks"
 
 	"cosmossdk.io/core/address"
 	"cosmossdk.io/log"

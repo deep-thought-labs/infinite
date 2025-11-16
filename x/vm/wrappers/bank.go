@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"math/big"
 
-	"github.com/deep-thought-labs/infinite/x/vm/types"
+	"github.com/cosmos/evm/x/vm/types"
 
 	"cosmossdk.io/errors"
 	sdkmath "cosmossdk.io/math"

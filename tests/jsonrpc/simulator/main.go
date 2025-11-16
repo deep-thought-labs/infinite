@@ -5,8 +5,8 @@ import (
 	"flag"
 	"log"
 
-	"github.com/deep-thought-labs/infinite/tests/jsonrpc/simulator/report"
-	"github.com/deep-thought-labs/infinite/tests/jsonrpc/simulator/runner"
+	"github.com/cosmos/evm/tests/jsonrpc/simulator/report"
+	"github.com/cosmos/evm/tests/jsonrpc/simulator/runner"
 )
 
 func main() {

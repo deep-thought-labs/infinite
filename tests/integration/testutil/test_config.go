@@ -3,11 +3,11 @@
 package testutil
 
 import (
-	testconstants "github.com/deep-thought-labs/infinite/testutil/constants"
-	grpchandler "github.com/deep-thought-labs/infinite/testutil/integration/evm/grpc"
-	"github.com/deep-thought-labs/infinite/testutil/integration/evm/network"
-	testkeyring "github.com/deep-thought-labs/infinite/testutil/keyring"
-	evmtypes "github.com/deep-thought-labs/infinite/x/vm/types"
+	testconstants "github.com/cosmos/evm/testutil/constants"
+	grpchandler "github.com/cosmos/evm/testutil/integration/evm/grpc"
+	"github.com/cosmos/evm/testutil/integration/evm/network"
+	testkeyring "github.com/cosmos/evm/testutil/keyring"
+	evmtypes "github.com/cosmos/evm/x/vm/types"
 
 	"cosmossdk.io/math"
 

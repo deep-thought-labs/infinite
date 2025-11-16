@@ -3,9 +3,10 @@ package keeper
 import (
 	"testing"
 
-	"github.com/deep-thought-labs/infinite/x/vm/types"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/stretchr/testify/require"
+
+	"github.com/cosmos/evm/x/vm/types"
 )
 
 func TestValidateApprovalEventDoesNotExist(t *testing.T) {

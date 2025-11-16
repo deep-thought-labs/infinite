@@ -1,8 +1,8 @@
 package grpc
 
 import (
-	"github.com/deep-thought-labs/infinite/testutil/integration/base/network"
-	precisebanktypes "github.com/deep-thought-labs/infinite/x/precisebank/types"
+	"github.com/cosmos/evm/testutil/integration/base/network"
+	precisebanktypes "github.com/cosmos/evm/x/precisebank/types"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	banktypes "github.com/cosmos/cosmos-sdk/x/bank/types"

@@ -4,9 +4,10 @@ import (
 	"strings"
 	"testing"
 
-	utiltx "github.com/deep-thought-labs/infinite/testutil/tx"
-	"github.com/deep-thought-labs/infinite/x/erc20/types"
 	"github.com/stretchr/testify/suite"
+
+	utiltx "github.com/cosmos/evm/testutil/tx"
+	"github.com/cosmos/evm/x/erc20/types"
 
 	length "github.com/cosmos/cosmos-sdk/x/gov/types/v1beta1"
 )

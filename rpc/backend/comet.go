@@ -3,12 +3,13 @@ package backend
 import (
 	"fmt"
 
-	rpctypes "github.com/deep-thought-labs/infinite/rpc/types"
-	"github.com/deep-thought-labs/infinite/utils"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/pkg/errors"
 
 	cmtrpctypes "github.com/cometbft/cometbft/rpc/core/types"
+
+	rpctypes "github.com/cosmos/evm/rpc/types"
+	"github.com/cosmos/evm/utils"
 )
 
 // CometBlockByNumber returns a CometBFT-formatted block for a given

@@ -1,9 +1,10 @@
 package keeper
 
 import (
-	"github.com/deep-thought-labs/infinite/utils"
-	"github.com/deep-thought-labs/infinite/x/erc20/types"
 	"github.com/ethereum/go-ethereum/common"
+
+	"github.com/cosmos/evm/utils"
+	"github.com/cosmos/evm/x/erc20/types"
 
 	errorsmod "cosmossdk.io/errors"
 	"cosmossdk.io/store/prefix"

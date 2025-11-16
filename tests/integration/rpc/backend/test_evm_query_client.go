@@ -8,11 +8,6 @@ import (
 	"strconv"
 	"testing"
 
-	"github.com/deep-thought-labs/infinite/rpc/backend/mocks"
-	rpc "github.com/deep-thought-labs/infinite/rpc/types"
-	"github.com/deep-thought-labs/infinite/testutil/constants"
-	utiltx "github.com/deep-thought-labs/infinite/testutil/tx"
-	evmtypes "github.com/deep-thought-labs/infinite/x/vm/types"
 	"github.com/ethereum/go-ethereum/common"
 	mock "github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/require"
@@ -21,6 +16,11 @@ import (
 	"google.golang.org/grpc/metadata"
 	"google.golang.org/grpc/status"
 
+	"github.com/cosmos/evm/rpc/backend/mocks"
+	rpc "github.com/cosmos/evm/rpc/types"
+	"github.com/cosmos/evm/testutil/constants"
+	utiltx "github.com/cosmos/evm/testutil/tx"
+	evmtypes "github.com/cosmos/evm/x/vm/types"
 	proto "github.com/cosmos/gogoproto/proto"
 
 	"cosmossdk.io/math"

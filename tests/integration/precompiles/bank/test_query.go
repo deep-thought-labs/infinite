@@ -3,10 +3,11 @@ package bank
 import (
 	"math/big"
 
-	"github.com/deep-thought-labs/infinite/precompiles/bank"
-	"github.com/deep-thought-labs/infinite/testutil/integration/evm/network"
-	cosmosevmutiltx "github.com/deep-thought-labs/infinite/testutil/tx"
 	"github.com/ethereum/go-ethereum/common"
+
+	"github.com/cosmos/evm/precompiles/bank"
+	"github.com/cosmos/evm/testutil/integration/evm/network"
+	cosmosevmutiltx "github.com/cosmos/evm/testutil/tx"
 
 	"cosmossdk.io/math"
 

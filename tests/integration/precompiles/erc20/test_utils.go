@@ -6,20 +6,21 @@ import (
 	"math/big"
 	"slices"
 
-	"github.com/deep-thought-labs/infinite/crypto/ethsecp256k1"
-	"github.com/deep-thought-labs/infinite/precompiles/erc20"
-	"github.com/deep-thought-labs/infinite/precompiles/testutil"
-	"github.com/deep-thought-labs/infinite/testutil/integration/evm/network"
-	utiltx "github.com/deep-thought-labs/infinite/testutil/tx"
-	testutiltypes "github.com/deep-thought-labs/infinite/testutil/types"
-	erc20types "github.com/deep-thought-labs/infinite/x/erc20/types"
-	evmtypes "github.com/deep-thought-labs/infinite/x/vm/types"
 	"github.com/ethereum/go-ethereum/accounts/abi"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/crypto"
 
 	//nolint:revive // dot imports are fine for Gomega
 	. "github.com/onsi/gomega"
+
+	"github.com/cosmos/evm/crypto/ethsecp256k1"
+	"github.com/cosmos/evm/precompiles/erc20"
+	"github.com/cosmos/evm/precompiles/testutil"
+	"github.com/cosmos/evm/testutil/integration/evm/network"
+	utiltx "github.com/cosmos/evm/testutil/tx"
+	testutiltypes "github.com/cosmos/evm/testutil/types"
+	erc20types "github.com/cosmos/evm/x/erc20/types"
+	evmtypes "github.com/cosmos/evm/x/vm/types"
 
 	errorsmod "cosmossdk.io/errors"
 	"cosmossdk.io/math"

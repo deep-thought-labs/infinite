@@ -7,12 +7,13 @@ import (
 	"os"
 	"strings"
 
-	"github.com/deep-thought-labs/infinite/utils"
-	"github.com/deep-thought-labs/infinite/x/vm/types"
 	"github.com/ethereum/go-ethereum/common/hexutil"
 	ethtypes "github.com/ethereum/go-ethereum/core/types"
 	"github.com/pkg/errors"
 	"github.com/spf13/cobra"
+
+	"github.com/cosmos/evm/utils"
+	"github.com/cosmos/evm/x/vm/types"
 
 	"cosmossdk.io/core/address"
 

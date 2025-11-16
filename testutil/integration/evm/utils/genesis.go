@@ -1,11 +1,11 @@
 package utils
 
 import (
-	testconstants "github.com/deep-thought-labs/infinite/testutil/constants"
-	"github.com/deep-thought-labs/infinite/testutil/integration/evm/network"
-	testkeyring "github.com/deep-thought-labs/infinite/testutil/keyring"
-	utiltx "github.com/deep-thought-labs/infinite/testutil/tx"
-	erc20types "github.com/deep-thought-labs/infinite/x/erc20/types"
+	testconstants "github.com/cosmos/evm/testutil/constants"
+	"github.com/cosmos/evm/testutil/integration/evm/network"
+	testkeyring "github.com/cosmos/evm/testutil/keyring"
+	utiltx "github.com/cosmos/evm/testutil/tx"
+	erc20types "github.com/cosmos/evm/x/erc20/types"
 
 	codectypes "github.com/cosmos/cosmos-sdk/codec/types"
 	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"

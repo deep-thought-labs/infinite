@@ -1,8 +1,8 @@
 package network
 
 import (
-	testconstants "github.com/deep-thought-labs/infinite/testutil/constants"
-	evmtypes "github.com/deep-thought-labs/infinite/x/vm/types"
+	testconstants "github.com/cosmos/evm/testutil/constants"
+	evmtypes "github.com/cosmos/evm/x/vm/types"
 )
 
 type CoinInfo struct {

@@ -4,13 +4,14 @@ import (
 	"math/big"
 	"math/rand"
 
-	"github.com/deep-thought-labs/infinite/contracts"
-	testconstants "github.com/deep-thought-labs/infinite/testutil/constants"
-	"github.com/deep-thought-labs/infinite/testutil/integration/evm/utils"
-	testutiltypes "github.com/deep-thought-labs/infinite/testutil/types"
-	"github.com/deep-thought-labs/infinite/x/precisebank/types"
-	evmtypes "github.com/deep-thought-labs/infinite/x/vm/types"
 	"github.com/ethereum/go-ethereum/common"
+
+	"github.com/cosmos/evm/contracts"
+	testconstants "github.com/cosmos/evm/testutil/constants"
+	"github.com/cosmos/evm/testutil/integration/evm/utils"
+	testutiltypes "github.com/cosmos/evm/testutil/types"
+	"github.com/cosmos/evm/x/precisebank/types"
+	evmtypes "github.com/cosmos/evm/x/vm/types"
 
 	sdkmath "cosmossdk.io/math"
 

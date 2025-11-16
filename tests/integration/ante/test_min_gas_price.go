@@ -3,10 +3,10 @@ package ante
 import (
 	"fmt"
 
-	cosmosante "github.com/deep-thought-labs/infinite/ante/cosmos"
-	"github.com/deep-thought-labs/infinite/testutil"
-	"github.com/deep-thought-labs/infinite/testutil/constants"
-	testutiltx "github.com/deep-thought-labs/infinite/testutil/tx"
+	cosmosante "github.com/cosmos/evm/ante/cosmos"
+	"github.com/cosmos/evm/testutil"
+	"github.com/cosmos/evm/testutil/constants"
+	testutiltx "github.com/cosmos/evm/testutil/tx"
 
 	"cosmossdk.io/math"
 

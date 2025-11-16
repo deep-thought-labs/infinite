@@ -3,10 +3,11 @@ package utils_test
 import (
 	"testing"
 
-	utiltx "github.com/deep-thought-labs/infinite/testutil/tx"
-	"github.com/deep-thought-labs/infinite/utils"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/stretchr/testify/require"
+
+	utiltx "github.com/cosmos/evm/testutil/tx"
+	"github.com/cosmos/evm/utils"
 )
 
 func TestIsEmptyHash(t *testing.T) {
