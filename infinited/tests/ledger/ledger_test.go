@@ -9,12 +9,12 @@ import (
 	//nolint:revive // dot imports are fine for Ginkgo
 	. "github.com/onsi/ginkgo/v2"
 
-	"github.com/deep-thought-labs/infinite/crypto/hd"
-	"github.com/deep-thought-labs/infinite/encoding"
-	"github.com/deep-thought-labs/infinite/infinited/tests/ledger/mocks"
-	"github.com/deep-thought-labs/infinite/server/config"
-	"github.com/deep-thought-labs/infinite/testutil"
-	utiltx "github.com/deep-thought-labs/infinite/testutil/tx"
+	"github.com/cosmos/evm/crypto/hd"
+	"github.com/cosmos/evm/encoding"
+	"github.com/cosmos/evm/infinited/tests/ledger/mocks"
+	"github.com/cosmos/evm/server/config"
+	"github.com/cosmos/evm/testutil"
+	utiltx "github.com/cosmos/evm/testutil/tx"
 
 	"cosmossdk.io/math"
 

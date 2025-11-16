@@ -3,13 +3,13 @@ package ante
 import (
 	"math/big"
 
-	"github.com/deep-thought-labs/infinite/ante/evm"
-	"github.com/deep-thought-labs/infinite/ante/types"
-	"github.com/deep-thought-labs/infinite/server/config"
-	"github.com/deep-thought-labs/infinite/testutil"
-	testconstants "github.com/deep-thought-labs/infinite/testutil/constants"
-	utiltx "github.com/deep-thought-labs/infinite/testutil/tx"
-	evmtypes "github.com/deep-thought-labs/infinite/x/vm/types"
+	"github.com/cosmos/evm/ante/evm"
+	"github.com/cosmos/evm/ante/types"
+	"github.com/cosmos/evm/server/config"
+	"github.com/cosmos/evm/testutil"
+	testconstants "github.com/cosmos/evm/testutil/constants"
+	utiltx "github.com/cosmos/evm/testutil/tx"
+	evmtypes "github.com/cosmos/evm/x/vm/types"
 	ethtypes "github.com/ethereum/go-ethereum/core/types"
 
 	sdkmath "cosmossdk.io/math"

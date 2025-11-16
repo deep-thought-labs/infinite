@@ -10,10 +10,10 @@ import (
 
 	abci "github.com/cometbft/cometbft/abci/types"
 
-	"github.com/deep-thought-labs/infinite/infinited"
-	"github.com/deep-thought-labs/infinite/infinited/tests/integration"
-	"github.com/deep-thought-labs/infinite/precompiles/ics02"
-	evmibctesting "github.com/deep-thought-labs/infinite/testutil/ibc"
+	"github.com/cosmos/evm/infinited"
+	"github.com/cosmos/evm/infinited/tests/integration"
+	"github.com/cosmos/evm/precompiles/ics02"
+	evmibctesting "github.com/cosmos/evm/testutil/ibc"
 	"github.com/cosmos/gogoproto/proto"
 	clienttypes "github.com/cosmos/ibc-go/v10/modules/core/02-client/types"
 	commitmenttypesv2 "github.com/cosmos/ibc-go/v10/modules/core/23-commitment/types/v2"

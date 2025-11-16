@@ -9,9 +9,9 @@ import (
 
 	errorsmod "cosmossdk.io/errors"
 
-	"github.com/deep-thought-labs/infinite"
-	testutiltypes "github.com/deep-thought-labs/infinite/testutil/types"
-	evmibctesting "github.com/deep-thought-labs/infinite/testutil/ibc"
+	"github.com/cosmos/evm"
+	testutiltypes "github.com/cosmos/evm/testutil/types"
+	evmibctesting "github.com/cosmos/evm/testutil/ibc"
 )
 
 // DeployContract deploys a contract to the test chain

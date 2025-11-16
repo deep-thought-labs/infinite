@@ -11,7 +11,7 @@ import (
 
 	storetypes "cosmossdk.io/store/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	cmn "github.com/deep-thought-labs/infinite/precompiles/common"
+	cmn "github.com/cosmos/evm/precompiles/common"
 )
 
 // Precompile defines a debugging precompile for use in testing.

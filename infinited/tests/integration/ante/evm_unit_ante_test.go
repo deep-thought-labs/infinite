@@ -5,8 +5,8 @@ import (
 
 	"github.com/stretchr/testify/suite"
 
-	"github.com/deep-thought-labs/infinite/infinited/tests/integration"
-	"github.com/deep-thought-labs/infinite/tests/integration/ante"
+	"github.com/cosmos/evm/infinited/tests/integration"
+	"github.com/cosmos/evm/tests/integration/ante"
 )
 
 func TestEvmUnitAnteTestSuite(t *testing.T) {

@@ -10,9 +10,9 @@ import (
 
 	"github.com/stretchr/testify/suite"
 
-	"github.com/deep-thought-labs/infinite/infinited"
-	"github.com/deep-thought-labs/infinite/infinited/tests/integration"
-	evmibctesting "github.com/deep-thought-labs/infinite/testutil/ibc"
+	"github.com/cosmos/evm/infinited"
+	"github.com/cosmos/evm/infinited/tests/integration"
+	evmibctesting "github.com/cosmos/evm/testutil/ibc"
 	"github.com/cosmos/ibc-go/v10/modules/apps/transfer/types"
 	clienttypes "github.com/cosmos/ibc-go/v10/modules/core/02-client/types"
 

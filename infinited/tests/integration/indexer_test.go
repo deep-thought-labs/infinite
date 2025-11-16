@@ -3,7 +3,7 @@ package integration
 import (
 	"testing"
 
-	"github.com/deep-thought-labs/infinite/tests/integration/indexer"
+	"github.com/cosmos/evm/tests/integration/indexer"
 )
 
 func TestKVIndexer(t *testing.T) {

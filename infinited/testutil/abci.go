@@ -8,9 +8,9 @@ import (
 	tmproto "github.com/cometbft/cometbft/proto/tendermint/types"
 	cmttypes "github.com/cometbft/cometbft/types"
 
-	"github.com/deep-thought-labs/infinite"
-	"github.com/deep-thought-labs/infinite/testutil/integration"
-	"github.com/deep-thought-labs/infinite/testutil/tx"
+	"github.com/cosmos/evm"
+	"github.com/cosmos/evm/testutil/integration"
+	"github.com/cosmos/evm/testutil/tx"
 
 	errorsmod "cosmossdk.io/errors"
 	sdkmath "cosmossdk.io/math"

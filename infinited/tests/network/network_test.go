@@ -11,8 +11,8 @@ import (
 	"github.com/ethereum/go-ethereum/ethclient"
 	"github.com/stretchr/testify/suite"
 
-	cosmosevmnetwork "github.com/deep-thought-labs/infinite/infinited/tests/network"
-	"github.com/deep-thought-labs/infinite/server/config"
+	cosmosevmnetwork "github.com/cosmos/evm/infinited/tests/network"
+	"github.com/cosmos/evm/server/config"
 )
 
 type IntegrationTestSuite struct {

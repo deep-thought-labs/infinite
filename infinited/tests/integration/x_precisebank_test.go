@@ -5,7 +5,7 @@ import (
 
 	"github.com/stretchr/testify/suite"
 
-	"github.com/deep-thought-labs/infinite/tests/integration/x/precisebank"
+	"github.com/cosmos/evm/tests/integration/x/precisebank"
 )
 
 func TestPreciseBankGenesis(t *testing.T) {

@@ -5,7 +5,7 @@ import (
 
 	"github.com/stretchr/testify/suite"
 
-	"github.com/deep-thought-labs/infinite/tests/integration/rpc/backend"
+	"github.com/cosmos/evm/tests/integration/rpc/backend"
 )
 
 func TestBackend(t *testing.T) {

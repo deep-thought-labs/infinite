@@ -12,7 +12,7 @@ import (
 	servertypes "github.com/cosmos/cosmos-sdk/server/types"
 	simtestutil "github.com/cosmos/cosmos-sdk/testutil/sims"
 	genutiltypes "github.com/cosmos/cosmos-sdk/x/genutil/types"
-	"github.com/deep-thought-labs/infinite/infinited"
+	"github.com/cosmos/evm/infinited"
 	"github.com/spf13/cast"
 	"github.com/spf13/viper"
 

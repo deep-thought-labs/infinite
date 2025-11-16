@@ -5,7 +5,7 @@ import (
 
 	"github.com/stretchr/testify/suite"
 
-	"github.com/deep-thought-labs/infinite/tests/integration/x/ibc"
+	"github.com/cosmos/evm/tests/integration/x/ibc"
 )
 
 func TestIBCKeeperTestSuite(t *testing.T) {

@@ -1,8 +1,8 @@
 package constants
 
 import (
-	erc20types "github.com/deep-thought-labs/infinite/x/erc20/types"
-	evmtypes "github.com/deep-thought-labs/infinite/x/vm/types"
+	erc20types "github.com/cosmos/evm/x/erc20/types"
+	evmtypes "github.com/cosmos/evm/x/vm/types"
 
 	"cosmossdk.io/math"
 )

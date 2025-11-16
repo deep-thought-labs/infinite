@@ -19,8 +19,8 @@ import (
 	"github.com/cometbft/cometbft/types"
 	cmttime "github.com/cometbft/cometbft/types/time"
 
-	"github.com/deep-thought-labs/infinite/server"
-	evmtypes "github.com/deep-thought-labs/infinite/x/vm/types"
+	"github.com/cosmos/evm/server"
+	evmtypes "github.com/cosmos/evm/x/vm/types"
 
 	"cosmossdk.io/log"
 

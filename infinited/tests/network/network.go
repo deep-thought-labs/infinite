@@ -17,7 +17,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/deep-thought-labs/infinite/utils"
+	"github.com/cosmos/evm/utils"
 
 	"github.com/ethereum/go-ethereum/ethclient"
 	"github.com/spf13/cobra"
@@ -28,12 +28,12 @@ import (
 	cmtclient "github.com/cometbft/cometbft/rpc/client"
 
 	dbm "github.com/cosmos/cosmos-db"
-	"github.com/deep-thought-labs/infinite/crypto/hd"
-	"github.com/deep-thought-labs/infinite/infinited"
-	evmconfig "github.com/deep-thought-labs/infinite/infinited/config"
-	"github.com/deep-thought-labs/infinite/server/config"
-	evmtestutil "github.com/deep-thought-labs/infinite/testutil"
-	testconstants "github.com/deep-thought-labs/infinite/testutil/constants"
+	"github.com/cosmos/evm/crypto/hd"
+	"github.com/cosmos/evm/infinited"
+	evmconfig "github.com/cosmos/evm/infinited/config"
+	"github.com/cosmos/evm/server/config"
+	evmtestutil "github.com/cosmos/evm/testutil"
+	testconstants "github.com/cosmos/evm/testutil/constants"
 
 	"cosmossdk.io/log"
 	"cosmossdk.io/math"

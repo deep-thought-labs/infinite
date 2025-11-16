@@ -5,8 +5,8 @@ import (
 
 	"github.com/stretchr/testify/suite"
 
-	"github.com/deep-thought-labs/infinite/infinited/tests/integration"
-	erc21 "github.com/deep-thought-labs/infinite/tests/integration/precompiles/erc20"
+	"github.com/cosmos/evm/infinited/tests/integration"
+	erc21 "github.com/cosmos/evm/tests/integration/precompiles/erc20"
 )
 
 func TestErc20PrecompileTestSuite(t *testing.T) {

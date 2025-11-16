@@ -2,7 +2,7 @@ package evmd
 
 import (
 	"fmt"
-	"github.com/deep-thought-labs/infinite/server"
+	"github.com/cosmos/evm/server"
 
 	"cosmossdk.io/log"
 
@@ -10,8 +10,8 @@ import (
 	servertypes "github.com/cosmos/cosmos-sdk/server/types"
 	sdkmempool "github.com/cosmos/cosmos-sdk/types/mempool"
 
-	evmmempool "github.com/deep-thought-labs/infinite/mempool"
-	evmtypes "github.com/deep-thought-labs/infinite/x/vm/types"
+	evmmempool "github.com/cosmos/evm/mempool"
+	evmtypes "github.com/cosmos/evm/x/vm/types"
 )
 
 // configureEVMMempool sets up the EVM mempool and related handlers using viper configuration.

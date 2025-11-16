@@ -11,12 +11,12 @@ import (
 
 	"github.com/stretchr/testify/suite"
 
-	"github.com/deep-thought-labs/infinite"
-	"github.com/deep-thought-labs/infinite/contracts"
-	"github.com/deep-thought-labs/infinite/infinited/tests/integration"
-	debugprecompile "github.com/deep-thought-labs/infinite/infinited/tests/testdata/debug"
-	evmibctesting "github.com/deep-thought-labs/infinite/testutil/ibc"
-	testutiltypes "github.com/deep-thought-labs/infinite/testutil/types"
+	"github.com/cosmos/evm"
+	"github.com/cosmos/evm/contracts"
+	"github.com/cosmos/evm/infinited/tests/integration"
+	debugprecompile "github.com/cosmos/evm/infinited/tests/testdata/debug"
+	evmibctesting "github.com/cosmos/evm/testutil/ibc"
+	testutiltypes "github.com/cosmos/evm/testutil/types"
 )
 
 // BalanceHandlerTestSuite tests the balance handler bug where recursive precompile calls

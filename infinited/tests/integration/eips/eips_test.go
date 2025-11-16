@@ -1,8 +1,8 @@
 package eips_test
 
 import (
-	"github.com/deep-thought-labs/infinite/infinited/tests/integration"
-	"github.com/deep-thought-labs/infinite/tests/integration/eips"
+	"github.com/cosmos/evm/infinited/tests/integration"
+	"github.com/cosmos/evm/tests/integration/eips"
 	"testing"
 	//nolint:revive // dot imports are fine for Ginkgo
 	//nolint:revive // dot imports are fine for Ginkgo

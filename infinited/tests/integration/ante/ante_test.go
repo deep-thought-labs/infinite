@@ -3,8 +3,8 @@ package ante
 import (
 	"testing"
 
-	"github.com/deep-thought-labs/infinite/infinited/tests/integration"
-	"github.com/deep-thought-labs/infinite/tests/integration/ante"
+	"github.com/cosmos/evm/infinited/tests/integration"
+	"github.com/cosmos/evm/tests/integration/ante"
 )
 
 func TestAnte_Integration(t *testing.T) {

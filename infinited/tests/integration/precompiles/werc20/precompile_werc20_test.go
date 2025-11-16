@@ -5,8 +5,8 @@ import (
 
 	"github.com/stretchr/testify/suite"
 
-	"github.com/deep-thought-labs/infinite/infinited/tests/integration"
-	"github.com/deep-thought-labs/infinite/tests/integration/precompiles/werc20"
+	"github.com/cosmos/evm/infinited/tests/integration"
+	"github.com/cosmos/evm/tests/integration/precompiles/werc20"
 )
 
 func TestWERC20PrecompileUnitTestSuite(t *testing.T) {

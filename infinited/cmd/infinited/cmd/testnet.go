@@ -9,12 +9,12 @@ import (
 	"path/filepath"
 	"time"
 
-	"github.com/deep-thought-labs/infinite/infinited/config"
+	"github.com/cosmos/evm/infinited/config"
 
-	cosmosevmhd "github.com/deep-thought-labs/infinite/crypto/hd"
-	cosmosevmkeyring "github.com/deep-thought-labs/infinite/crypto/keyring"
-	"github.com/deep-thought-labs/infinite/infinited"
-	cosmosevmserverconfig "github.com/deep-thought-labs/infinite/server/config"
+	cosmosevmhd "github.com/cosmos/evm/crypto/hd"
+	cosmosevmkeyring "github.com/cosmos/evm/crypto/keyring"
+	"github.com/cosmos/evm/infinited"
+	cosmosevmserverconfig "github.com/cosmos/evm/server/config"
 	"github.com/spf13/cobra"
 	"github.com/spf13/pflag"
 
@@ -48,9 +48,9 @@ import (
 	genutiltypes "github.com/cosmos/cosmos-sdk/x/genutil/types"
 	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
 
-	customnetwork "github.com/deep-thought-labs/infinite/infinited/tests/network"
-	evmnetwork "github.com/deep-thought-labs/infinite/testutil/integration/evm/network"
-	evmtypes "github.com/deep-thought-labs/infinite/x/vm/types"
+	customnetwork "github.com/cosmos/evm/infinited/tests/network"
+	evmnetwork "github.com/cosmos/evm/testutil/integration/evm/network"
+	evmtypes "github.com/cosmos/evm/x/vm/types"
 )
 
 var (

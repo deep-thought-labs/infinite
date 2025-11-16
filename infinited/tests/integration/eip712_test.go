@@ -5,7 +5,7 @@ import (
 
 	"github.com/stretchr/testify/suite"
 
-	"github.com/deep-thought-labs/infinite/tests/integration/eip712"
+	"github.com/cosmos/evm/tests/integration/eip712"
 )
 
 func TestEIP712TestSuite(t *testing.T) {

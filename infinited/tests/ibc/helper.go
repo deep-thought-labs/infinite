@@ -9,11 +9,11 @@ import (
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/crypto"
 
-	"github.com/deep-thought-labs/infinite"
-	"github.com/deep-thought-labs/infinite/contracts"
-	evmibctesting "github.com/deep-thought-labs/infinite/testutil/ibc"
-	testutiltypes "github.com/deep-thought-labs/infinite/testutil/types"
-	erc20types "github.com/deep-thought-labs/infinite/x/erc20/types"
+	"github.com/cosmos/evm"
+	"github.com/cosmos/evm/contracts"
+	evmibctesting "github.com/cosmos/evm/testutil/ibc"
+	testutiltypes "github.com/cosmos/evm/testutil/types"
+	erc20types "github.com/cosmos/evm/x/erc20/types"
 	ibctesting "github.com/cosmos/ibc-go/v10/testing"
 
 	errorsmod "cosmossdk.io/errors"

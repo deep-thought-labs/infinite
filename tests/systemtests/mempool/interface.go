@@ -5,7 +5,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/deep-thought-labs/infinite/tests/systemtests/suite"
+	"github.com/cosmos/evm/tests/systemtests/suite"
 )
 
 type TestSuite interface {

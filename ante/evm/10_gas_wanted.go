@@ -3,10 +3,10 @@ package evm
 import (
 	"math/big"
 
-	anteinterfaces "github.com/deep-thought-labs/infinite/ante/interfaces"
-	"github.com/deep-thought-labs/infinite/ante/types"
-	feemarkettypes "github.com/deep-thought-labs/infinite/x/feemarket/types"
-	evmtypes "github.com/deep-thought-labs/infinite/x/vm/types"
+	anteinterfaces "github.com/cosmos/evm/ante/interfaces"
+	"github.com/cosmos/evm/ante/types"
+	feemarkettypes "github.com/cosmos/evm/x/feemarket/types"
+	evmtypes "github.com/cosmos/evm/x/vm/types"
 
 	errorsmod "cosmossdk.io/errors"
 
@@ -76,10 +76,12 @@ func CheckGasWanted(ctx sdk.Context, feeMarketKeeper anteinterfaces.FeeMarketKee
 		return nil
 	}
 
-	// Add total gasWanted to cumulative in block transientStore in FeeMarket module
-	if _, err := feeMarketKeeper.AddTransientGasWanted(ctx, gasWanted); err != nil {
-		return errorsmod.Wrapf(err, "failed to add gas wanted to transient store")
-	}
+	// TODO: Add total gasWanted to cumulative in block transientStore in FeeMarket module
+	// Note: AddTransientGasWanted() method doesn't exist in FeeMarketKeeper interface
+	// This functionality may need to be implemented or handled differently
+	// if _, err := feeMarketKeeper.AddTransientGasWanted(ctx, gasWanted); err != nil {
+	// 	return errorsmod.Wrapf(err, "failed to add gas wanted to transient store")
+	// }
 
 	return nil
 }

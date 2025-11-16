@@ -5,7 +5,7 @@ import (
 
 	"github.com/stretchr/testify/suite"
 
-	"github.com/deep-thought-labs/infinite/tests/integration/wallets"
+	"github.com/cosmos/evm/tests/integration/wallets"
 )
 
 func TestLedgerTestSuite(t *testing.T) {

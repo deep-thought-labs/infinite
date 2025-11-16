@@ -9,11 +9,11 @@ import (
 	dbm "github.com/cosmos/cosmos-db"
 	ibctesting "github.com/cosmos/ibc-go/v10/testing"
 
-	"github.com/deep-thought-labs/infinite"
-	"github.com/deep-thought-labs/infinite/infinited"
-	srvflags "github.com/deep-thought-labs/infinite/server/flags"
-	"github.com/deep-thought-labs/infinite/testutil/constants"
-	feemarkettypes "github.com/deep-thought-labs/infinite/x/feemarket/types"
+	"github.com/cosmos/evm"
+	"github.com/cosmos/evm/infinited"
+	srvflags "github.com/cosmos/evm/server/flags"
+	"github.com/cosmos/evm/testutil/constants"
+	feemarkettypes "github.com/cosmos/evm/x/feemarket/types"
 
 	"cosmossdk.io/log"
 

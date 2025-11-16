@@ -6,8 +6,8 @@ import (
 
 	svrcmd "github.com/cosmos/cosmos-sdk/server/cmd"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/deep-thought-labs/infinite/infinited/cmd/infinited/cmd"
-	"github.com/deep-thought-labs/infinite/infinited/config"
+	"github.com/cosmos/evm/infinited/cmd/infinited/cmd"
+	"github.com/cosmos/evm/infinited/config"
 )
 
 func main() {

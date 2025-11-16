@@ -5,7 +5,7 @@ import (
 
 	"github.com/stretchr/testify/suite"
 
-	"github.com/deep-thought-labs/infinite/tests/integration/x/ibc/callbacks"
+	"github.com/cosmos/evm/tests/integration/x/ibc/callbacks"
 )
 
 func TestIBCCallback(t *testing.T) {

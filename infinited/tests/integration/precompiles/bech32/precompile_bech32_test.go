@@ -5,8 +5,8 @@ import (
 
 	"github.com/stretchr/testify/suite"
 
-	"github.com/deep-thought-labs/infinite/infinited/tests/integration"
-	"github.com/deep-thought-labs/infinite/tests/integration/precompiles/bech32"
+	"github.com/cosmos/evm/infinited/tests/integration"
+	"github.com/cosmos/evm/tests/integration/precompiles/bech32"
 )
 
 func TestBech32PrecompileTestSuite(t *testing.T) {

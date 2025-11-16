@@ -14,12 +14,12 @@ import (
 	"github.com/ethereum/go-ethereum/core/vm"
 	"github.com/stretchr/testify/suite"
 
-	"github.com/deep-thought-labs/infinite/infinited"
-	"github.com/deep-thought-labs/infinite/infinited/tests/integration"
-	"github.com/deep-thought-labs/infinite/precompiles/ics20"
-	chainutil "github.com/deep-thought-labs/infinite/testutil"
-	evmibctesting "github.com/deep-thought-labs/infinite/testutil/ibc"
-	evmante "github.com/deep-thought-labs/infinite/x/vm/ante"
+	"github.com/cosmos/evm/infinited"
+	"github.com/cosmos/evm/infinited/tests/integration"
+	"github.com/cosmos/evm/precompiles/ics20"
+	chainutil "github.com/cosmos/evm/testutil"
+	evmibctesting "github.com/cosmos/evm/testutil/ibc"
+	evmante "github.com/cosmos/evm/x/vm/ante"
 	transfertypes "github.com/cosmos/ibc-go/v10/modules/apps/transfer/types"
 	clienttypes "github.com/cosmos/ibc-go/v10/modules/core/02-client/types"
 

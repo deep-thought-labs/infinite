@@ -3,11 +3,11 @@ package mempool
 import (
 	"testing"
 
-	"github.com/deep-thought-labs/infinite/infinited/tests/integration"
+	"github.com/cosmos/evm/infinited/tests/integration"
 
 	"github.com/stretchr/testify/suite"
 
-	"github.com/deep-thought-labs/infinite/tests/integration/mempool"
+	"github.com/cosmos/evm/tests/integration/mempool"
 )
 
 func TestMempoolIntegrationTestSuite(t *testing.T) {

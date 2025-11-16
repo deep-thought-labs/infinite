@@ -2,7 +2,7 @@ package config
 
 import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/deep-thought-labs/infinite/crypto/hd"
+	"github.com/cosmos/evm/crypto/hd"
 )
 
 const (

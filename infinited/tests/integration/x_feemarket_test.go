@@ -5,7 +5,7 @@ import (
 
 	"github.com/stretchr/testify/suite"
 
-	"github.com/deep-thought-labs/infinite/tests/integration/x/feemarket"
+	"github.com/cosmos/evm/tests/integration/x/feemarket"
 )
 
 func TestFeeMarketKeeperTestSuite(t *testing.T) {

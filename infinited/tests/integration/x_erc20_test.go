@@ -5,7 +5,7 @@ import (
 
 	"github.com/stretchr/testify/suite"
 
-	"github.com/deep-thought-labs/infinite/tests/integration/x/erc20"
+	"github.com/cosmos/evm/tests/integration/x/erc20"
 )
 
 func TestERC20GenesisTestSuite(t *testing.T) {

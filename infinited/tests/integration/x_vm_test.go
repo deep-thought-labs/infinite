@@ -4,12 +4,12 @@ import (
 	"encoding/json"
 	"testing"
 
-	"github.com/deep-thought-labs/infinite/server/config"
-	"github.com/deep-thought-labs/infinite/tests/integration/x/vm"
-	"github.com/deep-thought-labs/infinite/testutil/integration/evm/network"
-	"github.com/deep-thought-labs/infinite/testutil/keyring"
-	feemarkettypes "github.com/deep-thought-labs/infinite/x/feemarket/types"
-	"github.com/deep-thought-labs/infinite/x/vm/types"
+	"github.com/cosmos/evm/server/config"
+	"github.com/cosmos/evm/tests/integration/x/vm"
+	"github.com/cosmos/evm/testutil/integration/evm/network"
+	"github.com/cosmos/evm/testutil/keyring"
+	feemarkettypes "github.com/cosmos/evm/x/feemarket/types"
+	"github.com/cosmos/evm/x/vm/types"
 	"github.com/ethereum/go-ethereum/common"
 
 	"github.com/stretchr/testify/require"

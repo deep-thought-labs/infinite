@@ -3,9 +3,9 @@ package evmd
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/deep-thought-labs/infinite/infinited/config"
-	"github.com/deep-thought-labs/infinite/testutil/integration/evm/network"
-	"github.com/deep-thought-labs/infinite/x/vm/types"
+	"github.com/cosmos/evm/infinited/config"
+	"github.com/cosmos/evm/testutil/integration/evm/network"
+	"github.com/cosmos/evm/x/vm/types"
 	"testing"
 
 	"github.com/stretchr/testify/require"
@@ -14,7 +14,7 @@ import (
 	cmttypes "github.com/cometbft/cometbft/types"
 
 	dbm "github.com/cosmos/cosmos-db"
-	feemarkettypes "github.com/deep-thought-labs/infinite/x/feemarket/types"
+	feemarkettypes "github.com/cosmos/evm/x/feemarket/types"
 	ibctesting "github.com/cosmos/ibc-go/v10/testing"
 
 	"cosmossdk.io/log"

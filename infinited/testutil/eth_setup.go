@@ -5,8 +5,8 @@ import (
 
 	cmtypes "github.com/cometbft/cometbft/types"
 
-	"github.com/deep-thought-labs/infinite"
-	"github.com/deep-thought-labs/infinite/testutil"
+	"github.com/cosmos/evm"
+	"github.com/cosmos/evm/testutil"
 
 	"cosmossdk.io/math"
 

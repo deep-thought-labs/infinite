@@ -2,8 +2,8 @@ package cmd
 
 import (
 	"errors"
-	"github.com/deep-thought-labs/infinite/utils"
-	"github.com/deep-thought-labs/infinite/x/vm/types"
+	"github.com/cosmos/evm/utils"
+	"github.com/cosmos/evm/x/vm/types"
 	"io"
 	"os"
 
@@ -16,13 +16,13 @@ import (
 	cmtcli "github.com/cometbft/cometbft/libs/cli"
 
 	dbm "github.com/cosmos/cosmos-db"
-	cosmosevmcmd "github.com/deep-thought-labs/infinite/client"
-	evmdebug "github.com/deep-thought-labs/infinite/client/debug"
-	cosmosevmkeyring "github.com/deep-thought-labs/infinite/crypto/keyring"
-	"github.com/deep-thought-labs/infinite/infinited"
-	"github.com/deep-thought-labs/infinite/infinited/config"
-	cosmosevmserver "github.com/deep-thought-labs/infinite/server"
-	srvflags "github.com/deep-thought-labs/infinite/server/flags"
+	cosmosevmcmd "github.com/cosmos/evm/client"
+	evmdebug "github.com/cosmos/evm/client/debug"
+	cosmosevmkeyring "github.com/cosmos/evm/crypto/keyring"
+	"github.com/cosmos/evm/infinited"
+	"github.com/cosmos/evm/infinited/config"
+	cosmosevmserver "github.com/cosmos/evm/server"
+	srvflags "github.com/cosmos/evm/server/flags"
 
 	"cosmossdk.io/log"
 	"cosmossdk.io/store"

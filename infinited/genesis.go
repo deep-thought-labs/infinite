@@ -2,10 +2,10 @@ package evmd
 
 import (
 	"encoding/json"
-	testconstants "github.com/deep-thought-labs/infinite/testutil/constants"
-	erc20types "github.com/deep-thought-labs/infinite/x/erc20/types"
-	feemarkettypes "github.com/deep-thought-labs/infinite/x/feemarket/types"
-	evmtypes "github.com/deep-thought-labs/infinite/x/vm/types"
+	testconstants "github.com/cosmos/evm/testutil/constants"
+	erc20types "github.com/cosmos/evm/x/erc20/types"
+	feemarkettypes "github.com/cosmos/evm/x/feemarket/types"
+	evmtypes "github.com/cosmos/evm/x/vm/types"
 
 	minttypes "github.com/cosmos/cosmos-sdk/x/mint/types"
 )
