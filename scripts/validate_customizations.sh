@@ -60,6 +60,15 @@ check "x/vm/types/params.go" 'DefaultEVMDisplayDenom = "Improbability"' "Token d
 check "x/vm/types/params.go" 'DefaultEVMDenom = "drop"' "Token base denom"
 check "x/vm/types/params.go" "DefaultEVMChainID uint64 = 421018" "EVM Chain ID"
 
+# Genesis state customization (ensures all modules use "drop" instead of default "stake")
+echo "Genesis state customization..."
+check "infinited/genesis.go" "NewMintGenesisState" "Mint genesis state function"
+check "infinited/genesis.go" "NewStakingGenesisState" "Staking genesis state function"
+check "infinited/genesis.go" "NewGovGenesisState" "Governance genesis state function"
+check "infinited/genesis.go" 'testconstants.ExampleAttoDenom' "Genesis functions use ExampleAttoDenom (drop)"
+check "infinited/app.go" "NewStakingGenesisState" "DefaultGenesis applies staking customization"
+check "infinited/app.go" "NewGovGenesisState" "DefaultGenesis applies governance customization"
+
 # Constants
 echo "Constants..."
 check "testutil/constants/constants.go" 'ExampleDisplayDenom = "Improbability"' "Display denom constant"

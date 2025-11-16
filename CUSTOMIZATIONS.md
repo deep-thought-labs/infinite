@@ -69,6 +69,11 @@ If you see significantly more or different files, generate a fresh comparison re
 - `x/vm/types/params.go`: DefaultEVMDenom, DefaultEVMDisplayDenom, DefaultEVMChainID
 - `testutil/constants/constants.go`: ExampleAttoDenom, ExampleDisplayDenom, ChainsCoinInfo[421018]
 - `testutil/integration/evm/network/chain_id_modifiers.go`: GenerateBankGenesisMetadata (chain ID 421018)
+- `infinited/genesis.go`: Genesis state functions that set denoms to "drop":
+  - `NewMintGenesisState()`: Sets `mint.params.mint_denom` to "drop"
+  - `NewStakingGenesisState()`: Sets `staking.params.bond_denom` to "drop"
+  - `NewGovGenesisState()`: Sets `gov.params.min_deposit[].denom` and `gov.params.expedited_min_deposit[].denom` to "drop"
+- `infinited/app.go`: `DefaultGenesis()` function that applies the custom genesis states above
 - `infinited/tests/integration/create_app.go`: Test app creation with identity configuration
 - `local_node.sh`: Token metadata in genesis
 - `assets/pre-mainet-genesis.json`: Token metadata
@@ -129,6 +134,15 @@ All files in `evmd/` directory were renamed to `infinited/`:
 - File: `infinited/app.go`
 - Value: `sdk.DefaultPowerReduction = utils.AttoPowerReduction`
 - Comment: `1 42 = 10^18 drop`
+
+### Genesis State Customization
+- File: `infinited/genesis.go`
+- Functions that customize default genesis state to use "drop" denom:
+  - `NewMintGenesisState()`: Overrides default "stake" with "drop" for mint module
+  - `NewStakingGenesisState()`: Overrides default "stake" with "drop" for staking module
+  - `NewGovGenesisState()`: Overrides default "stake" with "drop" for governance module
+- File: `infinited/app.go`
+- Function: `DefaultGenesis()` applies the custom genesis states to ensure all modules use "drop" instead of default "stake"
 
 ## Added Files (Not in upstream)
 

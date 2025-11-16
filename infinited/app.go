@@ -896,6 +896,12 @@ func (app *EVMD) DefaultGenesis() map[string]json.RawMessage {
 	mintGenState := NewMintGenesisState()
 	genesis[minttypes.ModuleName] = app.appCodec.MustMarshalJSON(mintGenState)
 
+	stakingGenState := NewStakingGenesisState()
+	genesis[stakingtypes.ModuleName] = app.appCodec.MustMarshalJSON(stakingGenState)
+
+	govGenState := NewGovGenesisState()
+	genesis[govtypes.ModuleName] = app.appCodec.MustMarshalJSON(govGenState)
+
 	evmGenState := NewEVMGenesisState()
 	genesis[evmtypes.ModuleName] = app.appCodec.MustMarshalJSON(evmGenState)
 

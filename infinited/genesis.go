@@ -7,7 +7,9 @@ import (
 	feemarkettypes "github.com/cosmos/evm/x/feemarket/types"
 	evmtypes "github.com/cosmos/evm/x/vm/types"
 
+	govv1 "github.com/cosmos/cosmos-sdk/x/gov/types/v1"
 	minttypes "github.com/cosmos/cosmos-sdk/x/mint/types"
+	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
 )
 
 // GenesisState of the blockchain is represented here as a map of raw json
@@ -65,4 +67,32 @@ func NewFeeMarketGenesisState() *feemarkettypes.GenesisState {
 	feeMarketGenState.Params.NoBaseFee = true
 
 	return feeMarketGenState
+}
+
+// NewStakingGenesisState returns the default genesis state for the staking module.
+//
+// NOTE: Sets the bond denomination to the base denom (drop) for Infinite Drive.
+func NewStakingGenesisState() *stakingtypes.GenesisState {
+	stakingGenState := stakingtypes.DefaultGenesisState()
+	stakingGenState.Params.BondDenom = testconstants.ExampleAttoDenom
+	return stakingGenState
+}
+
+// NewGovGenesisState returns the default genesis state for the governance module.
+//
+// NOTE: Sets the min_deposit and expedited_min_deposit denominations to the base denom (drop) for Infinite Drive.
+func NewGovGenesisState() *govv1.GenesisState {
+	govGenState := govv1.DefaultGenesisState()
+
+	// Update min_deposit denom
+	if len(govGenState.Params.MinDeposit) > 0 {
+		govGenState.Params.MinDeposit[0].Denom = testconstants.ExampleAttoDenom
+	}
+
+	// Update expedited_min_deposit denom
+	if len(govGenState.Params.ExpeditedMinDeposit) > 0 {
+		govGenState.Params.ExpeditedMinDeposit[0].Denom = testconstants.ExampleAttoDenom
+	}
+
+	return govGenState
 }
