@@ -173,9 +173,8 @@ echo ""
 if [ $FAILED -eq 0 ]; then
     echo -e "${GREEN}✅ All critical prerequisites are met!${NC}"
     echo ""
-    echo "You can now proceed with builds:"
-    echo "  - make release-dry-run-linux    # Quick Linux build test"
-    echo "  - make release-dry-run         # Full platform test"
+    echo "You can now proceed with compilation."
+    echo "For build instructions, see: guides/development/BUILDING.md"
     exit 0
 else
     echo -e "${RED}❌ Some prerequisites are missing or misconfigured${NC}"
