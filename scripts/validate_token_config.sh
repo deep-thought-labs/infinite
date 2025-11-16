@@ -76,7 +76,8 @@ if curl -s http://localhost:1317/cosmos/base/tendermint/v1beta1/node_info > /dev
 else
     print_status 1 "REST API not responding"
     echo "   Make sure your node is running on port 1317"
-    exit 1
+    print_warning "Continuing with Genesis file validation only..."
+    REST_API_OK=false
 fi
 
 if curl -s -X POST -H "Content-Type: application/json" \
@@ -91,10 +92,11 @@ fi
 
 echo ""
 
-# Test 2: Chain ID verification
-echo "2. Verifying Chain IDs..."
+# Test 2: Chain ID verification (only if node is running)
+if [ "$REST_API_OK" = "true" ]; then
+    echo "2. Verifying Chain IDs..."
 
-COSMOS_CHAIN_ID=$(curl -s http://localhost:1317/cosmos/base/tendermint/v1beta1/node_info | jq -r '.default_node_info.network' 2>/dev/null || echo "error")
+    COSMOS_CHAIN_ID=$(curl -s http://localhost:1317/cosmos/base/tendermint/v1beta1/node_info | jq -r '.default_node_info.network' 2>/dev/null || echo "error")
 
 if [ "$COSMOS_CHAIN_ID" = "$EXPECTED_CHAIN_ID" ]; then
     print_status 0 "Cosmos Chain ID correct: $COSMOS_CHAIN_ID"
@@ -104,19 +106,23 @@ else
     echo "   Found:    $COSMOS_CHAIN_ID"
 fi
 
-EVM_CHAIN_ID_HEX=$(curl -s -X POST -H "Content-Type: application/json" \
+    EVM_CHAIN_ID_HEX=$(curl -s -X POST -H "Content-Type: application/json" \
   --data '{"jsonrpc":"2.0","method":"eth_chainId","params":[],"id":1}' \
   http://localhost:8545 | jq -r '.result' 2>/dev/null || echo "error")
 
-if [ "$EVM_CHAIN_ID_HEX" = "$EXPECTED_EVM_CHAIN_ID_HEX" ]; then
-    print_status 0 "EVM Chain ID correct: $EVM_CHAIN_ID_HEX ($EXPECTED_EVM_CHAIN_ID_DECIMAL)"
-else
-    print_status 1 "EVM Chain ID mismatch"
-    echo "   Expected: $EXPECTED_EVM_CHAIN_ID_HEX ($EXPECTED_EVM_CHAIN_ID_DECIMAL)"
-    echo "   Found:    $EVM_CHAIN_ID_HEX"
-fi
+    if [ "$EVM_CHAIN_ID_HEX" = "$EXPECTED_EVM_CHAIN_ID_HEX" ]; then
+        print_status 0 "EVM Chain ID correct: $EVM_CHAIN_ID_HEX ($EXPECTED_EVM_CHAIN_ID_DECIMAL)"
+    else
+        print_status 1 "EVM Chain ID mismatch"
+        echo "   Expected: $EXPECTED_EVM_CHAIN_ID_HEX ($EXPECTED_EVM_CHAIN_ID_DECIMAL)"
+        echo "   Found:    $EVM_CHAIN_ID_HEX"
+    fi
 
-echo ""
+    echo ""
+else
+    print_warning "Skipping Chain ID validation (node not running)"
+    echo ""
+fi
 
 # Test 3: Token metadata - Complete validation
 echo "3. Verifying token metadata..."
@@ -126,122 +132,127 @@ METADATA=$(curl -s http://localhost:1317/cosmos/bank/v1beta1/denoms_metadata | j
 if [ -z "$METADATA" ] || [ "$METADATA" = "null" ]; then
     print_status 1 "Token metadata not found"
     echo "   No metadata found for base denom 'drop'"
-    exit 1
+    print_warning "Skipping node-based validations, continuing with Genesis file validation..."
+    REST_API_OK=false
 fi
 
-print_info "Full metadata:"
-echo "$METADATA" | jq '.' | sed 's/^/   /'
-echo ""
-
-# Extract and validate each field
-NAME=$(echo "$METADATA" | jq -r '.name // "missing"')
-SYMBOL=$(echo "$METADATA" | jq -r '.symbol // "missing"')
-DISPLAY=$(echo "$METADATA" | jq -r '.display // "missing"')
-BASE=$(echo "$METADATA" | jq -r '.base // "missing"')
-URI=$(echo "$METADATA" | jq -r '.uri // "missing"')
-DESCRIPTION=$(echo "$METADATA" | jq -r '.description // "missing"')
-
-# Validate name
-if [ "$NAME" = "$EXPECTED_NAME" ]; then
-    print_status 0 "Name: $NAME"
-else
-    print_status 1 "Name mismatch"
-    echo "   Expected: $EXPECTED_NAME"
-    echo "   Found:    $NAME"
-fi
-
-# Validate symbol
-if [ "$SYMBOL" = "$EXPECTED_SYMBOL" ]; then
-    print_status 0 "Symbol: $SYMBOL"
-else
-    print_status 1 "Symbol mismatch"
-    echo "   Expected: $EXPECTED_SYMBOL"
-    echo "   Found:    $SYMBOL"
-fi
-
-# Validate display
-if [ "$DISPLAY" = "$EXPECTED_DISPLAY" ]; then
-    print_status 0 "Display: $DISPLAY"
-else
-    print_status 1 "Display mismatch"
-    echo "   Expected: $EXPECTED_DISPLAY"
-    echo "   Found:    $DISPLAY"
-fi
-
-# Validate base
-if [ "$BASE" = "$EXPECTED_BASE" ]; then
-    print_status 0 "Base: $BASE"
-else
-    print_status 1 "Base mismatch"
-    echo "   Expected: $EXPECTED_BASE"
-    echo "   Found:    $BASE"
-fi
-
-# Validate URI (most important for our changes)
-if [ "$URI" = "$EXPECTED_URI" ]; then
-    print_status 0 "URI: $URI"
-else
-    print_status 1 "URI mismatch"
-    echo "   Expected: $EXPECTED_URI"
-    echo "   Found:    $URI"
-fi
-
-# Validate description
-if [ "$DESCRIPTION" = "$EXPECTED_DESCRIPTION" ]; then
-    print_status 0 "Description: $DESCRIPTION"
-else
-    print_warning "Description mismatch (may be acceptable)"
-    echo "   Expected: $EXPECTED_DESCRIPTION"
-    echo "   Found:    $DESCRIPTION"
-fi
-
-echo ""
-
-# Test 4: Denom units validation
-echo "4. Verifying denom units..."
-
-DENOM_UNITS=$(echo "$METADATA" | jq '.denom_units' 2>/dev/null)
-
-if [ -z "$DENOM_UNITS" ] || [ "$DENOM_UNITS" = "null" ]; then
-    print_status 1 "Denom units not found"
-else
-    print_info "Denom units:"
-    echo "$DENOM_UNITS" | jq '.' | sed 's/^/   /'
+if [ "$REST_API_OK" = "true" ] && [ -n "$METADATA" ] && [ "$METADATA" != "null" ]; then
+    print_info "Full metadata:"
+    echo "$METADATA" | jq '.' | sed 's/^/   /'
     echo ""
-    
-    # Check base unit (drop, exponent 0)
-    BASE_UNIT=$(echo "$DENOM_UNITS" | jq '.[] | select(.denom == "drop")' 2>/dev/null)
-    if [ -n "$BASE_UNIT" ] && [ "$BASE_UNIT" != "null" ]; then
-        BASE_EXPONENT=$(echo "$BASE_UNIT" | jq -r '.exponent // "missing"')
-        if [ "$BASE_EXPONENT" = "0" ]; then
-            print_status 0 "Base unit 'drop' has correct exponent: 0"
-        else
-            print_status 1 "Base unit 'drop' has incorrect exponent: $BASE_EXPONENT (expected: 0)"
-        fi
+
+    # Extract and validate each field
+    NAME=$(echo "$METADATA" | jq -r '.name // "missing"')
+    SYMBOL=$(echo "$METADATA" | jq -r '.symbol // "missing"')
+    DISPLAY=$(echo "$METADATA" | jq -r '.display // "missing"')
+    BASE=$(echo "$METADATA" | jq -r '.base // "missing"')
+    URI=$(echo "$METADATA" | jq -r '.uri // "missing"')
+    DESCRIPTION=$(echo "$METADATA" | jq -r '.description // "missing"')
+
+    # Validate name
+    if [ "$NAME" = "$EXPECTED_NAME" ]; then
+        print_status 0 "Name: $NAME"
     else
-        print_status 1 "Base unit 'drop' not found in denom_units"
+        print_status 1 "Name mismatch"
+        echo "   Expected: $EXPECTED_NAME"
+        echo "   Found:    $NAME"
     fi
-    
-    # Check display unit (Improbability, exponent 18)
-    DISPLAY_UNIT=$(echo "$DENOM_UNITS" | jq '.[] | select(.denom == "Improbability")' 2>/dev/null)
-    if [ -n "$DISPLAY_UNIT" ] && [ "$DISPLAY_UNIT" != "null" ]; then
-        DISPLAY_EXPONENT=$(echo "$DISPLAY_UNIT" | jq -r '.exponent // "missing"')
-        if [ "$DISPLAY_EXPONENT" = "18" ]; then
-            print_status 0 "Display unit 'Improbability' has correct exponent: 18"
+
+    # Validate symbol
+    if [ "$SYMBOL" = "$EXPECTED_SYMBOL" ]; then
+        print_status 0 "Symbol: $SYMBOL"
+    else
+        print_status 1 "Symbol mismatch"
+        echo "   Expected: $EXPECTED_SYMBOL"
+        echo "   Found:    $SYMBOL"
+    fi
+
+    # Validate display
+    if [ "$DISPLAY" = "$EXPECTED_DISPLAY" ]; then
+        print_status 0 "Display: $DISPLAY"
+    else
+        print_status 1 "Display mismatch"
+        echo "   Expected: $EXPECTED_DISPLAY"
+        echo "   Found:    $DISPLAY"
+    fi
+
+    # Validate base
+    if [ "$BASE" = "$EXPECTED_BASE" ]; then
+        print_status 0 "Base: $BASE"
+    else
+        print_status 1 "Base mismatch"
+        echo "   Expected: $EXPECTED_BASE"
+        echo "   Found:    $BASE"
+    fi
+
+    # Validate URI (most important for our changes)
+    if [ "$URI" = "$EXPECTED_URI" ]; then
+        print_status 0 "URI: $URI"
+    else
+        print_status 1 "URI mismatch"
+        echo "   Expected: $EXPECTED_URI"
+        echo "   Found:    $URI"
+    fi
+
+    # Validate description
+    if [ "$DESCRIPTION" = "$EXPECTED_DESCRIPTION" ]; then
+        print_status 0 "Description: $DESCRIPTION"
+    else
+        print_warning "Description mismatch (may be acceptable)"
+        echo "   Expected: $EXPECTED_DESCRIPTION"
+        echo "   Found:    $DESCRIPTION"
+    fi
+
+    echo ""
+
+    # Test 4: Denom units validation
+    echo "4. Verifying denom units..."
+
+    DENOM_UNITS=$(echo "$METADATA" | jq '.denom_units' 2>/dev/null)
+
+    if [ -z "$DENOM_UNITS" ] || [ "$DENOM_UNITS" = "null" ]; then
+        print_status 1 "Denom units not found"
+    else
+        print_info "Denom units:"
+        echo "$DENOM_UNITS" | jq '.' | sed 's/^/   /'
+        echo ""
+        
+        # Check base unit (drop, exponent 0)
+        BASE_UNIT=$(echo "$DENOM_UNITS" | jq '.[] | select(.denom == "drop")' 2>/dev/null)
+        if [ -n "$BASE_UNIT" ] && [ "$BASE_UNIT" != "null" ]; then
+            BASE_EXPONENT=$(echo "$BASE_UNIT" | jq -r '.exponent // "missing"')
+            if [ "$BASE_EXPONENT" = "0" ]; then
+                print_status 0 "Base unit 'drop' has correct exponent: 0"
+            else
+                print_status 1 "Base unit 'drop' has incorrect exponent: $BASE_EXPONENT (expected: 0)"
+            fi
         else
-            print_status 1 "Display unit 'Improbability' has incorrect exponent: $DISPLAY_EXPONENT (expected: 18)"
+            print_status 1 "Base unit 'drop' not found in denom_units"
         fi
         
-        # Check alias
-        ALIASES=$(echo "$DISPLAY_UNIT" | jq -r '.aliases[]?' 2>/dev/null | tr '\n' ' ')
-        if echo "$ALIASES" | grep -q "improbability"; then
-            print_status 0 "Display unit has correct alias: 'improbability'"
+        # Check display unit (Improbability, exponent 18)
+        DISPLAY_UNIT=$(echo "$DENOM_UNITS" | jq '.[] | select(.denom == "Improbability")' 2>/dev/null)
+        if [ -n "$DISPLAY_UNIT" ] && [ "$DISPLAY_UNIT" != "null" ]; then
+            DISPLAY_EXPONENT=$(echo "$DISPLAY_UNIT" | jq -r '.exponent // "missing"')
+            if [ "$DISPLAY_EXPONENT" = "18" ]; then
+                print_status 0 "Display unit 'Improbability' has correct exponent: 18"
+            else
+                print_status 1 "Display unit 'Improbability' has incorrect exponent: $DISPLAY_EXPONENT (expected: 18)"
+            fi
+            
+            # Check alias
+            ALIASES=$(echo "$DISPLAY_UNIT" | jq -r '.aliases[]?' 2>/dev/null | tr '\n' ' ')
+            if echo "$ALIASES" | grep -q "improbability"; then
+                print_status 0 "Display unit has correct alias: 'improbability'"
+            else
+                print_warning "Display unit alias 'improbability' not found (found: $ALIASES)"
+            fi
         else
-            print_warning "Display unit alias 'improbability' not found (found: $ALIASES)"
+            print_status 1 "Display unit 'Improbability' not found in denom_units"
         fi
-    else
-        print_status 1 "Display unit 'Improbability' not found in denom_units"
     fi
+else
+    print_warning "Skipping node-based metadata validation (node not running)"
 fi
 
 echo ""
@@ -280,6 +291,7 @@ echo "6. Validating genesis file configuration..."
 
 GENESIS_FILE="$HOME/.infinited/config/genesis.json"
 if [ -f "$GENESIS_FILE" ]; then
+    # 6.1: Token metadata validation
     GENESIS_METADATA=$(jq '.app_state.bank.denom_metadata[] | select(.base == "drop")' "$GENESIS_FILE" 2>/dev/null)
     
     if [ -n "$GENESIS_METADATA" ] && [ "$GENESIS_METADATA" != "null" ]; then
@@ -305,6 +317,50 @@ if [ -f "$GENESIS_FILE" ]; then
     else
         print_status 1 "Token metadata not found in genesis file"
     fi
+    
+    echo ""
+    
+    # 6.2: Staking module - bond_denom validation
+    echo "6.2. Validating staking module bond_denom..."
+    STAKING_BOND_DENOM=$(jq -r '.app_state.staking.params.bond_denom // "missing"' "$GENESIS_FILE" 2>/dev/null)
+    if [ "$STAKING_BOND_DENOM" = "$EXPECTED_BASE" ]; then
+        print_status 0 "Staking bond_denom correct: $STAKING_BOND_DENOM"
+    else
+        print_status 1 "Staking bond_denom mismatch"
+        echo "   Expected: $EXPECTED_BASE"
+        echo "   Found:    $STAKING_BOND_DENOM"
+    fi
+    
+    # 6.3: Mint module - mint_denom validation
+    echo "6.3. Validating mint module mint_denom..."
+    MINT_DENOM=$(jq -r '.app_state.mint.params.mint_denom // "missing"' "$GENESIS_FILE" 2>/dev/null)
+    if [ "$MINT_DENOM" = "$EXPECTED_BASE" ]; then
+        print_status 0 "Mint mint_denom correct: $MINT_DENOM"
+    else
+        print_status 1 "Mint mint_denom mismatch"
+        echo "   Expected: $EXPECTED_BASE"
+        echo "   Found:    $MINT_DENOM"
+    fi
+    
+    # 6.4: Governance module - min_deposit and expedited_min_deposit validation
+    echo "6.4. Validating governance module deposits..."
+    GOV_MIN_DEPOSIT_DENOM=$(jq -r '.app_state.gov.params.min_deposit[0].denom // "missing"' "$GENESIS_FILE" 2>/dev/null)
+    if [ "$GOV_MIN_DEPOSIT_DENOM" = "$EXPECTED_BASE" ]; then
+        print_status 0 "Gov min_deposit denom correct: $GOV_MIN_DEPOSIT_DENOM"
+    else
+        print_status 1 "Gov min_deposit denom mismatch"
+        echo "   Expected: $EXPECTED_BASE"
+        echo "   Found:    $GOV_MIN_DEPOSIT_DENOM"
+    fi
+    
+    GOV_EXPEDITED_DENOM=$(jq -r '.app_state.gov.params.expedited_min_deposit[0].denom // "missing"' "$GENESIS_FILE" 2>/dev/null)
+    if [ "$GOV_EXPEDITED_DENOM" = "$EXPECTED_BASE" ]; then
+        print_status 0 "Gov expedited_min_deposit denom correct: $GOV_EXPEDITED_DENOM"
+    else
+        print_status 1 "Gov expedited_min_deposit denom mismatch"
+        echo "   Expected: $EXPECTED_BASE"
+        echo "   Found:    $GOV_EXPEDITED_DENOM"
+    fi
 else
     print_warning "Genesis file not found at $GENESIS_FILE, skipping validation"
 fi
@@ -322,4 +378,9 @@ echo "  • Base: $EXPECTED_BASE"
 echo "  • URI: $EXPECTED_URI"
 echo "- Chain ID: $EXPECTED_CHAIN_ID"
 echo "- EVM Chain ID: $EXPECTED_EVM_CHAIN_ID_HEX ($EXPECTED_EVM_CHAIN_ID_DECIMAL)"
+echo "- Genesis file module denominations (all should be '$EXPECTED_BASE'):"
+echo "  • Staking bond_denom: $EXPECTED_BASE"
+echo "  • Mint mint_denom: $EXPECTED_BASE"
+echo "  • Gov min_deposit: $EXPECTED_BASE"
+echo "  • Gov expedited_min_deposit: $EXPECTED_BASE"
 

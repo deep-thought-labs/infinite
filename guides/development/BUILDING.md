@@ -130,6 +130,212 @@ make install
 
 ---
 
+## 🚀 Workflow 1.5: All-in-One Local Node Script
+
+**Purpose**: Complete automated setup: compile, configure, and start a local testnet node.
+
+**What you get**:
+- ✅ Compiled `infinited` binary (if not already compiled)
+- ✅ Local blockchain configuration initialized
+- ✅ Genesis file customized for Infinite Drive
+- ✅ Test accounts created and funded
+- ✅ Node started and ready to use
+
+**When to use**: Complete testing, development with full node, integration testing
+
+### Command
+
+```bash
+# Full setup and start
+./local_node.sh
+
+# Skip compilation (if already compiled)
+./local_node.sh --no-install
+
+# Overwrite existing data without prompt
+./local_node.sh -y
+
+# See all options
+./local_node.sh --help
+```
+
+### What `local_node.sh` Does
+
+The script performs a complete setup in this order:
+
+1. **Compiles the binary** (unless `--no-install` is used)
+2. **Initializes the chain** with `infinited init`
+3. **Customizes the Genesis file** (see details below)
+4. **Creates test accounts** (validator + dev0, dev1, dev2, dev3)
+5. **Funds accounts** in genesis
+6. **Finalizes genesis** (gentx, collect-gentxs, validate-genesis)
+7. **Starts the node** with all APIs enabled
+
+### Genesis File Customizations
+
+The script automatically modifies the Genesis file to configure Infinite Drive correctly. Here's what it changes:
+
+#### 1. Module Denominations
+
+All modules are configured to use `"drop"` as the base denomination:
+
+```bash
+# Staking module
+.app_state.staking.params.bond_denom = "drop"
+
+# Mint module  
+.app_state.mint.params.mint_denom = "drop"
+
+# Governance module
+.app_state.gov.params.min_deposit[0].denom = "drop"
+.app_state.gov.params.expedited_min_deposit[0].denom = "drop"
+
+# EVM module
+.app_state.evm.params.evm_denom = "drop"
+```
+
+**Why**: Ensures all modules use the Infinite Drive base token (`drop`) instead of the Cosmos SDK default (`stake`). These values are also set in code (`infinited/genesis.go`), but the script ensures they're correctly applied in the Genesis JSON.
+
+#### 2. Token Metadata
+
+Adds complete token metadata for the Improbability (42) token:
+
+```json
+{
+  "description": "Improbability Token — Project 42: Sovereign, Perpetual, DAO-Governed",
+  "denom_units": [
+    {"denom": "drop", "exponent": 0, "aliases": []},
+    {"denom": "Improbability", "exponent": 18, "aliases": ["improbability"]}
+  ],
+  "base": "drop",
+  "display": "Improbability",
+  "name": "Improbability",
+  "symbol": "42",
+  "uri": "https://assets.infinitedrive.xyz/tokens/42/icon.png"
+}
+```
+
+**Why**: Provides complete token information for wallets, explorers, and dApps to display the token correctly.
+
+#### 3. EVM Precompiles
+
+Enables all static precompiles for EVM compatibility:
+
+```bash
+.app_state.evm.params.active_static_precompiles = [
+  "0x0000000000000000000000000000000000000100",  # ECRecover
+  "0x0000000000000000000000000000000000000400",  # SHA256
+  "0x0000000000000000000000000000000000000800",  # RIPEMD160
+  "0x0000000000000000000000000000000000000801",  # Identity
+  "0x0000000000000000000000000000000000000802",  # ModExp
+  "0x0000000000000000000000000000000000000803",  # BN256Add
+  "0x0000000000000000000000000000000000000804",  # BN256Mul
+  "0x0000000000000000000000000000000000000805",  # BN256Pairing
+  "0x0000000000000000000000000000000000000806",  # Blake2F
+  "0x0000000000000000000000000000000000000807"   # PointEvaluation
+]
+```
+
+**Why**: Enables all standard Ethereum precompiles for full EVM compatibility.
+
+#### 4. ERC20 Native Token Pair
+
+Configures the native token as an ERC20:
+
+```bash
+.app_state.erc20.native_precompiles = ["0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE"]
+.app_state.erc20.token_pairs = [{
+  "contract_owner": 1,
+  "erc20_address": "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE",
+  "denom": "drop",
+  "enabled": true
+}]
+```
+
+**Why**: Allows the native `drop` token to be used as an ERC20 token in smart contracts.
+
+#### 5. Consensus Parameters
+
+Adjusts block gas limit for development:
+
+```bash
+.consensus.params.block.max_gas = "10000000"
+```
+
+**Why**: Sets a reasonable gas limit for local testing.
+
+#### 6. Governance Periods (Development Only)
+
+**⚠️ IMPORTANT**: These values are for **development only** and should **NOT** be used in production:
+
+```bash
+# Development: Fast periods for quick testing
+max_deposit_period: "30s"        # (Production: "172800s" = 2 days)
+voting_period: "30s"             # (Production: "172800s" = 2 days)
+expedited_voting_period: "15s"   # (Production: "86400s" = 1 day)
+```
+
+**Why**: Allows quick testing of governance proposals without waiting days. **For production, use realistic periods** (see [configuration/GENESIS.md](../configuration/GENESIS.md)).
+
+#### 7. Configuration File Optimizations
+
+The script also optimizes `config.toml` and `app.toml` for development:
+
+- **Faster block times**: Reduced consensus timeouts
+- **All APIs enabled**: REST, gRPC, JSON-RPC, Tendermint RPC
+- **Prometheus metrics**: Enabled for monitoring
+- **Indexer enabled**: For transaction indexing
+
+**Why**: Provides a complete development environment with all features accessible.
+
+### Test Accounts
+
+The script creates these accounts by default:
+
+| Account | Address (EVM) | Address (Cosmos) | Balance |
+|---------|---------------|------------------|---------|
+| `mykey` (validator) | - | `cosmos1...` | 100,000,000,000,000,000,000,000,000 drop |
+| `dev0` | `0xC6Fe5D33615a1C52c08018c47E8Bc53646A0E101` | `cosmos1cml96vmptgw99syqrrz8az79xer2pcgp84pdun` | 1,000,000,000,000,000,000,000 drop |
+| `dev1` | `0x963EBDf2e1f8DB8707D05FC75bfeFFBa1B5BaC17` | `cosmos1jcltmuhplrdcwp7stlr4hlhlhgd4htqh3a79sq` | 1,000,000,000,000,000,000,000 drop |
+| `dev2` | `0x40a0cb1C63e026A81B55EE1308586E21eec1eFa9` | `cosmos1gzsvk8rruqn2sx64acfsskrwy8hvrmafqkaze8` | 1,000,000,000,000,000,000,000 drop |
+| `dev3` | `0x498B5AeC5D439b733dC2F58AB489783A23FB26dA` | `cosmos1fx944mzagwdhx0wz7k9tfztc8g3lkfk6rrgv6l` | 1,000,000,000,000,000,000,000 drop |
+
+**Note**: The validator account (`mykey`) is automatically set up as the genesis validator.
+
+### Verifying the Setup
+
+After the node starts, you can verify the configuration:
+
+```bash
+# In another terminal, validate token configuration
+./scripts/validate_token_config.sh
+
+# Check node health
+./scripts/infinite_health_check.sh
+
+# Verify customizations
+./scripts/validate_customizations.sh
+```
+
+**Expected results**:
+- ✅ All denominations should be `"drop"`
+- ✅ Token metadata should show Improbability (42)
+- ✅ Chain ID should be `infinite_421018-1`
+- ✅ EVM Chain ID should be `421018` (0x66c9a)
+
+### Important Notes
+
+1. **Data Location**: All data is stored in `$HOME/.infinited/`
+2. **Overwriting**: Use `-y` flag to overwrite existing data, or `-n` to keep it
+3. **Development Only**: The governance periods are set for quick testing. **Do not use these values in production**
+4. **Code vs. Script**: The code (`infinited/genesis.go`) sets defaults, but `local_node.sh` ensures they're applied correctly in the Genesis JSON
+
+**More information**:
+- Genesis configuration: [configuration/GENESIS.md](../configuration/GENESIS.md)
+- Validation scripts: [testing/VALIDATION.md](../testing/VALIDATION.md)
+
+---
+
 ## 🧪 Workflow 2: Testing Build
 
 **Purpose**: Only compile the binary without installing it, useful for verifying it compiles correctly.
