@@ -21,7 +21,7 @@ This guide covers testing, manual compilation, and development-specific configur
 
 ```bash
 # Run the automated health check
-./infinite_health_check.sh
+./scripts/infinite_health_check.sh
 ```
 
 **Expected output**:

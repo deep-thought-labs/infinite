@@ -401,7 +401,7 @@ Now that your node is running, choose your path forward:
 ## Support
 
 - **Documentation**: Check the `infinite/` folder for detailed documentation
-- **Health Scripts**: Use `./infinite_health_check.sh` for diagnostics
+- **Health Scripts**: Use `./scripts/infinite_health_check.sh` for diagnostics
 - **Issues**: Report bugs and issues on GitHub
 - **Community**: Join our community discussions
 

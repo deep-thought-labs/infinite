@@ -254,7 +254,7 @@ cat ~/.infinited/config/genesis.json | jq '.app_state.bank.denom_metadata'
 If you encounter issues not covered in this guide:
 
 1. **Check the logs**: Look in `~/.infinited/logs/` for error messages
-2. **Run health check**: Use `./infinite_health_check.sh` to diagnose issues
+2. **Run health check**: Use `./scripts/infinite_health_check.sh` to diagnose issues
 3. **Check system resources**: Ensure sufficient RAM and disk space
 4. **Verify network**: Ensure ports are not blocked by firewall
 5. **Check systemd logs** (if using production setup): `sudo journalctl -u infinited`
@@ -262,7 +262,7 @@ If you encounter issues not covered in this guide:
 ### Additional Resources
 
 - **Documentation**: Check the `infinite/` folder for detailed documentation
-- **Health Scripts**: Use `./infinite_health_check.sh` for diagnostics
+- **Health Scripts**: Use `./scripts/infinite_health_check.sh` for diagnostics
 - **Issues**: Report bugs and issues on GitHub
 - **Community**: Join our community discussions
 

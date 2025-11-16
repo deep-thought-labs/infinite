@@ -8,7 +8,7 @@ This document provides comprehensive scripts and examples for verifying the heal
 
 ```bash
 # Run the comprehensive health check script
-./infinite_health_check.sh
+./scripts/infinite_health_check.sh
 ```
 
 **What this script does**: Performs 8 automated tests covering all essential node health aspects with colorized output and clear pass/fail indicators.
@@ -369,7 +369,7 @@ fi
 ```bash
 #!/bin/bash
 # Complete Infinite Drive node health check
-# Save as: infinite_health_check.sh
+# Save as: scripts/infinite_health_check.sh
 
 set -e
 
@@ -556,11 +556,11 @@ echo "🔧 Troubleshooting complete!"
 
 ```bash
 # Make scripts executable
-chmod +x infinite_health_check.sh
+chmod +x scripts/infinite_health_check.sh
 chmod +x infinite_troubleshoot.sh
 
 # Run health check
-./infinite_health_check.sh
+./scripts/infinite_health_check.sh
 
 # Run troubleshooting
 ./infinite_troubleshoot.sh

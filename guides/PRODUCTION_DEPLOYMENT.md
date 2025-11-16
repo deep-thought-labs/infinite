@@ -343,7 +343,7 @@ sudo ufw status
 crontab -e
 
 # Add this line to check every 5 minutes
-*/5 * * * * /path/to/infinite_health_check.sh >> /var/log/infinited-health.log 2>&1
+*/5 * * * * /path/to/scripts/infinite_health_check.sh >> /var/log/infinited-health.log 2>&1
 ```
 
 ### Log Management
@@ -564,7 +564,7 @@ sudo systemctl restart infinited
 
 ```bash
 # Check node health
-./infinite_health_check.sh
+./scripts/infinite_health_check.sh
 
 # Monitor logs for errors
 sudo journalctl -u infinited --since "1 hour ago" | grep -i error

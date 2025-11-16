@@ -3,12 +3,22 @@
 # Copyright (c) 2025 Deep Thought Labs
 # All rights reserved.
 #
-# This file is part of the internal tooling for node health monitoring and
-# validation processes.
+# This file is part of the Infinite Drive blockchain tooling.
 #
 # Purpose: Comprehensive health check script for Infinite Drive blockchain nodes.
 #          Verifies node connectivity, block production, chain configuration,
 #          and system status across JSON-RPC, REST API, and Tendermint endpoints.
+#
+# Usage: ./scripts/infinite_health_check.sh
+#
+# Prerequisites:
+#   - Running Infinite Drive node (ports 1317, 8545, 26657)
+#   - jq command-line JSON processor
+#   - curl command
+#
+# Exit codes:
+#   0 - All health checks passed
+#   1 - One or more health checks failed
 #
 
 set -e
@@ -184,3 +194,4 @@ fi
 echo ""
 echo "🏁 Health check complete!"
 echo "========================="
+
