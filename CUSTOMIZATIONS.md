@@ -38,6 +38,18 @@
 2. **Only preserve identity** customizations (tokens, chain IDs, bech32, names)
 3. **Revert everything else** to match upstream exactly
 4. **Validate** using `./scripts/validate_customizations.sh` after merge
+5. **Compare** using `COMPARISON_REPORT.md` as reference for expected changes
+
+### Expected Change Statistics
+
+Based on comparison between `migration` and `main`:
+- **Identity files:** 7 files (token config, chain IDs, bech32)
+- **Custom files added:** 55 files (guides, scripts, config)
+- **Renamed files:** 55 files (evmd/ → infinited/)
+- **Branding files:** 5 files (Makefile, NOTICE, README.md, go.mod, go.sum)
+- **Total expected differences:** ~122 files
+
+If you see significantly more or different files, review against `COMPARISON_REPORT.md`.
 
 ## Token Configuration
 
@@ -54,6 +66,7 @@
 - `x/vm/types/params.go`: DefaultEVMDenom, DefaultEVMDisplayDenom, DefaultEVMChainID
 - `testutil/constants/constants.go`: ExampleAttoDenom, ExampleDisplayDenom, ChainsCoinInfo[421018]
 - `testutil/integration/evm/network/chain_id_modifiers.go`: GenerateBankGenesisMetadata (chain ID 421018)
+- `infinited/tests/integration/create_app.go`: Test app creation with identity configuration
 - `local_node.sh`: Token metadata in genesis
 - `assets/pre-mainet-genesis.json`: Token metadata
 
@@ -89,11 +102,23 @@
 ### Binary/Directory Names
 - Old: `evmd`, `evmd/`
 - New: `infinited`, `infinited/`
+- **Total renamed:** 55 files from `evmd/` to `infinited/`
 
 ### Files
 - `Makefile`: test-infinited, INFINITED_DIR, EXAMPLE_BINARY
 - `NOTICE`: Copyright Deep Thought Labs
 - `README.md`: Branding and project description
+
+### Renamed Files Summary
+All files in `evmd/` directory were renamed to `infinited/`:
+- `evmd/app.go` → `infinited/app.go`
+- `evmd/cmd/evmd/` → `infinited/cmd/infinited/`
+- `evmd/config/` → `infinited/config/`
+- `evmd/tests/` → `infinited/tests/`
+- `evmd/go.mod` → `infinited/go.mod`
+- And 50+ more files
+
+**Note:** Files appearing as "deleted" in `evmd/tests/integration/` are actually renamed to `infinited/tests/integration/`.
 
 ## Technical Configuration
 
@@ -127,8 +152,8 @@
 - `local_node.sh`
 
 ### Test Files
-- `infinited/interfaces.go`
-- `infinited/tests/integration/*` (30+ test files)
+- `infinited/tests/integration/create_app.go` - **Contains identity changes** (uses Improbability token config)
+- `infinited/tests/integration/*` (30+ test files) - Renamed from `evmd/tests/integration/*`
 - `tests/integration/ante/test_evm_fee_market.go`
 - `tests/integration/ante/test_evm_unit_10_gas_wanted.go`
 - `tests/systemtests/mempool/interface.go`
@@ -136,8 +161,11 @@
 ### Other
 - `ante/evm/10_gas_wanted.go` (deleted in upstream, kept in fork)
 - `CUSTOMIZATIONS.md` (this file)
+- `COMPARISON_REPORT.md` (comparison analysis document)
 
 ## Complete File List
+
+### Quick Comparison Script
 
 To see complete list of all files that differ from upstream repository:
 ```bash
@@ -153,6 +181,24 @@ This will show:
 - Files deleted in upstream but kept in fork (D)
 
 **Note**: This script compares against the upstream remote (original repository), not your fork's main branch. This ensures accurate comparison even after merging your customizations to main.
+
+### Comparison Report
+
+For a detailed comparison between your current branch and `main` (your fork's base), see:
+- `COMPARISON_REPORT.md` - Detailed analysis of all differences
+
+**Current Statistics** (migration vs main):
+- **Total files different:** 141
+- **Added:** 55 files
+- **Modified:** 9 files
+- **Renamed:** 55 files (evmd/ → infinited/)
+- **Deleted:** 22 files (renamed, not actually deleted)
+
+**Breakdown:**
+- Identity files: 7 files
+- Custom files added: 55 files
+- Renamed files: 55 files
+- Branding files: 5 files (Makefile, NOTICE, README.md, go.mod, go.sum)
 
 ## Validation Commands
 
