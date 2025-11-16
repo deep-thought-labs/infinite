@@ -94,6 +94,22 @@
 
 ---
 
+## 🚀 Quick Start for Developers
+
+**Want to compile and test Infinite Drive locally?**
+
+👉 **[guides/QUICK_START.md](guides/QUICK_START.md)** - Developer entry point
+
+This guide shows you the different available workflows:
+- **All-in-One Workflow**: Compile + configure + start node (`./local_node.sh`)
+- **Compilation Workflow**: Just compile the binary (`make install`)
+- **Testing Workflow**: Validate everything works
+- **Release Workflow**: Create releases with GitHub Actions
+
+**📚 More documentation**: See [guides/README.md](guides/README.md) for complete index
+
+---
+
 ## Run a Node
 
 ### Option 1: Using Drive (Recommended)
@@ -119,7 +135,7 @@ cd infinite
 ./local_node.sh
 ```
 
-[Full Guide →](./guides/GETTING_STARTED.md)
+[Full Guide →](./guides/QUICK_START.md)
 
 ---
 
@@ -152,7 +168,7 @@ cd infinite
 - **Lab**: [Deep Thought Labs](https://deep-thought.computer) - Research laboratory developing Infinite Drive
 - **X**: [@DeepThought_Lab](https://x.com/DeepThought_Lab)
 - **Telegram**: [Deep Thought Labs](https://t.me/+nt8ysid_-8VlMDVh)
-- **Docs**: [Getting Started with Infinite Drive](./guides/GETTING_STARTED.md)
+- **Docs**: [Getting Started with Infinite Drive](./guides/QUICK_START.md)
 - **Client**: [Drive](https://github.com/deep-thought-labs/drive) - Infrastructure management client
 - **License**: [Apache 2.0](./LICENSE)
 - [NOTICE & Attributions](./NOTICE)

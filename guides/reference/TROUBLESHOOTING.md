@@ -418,8 +418,8 @@ find /opt/backups -name "*.tar.gz" -mtime +30 -delete
 
 ## Next Steps
 
-- **[Development Guide](DEVELOPMENT_GUIDE.md)** - Learn more about development and testing
-- **[Production Deployment](PRODUCTION_DEPLOYMENT.md)** - Deploy to production with proper monitoring
-- **[Node Health Scripts](NODE_HEALTH_SCRIPTS.md)** - Comprehensive health monitoring and verification tools
+- **[Development Guide](../development/DEVELOPMENT.md)** - Learn more about development and testing
+- **[Production Deployment](../deployment/PRODUCTION.md)** - Deploy to production with proper monitoring
+- **[Node Health Scripts](../infrastructure/HEALTH_CHECKS.md)** - Comprehensive health monitoring and verification tools
 - **Community Support**: Join discussions and get help from other users
 - **Report Issues**: Help improve Infinite Drive by reporting bugs

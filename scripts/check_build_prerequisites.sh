@@ -181,7 +181,7 @@ else
     echo -e "${RED}❌ Some prerequisites are missing or misconfigured${NC}"
     echo ""
     echo "Please install the missing components before proceeding."
-    echo "See: guides/BUILDING_AND_RELEASES.md for detailed installation instructions"
+    echo "See: guides/development/BUILDING.md for detailed installation instructions"
     exit 1
 fi
 
