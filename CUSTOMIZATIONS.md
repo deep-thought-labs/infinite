@@ -104,13 +104,24 @@ If you see significantly more or different files, generate a fresh comparison re
 ## Chain IDs
 
 ### Values
-- Cosmos Chain ID: `infinite_421018-1`
-- EVM Chain ID: `421018` (decimal), `0x66c9a` (hex)
+- **Mainnet**:
+  - Cosmos Chain ID: `infinite_421018-1`
+  - EVM Chain ID: `421018` (decimal), `0x66c9a` (hex)
+- **Testnet**:
+  - Cosmos Chain ID: `infinite_421018001-1`
+  - EVM Chain ID: `421018001` (decimal)
+- **Creative**:
+  - Cosmos Chain ID: `infinite_421018002-1`
+  - EVM Chain ID: `421018002` (decimal)
 
 ### Files
 - `testutil/constants/constants.go`: ExampleChainID, EighteenDecimalsChainID
 - `x/vm/types/params.go`: DefaultEVMChainID
 - `local_node.sh`: CHAINID, EVM_CHAIN_ID
+- `scripts/genesis-configs/mainnet.json`: `cosmos.chain_id`, `evm.chain_id`
+- `scripts/genesis-configs/testnet.json`: `cosmos.chain_id`, `evm.chain_id`
+- `scripts/genesis-configs/creative.json`: `cosmos.chain_id`, `evm.chain_id`
+- `scripts/customize_genesis.sh`: `configure_cosmos_chain_id()` function applies Cosmos Chain ID from config files
 
 ## Bech32 Prefixes
 

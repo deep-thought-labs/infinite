@@ -34,6 +34,7 @@ TOKEN_NAME=""
 TOKEN_DESCRIPTION=""
 TOKEN_URI=""
 EVM_CHAIN_ID=0
+COSMOS_CHAIN_ID=""
 NETWORK_MODE=""
 CONFIG_FILE=""
 
@@ -137,12 +138,14 @@ configure_network_values() {
     TOKEN_DESCRIPTION=$(jq -r '.token.description' "$CONFIG_FILE")
     TOKEN_URI=$(jq -r '.token.uri' "$CONFIG_FILE")
     EVM_CHAIN_ID=$(jq -r '.evm.chain_id' "$CONFIG_FILE")
+    COSMOS_CHAIN_ID=$(jq -r '.cosmos.chain_id' "$CONFIG_FILE")
     
     print_info "Configuring for network: $NETWORK_MODE"
     print_info "Base denom: $BASE_DENOM"
     print_info "Display denom: $DISPLAY_DENOM"
     print_info "Symbol: $SYMBOL"
     print_info "EVM Chain ID: $EVM_CHAIN_ID"
+    print_info "Cosmos Chain ID: $COSMOS_CHAIN_ID"
 }
 
 # Check prerequisites
@@ -191,6 +194,17 @@ apply_jq_modification() {
         print_error "Failed to apply: $description"
         return 1
     fi
+}
+
+# Configure Cosmos Chain ID
+configure_cosmos_chain_id() {
+    local genesis_file="$1"
+    
+    print_info "Configuring Cosmos Chain ID to '$COSMOS_CHAIN_ID'..."
+    
+    apply_jq_modification "$genesis_file" \
+        ".chain_id=\"$COSMOS_CHAIN_ID\"" \
+        "Cosmos Chain ID → $COSMOS_CHAIN_ID"
 }
 
 # Customize module denominations
@@ -617,6 +631,7 @@ main() {
     echo ""
     
     # Apply customizations
+    configure_cosmos_chain_id "$GENESIS_FILE"
     customize_denominations "$GENESIS_FILE"
     add_token_metadata "$GENESIS_FILE"
     configure_evm_precompiles "$GENESIS_FILE"

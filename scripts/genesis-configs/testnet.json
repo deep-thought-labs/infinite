@@ -11,6 +11,9 @@
   "evm": {
     "chain_id": 421018001
   },
+  "cosmos": {
+    "chain_id": "infinite_421018001-1"
+  },
   "staking": {
     "unbonding_time": "1814400s",
     "max_validators": 100,

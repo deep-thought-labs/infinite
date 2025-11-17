@@ -116,15 +116,23 @@ check "scripts/customize_genesis.sh" "configure_fee_market_module" "Script confi
 check "scripts/customize_genesis.sh" "configure_distribution_module" "Script configures distribution module"
 check "scripts/customize_genesis.sh" "load_config_file" "Script loads configuration from JSON files"
 check "scripts/customize_genesis.sh" "genesis-configs" "Script references genesis-configs directory"
+check "scripts/customize_genesis.sh" "configure_cosmos_chain_id" "Script configures Cosmos Chain ID"
+check "scripts/customize_genesis.sh" "COSMOS_CHAIN_ID" "Script uses COSMOS_CHAIN_ID variable"
 
 # Genesis configuration files (REQUIRED for script to work)
 echo "Genesis configuration files..."
 check "scripts/genesis-configs/mainnet.json" "mainnet" "Mainnet configuration file exists"
 check "scripts/genesis-configs/mainnet.json" "base_denom" "Mainnet config contains base_denom"
+check "scripts/genesis-configs/mainnet.json" "\"cosmos\"" "Mainnet config contains cosmos section"
+check "scripts/genesis-configs/mainnet.json" "infinite_421018-1" "Mainnet config contains correct Cosmos Chain ID"
 check "scripts/genesis-configs/testnet.json" "testnet" "Testnet configuration file exists"
 check "scripts/genesis-configs/testnet.json" "base_denom" "Testnet config contains base_denom"
+check "scripts/genesis-configs/testnet.json" "\"cosmos\"" "Testnet config contains cosmos section"
+check "scripts/genesis-configs/testnet.json" "infinite_421018001-1" "Testnet config contains correct Cosmos Chain ID"
 check "scripts/genesis-configs/creative.json" "creative" "Creative configuration file exists"
 check "scripts/genesis-configs/creative.json" "base_denom" "Creative config contains base_denom"
+check "scripts/genesis-configs/creative.json" "\"cosmos\"" "Creative config contains cosmos section"
+check "scripts/genesis-configs/creative.json" "infinite_421018002-1" "Creative config contains correct Cosmos Chain ID"
 
 # ModuleAccounts vesting setup script
 echo "ModuleAccounts vesting setup script..."
