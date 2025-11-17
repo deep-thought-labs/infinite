@@ -398,6 +398,127 @@ These files contain all parameters for each network, making it easy to modify va
 
 ---
 
+## ModuleAccounts Vesting Setup Script
+
+### `scripts/setup_module_accounts.sh`
+
+**Purpose**: Generate commands (does NOT execute them) for configuring ModuleAccounts with linear vesting in genesis.json for mainnet, testnet, or creative networks.
+
+**What it does**:
+- Reads network-specific vesting configuration from `*-vesting.json` files
+- Converts token amounts from full units to atomic units (multiplies by 10^18)
+- Generates `infinited genesis add-module-vesting-account` commands for each pool
+- Displays vesting start/end times in both Unix timestamp and UTC human-readable format
+- Calculates and displays vesting duration in human-readable format (e.g., "14 years and 364 days")
+- Conditionally includes `--permissions` flag only if permissions are specified in config
+- Provides clear, copy-paste ready commands with proper formatting
+
+**When to use**:
+- **Network genesis creation**: When setting up ModuleAccounts with vesting for mainnet, testnet, or creative networks (one-time setup process)
+- As part of the network deployment pipeline after running `customize_genesis.sh`
+- When you need to configure treasury, development, or community pools with vesting schedules
+
+**When NOT to use**:
+- **Regular local development**: Not needed for local testing chains
+- For quick local testing: This is only for production network setup
+
+**Usage**:
+```bash
+./scripts/setup_module_accounts.sh --network <mainnet|testnet|creative> [--genesis-dir <path>]
+```
+
+**Example**:
+```bash
+# Generate commands for mainnet ModuleAccounts
+./scripts/setup_module_accounts.sh --network mainnet
+
+# Or specify a custom genesis directory
+./scripts/setup_module_accounts.sh --network testnet --genesis-dir ~/.infinited-testnet
+
+# Or for creative network
+./scripts/setup_module_accounts.sh --network creative
+```
+
+**Expected output** (mainnet example):
+```
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ModuleAccounts Setup Commands for MAINNET
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+ℹ Network: mainnet
+ℹ Genesis directory: /Users/alberto/.infinited
+ℹ Base denom: drop
+ℹ Vesting start time: 1735689600 (2025-01-01 00:00:00 UTC)
+ℹ Vesting end time: 2208988800 (2040-01-01 00:00:00 UTC) - Duration: 14 years and 364 days
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Commands to Execute
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+ℹ Copy and paste each command below in order:
+
+infinited genesis add-module-vesting-account treasury --module-name treasury --vesting-amount 1000000000000000000000000drop --vesting-start-time 1735689600 --vesting-end-time 2208988800 --permissions minter,burner --home /Users/alberto/.infinited
+
+infinited genesis add-module-vesting-account development --module-name development --vesting-amount 500000000000000000000000drop --vesting-start-time 1735689600 --vesting-end-time 2208988800 --permissions minter,burner --home /Users/alberto/.infinited
+
+infinited genesis add-module-vesting-account community --module-name community --vesting-amount 300000000000000000000000drop --vesting-start-time 1735689600 --vesting-end-time 2208988800 --permissions minter,burner --home /Users/alberto/.infinited
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Summary
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+ℹ Configuration:
+  - Network: mainnet
+  - Base denom: drop
+  - Module accounts: 3
+  - Vesting start: 1735689600 (2025-01-01 00:00:00 UTC)
+  - Vesting end: 2208988800 (2040-01-01 00:00:00 UTC) - Duration: 14 years and 364 days
+
+ℹ Next steps:
+  1. Copy and paste each command above in order
+  2. Validate the genesis file: infinited genesis validate --home /Users/alberto/.infinited
+```
+
+**Configuration Files**:
+The script reads vesting configuration from JSON files located in `scripts/genesis-configs/`:
+- `mainnet-vesting.json` - Mainnet ModuleAccounts vesting configuration
+- `testnet-vesting.json` - Testnet ModuleAccounts vesting configuration
+- `creative-vesting.json` - Creative network ModuleAccounts vesting configuration
+
+Each vesting configuration file contains:
+- `vesting_start_time`: Unix timestamp for vesting start
+- `vesting_end_time`: Unix timestamp for vesting end
+- `fee_burn_percent`: Percentage of fees to burn (for future use)
+- `pools`: Array of ModuleAccount pools, each with:
+  - `name`: Module account name
+  - `amount_tokens`: Amount in full token units (will be converted to atomic units)
+  - `permissions`: Optional permissions (e.g., "minter,burner")
+  - `fee_share_percent`: Percentage of fee recirculation (for future use)
+
+**Prerequisites**:
+- `jq` must be installed
+- `bc` is recommended for precise calculations (optional, has fallback)
+- Vesting configuration file for the specified network must exist in `scripts/genesis-configs/`
+- Network configuration file (e.g., `mainnet.json`) must exist to read base denom
+
+**Notes**:
+- **This script does NOT execute any commands** - it only prints them for manual execution
+- All times are displayed in UTC for consistency in public genesis files
+- Token amounts are automatically converted from full units to atomic units (× 10^18)
+- The `--permissions` flag is only included if permissions are specified in the config
+- Commands are ready to copy and paste in the exact order shown
+- Always validate the genesis file after executing the generated commands
+
+**Integration with Genesis Creation Process**:
+This script is typically used **after** running `customize_genesis.sh`:
+1. Run `infinited init` to generate base genesis
+2. Run `customize_genesis.sh` to apply all module customizations
+3. Run `setup_module_accounts.sh` to generate ModuleAccount vesting commands
+4. Execute the generated commands manually
+5. Validate with `infinited genesis validate`
+
+---
+
 ## 🧪 Testing Scripts
 
 ### 10. Compatibility Scripts
@@ -521,6 +642,8 @@ head -10 scripts/*.sh | grep -B 5 "Deep Thought Labs"
 - `verify_command_name.sh`
 - `test_outputs_before.sh`
 - `compare_outputs.sh`
+- `customize_genesis.sh`
+- `setup_module_accounts.sh`
 
 ---
 

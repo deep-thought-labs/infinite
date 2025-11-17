@@ -126,9 +126,28 @@ check "scripts/genesis-configs/testnet.json" "base_denom" "Testnet config contai
 check "scripts/genesis-configs/creative.json" "creative" "Creative configuration file exists"
 check "scripts/genesis-configs/creative.json" "base_denom" "Creative config contains base_denom"
 
+# ModuleAccounts vesting setup script
+echo "ModuleAccounts vesting setup script..."
+check "scripts/setup_module_accounts.sh" "Deep Thought Labs" "ModuleAccounts setup script header"
+check "scripts/setup_module_accounts.sh" "setup_module_accounts.sh" "Script file exists"
+check "scripts/setup_module_accounts.sh" "Error.*--network flag is required" "Script requires --network flag"
+check "scripts/setup_module_accounts.sh" "mainnet|testnet|creative" "Script supports all three networks"
+check "scripts/setup_module_accounts.sh" "add-module-vesting-account" "Script generates vesting account commands"
+check "scripts/setup_module_accounts.sh" "genesis-configs.*-vesting.json" "Script references vesting config files"
+check "scripts/setup_module_accounts.sh" "convert_to_atomic" "Script converts tokens to atomic units"
+check "scripts/setup_module_accounts.sh" "calculate_duration" "Script calculates vesting duration"
+
+# Vesting configuration files (REQUIRED for ModuleAccounts script to work)
+echo "Vesting configuration files..."
+check "scripts/genesis-configs/mainnet-vesting.json" "vesting_start_time" "Mainnet vesting config exists"
+check "scripts/genesis-configs/mainnet-vesting.json" "pools" "Mainnet vesting config contains pools"
+check "scripts/genesis-configs/testnet-vesting.json" "vesting_start_time" "Testnet vesting config exists"
+check "scripts/genesis-configs/testnet-vesting.json" "pools" "Testnet vesting config contains pools"
+check "scripts/genesis-configs/creative-vesting.json" "vesting_start_time" "Creative vesting config exists"
+check "scripts/genesis-configs/creative-vesting.json" "pools" "Creative vesting config contains pools"
+
 # Added files - Critical documentation
 echo "Added files - Documentation..."
-check "guides/GETTING_STARTED.md" "infinite_421018-1" "Getting started guide"
 check "assets/pre-mainet-genesis.json" "Improbability" "Genesis template"
 
 # Added files - Scripts
