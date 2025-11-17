@@ -75,7 +75,7 @@ If you see significantly more or different files, generate a fresh comparison re
   - `NewGovGenesisState()`: Sets `gov.params.min_deposit[].denom` and `gov.params.expedited_min_deposit[].denom` to "drop"
 - `infinited/app.go`: `DefaultGenesis()` function that applies the custom genesis states above
 - `infinited/tests/integration/create_app.go`: Test app creation with identity configuration
-- `scripts/customize_genesis.sh`: **REQUIRED SCRIPT** - Standalone script to customize generated genesis.json with all Infinite Drive personalizations. **MUST be executed after `infinited init`** to apply:
+- `scripts/customize_genesis.sh`: **Mainnet/Testnet Genesis Setup Script** - Standalone script to customize generated genesis.json with all Infinite Drive personalizations. **Used specifically for mainnet/testnet creation process** (not required for regular users running local chains). Applies:
   - All module denominations (staking, mint, gov, evm) → "drop"
   - Complete token metadata for Improbability (42) token
   - EVM static precompiles configuration
@@ -83,7 +83,8 @@ If you see significantly more or different files, generate a fresh comparison re
   - Consensus max_gas parameter
   - Creates automatic backup before modifications
   - **Usage**: `./scripts/customize_genesis.sh <genesis_file_path>`
-  - **When**: Immediately after running `infinited init` and before adding accounts/validators
+  - **When**: During mainnet/testnet genesis creation process, after `infinited init` and before adding accounts/validators
+  - **Note**: Regular users running local development chains should use `local_node.sh` instead, which includes this customization automatically
 - `local_node.sh`: Development script that includes genesis customization (uses same logic as customize_genesis.sh) plus account creation, funding, and node startup
 - `assets/pre-mainet-genesis.json`: Token metadata
 

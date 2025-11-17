@@ -307,10 +307,13 @@ make install
 - Creates automatic backup before modifications
 
 **When to use**:
-- After running `infinited init` to customize the generated genesis
-- When preparing a genesis file for testnet or mainnet
-- As part of a deployment pipeline
-- When you need to ensure all Infinite Drive customizations are applied
+- **Mainnet/Testnet creation**: When preparing a genesis file for mainnet or testnet (one-time setup process)
+- As part of the mainnet/testnet deployment pipeline
+- When you need to ensure all Infinite Drive customizations are applied to a genesis file
+
+**When NOT to use**:
+- **Regular local development**: Use `local_node.sh` instead, which handles genesis customization automatically
+- For quick local testing: `local_node.sh` is the recommended approach
 
 **Usage**:
 ```bash
