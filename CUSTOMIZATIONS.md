@@ -75,7 +75,7 @@ If you see significantly more or different files, generate a fresh comparison re
   - `NewGovGenesisState()`: Sets `gov.params.min_deposit[].denom` and `gov.params.expedited_min_deposit[].denom` to "drop"
 - `infinited/app.go`: `DefaultGenesis()` function that applies the custom genesis states above
 - `infinited/tests/integration/create_app.go`: Test app creation with identity configuration
-- `scripts/customize_genesis.sh`: **Network Genesis Configuration Script** - Standalone script to customize generated genesis.json with all Infinite Drive personalizations for mainnet, testnet, or creative networks. **Used specifically for network genesis creation process** (not required for regular users running local chains). Applies:
+- `scripts/customize_genesis.sh`: **Network Genesis Configuration Script** - Standalone script to customize generated genesis.json with all Infinite Drive personalizations for mainnet, testnet, or creative networks. **Used specifically for network genesis creation process** (not required for regular users running local chains). The script reads all configuration values from external JSON files (see below) rather than hardcoding them. Applies:
   - All module denominations (staking, mint, gov, evm) → network-specific denom (drop/tdrop/cdrop)
   - Complete token metadata for network-specific token (Improbability/TestImprobability/CreativeImprobability)
   - EVM static precompiles configuration
@@ -91,6 +91,9 @@ If you see significantly more or different files, generate a fresh comparison re
   - **Usage**: `./scripts/customize_genesis.sh <genesis_file_path> --network <mainnet|testnet|creative>`
   - **When**: During network genesis creation process, after `infinited init` and before adding accounts/validators
   - **Note**: Regular users running local development chains should use `local_node.sh` instead, which includes this customization automatically
+- `scripts/genesis-configs/mainnet.json`: **Mainnet Configuration File** - JSON configuration file containing all network-specific parameters for mainnet (production network). Includes token settings, staking parameters, mint inflation rates, governance periods, slashing penalties, fee market settings, distribution parameters, and consensus settings. The script reads this file when `--network mainnet` is specified.
+- `scripts/genesis-configs/testnet.json`: **Testnet Configuration File** - JSON configuration file containing all network-specific parameters for testnet (testing network, similar to mainnet). Includes token settings, staking parameters, mint inflation rates, governance periods, slashing penalties, fee market settings, distribution parameters, and consensus settings. The script reads this file when `--network testnet` is specified.
+- `scripts/genesis-configs/creative.json`: **Creative Network Configuration File** - JSON configuration file containing all network-specific parameters for creative network (experimental playground network with minimal fees and no inflation). Includes token settings, staking parameters (shorter unbonding time, fewer validators), mint inflation rates (0%), governance periods (faster), slashing penalties (more lenient), fee market settings (no base fee), distribution parameters (minimal), and consensus settings (higher max_gas). The script reads this file when `--network creative` is specified.
 - `local_node.sh`: Development script that includes genesis customization (uses same logic as customize_genesis.sh) plus account creation, funding, and node startup
 - `assets/pre-mainet-genesis.json`: Token metadata
 

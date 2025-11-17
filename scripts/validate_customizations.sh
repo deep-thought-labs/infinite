@@ -106,7 +106,7 @@ check "NOTICE" "Deep Thought Labs" "Copyright in NOTICE"
 echo "Genesis customization script..."
 check "scripts/customize_genesis.sh" "Deep Thought Labs" "Genesis customization script header"
 check "scripts/customize_genesis.sh" "customize_genesis.sh" "Script file exists"
-check "scripts/customize_genesis.sh" "--network" "Script requires --network flag"
+check "scripts/customize_genesis.sh" "Error.*--network flag is required" "Script requires --network flag"
 check "scripts/customize_genesis.sh" "mainnet|testnet|creative" "Script supports all three networks"
 check "scripts/customize_genesis.sh" "configure_staking_module" "Script configures staking module"
 check "scripts/customize_genesis.sh" "configure_mint_module" "Script configures mint module"
@@ -114,6 +114,17 @@ check "scripts/customize_genesis.sh" "configure_governance_module" "Script confi
 check "scripts/customize_genesis.sh" "configure_slashing_module" "Script configures slashing module"
 check "scripts/customize_genesis.sh" "configure_fee_market_module" "Script configures fee market module"
 check "scripts/customize_genesis.sh" "configure_distribution_module" "Script configures distribution module"
+check "scripts/customize_genesis.sh" "load_config_file" "Script loads configuration from JSON files"
+check "scripts/customize_genesis.sh" "genesis-configs" "Script references genesis-configs directory"
+
+# Genesis configuration files (REQUIRED for script to work)
+echo "Genesis configuration files..."
+check "scripts/genesis-configs/mainnet.json" "mainnet" "Mainnet configuration file exists"
+check "scripts/genesis-configs/mainnet.json" "base_denom" "Mainnet config contains base_denom"
+check "scripts/genesis-configs/testnet.json" "testnet" "Testnet configuration file exists"
+check "scripts/genesis-configs/testnet.json" "base_denom" "Testnet config contains base_denom"
+check "scripts/genesis-configs/creative.json" "creative" "Creative configuration file exists"
+check "scripts/genesis-configs/creative.json" "base_denom" "Creative config contains base_denom"
 
 # Added files - Critical documentation
 echo "Added files - Documentation..."

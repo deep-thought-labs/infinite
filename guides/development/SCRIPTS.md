@@ -377,9 +377,18 @@ infinited genesis validate-genesis
 ℹ Genesis file customized successfully for mainnet!
 ```
 
+**Configuration Files**:
+The script reads all network-specific values from JSON configuration files located in `scripts/genesis-configs/`:
+- `mainnet.json` - Production network configuration
+- `testnet.json` - Testing network configuration (similar to mainnet)
+- `creative.json` - Experimental playground network configuration (minimal fees, no inflation)
+
+These files contain all parameters for each network, making it easy to modify values without editing the script code. The structure is consistent across all three files, with different values for each network.
+
 **Prerequisites**:
 - `jq` must be installed
 - Valid `genesis.json` file must exist
+- Configuration file for the specified network must exist in `scripts/genesis-configs/`
 
 **Notes**:
 - The script creates a timestamped backup automatically
