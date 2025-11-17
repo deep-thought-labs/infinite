@@ -840,7 +840,8 @@ infinited start \
 - [Cosmos SDK Genesis Documentation](https://docs.cosmos.network/main/building-modules/genesis)
 - [CometBFT Genesis Documentation](https://docs.cometbft.com/v0.38/core/genesis)
 - Production Guide: `guides/deployment/PRODUCTION.md`
-- Example file for development: `local_node.sh` (lines 233-256)
+- **Genesis Customization Script**: `scripts/customize_genesis.sh` - **⚠️ REQUIRED: Execute this after `infinited init`**
+- Development example: `local_node.sh` (lines 233-256) - Includes genesis customization plus account setup
 
 ---
 
