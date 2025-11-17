@@ -12,13 +12,12 @@
     {
       "name": "development",
       "amount_tokens": 500000,
-      "permissions": "minter,burner",
+      "permissions": "",
       "fee_share_percent": 20.0
     },
     {
       "name": "community",
       "amount_tokens": 300000,
-      "permissions": "minter,burner",
       "fee_share_percent": 10.0
     }
   ]
