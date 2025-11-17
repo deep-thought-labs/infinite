@@ -102,6 +102,13 @@ check "Makefile" "infinited" "Binary name in Makefile"
 echo "Copyright..."
 check "NOTICE" "Deep Thought Labs" "Copyright in NOTICE"
 
+# Genesis customization script (REQUIRED for proper genesis setup)
+echo "Genesis customization script..."
+check "scripts/customize_genesis.sh" "Deep Thought Labs" "Genesis customization script header"
+check "scripts/customize_genesis.sh" "customize_genesis.sh" "Script file exists"
+check "scripts/customize_genesis.sh" "BASE_DENOM=\"drop\"" "Script uses drop denomination"
+check "scripts/customize_genesis.sh" "DISPLAY_DENOM=\"Improbability\"" "Script uses Improbability display"
+
 # Added files - Critical documentation
 echo "Added files - Documentation..."
 check "guides/GETTING_STARTED.md" "infinite_421018-1" "Getting started guide"
