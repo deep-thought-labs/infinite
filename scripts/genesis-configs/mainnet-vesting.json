@@ -1,0 +1,26 @@
+{
+  "vesting_start_time": 1735689600,
+  "vesting_end_time": 2208988800,
+  "fee_burn_percent": 40,
+  "pools": [
+    {
+      "name": "treasury",
+      "amount_tokens": 1000000,
+      "permissions": "minter,burner",
+      "fee_share_percent": 30.0
+    },
+    {
+      "name": "development",
+      "amount_tokens": 500000,
+      "permissions": "minter,burner",
+      "fee_share_percent": 20.0
+    },
+    {
+      "name": "community",
+      "amount_tokens": 300000,
+      "permissions": "minter,burner",
+      "fee_share_percent": 10.0
+    }
+  ]
+}
+

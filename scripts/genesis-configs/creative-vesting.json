@@ -1,0 +1,14 @@
+{
+  "vesting_start_time": 1735689600,
+  "vesting_end_time": 1893456000,
+  "fee_burn_percent": 0,
+  "pools": [
+    {
+      "name": "faucet",
+      "amount_tokens": 10000000,
+      "permissions": "minter,burner",
+      "fee_share_percent": 100.0
+    }
+  ]
+}
+
