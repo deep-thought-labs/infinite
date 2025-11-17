@@ -1,0 +1,71 @@
+{
+  "network": "testnet",
+  "token": {
+    "base_denom": "tdrop",
+    "display_denom": "TestImprobability",
+    "symbol": "TEST42",
+    "name": "TestImprobability",
+    "description": "TestImprobability Token — Project 42 Testnet: Sovereign, Perpetual, DAO-Governed",
+    "uri": ""
+  },
+  "evm": {
+    "chain_id": 421018001
+  },
+  "staking": {
+    "unbonding_time": "1814400s",
+    "max_validators": 100,
+    "historical_entries": 10000,
+    "max_entries": 7,
+    "min_commission_rate": "0.000000000000000000"
+  },
+  "mint": {
+    "inflation_min": "0.070000000000000000",
+    "inflation_max": "0.200000000000000000",
+    "inflation_rate_change": "0.130000000000000000",
+    "goal_bonded": "0.670000000000000000",
+    "blocks_per_year": "6311520",
+    "initial_inflation": "0.130000000000000000",
+    "initial_annual_provisions": "0.000000000000000000"
+  },
+  "governance": {
+    "max_deposit_period": "172800s",
+    "voting_period": "172800s",
+    "expedited_voting_period": "86400s",
+    "min_deposit": "1000000000000000000",
+    "expedited_min_deposit": "5000000000000000000",
+    "quorum": "0.334000000000000000",
+    "threshold": "0.500000000000000000",
+    "veto_threshold": "0.334000000000000000"
+  },
+  "slashing": {
+    "signed_blocks_window": 10000,
+    "min_signed_per_window": "0.050000000000000000",
+    "downtime_jail_duration": "600s",
+    "slash_fraction_double_sign": "0.050000000000000000",
+    "slash_fraction_downtime": "0.000100000000000000"
+  },
+  "fee_market": {
+    "no_base_fee": false,
+    "base_fee": "1000000000",
+    "min_gas_price": "0",
+    "min_gas_multiplier": "0.500000000000000000",
+    "base_fee_change_denominator": 8,
+    "elasticity_multiplier": 2,
+    "enable_height": 0,
+    "block_gas": "0"
+  },
+  "distribution": {
+    "community_tax": "0.020000000000000000",
+    "base_proposer_reward": "0.010000000000000000",
+    "bonus_proposer_reward": "0.040000000000000000",
+    "withdraw_addr_enabled": true
+  },
+  "consensus": {
+    "max_gas": "10000000",
+    "max_bytes": "22020096",
+    "evidence_max_age_duration": "172800000000000",
+    "evidence_max_age_num_blocks": 100000,
+    "evidence_max_bytes": "1048576"
+  }
+}
+

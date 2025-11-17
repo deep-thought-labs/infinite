@@ -26,7 +26,7 @@ GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
 NC='\033[0m' # No Color
 
-# Network configuration variables (will be set based on --network flag)
+# Network configuration variables (will be loaded from config file)
 BASE_DENOM=""
 DISPLAY_DENOM=""
 SYMBOL=""
@@ -35,6 +35,7 @@ TOKEN_DESCRIPTION=""
 TOKEN_URI=""
 EVM_CHAIN_ID=0
 NETWORK_MODE=""
+CONFIG_FILE=""
 
 # Print colored messages
 print_info() {
@@ -105,37 +106,37 @@ parse_arguments() {
     NETWORK_MODE="$network"
 }
 
-# Configure network-specific values
+# Load configuration from JSON file
+load_config_file() {
+    local script_dir
+    script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+    CONFIG_FILE="${script_dir}/genesis-configs/${NETWORK_MODE}.json"
+    
+    if [[ ! -f "$CONFIG_FILE" ]]; then
+        print_error "Configuration file not found: $CONFIG_FILE"
+        exit 1
+    fi
+    
+    if ! jq empty "$CONFIG_FILE" 2>/dev/null; then
+        print_error "Invalid JSON configuration file: $CONFIG_FILE"
+        exit 1
+    fi
+    
+    print_info "Loading configuration from: $CONFIG_FILE"
+}
+
+# Configure network-specific values from config file
 configure_network_values() {
-    case "$NETWORK_MODE" in
-        mainnet)
-            BASE_DENOM="drop"
-            DISPLAY_DENOM="Improbability"
-            SYMBOL="42"
-            TOKEN_NAME="Improbability"
-            TOKEN_DESCRIPTION="Improbability Token — Project 42: Sovereign, Perpetual, DAO-Governed"
-            TOKEN_URI=""
-            EVM_CHAIN_ID=421018
-            ;;
-        testnet)
-            BASE_DENOM="tdrop"
-            DISPLAY_DENOM="TestImprobability"
-            SYMBOL="TEST42"
-            TOKEN_NAME="TestImprobability"
-            TOKEN_DESCRIPTION="TestImprobability Token — Project 42 Testnet: Sovereign, Perpetual, DAO-Governed"
-            TOKEN_URI=""
-            EVM_CHAIN_ID=421018001
-            ;;
-        creative)
-            BASE_DENOM="cdrop"
-            DISPLAY_DENOM="CreativeImprobability"
-            SYMBOL="CRE42"
-            TOKEN_NAME="CreativeImprobability"
-            TOKEN_DESCRIPTION="CreativeImprobability Token — Project 42 Creative: Experimental Playground Network"
-            TOKEN_URI=""
-            EVM_CHAIN_ID=421018002
-            ;;
-    esac
+    load_config_file
+    
+    # Load token configuration
+    BASE_DENOM=$(jq -r '.token.base_denom' "$CONFIG_FILE")
+    DISPLAY_DENOM=$(jq -r '.token.display_denom' "$CONFIG_FILE")
+    SYMBOL=$(jq -r '.token.symbol' "$CONFIG_FILE")
+    TOKEN_NAME=$(jq -r '.token.name' "$CONFIG_FILE")
+    TOKEN_DESCRIPTION=$(jq -r '.token.description' "$CONFIG_FILE")
+    TOKEN_URI=$(jq -r '.token.uri' "$CONFIG_FILE")
+    EVM_CHAIN_ID=$(jq -r '.evm.chain_id' "$CONFIG_FILE")
     
     print_info "Configuring for network: $NETWORK_MODE"
     print_info "Base denom: $BASE_DENOM"
@@ -311,51 +312,33 @@ configure_staking_module() {
     
     print_info "Configuring Staking Module parameters..."
     
-    # Unbonding time: 21 days for mainnet/testnet, 1 day for creative
-    local unbonding_time
-    if [[ "$NETWORK_MODE" == "creative" ]]; then
-        unbonding_time="86400s"  # 1 day
-    else
-        unbonding_time="1814400s"  # 21 days
-    fi
+    local unbonding_time max_validators historical_entries max_entries min_commission_rate
+    
+    unbonding_time=$(jq -r '.staking.unbonding_time' "$CONFIG_FILE")
+    max_validators=$(jq -r '.staking.max_validators' "$CONFIG_FILE")
+    historical_entries=$(jq -r '.staking.historical_entries' "$CONFIG_FILE")
+    max_entries=$(jq -r '.staking.max_entries' "$CONFIG_FILE")
+    min_commission_rate=$(jq -r '.staking.min_commission_rate' "$CONFIG_FILE")
     
     apply_jq_modification "$genesis_file" \
         ".app_state[\"staking\"][\"params\"][\"unbonding_time\"]=\"$unbonding_time\"" \
         "Staking unbonding_time → $unbonding_time"
     
-    # Max validators: 100 for mainnet/testnet, 50 for creative
-    local max_validators
-    if [[ "$NETWORK_MODE" == "creative" ]]; then
-        max_validators=50
-    else
-        max_validators=100
-    fi
-    
     apply_jq_modification "$genesis_file" \
         ".app_state[\"staking\"][\"params\"][\"max_validators\"]=$max_validators" \
         "Staking max_validators → $max_validators"
-    
-    # Historical entries: 10000 for mainnet/testnet, 1000 for creative
-    local historical_entries
-    if [[ "$NETWORK_MODE" == "creative" ]]; then
-        historical_entries=1000
-    else
-        historical_entries=10000
-    fi
     
     apply_jq_modification "$genesis_file" \
         ".app_state[\"staking\"][\"params\"][\"historical_entries\"]=$historical_entries" \
         "Staking historical_entries → $historical_entries"
     
-    # Max entries: 7 for all networks
     apply_jq_modification "$genesis_file" \
-        '.app_state["staking"]["params"]["max_entries"]=7' \
-        "Staking max_entries → 7"
+        ".app_state[\"staking\"][\"params\"][\"max_entries\"]=$max_entries" \
+        "Staking max_entries → $max_entries"
     
-    # Min commission rate: 0% for all networks
     apply_jq_modification "$genesis_file" \
-        '.app_state["staking"]["params"]["min_commission_rate"]="0.000000000000000000"' \
-        "Staking min_commission_rate → 0%"
+        ".app_state[\"staking\"][\"params\"][\"min_commission_rate\"]=\"$min_commission_rate\"" \
+        "Staking min_commission_rate → $min_commission_rate"
 }
 
 # Configure Mint Module parameters (inflation)
@@ -364,24 +347,16 @@ configure_mint_module() {
     
     print_info "Configuring Mint Module parameters (inflation)..."
     
-    # Inflation parameters
-    local inflation_min inflation_max inflation_rate_change goal_bonded initial_inflation
+    local inflation_min inflation_max inflation_rate_change goal_bonded blocks_per_year
+    local initial_inflation initial_annual_provisions
     
-    if [[ "$NETWORK_MODE" == "creative" ]]; then
-        # Creative: No inflation (0%)
-        inflation_min="0.000000000000000000"
-        inflation_max="0.000000000000000000"
-        inflation_rate_change="0.000000000000000000"
-        goal_bonded="0.500000000000000000"  # 50%
-        initial_inflation="0.000000000000000000"
-    else
-        # Mainnet/Testnet: Standard inflation (7-20%)
-        inflation_min="0.070000000000000000"  # 7%
-        inflation_max="0.200000000000000000"  # 20%
-        inflation_rate_change="0.130000000000000000"  # 13%
-        goal_bonded="0.670000000000000000"  # 67%
-        initial_inflation="0.130000000000000000"  # 13%
-    fi
+    inflation_min=$(jq -r '.mint.inflation_min' "$CONFIG_FILE")
+    inflation_max=$(jq -r '.mint.inflation_max' "$CONFIG_FILE")
+    inflation_rate_change=$(jq -r '.mint.inflation_rate_change' "$CONFIG_FILE")
+    goal_bonded=$(jq -r '.mint.goal_bonded' "$CONFIG_FILE")
+    blocks_per_year=$(jq -r '.mint.blocks_per_year' "$CONFIG_FILE")
+    initial_inflation=$(jq -r '.mint.initial_inflation' "$CONFIG_FILE")
+    initial_annual_provisions=$(jq -r '.mint.initial_annual_provisions' "$CONFIG_FILE")
     
     apply_jq_modification "$genesis_file" \
         ".app_state[\"mint\"][\"params\"][\"inflation_min\"]=\"$inflation_min\"" \
@@ -399,20 +374,17 @@ configure_mint_module() {
         ".app_state[\"mint\"][\"params\"][\"goal_bonded\"]=\"$goal_bonded\"" \
         "Mint goal_bonded → $goal_bonded"
     
-    # Blocks per year: 6311520 for all networks (based on ~5s block time)
     apply_jq_modification "$genesis_file" \
-        '.app_state["mint"]["params"]["blocks_per_year"]="6311520"' \
-        "Mint blocks_per_year → 6311520"
+        ".app_state[\"mint\"][\"params\"][\"blocks_per_year\"]=\"$blocks_per_year\"" \
+        "Mint blocks_per_year → $blocks_per_year"
     
-    # Initial inflation in minter
     apply_jq_modification "$genesis_file" \
         ".app_state[\"mint\"][\"minter\"][\"inflation\"]=\"$initial_inflation\"" \
         "Mint minter.inflation → $initial_inflation"
     
-    # Annual provisions starts at 0
     apply_jq_modification "$genesis_file" \
-        '.app_state["mint"]["minter"]["annual_provisions"]="0.000000000000000000"' \
-        "Mint minter.annual_provisions → 0"
+        ".app_state[\"mint\"][\"minter\"][\"annual_provisions\"]=\"$initial_annual_provisions\"" \
+        "Mint minter.annual_provisions → $initial_annual_provisions"
 }
 
 # Configure Governance Module parameters
@@ -421,32 +393,18 @@ configure_governance_module() {
     
     print_info "Configuring Governance Module parameters..."
     
-    # Voting periods and deposits
     local max_deposit_period voting_period expedited_voting_period
     local min_deposit expedited_min_deposit
     local quorum threshold veto_threshold
     
-    if [[ "$NETWORK_MODE" == "creative" ]]; then
-        # Creative: Fast periods for experimentation
-        max_deposit_period="3600s"  # 1 hour
-        voting_period="3600s"  # 1 hour
-        expedited_voting_period="1800s"  # 30 minutes
-        min_deposit="100000000000000000"  # 0.1 token
-        expedited_min_deposit="1000000000000000000"  # 1 token
-        quorum="0.100000000000000000"  # 10%
-        threshold="0.500000000000000000"  # 50%
-        veto_threshold="0.200000000000000000"  # 20%
-    else
-        # Mainnet/Testnet: Standard production periods
-        max_deposit_period="172800s"  # 2 days
-        voting_period="172800s"  # 2 days
-        expedited_voting_period="86400s"  # 1 day
-        min_deposit="1000000000000000000"  # 1 token
-        expedited_min_deposit="5000000000000000000"  # 5 tokens
-        quorum="0.334000000000000000"  # 33.4%
-        threshold="0.500000000000000000"  # 50%
-        veto_threshold="0.334000000000000000"  # 33.4%
-    fi
+    max_deposit_period=$(jq -r '.governance.max_deposit_period' "$CONFIG_FILE")
+    voting_period=$(jq -r '.governance.voting_period' "$CONFIG_FILE")
+    expedited_voting_period=$(jq -r '.governance.expedited_voting_period' "$CONFIG_FILE")
+    min_deposit=$(jq -r '.governance.min_deposit' "$CONFIG_FILE")
+    expedited_min_deposit=$(jq -r '.governance.expedited_min_deposit' "$CONFIG_FILE")
+    quorum=$(jq -r '.governance.quorum' "$CONFIG_FILE")
+    threshold=$(jq -r '.governance.threshold' "$CONFIG_FILE")
+    veto_threshold=$(jq -r '.governance.veto_threshold' "$CONFIG_FILE")
     
     # Update min_deposit amount (denom already set in customize_denominations)
     apply_jq_modification "$genesis_file" \
@@ -489,25 +447,14 @@ configure_slashing_module() {
     
     print_info "Configuring Slashing Module parameters..."
     
-    # Slashing parameters
     local signed_blocks_window min_signed_per_window downtime_jail_duration
     local slash_fraction_double_sign slash_fraction_downtime
     
-    if [[ "$NETWORK_MODE" == "creative" ]]; then
-        # Creative: Lenient slashing for experimentation
-        signed_blocks_window=5000
-        min_signed_per_window="0.010000000000000000"  # 1%
-        downtime_jail_duration="60s"  # 1 minute
-        slash_fraction_double_sign="0.010000000000000000"  # 1%
-        slash_fraction_downtime="0.000010000000000000"  # 0.001%
-    else
-        # Mainnet/Testnet: Standard security parameters
-        signed_blocks_window=10000
-        min_signed_per_window="0.050000000000000000"  # 5%
-        downtime_jail_duration="600s"  # 10 minutes
-        slash_fraction_double_sign="0.050000000000000000"  # 5%
-        slash_fraction_downtime="0.000100000000000000"  # 0.01%
-    fi
+    signed_blocks_window=$(jq -r '.slashing.signed_blocks_window' "$CONFIG_FILE")
+    min_signed_per_window=$(jq -r '.slashing.min_signed_per_window' "$CONFIG_FILE")
+    downtime_jail_duration=$(jq -r '.slashing.downtime_jail_duration' "$CONFIG_FILE")
+    slash_fraction_double_sign=$(jq -r '.slashing.slash_fraction_double_sign' "$CONFIG_FILE")
+    slash_fraction_downtime=$(jq -r '.slashing.slash_fraction_downtime' "$CONFIG_FILE")
     
     apply_jq_modification "$genesis_file" \
         ".app_state[\"slashing\"][\"params\"][\"signed_blocks_window\"]=$signed_blocks_window" \
@@ -536,20 +483,17 @@ configure_fee_market_module() {
     
     print_info "Configuring Fee Market Module parameters..."
     
-    # Fee market parameters
-    local no_base_fee base_fee min_gas_multiplier
+    local no_base_fee base_fee min_gas_price min_gas_multiplier
+    local base_fee_change_denominator elasticity_multiplier enable_height block_gas
     
-    if [[ "$NETWORK_MODE" == "creative" ]]; then
-        # Creative: No base fee (free transactions)
-        no_base_fee=true
-        base_fee="0"
-        min_gas_multiplier="0.100000000000000000"  # 10%
-    else
-        # Mainnet/Testnet: Standard fee market
-        no_base_fee=false
-        base_fee="1000000000"  # 1 gwei
-        min_gas_multiplier="0.500000000000000000"  # 50%
-    fi
+    no_base_fee=$(jq -r '.fee_market.no_base_fee' "$CONFIG_FILE")
+    base_fee=$(jq -r '.fee_market.base_fee' "$CONFIG_FILE")
+    min_gas_price=$(jq -r '.fee_market.min_gas_price' "$CONFIG_FILE")
+    min_gas_multiplier=$(jq -r '.fee_market.min_gas_multiplier' "$CONFIG_FILE")
+    base_fee_change_denominator=$(jq -r '.fee_market.base_fee_change_denominator' "$CONFIG_FILE")
+    elasticity_multiplier=$(jq -r '.fee_market.elasticity_multiplier' "$CONFIG_FILE")
+    enable_height=$(jq -r '.fee_market.enable_height' "$CONFIG_FILE")
+    block_gas=$(jq -r '.fee_market.block_gas' "$CONFIG_FILE")
     
     apply_jq_modification "$genesis_file" \
         ".app_state[\"feemarket\"][\"params\"][\"no_base_fee\"]=$no_base_fee" \
@@ -560,32 +504,28 @@ configure_fee_market_module() {
         "Fee Market base_fee → $base_fee"
     
     apply_jq_modification "$genesis_file" \
-        ".app_state[\"feemarket\"][\"params\"][\"min_gas_price\"]=\"0\"" \
-        "Fee Market min_gas_price → 0"
+        ".app_state[\"feemarket\"][\"params\"][\"min_gas_price\"]=\"$min_gas_price\"" \
+        "Fee Market min_gas_price → $min_gas_price"
     
     apply_jq_modification "$genesis_file" \
         ".app_state[\"feemarket\"][\"params\"][\"min_gas_multiplier\"]=\"$min_gas_multiplier\"" \
         "Fee Market min_gas_multiplier → $min_gas_multiplier"
     
-    # Base fee change denominator: 8 (default)
     apply_jq_modification "$genesis_file" \
-        '.app_state["feemarket"]["params"]["base_fee_change_denominator"]=8' \
-        "Fee Market base_fee_change_denominator → 8"
+        ".app_state[\"feemarket\"][\"params\"][\"base_fee_change_denominator\"]=$base_fee_change_denominator" \
+        "Fee Market base_fee_change_denominator → $base_fee_change_denominator"
     
-    # Elasticity multiplier: 2 (default)
     apply_jq_modification "$genesis_file" \
-        '.app_state["feemarket"]["params"]["elasticity_multiplier"]=2' \
-        "Fee Market elasticity_multiplier → 2"
+        ".app_state[\"feemarket\"][\"params\"][\"elasticity_multiplier\"]=$elasticity_multiplier" \
+        "Fee Market elasticity_multiplier → $elasticity_multiplier"
     
-    # Enable height: 0 (enabled from start)
     apply_jq_modification "$genesis_file" \
-        '.app_state["feemarket"]["params"]["enable_height"]=0' \
-        "Fee Market enable_height → 0"
+        ".app_state[\"feemarket\"][\"params\"][\"enable_height\"]=$enable_height" \
+        "Fee Market enable_height → $enable_height"
     
-    # Block gas: 0 (initial)
     apply_jq_modification "$genesis_file" \
-        '.app_state["feemarket"]["block_gas"]="0"' \
-        "Fee Market block_gas → 0"
+        ".app_state[\"feemarket\"][\"block_gas\"]=\"$block_gas\"" \
+        "Fee Market block_gas → $block_gas"
 }
 
 # Configure Distribution Module parameters (fee distribution)
@@ -594,20 +534,12 @@ configure_distribution_module() {
     
     print_info "Configuring Distribution Module parameters (fee distribution)..."
     
-    # Distribution parameters
-    local community_tax base_proposer_reward bonus_proposer_reward
+    local community_tax base_proposer_reward bonus_proposer_reward withdraw_addr_enabled
     
-    if [[ "$NETWORK_MODE" == "creative" ]]; then
-        # Creative: Minimal fees, everything to validators
-        community_tax="0.000000000000000000"  # 0%
-        base_proposer_reward="0.000000000000000000"  # 0%
-        bonus_proposer_reward="0.000000000000000000"  # 0%
-    else
-        # Mainnet/Testnet: Standard distribution
-        community_tax="0.020000000000000000"  # 2% to community pool
-        base_proposer_reward="0.010000000000000000"  # 1% to proposer
-        bonus_proposer_reward="0.040000000000000000"  # 4% bonus to proposer
-    fi
+    community_tax=$(jq -r '.distribution.community_tax' "$CONFIG_FILE")
+    base_proposer_reward=$(jq -r '.distribution.base_proposer_reward' "$CONFIG_FILE")
+    bonus_proposer_reward=$(jq -r '.distribution.bonus_proposer_reward' "$CONFIG_FILE")
+    withdraw_addr_enabled=$(jq -r '.distribution.withdraw_addr_enabled' "$CONFIG_FILE")
     
     apply_jq_modification "$genesis_file" \
         ".app_state[\"distribution\"][\"params\"][\"community_tax\"]=\"$community_tax\"" \
@@ -621,10 +553,9 @@ configure_distribution_module() {
         ".app_state[\"distribution\"][\"params\"][\"bonus_proposer_reward\"]=\"$bonus_proposer_reward\"" \
         "Distribution bonus_proposer_reward → $bonus_proposer_reward"
     
-    # Withdraw address enabled: true for all networks
     apply_jq_modification "$genesis_file" \
-        '.app_state["distribution"]["params"]["withdraw_addr_enabled"]=true' \
-        "Distribution withdraw_addr_enabled → true"
+        ".app_state[\"distribution\"][\"params\"][\"withdraw_addr_enabled\"]=$withdraw_addr_enabled" \
+        "Distribution withdraw_addr_enabled → $withdraw_addr_enabled"
 }
 
 # Configure consensus parameters
@@ -633,51 +564,33 @@ configure_consensus_params() {
     
     print_info "Configuring consensus parameters..."
     
-    # Max gas: 10M for mainnet/testnet, 20M for creative
-    local max_gas
-    if [[ "$NETWORK_MODE" == "creative" ]]; then
-        max_gas="20000000"  # 20M
-    else
-        max_gas="10000000"  # 10M
-    fi
+    local max_gas max_bytes evidence_max_age_duration evidence_max_age_num_blocks evidence_max_bytes
+    
+    max_gas=$(jq -r '.consensus.max_gas' "$CONFIG_FILE")
+    max_bytes=$(jq -r '.consensus.max_bytes' "$CONFIG_FILE")
+    evidence_max_age_duration=$(jq -r '.consensus.evidence_max_age_duration' "$CONFIG_FILE")
+    evidence_max_age_num_blocks=$(jq -r '.consensus.evidence_max_age_num_blocks' "$CONFIG_FILE")
+    evidence_max_bytes=$(jq -r '.consensus.evidence_max_bytes' "$CONFIG_FILE")
     
     apply_jq_modification "$genesis_file" \
         ".consensus.params.block.max_gas=\"$max_gas\"" \
         "Consensus max_gas → $max_gas"
     
-    # Max bytes: ~21MB for all networks
     apply_jq_modification "$genesis_file" \
-        '.consensus.params.block.max_bytes="22020096"' \
-        "Consensus max_bytes → 22020096"
-    
-    # Evidence max age: 2 days for mainnet/testnet, 1 day for creative
-    local max_age_duration
-    if [[ "$NETWORK_MODE" == "creative" ]]; then
-        max_age_duration="86400000000000"  # 1 day in nanoseconds
-    else
-        max_age_duration="172800000000000"  # 2 days in nanoseconds
-    fi
+        ".consensus.params.block.max_bytes=\"$max_bytes\"" \
+        "Consensus max_bytes → $max_bytes"
     
     apply_jq_modification "$genesis_file" \
-        ".consensus.params.evidence.max_age_duration=\"$max_age_duration\"" \
-        "Consensus evidence.max_age_duration → $max_age_duration"
-    
-    # Evidence max age num blocks: 100000 for mainnet/testnet, 50000 for creative
-    local max_age_num_blocks
-    if [[ "$NETWORK_MODE" == "creative" ]]; then
-        max_age_num_blocks=50000
-    else
-        max_age_num_blocks=100000
-    fi
+        ".consensus.params.evidence.max_age_duration=\"$evidence_max_age_duration\"" \
+        "Consensus evidence.max_age_duration → $evidence_max_age_duration"
     
     apply_jq_modification "$genesis_file" \
-        ".consensus.params.evidence.max_age_num_blocks=$max_age_num_blocks" \
-        "Consensus evidence.max_age_num_blocks → $max_age_num_blocks"
+        ".consensus.params.evidence.max_age_num_blocks=$evidence_max_age_num_blocks" \
+        "Consensus evidence.max_age_num_blocks → $evidence_max_age_num_blocks"
     
-    # Evidence max bytes: 1MB for all networks
     apply_jq_modification "$genesis_file" \
-        '.consensus.params.evidence.max_bytes="1048576"' \
-        "Consensus evidence.max_bytes → 1048576"
+        ".consensus.params.evidence.max_bytes=\"$evidence_max_bytes\"" \
+        "Consensus evidence.max_bytes → $evidence_max_bytes"
 }
 
 # Main function
