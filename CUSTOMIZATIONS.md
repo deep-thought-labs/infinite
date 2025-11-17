@@ -75,15 +75,21 @@ If you see significantly more or different files, generate a fresh comparison re
   - `NewGovGenesisState()`: Sets `gov.params.min_deposit[].denom` and `gov.params.expedited_min_deposit[].denom` to "drop"
 - `infinited/app.go`: `DefaultGenesis()` function that applies the custom genesis states above
 - `infinited/tests/integration/create_app.go`: Test app creation with identity configuration
-- `scripts/customize_genesis.sh`: **Mainnet/Testnet Genesis Setup Script** - Standalone script to customize generated genesis.json with all Infinite Drive personalizations. **Used specifically for mainnet/testnet creation process** (not required for regular users running local chains). Applies:
-  - All module denominations (staking, mint, gov, evm) → "drop"
-  - Complete token metadata for Improbability (42) token
+- `scripts/customize_genesis.sh`: **Network Genesis Configuration Script** - Standalone script to customize generated genesis.json with all Infinite Drive personalizations for mainnet, testnet, or creative networks. **Used specifically for network genesis creation process** (not required for regular users running local chains). Applies:
+  - All module denominations (staking, mint, gov, evm) → network-specific denom (drop/tdrop/cdrop)
+  - Complete token metadata for network-specific token (Improbability/TestImprobability/CreativeImprobability)
   - EVM static precompiles configuration
   - ERC20 native token pair
-  - Consensus max_gas parameter
+  - Complete Staking Module configuration (unbonding_time, max_validators, etc.)
+  - Complete Mint Module configuration (inflation rates per network)
+  - Complete Governance Module configuration (voting periods, thresholds, deposits)
+  - Complete Slashing Module configuration (penalties, windows, jail duration)
+  - Complete Fee Market Module configuration (base fees, multipliers)
+  - Complete Distribution Module configuration (community_tax, proposer rewards)
+  - Consensus parameters (max_gas, evidence windows)
   - Creates automatic backup before modifications
-  - **Usage**: `./scripts/customize_genesis.sh <genesis_file_path>`
-  - **When**: During mainnet/testnet genesis creation process, after `infinited init` and before adding accounts/validators
+  - **Usage**: `./scripts/customize_genesis.sh <genesis_file_path> --network <mainnet|testnet|creative>`
+  - **When**: During network genesis creation process, after `infinited init` and before adding accounts/validators
   - **Note**: Regular users running local development chains should use `local_node.sh` instead, which includes this customization automatically
 - `local_node.sh`: Development script that includes genesis customization (uses same logic as customize_genesis.sh) plus account creation, funding, and node startup
 - `assets/pre-mainet-genesis.json`: Token metadata

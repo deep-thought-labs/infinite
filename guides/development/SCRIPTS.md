@@ -296,19 +296,25 @@ make install
 
 ### `scripts/customize_genesis.sh`
 
-**Purpose**: Apply all Infinite Drive personalizations to a generated `genesis.json` file.
+**Purpose**: Apply all Infinite Drive personalizations to a generated `genesis.json` file for mainnet, testnet, or creative networks.
 
 **What it does**:
-- Sets all module denominations to "drop" (staking, mint, gov, evm)
-- Adds complete token metadata for Improbability (42) token
+- Sets all module denominations to network-specific denom (drop/tdrop/cdrop)
+- Adds complete token metadata for network-specific token (Improbability/TestImprobability/CreativeImprobability)
 - Enables all EVM static precompiles
 - Configures ERC20 native token pair
-- Sets consensus max_gas parameter
+- Configures complete Staking Module (unbonding_time, max_validators, historical_entries, etc.)
+- Configures complete Mint Module (inflation rates, goal_bonded, blocks_per_year)
+- Configures complete Governance Module (voting periods, thresholds, min_deposits)
+- Configures complete Slashing Module (penalties, windows, jail duration)
+- Configures complete Fee Market Module (base_fee, no_base_fee, multipliers)
+- Configures complete Distribution Module (community_tax, proposer rewards)
+- Configures consensus parameters (max_gas, evidence windows)
 - Creates automatic backup before modifications
 
 **When to use**:
-- **Mainnet/Testnet creation**: When preparing a genesis file for mainnet or testnet (one-time setup process)
-- As part of the mainnet/testnet deployment pipeline
+- **Network genesis creation**: When preparing a genesis file for mainnet, testnet, or creative (one-time setup process)
+- As part of the network deployment pipeline
 - When you need to ensure all Infinite Drive customizations are applied to a genesis file
 
 **When NOT to use**:
@@ -317,7 +323,7 @@ make install
 
 **Usage**:
 ```bash
-./scripts/customize_genesis.sh <genesis_file_path>
+./scripts/customize_genesis.sh <genesis_file_path> --network <mainnet|testnet|creative>
 ```
 
 **Example**:
@@ -325,16 +331,28 @@ make install
 # After initializing a node
 infinited init my-moniker --chain-id infinite_421018-1
 
-# Customize the generated genesis
-./scripts/customize_genesis.sh ~/.infinited/config/genesis.json
+# Customize the generated genesis for mainnet
+./scripts/customize_genesis.sh ~/.infinited/config/genesis.json --network mainnet
+
+# Or for testnet
+./scripts/customize_genesis.sh ~/.infinited/config/genesis.json --network testnet
+
+# Or for creative network
+./scripts/customize_genesis.sh ~/.infinited/config/genesis.json --network creative
 
 # Validate the customized genesis
 infinited genesis validate-genesis
 ```
 
-**Expected output**:
+**Expected output** (mainnet example):
 ```
 ℹ Customizing Genesis file: ~/.infinited/config/genesis.json
+ℹ Network: mainnet
+ℹ Configuring for network: mainnet
+ℹ Base denom: drop
+ℹ Display denom: Improbability
+ℹ Symbol: 42
+ℹ EVM Chain ID: 421018
 ℹ Backup created: ~/.infinited/config/genesis.json.backup.20251116_170222
 ℹ Customizing module denominations to 'drop'...
 ℹ Staking bond_denom → drop
@@ -349,9 +367,14 @@ infinited genesis validate-genesis
 ℹ Configuring ERC20 native token pair...
 ℹ ERC20 native precompiles configured
 ℹ ERC20 native token pair configured
+ℹ Configuring Staking Module parameters...
+ℹ Configuring Mint Module parameters (inflation)...
+ℹ Configuring Governance Module parameters...
+ℹ Configuring Slashing Module parameters...
+ℹ Configuring Fee Market Module parameters...
+ℹ Configuring Distribution Module parameters (fee distribution)...
 ℹ Configuring consensus parameters...
-ℹ Consensus max_gas → 10000000
-ℹ Genesis file customized successfully!
+ℹ Genesis file customized successfully for mainnet!
 ```
 
 **Prerequisites**:
