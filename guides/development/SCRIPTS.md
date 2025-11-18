@@ -402,7 +402,7 @@ These files contain all parameters for each network, making it easy to modify va
 
 ### `scripts/setup_module_accounts.sh`
 
-**Purpose**: Generate commands (does NOT execute them) for configuring pure ModuleAccounts (without vesting) in genesis.json for mainnet, testnet, or creative networks.
+**Purpose**: Configure pure ModuleAccounts (without vesting) directly in genesis.json for mainnet, testnet, or creative networks. The script **EXECUTES** commands and modifies the genesis file automatically.
 
 **Important**: This script creates ModuleAccounts as pure accounts (BaseAccount + name + permissions), not vesting accounts. Cosmos SDK does not natively support ModuleAccounts with vesting. For vesting tokens, a separate vesting account script will be created in the future.
 
@@ -410,10 +410,13 @@ These files contain all parameters for each network, making it easy to modify va
 - Reads network-specific module configuration from `*-vesting.json` files
 - Calculates deterministic module addresses using `calc_module_addr.go`
 - Converts token amounts from full units to atomic units (multiplies by 10^18)
-- Generates two commands per ModuleAccount:
-  1. `infinited genesis add-genesis-account` (without vesting flags)
-  2. `jq` command to convert the account to ModuleAccount with name and permissions
-- Provides clear, copy-paste ready commands with proper formatting
+- **Executes** commands directly to create ModuleAccounts:
+  1. Runs `infinited genesis add-genesis-account` (without vesting flags)
+  2. Uses `jq` to convert the account to ModuleAccount with name and permissions
+- Validates the genesis file after all changes
+- Provides detailed progress reports and error handling
+- Supports accounts with 0 tokens
+- Idempotent: skips ModuleAccounts that already exist
 
 **When to use**:
 - **Network genesis creation**: When setting up ModuleAccounts for mainnet, testnet, or creative networks (one-time setup process)
@@ -444,32 +447,43 @@ These files contain all parameters for each network, making it easy to modify va
 **Expected output** (mainnet example):
 ```
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-ModuleAccounts Setup Commands for MAINNET
+ModuleAccounts Setup for MAINNET
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ℹ Network: mainnet
 ℹ Genesis directory: /Users/alberto/.infinited
+
+ℹ Genesis file: /Users/alberto/.infinited/config/genesis.json
 ℹ Base denom: drop
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-Commands to Execute
+Creating ModuleAccounts
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-ℹ Copy and paste each command below in order:
+ℹ Found 3 ModuleAccount(s) to configure
 
-ℹ Module: treasury (address: infinite1vmafl8f3s6uuzwnxkqz0eza47v6ecn0tqw4y9p)
-# Step 1: Add account with initial balance
-infinited genesis add-genesis-account infinite1vmafl8f3s6uuzwnxkqz0eza47v6ecn0tqw4y9p 1000000000000000000000000drop --home /Users/alberto/.infinited
+ℹ Processing ModuleAccount: treasury
+ℹ   Address: infinite1vmafl8f3s6uuzwnxkqz0eza47v6ecn0tqw4y9p
+ℹ   Amount: 1000000 tokens (1000000000000000000000000drop)
+ℹ   Step 1: Adding account to genesis...
+✓   Account added successfully
+ℹ   Step 2: Converting to ModuleAccount...
+✓   ModuleAccount created successfully
 
-# Step 2: Convert to ModuleAccount with name and permissions
-jq '(.app_state.auth.accounts[] | select(.address == "infinite1vmafl8f3s6uuzwnxkqz0eza47v6ecn0tqw4y9p")) |= (. | del(."@type") | {"@type":"/cosmos.auth.v1beta1.ModuleAccount","base_account":.,"name":"treasury","permissions":["minter","burner"]})' /Users/alberto/.infinited/config/genesis.json > /Users/alberto/.infinited/config/genesis.json.tmp && mv /Users/alberto/.infinited/config/genesis.json.tmp /Users/alberto/.infinited/config/genesis.json
+ℹ Processing ModuleAccount: development
+ℹ   Address: infinite1sade8qyxd6w4dec3pv8wxyyk9stdn49wjy9ke2
+ℹ   Amount: 500000 tokens (500000000000000000000000drop)
+ℹ   Step 1: Adding account to genesis...
+✓   Account added successfully
+ℹ   Step 2: Converting to ModuleAccount...
+✓   ModuleAccount created successfully
 
-ℹ Module: development (address: infinite1sade8qyxd6w4dec3pv8wxyyk9stdn49wjy9ke2)
-# Step 1: Add account with initial balance
-infinited genesis add-genesis-account infinite1sade8qyxd6w4dec3pv8wxyyk9stdn49wjy9ke2 500000000000000000000000drop --home /Users/alberto/.infinited
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Validating Genesis File
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-# Step 2: Convert to ModuleAccount with name and permissions
-jq '(.app_state.auth.accounts[] | select(.address == "infinite1sade8qyxd6w4dec3pv8wxyyk9stdn49wjy9ke2")) |= (. | del(."@type") | {"@type":"/cosmos.auth.v1beta1.ModuleAccount","base_account":.,"name":"development","permissions":["minter","burner"]})' /Users/alberto/.infinited/config/genesis.json > /Users/alberto/.infinited/config/genesis.json.tmp && mv /Users/alberto/.infinited/config/genesis.json.tmp /Users/alberto/.infinited/config/genesis.json
+ℹ Running genesis validation...
+✓ Genesis file is valid
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 Summary
@@ -478,19 +492,17 @@ Summary
 ℹ Configuration:
   - Network: mainnet
   - Base denom: drop
-  - Module accounts: 3
+  - Total ModuleAccounts: 3
+  - Successfully created: 3
+  - Skipped (already exist): 0
+  - Errors: 0
 
-ℹ Module accounts created:
-  - treasury: 1000000 tokens
-  - development: 500000 tokens
-  - community: 300000 tokens
+✓ ModuleAccounts created:
+  ✓ treasury: 1000000 tokens (address: infinite1vmafl8f3s6uuzwnxkqz0eza47v6ecn0tqw4y9p)
+  ✓ development: 500000 tokens (address: infinite1sade8qyxd6w4dec3pv8wxyyk9stdn49wjy9ke2)
+  ✓ community: 300000 tokens (address: infinite17d2wax0zhjrrecvaszuyxdf5wcu5a0p44yys8v)
 
-ℹ Next steps:
-  1. Copy and paste each command above in order
-  2. Validate the genesis file: infinited genesis validate-genesis --home /Users/alberto/.infinited
-
-Note: These ModuleAccounts are pure (no vesting).
-      For vesting tokens, use a separate vesting account (to be implemented).
+✓ All ModuleAccounts configured successfully
 ```
 
 **Configuration Files**:
@@ -517,22 +529,24 @@ Each configuration file contains:
 - Go must be installed (for `calc_module_addr.go` to calculate deterministic module addresses)
 
 **Notes**:
-- **This script does NOT execute any commands** - it only prints them for manual execution
+- **This script EXECUTES commands directly** and modifies the genesis file automatically
 - ModuleAccounts are created as pure accounts (BaseAccount + name + permissions), **without vesting**
 - Cosmos SDK does not natively support ModuleAccounts with vesting
 - Token amounts are automatically converted from full units to atomic units (× 10^18)
-- Each ModuleAccount requires 2 commands: `add-genesis-account` + `jq` conversion
-- Commands are ready to copy and paste in the exact order shown
-- Always validate the genesis file after executing the generated commands
+- Supports accounts with 0 tokens (creates ModuleAccount with empty balance)
+- Idempotent: automatically skips ModuleAccounts that already exist
+- Validates the genesis file automatically after all changes
+- Provides detailed error reporting if any step fails
+- Exit code: 0 = success, 1 = errors encountered
 - For vesting tokens, a separate vesting account script will be created in the future
 
 **Integration with Genesis Creation Process**:
 This script is typically used **after** running `customize_genesis.sh`:
 1. Run `infinited init` to generate base genesis
 2. Run `customize_genesis.sh` to apply all module customizations
-3. Run `setup_module_accounts.sh` to generate ModuleAccount commands
-4. Execute the generated commands manually (2 commands per ModuleAccount)
-5. Validate with `infinited genesis validate-genesis`
+3. Run `setup_module_accounts.sh` to create ModuleAccounts automatically
+4. The script validates the genesis file automatically
+5. Review the summary report to confirm all ModuleAccounts were created successfully
 
 ---
 

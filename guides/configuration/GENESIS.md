@@ -193,10 +193,9 @@ If you need to set up ModuleAccounts (e.g., treasury, development, community poo
 
 **What to do**:
 1. Run the script with the appropriate `--network` flag for your network
-2. The script will print the generated commands (2 commands per ModuleAccount)
-3. Copy and paste each command in the order shown
-4. The script does NOT execute commands automatically - you must run them manually
-5. Validate the genesis file: `infinited genesis validate-genesis --home ~/.infinited`
+2. The script will **execute commands automatically** and create all ModuleAccounts
+3. Review the summary report to confirm all ModuleAccounts were created successfully
+4. The script validates the genesis file automatically at the end
 
 **When to use**: Setting up treasury accounts, development funds, or community pools as ModuleAccounts.
 
