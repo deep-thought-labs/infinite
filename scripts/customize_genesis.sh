@@ -471,7 +471,7 @@ configure_slashing_module() {
     slash_fraction_downtime=$(jq -r '.slashing.slash_fraction_downtime' "$CONFIG_FILE")
     
     apply_jq_modification "$genesis_file" \
-        ".app_state[\"slashing\"][\"params\"][\"signed_blocks_window\"]=$signed_blocks_window" \
+        ".app_state[\"slashing\"][\"params\"][\"signed_blocks_window\"]=\"$signed_blocks_window\"" \
         "Slashing signed_blocks_window → $signed_blocks_window"
     
     apply_jq_modification "$genesis_file" \
@@ -534,7 +534,7 @@ configure_fee_market_module() {
         "Fee Market elasticity_multiplier → $elasticity_multiplier"
     
     apply_jq_modification "$genesis_file" \
-        ".app_state[\"feemarket\"][\"params\"][\"enable_height\"]=$enable_height" \
+        ".app_state[\"feemarket\"][\"params\"][\"enable_height\"]=\"$enable_height\"" \
         "Fee Market enable_height → $enable_height"
     
     apply_jq_modification "$genesis_file" \
@@ -599,7 +599,7 @@ configure_consensus_params() {
         "Consensus evidence.max_age_duration → $evidence_max_age_duration"
     
     apply_jq_modification "$genesis_file" \
-        ".consensus.params.evidence.max_age_num_blocks=$evidence_max_age_num_blocks" \
+        ".consensus.params.evidence.max_age_num_blocks=\"$evidence_max_age_num_blocks\"" \
         "Consensus evidence.max_age_num_blocks → $evidence_max_age_num_blocks"
     
     apply_jq_modification "$genesis_file" \
