@@ -1,5 +1,41 @@
 # CHANGELOG
 
+## Infinite Drive Features
+
+> **Note**: This section documents the features and configurations specific to Infinite Drive. Changes from the upstream repository are documented in the sections below.
+
+### IDENTITY & NETWORK CONFIGURATION
+
+- **Native Token**: "Improbability" (42) with base denomination `drop` (1 Improbability [42] = 10¹⁸ drop)
+- **Chain IDs**: 
+  - Mainnet: Cosmos `infinite_421018-1`, EVM `421018`
+  - Testnet: Cosmos `infinite_421018001-1`, EVM `421018001`
+  - Creative: Cosmos `infinite_421018002-1`, EVM `421018002`
+- **Bech32 Prefixes**: `infinite`, `infinitevaloper`, `infinitevalcons`
+- **Binary**: `infinited` - Infinite Drive blockchain node
+
+### GENESIS CONFIGURATION
+
+- **Multi-network genesis support**: `customize_genesis.sh` script supporting mainnet, testnet, and creative networks with distinct parameters (denominations, inflation, governance, slashing, fee market, distribution, consensus)
+- **ModuleAccounts automation**: `setup_module_accounts.sh` script for automated ModuleAccount creation with permissions and initial balances
+- **External configuration**: JSON configuration files (`genesis-configs/*.json`) for all network-specific parameters, enabling flexible network setup
+- **Genesis state defaults**: `DefaultGenesis()` implementation ensuring all modules use "drop" denomination
+
+### DOCUMENTATION & DEVELOPER TOOLS
+
+- **Structured documentation**: Clear entry points (`QUICK_START.md`, `BUILDING.md`), categorized guides, and AI-friendly format
+- **Validation suite**: Comprehensive validation scripts (`validate_customizations.sh`, `validate_token_config.sh`, `check_build_prerequisites.sh`)
+- **Development utilities**: Scripts for customization tracking, health checks, and build verification
+- **Genesis creation guides**: Step-by-step instructions for network genesis creation across mainnet/testnet/creative networks
+
+### TECHNICAL FEATURES
+
+- **Power reduction configuration**: 1 Improbability [42] = 10^18 drop
+- **Genesis module defaults**: Genesis state functions for staking, mint, and governance modules configured for "drop" denomination
+- **Local development tools**: `local_node.sh` script with automatic genesis customization for streamlined local development
+
+---
+
 ## UNRELEASED
 
 ### DEPENDENCIES
