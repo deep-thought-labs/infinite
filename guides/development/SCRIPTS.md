@@ -398,25 +398,27 @@ These files contain all parameters for each network, making it easy to modify va
 
 ---
 
-## ModuleAccounts Vesting Setup Script
+## ModuleAccounts Setup Script
 
 ### `scripts/setup_module_accounts.sh`
 
-**Purpose**: Generate commands (does NOT execute them) for configuring ModuleAccounts with linear vesting in genesis.json for mainnet, testnet, or creative networks.
+**Purpose**: Generate commands (does NOT execute them) for configuring pure ModuleAccounts (without vesting) in genesis.json for mainnet, testnet, or creative networks.
+
+**Important**: This script creates ModuleAccounts as pure accounts (BaseAccount + name + permissions), not vesting accounts. Cosmos SDK does not natively support ModuleAccounts with vesting. For vesting tokens, a separate vesting account script will be created in the future.
 
 **What it does**:
-- Reads network-specific vesting configuration from `*-vesting.json` files
+- Reads network-specific module configuration from `*-vesting.json` files
+- Calculates deterministic module addresses using `calc_module_addr.go`
 - Converts token amounts from full units to atomic units (multiplies by 10^18)
-- Generates `infinited genesis add-module-vesting-account` commands for each pool
-- Displays vesting start/end times in both Unix timestamp and UTC human-readable format
-- Calculates and displays vesting duration in human-readable format (e.g., "14 years and 364 days")
-- Conditionally includes `--permissions` flag only if permissions are specified in config
+- Generates two commands per ModuleAccount:
+  1. `infinited genesis add-genesis-account` (without vesting flags)
+  2. `jq` command to convert the account to ModuleAccount with name and permissions
 - Provides clear, copy-paste ready commands with proper formatting
 
 **When to use**:
-- **Network genesis creation**: When setting up ModuleAccounts with vesting for mainnet, testnet, or creative networks (one-time setup process)
+- **Network genesis creation**: When setting up ModuleAccounts for mainnet, testnet, or creative networks (one-time setup process)
 - As part of the network deployment pipeline after running `customize_genesis.sh`
-- When you need to configure treasury, development, or community pools with vesting schedules
+- When you need to configure treasury, development, or community pools as ModuleAccounts
 
 **When NOT to use**:
 - **Regular local development**: Not needed for local testing chains
@@ -448,8 +450,6 @@ ModuleAccounts Setup Commands for MAINNET
 ℹ Network: mainnet
 ℹ Genesis directory: /Users/alberto/.infinited
 ℹ Base denom: drop
-ℹ Vesting start time: 1735689600 (2025-01-01 00:00:00 UTC)
-ℹ Vesting end time: 2208988800 (2040-01-01 00:00:00 UTC) - Duration: 14 years and 364 days
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 Commands to Execute
@@ -457,11 +457,19 @@ Commands to Execute
 
 ℹ Copy and paste each command below in order:
 
-infinited genesis add-module-vesting-account treasury --module-name treasury --vesting-amount 1000000000000000000000000drop --vesting-start-time 1735689600 --vesting-end-time 2208988800 --permissions minter,burner --home /Users/alberto/.infinited
+ℹ Module: treasury (address: infinite1vmafl8f3s6uuzwnxkqz0eza47v6ecn0tqw4y9p)
+# Step 1: Add account with initial balance
+infinited genesis add-genesis-account infinite1vmafl8f3s6uuzwnxkqz0eza47v6ecn0tqw4y9p 1000000000000000000000000drop --home /Users/alberto/.infinited
 
-infinited genesis add-module-vesting-account development --module-name development --vesting-amount 500000000000000000000000drop --vesting-start-time 1735689600 --vesting-end-time 2208988800 --permissions minter,burner --home /Users/alberto/.infinited
+# Step 2: Convert to ModuleAccount with name and permissions
+jq '(.app_state.auth.accounts[] | select(.address == "infinite1vmafl8f3s6uuzwnxkqz0eza47v6ecn0tqw4y9p")) |= (. | del(."@type") | {"@type":"/cosmos.auth.v1beta1.ModuleAccount","base_account":.,"name":"treasury","permissions":["minter","burner"]})' /Users/alberto/.infinited/config/genesis.json > /Users/alberto/.infinited/config/genesis.json.tmp && mv /Users/alberto/.infinited/config/genesis.json.tmp /Users/alberto/.infinited/config/genesis.json
 
-infinited genesis add-module-vesting-account community --module-name community --vesting-amount 300000000000000000000000drop --vesting-start-time 1735689600 --vesting-end-time 2208988800 --permissions minter,burner --home /Users/alberto/.infinited
+ℹ Module: development (address: infinite1sade8qyxd6w4dec3pv8wxyyk9stdn49wjy9ke2)
+# Step 1: Add account with initial balance
+infinited genesis add-genesis-account infinite1sade8qyxd6w4dec3pv8wxyyk9stdn49wjy9ke2 500000000000000000000000drop --home /Users/alberto/.infinited
+
+# Step 2: Convert to ModuleAccount with name and permissions
+jq '(.app_state.auth.accounts[] | select(.address == "infinite1sade8qyxd6w4dec3pv8wxyyk9stdn49wjy9ke2")) |= (. | del(."@type") | {"@type":"/cosmos.auth.v1beta1.ModuleAccount","base_account":.,"name":"development","permissions":["minter","burner"]})' /Users/alberto/.infinited/config/genesis.json > /Users/alberto/.infinited/config/genesis.json.tmp && mv /Users/alberto/.infinited/config/genesis.json.tmp /Users/alberto/.infinited/config/genesis.json
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 Summary
@@ -471,51 +479,60 @@ Summary
   - Network: mainnet
   - Base denom: drop
   - Module accounts: 3
-  - Vesting start: 1735689600 (2025-01-01 00:00:00 UTC)
-  - Vesting end: 2208988800 (2040-01-01 00:00:00 UTC) - Duration: 14 years and 364 days
+
+ℹ Module accounts created:
+  - treasury: 1000000 tokens
+  - development: 500000 tokens
+  - community: 300000 tokens
 
 ℹ Next steps:
   1. Copy and paste each command above in order
-  2. Validate the genesis file: infinited genesis validate --home /Users/alberto/.infinited
+  2. Validate the genesis file: infinited genesis validate-genesis --home /Users/alberto/.infinited
+
+Note: These ModuleAccounts are pure (no vesting).
+      For vesting tokens, use a separate vesting account (to be implemented).
 ```
 
 **Configuration Files**:
-The script reads vesting configuration from JSON files located in `scripts/genesis-configs/`:
-- `mainnet-vesting.json` - Mainnet ModuleAccounts vesting configuration
-- `testnet-vesting.json` - Testnet ModuleAccounts vesting configuration
-- `creative-vesting.json` - Creative network ModuleAccounts vesting configuration
+The script reads module configuration from JSON files located in `scripts/genesis-configs/`:
+- `mainnet-vesting.json` - Mainnet ModuleAccounts configuration
+- `testnet-vesting.json` - Testnet ModuleAccounts configuration
+- `creative-vesting.json` - Creative network ModuleAccounts configuration
 
-Each vesting configuration file contains:
-- `vesting_start_time`: Unix timestamp for vesting start
-- `vesting_end_time`: Unix timestamp for vesting end
-- `fee_burn_percent`: Percentage of fees to burn (for future use)
+Each configuration file contains:
 - `pools`: Array of ModuleAccount pools, each with:
-  - `name`: Module account name
-  - `amount_tokens`: Amount in full token units (will be converted to atomic units)
-  - `permissions`: Optional permissions (e.g., "minter,burner")
-  - `fee_share_percent`: Percentage of fee recirculation (for future use)
+  - `name`: Module account name (required)
+  - `amount_tokens`: Initial balance in full token units (will be converted to atomic units × 10^18)
+  - `permissions`: Optional permissions (e.g., "minter,burner") - empty string or omitted if no permissions
+  - `fee_share_percent`: Percentage for future token distribution from vesting account (reserved for future use)
+- `vesting_start_time`: Unix timestamp (reserved for future vesting account script, not used by ModuleAccounts)
+- `vesting_end_time`: Unix timestamp (reserved for future vesting account script, not used by ModuleAccounts)
+- `fee_burn_percent`: Percentage (reserved for future vesting account script, not used by ModuleAccounts)
 
 **Prerequisites**:
 - `jq` must be installed
 - `bc` is recommended for precise calculations (optional, has fallback)
-- Vesting configuration file for the specified network must exist in `scripts/genesis-configs/`
+- Module configuration file for the specified network must exist in `scripts/genesis-configs/`
 - Network configuration file (e.g., `mainnet.json`) must exist to read base denom
+- Go must be installed (for `calc_module_addr.go` to calculate deterministic module addresses)
 
 **Notes**:
 - **This script does NOT execute any commands** - it only prints them for manual execution
-- All times are displayed in UTC for consistency in public genesis files
+- ModuleAccounts are created as pure accounts (BaseAccount + name + permissions), **without vesting**
+- Cosmos SDK does not natively support ModuleAccounts with vesting
 - Token amounts are automatically converted from full units to atomic units (× 10^18)
-- The `--permissions` flag is only included if permissions are specified in the config
+- Each ModuleAccount requires 2 commands: `add-genesis-account` + `jq` conversion
 - Commands are ready to copy and paste in the exact order shown
 - Always validate the genesis file after executing the generated commands
+- For vesting tokens, a separate vesting account script will be created in the future
 
 **Integration with Genesis Creation Process**:
 This script is typically used **after** running `customize_genesis.sh`:
 1. Run `infinited init` to generate base genesis
 2. Run `customize_genesis.sh` to apply all module customizations
-3. Run `setup_module_accounts.sh` to generate ModuleAccount vesting commands
-4. Execute the generated commands manually
-5. Validate with `infinited genesis validate`
+3. Run `setup_module_accounts.sh` to generate ModuleAccount commands
+4. Execute the generated commands manually (2 commands per ModuleAccount)
+5. Validate with `infinited genesis validate-genesis`
 
 ---
 

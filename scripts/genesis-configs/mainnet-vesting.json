@@ -1,4 +1,5 @@
 {
+  "_comment": "ModuleAccounts configuration for mainnet. Fields 'vesting_start_time', 'vesting_end_time', and 'fee_burn_percent' are reserved for future vesting account script (not used for ModuleAccounts).",
   "vesting_start_time": 1735689600,
   "vesting_end_time": 2208988800,
   "fee_burn_percent": 40,
@@ -23,4 +24,3 @@
     }
   ]
 }
-

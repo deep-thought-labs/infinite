@@ -5,7 +5,7 @@
 #
 # This file is part of the Infinite Drive blockchain tooling.
 #
-# Purpose: Generate commands to configure ModuleAccounts with linear vesting
+# Purpose: Generate commands to configure ModuleAccounts (pure, without vesting)
 #          for mainnet, testnet, or creative networks.
 #
 # This script does NOT execute any commands. It only prints the commands you need to
@@ -35,7 +35,7 @@ NETWORK_MODE=""
 GENESIS_DIR="${HOME}/.infinited"
 SCRIPT_DIR=""
 NETWORK_CONFIG_FILE=""
-VESTING_CONFIG_FILE=""
+MODULE_CONFIG_FILE=""
 BASE_DENOM=""
 
 # Print colored messages
@@ -82,7 +82,7 @@ parse_arguments() {
                 echo "  --genesis-dir <path>                  Genesis directory (default: ~/.infinited)"
                 echo "  -h, --help                            Show this help message"
                 echo ""
-                echo "This script generates commands for setting up ModuleAccounts with vesting."
+                echo "This script generates commands for setting up ModuleAccounts (pure, without vesting)."
                 echo "It does NOT execute any commands - you must copy and paste them manually."
                 exit 0
                 ;;
@@ -122,7 +122,7 @@ parse_arguments() {
 load_config_files() {
     SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
     NETWORK_CONFIG_FILE="${SCRIPT_DIR}/genesis-configs/${NETWORK_MODE}.json"
-    VESTING_CONFIG_FILE="${SCRIPT_DIR}/genesis-configs/${NETWORK_MODE}-vesting.json"
+    MODULE_CONFIG_FILE="${SCRIPT_DIR}/genesis-configs/${NETWORK_MODE}-vesting.json"
     
     # Validate network config file exists
     if [[ ! -f "$NETWORK_CONFIG_FILE" ]]; then
@@ -130,9 +130,9 @@ load_config_files() {
         exit 1
     fi
     
-    # Validate vesting config file exists
-    if [[ ! -f "$VESTING_CONFIG_FILE" ]]; then
-        print_error "Vesting configuration file not found: $VESTING_CONFIG_FILE"
+    # Validate module config file exists
+    if [[ ! -f "$MODULE_CONFIG_FILE" ]]; then
+        print_error "Module configuration file not found: $MODULE_CONFIG_FILE"
         exit 1
     fi
     
@@ -147,8 +147,8 @@ load_config_files() {
         exit 1
     fi
     
-    if ! jq empty "$VESTING_CONFIG_FILE" 2>/dev/null; then
-        print_error "Invalid JSON in vesting configuration file: $VESTING_CONFIG_FILE"
+    if ! jq empty "$MODULE_CONFIG_FILE" 2>/dev/null; then
+        print_error "Invalid JSON in module configuration file: $MODULE_CONFIG_FILE"
         exit 1
     fi
     
@@ -173,107 +173,6 @@ convert_to_atomic() {
     fi
 }
 
-# Calculate duration between two Unix timestamps in human-readable format
-calculate_duration() {
-    local start_ts="$1"
-    local end_ts="$2"
-    
-    # Calculate difference in seconds
-    local diff_seconds
-    diff_seconds=$((end_ts - start_ts))
-    
-    if [[ $diff_seconds -le 0 ]]; then
-        echo "0 seconds"
-        return
-    fi
-    
-    # Calculate years (approximate: 365.25 days per year)
-    local years days hours minutes seconds
-    local remaining=$diff_seconds
-    
-    years=$((remaining / 31557600))  # 365.25 * 24 * 60 * 60
-    remaining=$((remaining % 31557600))
-    
-    # Calculate days
-    days=$((remaining / 86400))
-    remaining=$((remaining % 86400))
-    
-    # Calculate hours
-    hours=$((remaining / 3600))
-    remaining=$((remaining % 3600))
-    
-    # Calculate minutes
-    minutes=$((remaining / 60))
-    seconds=$((remaining % 60))
-    
-    # Build human-readable string
-    local duration_parts=()
-    
-    if [[ $years -gt 0 ]]; then
-        if [[ $years -eq 1 ]]; then
-            duration_parts+=("1 year")
-        else
-            duration_parts+=("$years years")
-        fi
-    fi
-    
-    if [[ $days -gt 0 ]]; then
-        if [[ $days -eq 1 ]]; then
-            duration_parts+=("1 day")
-        else
-            duration_parts+=("$days days")
-        fi
-    fi
-    
-    # Only show hours/minutes/seconds if less than a day
-    if [[ $years -eq 0 && $days -eq 0 ]]; then
-        if [[ $hours -gt 0 ]]; then
-            if [[ $hours -eq 1 ]]; then
-                duration_parts+=("1 hour")
-            else
-                duration_parts+=("$hours hours")
-            fi
-        fi
-        
-        if [[ $minutes -gt 0 ]]; then
-            if [[ $minutes -eq 1 ]]; then
-                duration_parts+=("1 minute")
-            else
-                duration_parts+=("$minutes minutes")
-            fi
-        fi
-        
-        if [[ $seconds -gt 0 && $hours -eq 0 ]]; then
-            if [[ $seconds -eq 1 ]]; then
-                duration_parts+=("1 second")
-            else
-                duration_parts+=("$seconds seconds")
-            fi
-        fi
-    fi
-    
-    # Join parts with commas and "and" for the last one
-    local result=""
-    local count=${#duration_parts[@]}
-    
-    if [[ $count -eq 0 ]]; then
-        echo "0 seconds"
-        return
-    fi
-    
-    for ((i=0; i<count; i++)); do
-        if [[ $i -eq 0 ]]; then
-            result="${duration_parts[$i]}"
-        elif [[ $i -eq $((count - 1)) ]]; then
-            result="$result and ${duration_parts[$i]}"
-        else
-            result="$result, ${duration_parts[$i]}"
-        fi
-    done
-    
-    echo "$result"
-}
-
 # Main function
 main() {
     parse_arguments "$@"
@@ -292,39 +191,14 @@ main() {
     print_info "Base denom: $BASE_DENOM"
     echo ""
     
-    # Load vesting configuration
-    local vesting_start vesting_end
-    vesting_start=$(jq -r '.vesting_start_time' "$VESTING_CONFIG_FILE")
-    vesting_end=$(jq -r '.vesting_end_time' "$VESTING_CONFIG_FILE")
-    
-    # Convert Unix timestamps to readable dates (always in UTC for consistency)
-    local vesting_start_readable vesting_end_readable
-    if command -v date &> /dev/null; then
-        if [[ "$(uname)" == "Darwin" ]]; then
-            # macOS date command - force UTC timezone
-            vesting_start_readable=$(TZ=UTC date -r "$vesting_start" "+%Y-%m-%d %H:%M:%S UTC" 2>/dev/null || echo "N/A")
-            vesting_end_readable=$(TZ=UTC date -r "$vesting_end" "+%Y-%m-%d %H:%M:%S UTC" 2>/dev/null || echo "N/A")
-        else
-            # Linux date command - force UTC timezone
-            vesting_start_readable=$(TZ=UTC date -d "@$vesting_start" "+%Y-%m-%d %H:%M:%S UTC" 2>/dev/null || echo "N/A")
-            vesting_end_readable=$(TZ=UTC date -d "@$vesting_end" "+%Y-%m-%d %H:%M:%S UTC" 2>/dev/null || echo "N/A")
-        fi
-    else
-        vesting_start_readable="N/A"
-        vesting_end_readable="N/A"
-    fi
-    
-    # Calculate duration
-    local vesting_duration
-    vesting_duration=$(calculate_duration "$vesting_start" "$vesting_end")
-    
-    print_info "Vesting start time: $vesting_start ($vesting_start_readable)"
-    print_info "Vesting end time: $vesting_end ($vesting_end_readable) - Duration: $vesting_duration"
-    echo ""
-    
     # Process each pool
     local pools_count
-    pools_count=$(jq '.pools | length' "$VESTING_CONFIG_FILE")
+    pools_count=$(jq '.pools | length' "$MODULE_CONFIG_FILE")
+    
+    if [[ $pools_count -eq 0 ]]; then
+        print_error "No pools found in module configuration file"
+        exit 1
+    fi
     
     print_section "Commands to Execute"
     
@@ -334,64 +208,86 @@ main() {
     for ((i=0; i<pools_count; i++)); do
         local pool_name pool_amount pool_permissions
         
-        pool_name=$(jq -r ".pools[$i].name" "$VESTING_CONFIG_FILE")
-        pool_amount=$(jq -r ".pools[$i].amount_tokens" "$VESTING_CONFIG_FILE")
-        pool_permissions=$(jq -r ".pools[$i].permissions // empty" "$VESTING_CONFIG_FILE")
+        pool_name=$(jq -r ".pools[$i].name" "$MODULE_CONFIG_FILE")
+        pool_amount=$(jq -r ".pools[$i].amount_tokens" "$MODULE_CONFIG_FILE")
+        pool_permissions=$(jq -r ".pools[$i].permissions // empty" "$MODULE_CONFIG_FILE")
+        
+        # Validate pool_name
+        if [[ -z "$pool_name" || "$pool_name" == "null" ]]; then
+            print_error "Pool $i has invalid or missing name"
+            exit 1
+        fi
+        
+        # Validate pool_amount
+        if [[ -z "$pool_amount" || "$pool_amount" == "null" || "$pool_amount" == "0" ]]; then
+            print_error "Pool '$pool_name' has invalid or missing amount_tokens"
+            exit 1
+        fi
         
         # Convert to atomic units
         local atomic_amount
         atomic_amount=$(convert_to_atomic "$pool_amount")
         local amount_with_denom="${atomic_amount}${BASE_DENOM}"
         
-        # Build command base
-        local cmd="infinited genesis add-module-vesting-account $pool_name --module-name $pool_name --vesting-amount $amount_with_denom --vesting-start-time $vesting_start --vesting-end-time $vesting_end"
-        
-        # Add --permissions only if it's not empty
-        if [[ -n "$pool_permissions" && "$pool_permissions" != "null" && "$pool_permissions" != "" ]]; then
-            cmd="$cmd --permissions $pool_permissions"
+        # Calculate deterministic address using Go program
+        local module_addr
+        if ! module_addr=$(go run "${SCRIPT_DIR}/calc_module_addr.go" "$pool_name" 2>/dev/null); then
+            print_error "Failed to calculate deterministic address for module: $pool_name"
+            print_error "Make sure Go is installed and calc_module_addr.go is in the scripts directory"
+            exit 1
         fi
         
-        cmd="$cmd --home $GENESIS_DIR"
+        # Generate command 1: add-genesis-account (without vesting)
+        local genesis_file="${GENESIS_DIR}/config/genesis.json"
+        local cmd1="infinited genesis add-genesis-account $module_addr $amount_with_denom --home $GENESIS_DIR"
         
-        # Generate command
-        print_command "$cmd"
+        print_info "Module: $pool_name (address: $module_addr)"
+        print_command "# Step 1: Add account with initial balance"
+        print_command "$cmd1"
+        echo ""
+        
+        # Generate command 2: jq to convert to ModuleAccount
+        local permissions_json
+        if [[ -n "$pool_permissions" && "$pool_permissions" != "null" && "$pool_permissions" != "" ]]; then
+            # Split permissions by comma and create JSON array (compact format, single line)
+            permissions_json=$(echo "$pool_permissions" | tr ',' '\n' | jq -R . | jq -s -c .)
+        else
+            permissions_json="[]"
+        fi
+        
+        # jq command to replace the account with ModuleAccount
+        # IMPORTANT: ModuleAccount.base_account must be a BaseAccount (pure, no vesting)
+        # Use single quotes for the jq expression to avoid shell escaping issues
+        local jq_modification="(.app_state.auth.accounts[] | select(.address == \"$module_addr\")) |= (. | del(.\"@type\") | {\"@type\":\"/cosmos.auth.v1beta1.ModuleAccount\",\"base_account\":.,\"name\":\"$pool_name\",\"permissions\":$permissions_json})"
+        
+        print_command "# Step 2: Convert to ModuleAccount with name and permissions"
+        print_command "jq '$jq_modification' $genesis_file > ${genesis_file}.tmp && mv ${genesis_file}.tmp $genesis_file"
         echo ""
     done
     
     print_section "Summary"
     
-    # Convert Unix timestamps to readable dates for summary (always in UTC for consistency)
-    local vesting_start_readable_summary vesting_end_readable_summary
-    if command -v date &> /dev/null; then
-        if [[ "$(uname)" == "Darwin" ]]; then
-            # macOS date command - force UTC timezone
-            vesting_start_readable_summary=$(TZ=UTC date -r "$vesting_start" "+%Y-%m-%d %H:%M:%S UTC" 2>/dev/null || echo "N/A")
-            vesting_end_readable_summary=$(TZ=UTC date -r "$vesting_end" "+%Y-%m-%d %H:%M:%S UTC" 2>/dev/null || echo "N/A")
-        else
-            # Linux date command - force UTC timezone
-            vesting_start_readable_summary=$(TZ=UTC date -d "@$vesting_start" "+%Y-%m-%d %H:%M:%S UTC" 2>/dev/null || echo "N/A")
-            vesting_end_readable_summary=$(TZ=UTC date -d "@$vesting_end" "+%Y-%m-%d %H:%M:%S UTC" 2>/dev/null || echo "N/A")
-        fi
-    else
-        vesting_start_readable_summary="N/A"
-        vesting_end_readable_summary="N/A"
-    fi
-    
-    # Calculate duration for summary
-    local vesting_duration_summary
-    vesting_duration_summary=$(calculate_duration "$vesting_start" "$vesting_end")
-    
     print_info "Configuration:"
     echo "  - Network: $NETWORK_MODE"
     echo "  - Base denom: $BASE_DENOM"
     echo "  - Module accounts: $pools_count"
-    echo "  - Vesting start: $vesting_start ($vesting_start_readable_summary)"
-    echo "  - Vesting end: $vesting_end ($vesting_end_readable_summary) - Duration: $vesting_duration_summary"
+    echo ""
+    
+    print_info "Module accounts created:"
+    for ((i=0; i<pools_count; i++)); do
+        local pool_name pool_amount
+        pool_name=$(jq -r ".pools[$i].name" "$MODULE_CONFIG_FILE")
+        pool_amount=$(jq -r ".pools[$i].amount_tokens" "$MODULE_CONFIG_FILE")
+        echo "  - $pool_name: $pool_amount tokens"
+    done
     echo ""
     
     print_info "Next steps:"
     echo "  1. Copy and paste each command above in order"
-    echo "  2. Validate the genesis file: infinited genesis validate --home $GENESIS_DIR"
+    echo "  2. Validate the genesis file: infinited genesis validate-genesis --home $GENESIS_DIR"
+    echo ""
+    echo "Note: These ModuleAccounts are pure (no vesting)."
+    echo "      For vesting tokens, use a separate vesting account (to be implemented)."
     echo ""
 }
 

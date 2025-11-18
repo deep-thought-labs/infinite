@@ -14,10 +14,41 @@ Follow these steps in order to create your genesis file:
 
 ### Step 1: Initialize Genesis
 
-   ```bash
-# Initialize the chain with a moniker and chain ID
+<details>
+<summary><strong>Mainnet</strong> (click to expand)</summary>
+
+```bash
+# Initialize the chain with a moniker and chain ID (mainnet)
 infinited init my-moniker --chain-id infinite_421018-1 --home ~/.infinited
 ```
+
+**Note**: The chain ID will be automatically updated by `customize_genesis.sh` in Step 2, but you should use the correct initial chain ID for consistency.
+
+</details>
+
+<details>
+<summary><strong>Testnet</strong> (click to expand)</summary>
+
+```bash
+# Initialize the chain with a moniker and chain ID (testnet)
+infinited init my-moniker --chain-id infinite_421018001-1 --home ~/.infinited
+```
+
+**Note**: The chain ID will be automatically updated by `customize_genesis.sh` in Step 2, but you should use the correct initial chain ID for consistency.
+
+</details>
+
+<details>
+<summary><strong>Creative</strong> (click to expand)</summary>
+
+```bash
+# Initialize the chain with a moniker and chain ID (creative)
+infinited init my-moniker --chain-id infinite_421018002-1 --home ~/.infinited
+```
+
+**Note**: The chain ID will be automatically updated by `customize_genesis.sh` in Step 2, but you should use the correct initial chain ID for consistency.
+
+</details>
 
 **What this does**: Creates a basic genesis file with default Cosmos SDK values (uses "stake" denomination - will be customized in next step).
 
@@ -94,35 +125,84 @@ These files contain all network-specific parameters (denominations, token metada
 
 ---
 
-### Step 3: Configure ModuleAccounts with Vesting (Optional)
+### Step 3: Configure ModuleAccounts (Optional)
 
 <details>
-<summary><strong>Click to expand if you need ModuleAccounts with vesting</strong></summary>
+<summary><strong>Click to expand if you need ModuleAccounts</strong></summary>
 
-If you need to set up ModuleAccounts with linear vesting (e.g., treasury, development, community pools):
+If you need to set up ModuleAccounts (e.g., treasury, development, community pools):
+
+**Important**: ModuleAccounts are created as pure accounts (without vesting), as Cosmos SDK does not natively support ModuleAccounts with vesting. For vesting tokens, use a separate vesting account (to be implemented in a future script).
+
+<details>
+<summary><strong>Mainnet</strong> (click to expand)</summary>
 
 ```bash
-# Generate commands for ModuleAccounts vesting setup
+# Generate commands for ModuleAccounts setup (mainnet)
 ./scripts/setup_module_accounts.sh --network mainnet --genesis-dir ~/.infinited
 
 # The script will print commands like:
-# infinited genesis add-module-vesting-account treasury \
-#   --module-name treasury \
-#   --vesting-amount 1000000000000000000000000drop \
-#   --vesting-start-time 1735689600 \
-#   --vesting-end-time 2208988800 \
-#   --permissions minter,burner \
-#   --home ~/.infinited
+# Step 1: Add account with initial balance
+# infinited genesis add-genesis-account infinite1vmafl8f3s6uuzwnxkqz0eza47v6ecn0tqw4y9p 1000000000000000000000000drop --home ~/.infinited
+#
+# Step 2: Convert to ModuleAccount with name and permissions
+# jq '(.app_state.auth.accounts[] | select(.address == "infinite1vmafl8f3s6uuzwnxkqz0eza47v6ecn0tqw4y9p")) |= (. | del(."@type") | {"@type":"/cosmos.auth.v1beta1.ModuleAccount","base_account":.,"name":"treasury","permissions":["minter","burner"]})' ~/.infinited/config/genesis.json > ~/.infinited/config/genesis.json.tmp && mv ~/.infinited/config/genesis.json.tmp ~/.infinited/config/genesis.json
 ```
 
+**Configuration file**: `scripts/genesis-configs/mainnet-vesting.json`
+
+</details>
+
+<details>
+<summary><strong>Testnet</strong> (click to expand)</summary>
+
+```bash
+# Generate commands for ModuleAccounts setup (testnet)
+./scripts/setup_module_accounts.sh --network testnet --genesis-dir ~/.infinited
+
+# The script will print commands like:
+# Step 1: Add account with initial balance
+# infinited genesis add-genesis-account <module_address> <amount>tdrop --home ~/.infinited
+#
+# Step 2: Convert to ModuleAccount with name and permissions
+# jq '...' ~/.infinited/config/genesis.json > ~/.infinited/config/genesis.json.tmp && mv ~/.infinited/config/genesis.json.tmp ~/.infinited/config/genesis.json
+```
+
+**Configuration file**: `scripts/genesis-configs/testnet-vesting.json`
+
+</details>
+
+<details>
+<summary><strong>Creative</strong> (click to expand)</summary>
+
+```bash
+# Generate commands for ModuleAccounts setup (creative)
+./scripts/setup_module_accounts.sh --network creative --genesis-dir ~/.infinited
+
+# The script will print commands like:
+# Step 1: Add account with initial balance
+# infinited genesis add-genesis-account <module_address> <amount>cdrop --home ~/.infinited
+#
+# Step 2: Convert to ModuleAccount with name and permissions
+# jq '...' ~/.infinited/config/genesis.json > ~/.infinited/config/genesis.json.tmp && mv ~/.infinited/config/genesis.json.tmp ~/.infinited/config/genesis.json
+```
+
+**Configuration file**: `scripts/genesis-configs/creative-vesting.json`
+
+</details>
+
 **What to do**:
-1. Run the script to see the generated commands
-2. Copy and paste each command in the order shown
-3. The script does NOT execute commands automatically - you must run them manually
+1. Run the script with the appropriate `--network` flag for your network
+2. The script will print the generated commands (2 commands per ModuleAccount)
+3. Copy and paste each command in the order shown
+4. The script does NOT execute commands automatically - you must run them manually
+5. Validate the genesis file: `infinited genesis validate-genesis --home ~/.infinited`
 
-**When to use**: Setting up treasury accounts, development funds, or community pools with vesting schedules.
+**When to use**: Setting up treasury accounts, development funds, or community pools as ModuleAccounts.
 
-**When NOT to use**: If you don't need ModuleAccounts with vesting, or for regular user accounts (use Step 4 instead).
+**When NOT to use**: If you don't need ModuleAccounts, or for regular user accounts (use Step 4 instead).
+
+**Note**: For vesting tokens, a separate vesting account script will be created in the future. ModuleAccounts created by this script are pure accounts without vesting.
 
 </details>
 
@@ -220,6 +300,9 @@ infinited genesis add-genesis-account account2 100000000000000000000drop \
 
 #### 5.1: Create Validator Genesis Transaction (gentx)
 
+<details>
+<summary><strong>Mainnet</strong> (click to expand)</summary>
+
 ```bash
 # Create a gentx for the validator (example: self-delegate 1 token)
 infinited genesis gentx my-account 1000000000000000000drop \
@@ -231,15 +314,6 @@ infinited genesis gentx my-account 1000000000000000000drop \
   --keyring-backend file \
   --home ~/.infinited
 ```
-
-**Parameters**:
-- `my-account`: Account name (must exist in keyring and have funds in genesis)
-- `1000000000000000000drop`: Amount to self-delegate (1 token = 1 × 10^18, must be ≤ account balance)
-- `--chain-id`: Must match the chain ID used in `infinited init`
-- `--commission-rate`: Initial commission (e.g., 10% = "0.10")
-- `--commission-max-rate`: Maximum commission (e.g., 20% = "0.20")
-- `--commission-max-change-rate`: Max change per update (e.g., 1% = "0.01")
-- `--min-self-delegation`: Minimum tokens to self-delegate (in atomic units, example: 1 token = "1000000000000000000")
 
 **Optional metadata**:
 ```bash
@@ -256,6 +330,89 @@ infinited genesis gentx my-account 1000000000000000000drop \
   --keyring-backend file \
   --home ~/.infinited
 ```
+
+</details>
+
+<details>
+<summary><strong>Testnet</strong> (click to expand)</summary>
+
+```bash
+# Create a gentx for the validator (example: self-delegate 1 token)
+infinited genesis gentx my-account 1000000000000000000tdrop \
+  --chain-id infinite_421018001-1 \
+  --commission-rate "0.10" \
+  --commission-max-rate "0.20" \
+  --commission-max-change-rate "0.01" \
+  --min-self-delegation "1000000000000000000" \
+  --keyring-backend file \
+  --home ~/.infinited
+```
+
+**Optional metadata**:
+```bash
+infinited genesis gentx my-account 1000000000000000000tdrop \
+  --chain-id infinite_421018001-1 \
+  --moniker "My Validator" \
+  --website "https://myvalidator.com" \
+  --details "Validator description" \
+  --security-contact "security@myvalidator.com" \
+  --commission-rate "0.10" \
+  --commission-max-rate "0.20" \
+  --commission-max-change-rate "0.01" \
+  --min-self-delegation "1000000000000000000" \
+  --keyring-backend file \
+  --home ~/.infinited
+```
+
+</details>
+
+<details>
+<summary><strong>Creative</strong> (click to expand)</summary>
+
+```bash
+# Create a gentx for the validator (example: self-delegate 1 token)
+infinited genesis gentx my-account 1000000000000000000cdrop \
+  --chain-id infinite_421018002-1 \
+  --commission-rate "0.01" \
+  --commission-max-rate "0.05" \
+  --commission-max-change-rate "0.01" \
+  --min-self-delegation "1000000000000000000" \
+  --keyring-backend file \
+  --home ~/.infinited
+```
+
+**Optional metadata**:
+```bash
+infinited genesis gentx my-account 1000000000000000000cdrop \
+  --chain-id infinite_421018002-1 \
+  --moniker "My Validator" \
+  --website "https://myvalidator.com" \
+  --details "Validator description" \
+  --security-contact "security@myvalidator.com" \
+  --commission-rate "0.01" \
+  --commission-max-rate "0.05" \
+  --commission-max-change-rate "0.01" \
+  --min-self-delegation "1000000000000000000" \
+  --keyring-backend file \
+  --home ~/.infinited
+```
+
+</details>
+
+**Parameters**:
+- `my-account`: Account name (must exist in keyring and have funds in genesis)
+- Amount: Amount to self-delegate (1 token = 1 × 10^18, must be ≤ account balance)
+  - Mainnet: `1000000000000000000drop`
+  - Testnet: `1000000000000000000tdrop`
+  - Creative: `1000000000000000000cdrop`
+- `--chain-id`: Must match the chain ID used in `infinited init`
+  - Mainnet: `infinite_421018-1`
+  - Testnet: `infinite_421018001-1`
+  - Creative: `infinite_421018002-1`
+- `--commission-rate`: Initial commission (e.g., 10% = "0.10", Creative uses 1% = "0.01")
+- `--commission-max-rate`: Maximum commission (e.g., 20% = "0.20", Creative uses 5% = "0.05")
+- `--commission-max-change-rate`: Max change per update (e.g., 1% = "0.01")
+- `--min-self-delegation`: Minimum tokens to self-delegate (in atomic units, example: 1 token = "1000000000000000000")
 
 #### 5.2: Collect Genesis Transactions
 
