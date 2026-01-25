@@ -302,16 +302,43 @@ create_module_account() {
     return 0
 }
 
-# Validate final genesis file
+# Validate genesis structure (Cosmos SDK specification compliance)
+validate_genesis_structure() {
+    local script_dir
+    script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+    local validate_script="${script_dir}/validate_genesis_structure.sh"
+    
+    if [[ ! -f "$validate_script" ]]; then
+        print_warning "Structure validation script not found, skipping structure validation"
+        return 0
+    fi
+    
+    print_info "Validating genesis structure (Cosmos SDK compliance)..."
+    if bash "$validate_script" "$GENESIS_FILE" > /dev/null 2>&1; then
+        print_success "Genesis structure is valid (Cosmos SDK compliant)"
+        return 0
+    else
+        print_error "Genesis structure validation failed"
+        print_info "Run 'bash $validate_script $GENESIS_FILE' for details"
+        ERRORS+=("Genesis structure validation failed")
+        return 1
+    fi
+}
+
+# Validate final genesis file (SDK validator)
 validate_genesis() {
     print_section "Validating Genesis File"
     
-    print_info "Running genesis validation..."
+    # First validate structure (Cosmos SDK compliance)
+    validate_genesis_structure
+    
+    # Then validate using SDK validator
+    print_info "Running SDK genesis validation..."
     if infinited genesis validate-genesis --home "$GENESIS_DIR" > /dev/null 2>&1; then
-        print_success "Genesis file is valid"
+        print_success "Genesis file is valid (SDK validation passed)"
         return 0
     else
-        print_error "Genesis file validation failed"
+        print_error "Genesis file validation failed (SDK validation)"
         print_error "Run 'infinited genesis validate-genesis --home $GENESIS_DIR' for details"
         ERRORS+=("Genesis validation failed")
         return 1

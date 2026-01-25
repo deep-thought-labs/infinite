@@ -574,7 +574,14 @@ For networks with multiple validators:
 
 ### Step 5: Validate Genesis
 
-#### 5.1: Validate Structure (Recommended)
+**Note**: Validation is **automatically executed** by the scripts:
+- `customize_genesis.sh` validates structure and SDK after all customizations
+- `setup_module_accounts.sh` validates structure and SDK after creating ModuleAccounts
+- `setup_vesting_accounts.sh` validates structure and SDK after creating vesting accounts
+
+**You can also run validation manually**:
+
+#### 5.1: Validate Structure (Cosmos SDK Compliance)
 
 ```bash
 # Validate genesis structure against Cosmos SDK specifications
@@ -606,6 +613,11 @@ infinited genesis validate-genesis --home ~/.infinited
 - ✅ Total supply equals sum of balances (see [TOKEN_SUPPLY.md](TOKEN_SUPPLY.md) for details)
 - ✅ Validator configurations are correct
 - ✅ JSON structure is valid
+
+**When validation runs automatically**:
+- After `customize_genesis.sh` completes (validates final structure)
+- After `setup_module_accounts.sh` completes (validates ModuleAccount structure)
+- After `setup_vesting_accounts.sh` completes (validates vesting account structure)
 
 ---
 

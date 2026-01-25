@@ -185,7 +185,7 @@ check_prerequisites() {
     fi
 }
 
-# Validate genesis file
+# Validate genesis file (basic checks)
 validate_genesis_file() {
     local genesis_file="$1"
     
@@ -203,6 +203,62 @@ validate_genesis_file() {
         print_error "Invalid genesis file: missing app_state"
         exit 1
     fi
+}
+
+# Validate genesis structure (Cosmos SDK specification compliance)
+validate_genesis_structure() {
+    local genesis_file="$1"
+    local script_dir
+    script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+    local validate_script="${script_dir}/validate_genesis_structure.sh"
+    
+    if [[ ! -f "$validate_script" ]]; then
+        print_warning "Structure validation script not found, skipping structure validation"
+        return 0
+    fi
+    
+    print_info "Validating genesis structure (Cosmos SDK compliance)..."
+    if bash "$validate_script" "$genesis_file" > /dev/null 2>&1; then
+        print_success "Genesis structure is valid (Cosmos SDK compliant)"
+        return 0
+    else
+        print_error "Genesis structure validation failed"
+        print_info "Run 'bash $validate_script $genesis_file' for details"
+        return 1
+    fi
+}
+
+# Validate genesis using SDK validator
+validate_genesis_sdk() {
+    local genesis_dir="$1"
+    
+    print_info "Running SDK genesis validation..."
+    if infinited genesis validate-genesis --home "$genesis_dir" > /dev/null 2>&1; then
+        print_success "Genesis file is valid (SDK validation passed)"
+        return 0
+    else
+        print_error "Genesis validation failed (SDK validation)"
+        print_info "Run 'infinited genesis validate-genesis --home $genesis_dir' for details"
+        return 1
+    fi
+}
+
+# Validate both structure and SDK
+validate_genesis_structure_and_sdk() {
+    local genesis_file="$1"
+    local genesis_dir="$2"
+    
+    # First validate structure (Cosmos SDK compliance)
+    if ! validate_genesis_structure "$genesis_file"; then
+        return 1
+    fi
+    
+    # Then validate using SDK validator
+    if ! validate_genesis_sdk "$genesis_dir"; then
+        return 1
+    fi
+    
+    return 0
 }
 
 # Apply jq modification safely
