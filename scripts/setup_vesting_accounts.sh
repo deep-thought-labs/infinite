@@ -312,7 +312,10 @@ main() {
     parse_arguments "$@"
     get_script_dir
     
-    print_section "Vesting Accounts Setup for ${NETWORK_MODE^^}"
+    # Convert network mode to uppercase (compatible with all shells)
+    local network_upper
+    network_upper=$(echo "$NETWORK_MODE" | tr '[:lower:]' '[:upper:]')
+    print_section "Vesting Accounts Setup for $network_upper"
     
     print_info "Network: $NETWORK_MODE"
     print_info "Genesis directory: $GENESIS_DIR"
