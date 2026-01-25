@@ -303,6 +303,8 @@ create_module_account() {
 }
 
 # Validate genesis structure (Cosmos SDK specification compliance)
+# Note: This validation only checks ModuleAccounts structure, not vesting accounts
+# Vesting accounts are validated separately after setup_vesting_accounts.sh runs
 validate_genesis_structure() {
     local script_dir
     script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -313,9 +315,10 @@ validate_genesis_structure() {
         return 0
     fi
     
-    print_info "Validating genesis structure (Cosmos SDK compliance)..."
+    print_info "Validating ModuleAccounts structure (Cosmos SDK compliance)..."
+    # Note: validate_genesis_structure.sh now handles missing vesting accounts gracefully
     if bash "$validate_script" "$GENESIS_FILE" > /dev/null 2>&1; then
-        print_success "Genesis structure is valid (Cosmos SDK compliant)"
+        print_success "ModuleAccounts structure is valid (Cosmos SDK compliant)"
         return 0
     else
         print_error "Genesis structure validation failed"
