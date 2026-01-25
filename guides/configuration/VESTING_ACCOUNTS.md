@@ -201,6 +201,19 @@ After creation, vesting accounts appear in `genesis.json` as:
 | 2030-01-01 00:00:00 UTC | `2208988800` |
 | 2035-01-01 00:00:00 UTC | `2682288000` |
 
+### ⚠️ Important: Start Time vs Chain Launch
+
+**Best Practice**: Set `vesting_start_time` to match or be after the **chain launch date**:
+
+- ✅ **Recommended**: `vesting_start_time` = chain launch date (or later)
+  - Ensures uniform distribution over the full vesting period
+  - No tokens are unlocked at launch
+  
+- ⚠️ **If start_time < launch_date**:
+  - Tokens will be **partially unlocked** at chain launch
+  - The remaining tokens unlock over the **remaining time** (not the full period)
+  - Example: If 20% of the period has passed, 20% of tokens are unlocked at launch
+
 ### Calculating on macOS
 
 ```bash
@@ -345,10 +358,36 @@ For **continuous vesting**:
 - Tokens unlock linearly over time
 - At any point, the percentage unlocked = `(current_time - start_time) / (end_time - start_time)`
 - Example: If 50% of time has passed, 50% of tokens are unlocked
+- **Important**: The calculation uses **block time** (current chain time), not genesis time
 
 For **delayed vesting**:
 - 0% unlocked until `end_time`
 - 100% unlocked at `end_time` (all at once)
+
+### Start Time Before Chain Launch
+
+**⚠️ IMPORTANT**: If `vesting_start_time` is set to a date **before the chain launch**, the vesting calculation **automatically adjusts**:
+
+**Behavior**:
+- ✅ **Vesting begins calculating from the start_time**, even if it's in the past
+- ✅ **Distribution is NOT uniform** - it uses the **remaining time** in the vesting period
+- ✅ The formula adjusts: `unlocked_percentage = (current_block_time - start_time) / (end_time - start_time)`
+
+**Example Scenario**:
+- Chain launches: 2025-06-01 (timestamp: 1751328000)
+- Vesting start: 2025-01-01 (timestamp: 1735689600) - **5 months before launch**
+- Vesting end: 2030-01-01 (timestamp: 2208988800) - 5 years from start
+
+**What happens**:
+- At chain launch (2025-06-01): ~8.3% of tokens are already unlocked (5 months / 60 months)
+- Tokens continue unlocking linearly from launch date
+- The remaining ~91.7% unlock over the remaining ~54.5 months
+- **The vesting period is NOT extended** - it still ends at 2030-01-01
+
+**Recommendation**:
+- ✅ **Best practice**: Set `vesting_start_time` to the **chain launch date** or later
+- ✅ This ensures vesting begins at launch and distributes uniformly over the full period
+- ⚠️ If you set it before launch, tokens will be partially unlocked at launch
 
 ---
 
