@@ -136,11 +136,23 @@ These files contain all network-specific parameters (denominations, token metada
 ```bash
 ./scripts/customize_genesis.sh ~/.infinited/config/genesis.json --network mainnet --skip-accounts
 ```
-This will only apply module customizations without executing the account setup scripts. You can then run them manually if needed (see Steps 3 and 3.5 for debugging/testing purposes only).
+This will only apply module customizations without executing the account setup scripts. You can then run them manually if needed (see technical details below).
 
----
+<details>
+<summary><strong>Technical Details: ModuleAccounts and Vesting Accounts Setup (Internal to Step 2)</strong></summary>
 
-### Step 3: Configure ModuleAccounts (Debugging/Testing Only - Do NOT Run Normally)
+**Note**: This section is for technical reference only. In normal workflow, these scripts are executed automatically by `customize_genesis.sh`. You should not run them manually unless debugging/testing.
+
+The `customize_genesis.sh` script automatically executes two additional scripts as part of Step 2:
+
+1. **`setup_module_accounts.sh`** - Creates tokenomics ModuleAccounts (strategic_delegation, security_rewards, etc.)
+2. **`setup_vesting_accounts.sh`** - Creates vesting accounts (multisig wallets with locked tokens)
+
+These scripts are internal to Step 2 and are not separate user-facing steps. They are documented here only for debugging/testing purposes.
+
+### ModuleAccounts Setup (Internal)
+
+**⚠️ REMINDER**: This is executed automatically by Step 2. Only run manually for debugging/testing.
 
 **⚠️ IMPORTANT**: **You should NOT run this step manually in normal circumstances.**
 
@@ -152,9 +164,11 @@ ModuleAccounts are **automatically configured** when you run `customize_genesis.
 **In normal workflow, skip this step entirely.** The scripts `setup_module_accounts.sh` and `setup_vesting_accounts.sh` are executed automatically by `customize_genesis.sh` and you should not run them directly.
 
 <details>
-<summary><strong>Click to expand if you need ModuleAccounts</strong></summary>
+<summary><strong>Click to expand for debugging/testing purposes only</strong></summary>
 
-If you need to set up ModuleAccounts according to the project's tokenomics:
+**⚠️ REMINDER**: This step is only for debugging/testing. In normal workflow, ModuleAccounts are automatically configured by Step 2.
+
+If you need to manually set up or modify ModuleAccounts according to the project's tokenomics:
 
 **Important**: ModuleAccounts are created according to Cosmos SDK specification with `@type: "/cosmos.auth.v1beta1.ModuleAccount"`, containing `base_account`, `name`, and `permissions` fields. Custom ModuleAccounts created by this script always have an empty permissions array (`permissions: []`). Permissions are only effective when registered in `infinited/config/permissions.go`, which requires code changes.
 
@@ -235,29 +249,15 @@ If you need to set up ModuleAccounts according to the project's tokenomics:
 
 See **[MODULE_ACCOUNTS.md](MODULE_ACCOUNTS.md)** for complete documentation.
 
-**When NOT to use**: If you don't need ModuleAccounts, or for regular user accounts (use Step 4 instead).
+**When NOT to use**: In normal workflow, you should NOT run this manually. ModuleAccounts are automatically configured in Step 2. Only use for debugging/testing or manual modifications after Step 2.
 
 **Note**: ModuleAccounts created by this script follow the official Cosmos SDK structure for ModuleAccounts.
 
-</details>
+### Vesting Accounts Setup (Internal)
 
----
+**⚠️ REMINDER**: This is executed automatically by Step 2. Only run manually for debugging/testing.
 
-### Step 3.5: Configure Vesting Accounts (Debugging/Testing Only - Do NOT Run Normally)
-
-**⚠️ IMPORTANT**: **You should NOT run this step manually in normal circumstances.**
-
-Vesting Accounts are **automatically configured** when you run `customize_genesis.sh` in Step 2. This step is only documented here for:
-- **Debugging**: If you need to troubleshoot Vesting Accounts setup
-- **Testing**: If you want to test the Vesting Accounts script in isolation
-- **Manual modifications**: If you need to add or modify vesting accounts after Step 2
-
-**In normal workflow, skip this step entirely.** The scripts `setup_module_accounts.sh` and `setup_vesting_accounts.sh` are executed automatically by `customize_genesis.sh` and you should not run them directly.
-
-<details>
-<summary><strong>Click to expand if you need Vesting Accounts</strong></summary>
-
-If you need to set up vesting accounts (e.g., multisig wallets with locked tokens that unlock gradually):
+If you need to manually set up or modify vesting accounts (e.g., multisig wallets with locked tokens that unlock gradually):
 
 **Important**: Vesting accounts are regular accounts (not ModuleAccounts) with a vesting schedule. Tokens unlock gradually over time according to the configured schedule. This is useful for multisig wallets or accounts that should have tokens locked at genesis.
 
@@ -304,9 +304,9 @@ If you need to set up vesting accounts (e.g., multisig wallets with locked token
 4. The script will **execute commands automatically** and create all vesting accounts
 5. Review the summary report to confirm all accounts were created successfully
 
-**When to use**: Setting up multisig wallets or accounts that need tokens locked at genesis with gradual unlock over time.
+**When to use**: Only for debugging/testing or manual modifications after Step 2. In normal workflow, Vesting Accounts are automatically configured in Step 2.
 
-**When NOT to use**: For regular accounts (use Step 4) or ModuleAccounts (use Step 3).
+**When NOT to use**: In normal workflow, you should NOT run this manually. Vesting Accounts are automatically configured in Step 2. Only use for debugging/testing or manual modifications after Step 2.
 
 **Note**: Vesting accounts can be added using only the public address - no keyring or private keys required. This is perfect for multisig wallets where you only have the public address.
 
@@ -316,9 +316,9 @@ If you need to set up vesting accounts (e.g., multisig wallets with locked token
 
 ---
 
-### Step 4: Create and Fund Accounts
+### Step 3: Create and Fund Accounts
 
-#### 4.1: Create Account
+#### 3.1: Create Account
 
 ```bash
 # Create a new account in the keyring
@@ -332,7 +332,7 @@ infinited keys add my-account --keyring-backend file --home ~/.infinited
 infinited keys add my-account --recover --keyring-backend file --home ~/.infinited
 ```
 
-#### 4.2: Fund Account in Genesis
+#### 3.2: Fund Account in Genesis
 
 ```bash
 # Add the account to genesis with initial balance (example: 100 tokens)
@@ -404,9 +404,9 @@ infinited genesis add-genesis-account account2 100000000000000000000drop \
 
 ---
 
-### Step 5: Create Validator
+### Step 4: Create Validator
 
-#### 5.1: Create Validator Genesis Transaction (gentx)
+#### 4.1: Create Validator Genesis Transaction (gentx)
 
 <details>
 <summary><strong>Mainnet</strong> (click to expand)</summary>
@@ -522,7 +522,7 @@ infinited genesis gentx my-account 1000000000000000000cdrop \
 - `--commission-max-change-rate`: Max change per update (e.g., 1% = "0.01")
 - `--min-self-delegation`: Minimum tokens to self-delegate (in atomic units, example: 1 token = "1000000000000000000")
 
-#### 5.2: Collect Genesis Transactions
+#### 4.2: Collect Genesis Transactions
 
 ```bash
 # Collect all gentx files into genesis
@@ -575,7 +575,7 @@ For networks with multiple validators:
 
 ---
 
-### Step 6: Validate Genesis
+### Step 5: Validate Genesis
 
 ```bash
 # Validate the genesis file
@@ -590,7 +590,7 @@ infinited genesis validate-genesis --home ~/.infinited
 
 ---
 
-### Step 7: Distribute Genesis File
+### Step 6: Distribute Genesis File
 
 The finalized `genesis.json` must be distributed to **ALL nodes** in the network before launch:
 
@@ -604,7 +604,7 @@ scp ~/.infinited/config/genesis.json user@validator2:/path/to/.infinited/config/
 
 ---
 
-### Step 8: Start the Network
+### Step 7: Start the Network
 
 <details>
 <summary><strong>Mainnet</strong> (click to expand)</summary>
@@ -660,15 +660,15 @@ infinited init mainnet-validator --chain-id infinite_421018-1 --home ~/.infinite
 # Step 2: Apply customizations (automatically includes ModuleAccounts and Vesting Accounts)
 ./scripts/customize_genesis.sh ~/.infinited/config/genesis.json --network mainnet
 
-# Step 4: Create validator account
+# Step 3: Create validator account
 infinited keys add validator --keyring-backend file --home ~/.infinited
 # Save the mnemonic securely!
 
-# Step 4.2: Fund validator account (100 tokens)
+# Step 3.2: Fund validator account (100 tokens)
 infinited genesis add-genesis-account validator 100000000000000000000drop \
   --keyring-backend file --home ~/.infinited
 
-# Step 5: Create gentx (self-delegate 1 token)
+# Step 4: Create gentx (self-delegate 1 token)
 infinited genesis gentx validator 1000000000000000000drop \
   --chain-id infinite_421018-1 \
   --moniker "Mainnet Validator" \
@@ -679,13 +679,13 @@ infinited genesis gentx validator 1000000000000000000drop \
   --keyring-backend file \
   --home ~/.infinited
 
-# Step 5.2: Collect gentx
+# Step 4.2: Collect gentx
 infinited genesis collect-gentxs --home ~/.infinited
 
-# Step 6: Validate
+# Step 5: Validate
 infinited genesis validate-genesis --home ~/.infinited
 
-# Step 7: Distribute genesis.json to all nodes, then start
+# Step 6: Distribute genesis.json to all nodes, then start
 infinited start --chain-id infinite_421018-1 --evm.evm-chain-id 421018 --home ~/.infinited
 ```
 
@@ -701,15 +701,15 @@ infinited init testnet-validator --chain-id infinite_421018001-1 --home ~/.infin
 # Step 2: Apply customizations (automatically includes ModuleAccounts and Vesting Accounts)
 ./scripts/customize_genesis.sh ~/.infinited/config/genesis.json --network testnet
 
-# Step 4: Create validator account
+# Step 3: Create validator account
 infinited keys add validator --keyring-backend file --home ~/.infinited
 # Save the mnemonic securely!
 
-# Step 4.2: Fund validator account (100 tokens)
+# Step 3.2: Fund validator account (100 tokens)
 infinited genesis add-genesis-account validator 100000000000000000000tdrop \
   --keyring-backend file --home ~/.infinited
 
-# Step 5: Create gentx (self-delegate 1 token)
+# Step 4: Create gentx (self-delegate 1 token)
 infinited genesis gentx validator 1000000000000000000tdrop \
   --chain-id infinite_421018001-1 \
   --moniker "Testnet Validator" \
@@ -720,13 +720,13 @@ infinited genesis gentx validator 1000000000000000000tdrop \
   --keyring-backend file \
   --home ~/.infinited
 
-# Step 6: Collect gentx
+# Step 4.2: Collect gentx
 infinited genesis collect-gentxs --home ~/.infinited
 
-# Step 7: Validate
+# Step 5: Validate
 infinited genesis validate-genesis --home ~/.infinited
 
-# Step 8: Distribute genesis.json to all nodes, then start
+# Step 6: Distribute genesis.json to all nodes, then start
 infinited start --chain-id infinite_421018001-1 --evm.evm-chain-id 421018001 --home ~/.infinited
 ```
 
@@ -742,15 +742,15 @@ infinited init creative-validator --chain-id infinite_421018002-1 --home ~/.infi
 # Step 2: Apply customizations (automatically includes ModuleAccounts and Vesting Accounts)
 ./scripts/customize_genesis.sh ~/.infinited/config/genesis.json --network creative
 
-# Step 4: Create validator account
+# Step 3: Create validator account
 infinited keys add validator --keyring-backend file --home ~/.infinited
 # Save the mnemonic securely!
 
-# Step 4.2: Fund validator account (100 tokens)
+# Step 3.2: Fund validator account (100 tokens)
 infinited genesis add-genesis-account validator 100000000000000000000cdrop \
   --keyring-backend file --home ~/.infinited
 
-# Step 5: Create gentx (self-delegate 1 token)
+# Step 4: Create gentx (self-delegate 1 token)
 infinited genesis gentx validator 1000000000000000000cdrop \
   --chain-id infinite_421018002-1 \
   --moniker "Creative Validator" \
@@ -761,13 +761,13 @@ infinited genesis gentx validator 1000000000000000000cdrop \
   --keyring-backend file \
   --home ~/.infinited
 
-# Step 6: Collect gentx
+# Step 4.2: Collect gentx
 infinited genesis collect-gentxs --home ~/.infinited
 
-# Step 7: Validate
+# Step 5: Validate
 infinited genesis validate-genesis --home ~/.infinited
 
-# Step 8: Distribute genesis.json to all nodes, then start
+# Step 6: Distribute genesis.json to all nodes, then start
 infinited start --chain-id infinite_421018002-1 --evm.evm-chain-id 421018002 --home ~/.infinited
 ```
 
