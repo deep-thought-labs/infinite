@@ -103,12 +103,14 @@ infinited init my-moniker --chain-id infinite_421018002-1 --home ~/.infinited
 
 </details>
 
-**What this script does**:
+**What this script does automatically**:
 - ✅ Sets all module denominations to network-specific denom
 - ✅ Adds complete token metadata
 - ✅ Configures EVM precompiles and ERC20 pairs
 - ✅ Sets consensus, staking, mint, governance, slashing, fee market, and distribution parameters
 - ✅ Creates automatic backup
+- ✅ **Executes `setup_module_accounts.sh`** to create tokenomics ModuleAccounts
+- ✅ **Executes `setup_vesting_accounts.sh`** to create vesting accounts (if configured)
 
 **Configuration files location**:
 The script reads all network-specific parameters from JSON configuration files located in:
@@ -118,10 +120,17 @@ The script reads all network-specific parameters from JSON configuration files l
 
 These files contain all network-specific parameters (denominations, token metadata, staking, mint, governance, slashing, fee market, distribution, and consensus parameters). You can modify these files to customize the genesis parameters for each network.
 
-**For ModuleAccounts configuration**:
+**For ModuleAccounts configuration** (automatically executed):
 - **Mainnet**: `scripts/genesis-configs/mainnet-module-accounts.json`
 - **Testnet**: `scripts/genesis-configs/testnet-module-accounts.json`
 - **Creative**: `scripts/genesis-configs/creative-module-accounts.json`
+
+**For Vesting Accounts configuration** (automatically executed):
+- **Mainnet**: `scripts/genesis-configs/mainnet-vesting-accounts.json`
+- **Testnet**: `scripts/genesis-configs/testnet-vesting-accounts.json`
+- **Creative**: `scripts/genesis-configs/creative-vesting-accounts.json`
+
+**Note**: You don't need to run `setup_module_accounts.sh` or `setup_vesting_accounts.sh` separately. They are executed automatically by `customize_genesis.sh` after applying module customizations.
 
 ---
 
@@ -624,14 +633,8 @@ infinited start \
 # Step 1: Initialize
 infinited init mainnet-validator --chain-id infinite_421018-1 --home ~/.infinited
 
-# Step 2: Apply customizations
-./scripts/customize_genesis.sh --network mainnet
-
-# Step 3: Create ModuleAccounts (tokenomics pools)
-./scripts/setup_module_accounts.sh --network mainnet
-
-# Step 3.5: Create Vesting Accounts (optional - for multisig wallets)
-./scripts/setup_vesting_accounts.sh --network mainnet
+# Step 2: Apply customizations (automatically includes ModuleAccounts and Vesting Accounts)
+./scripts/customize_genesis.sh ~/.infinited/config/genesis.json --network mainnet
 
 # Step 4: Create validator account
 infinited keys add validator --keyring-backend file --home ~/.infinited
@@ -671,14 +674,8 @@ infinited start --chain-id infinite_421018-1 --evm.evm-chain-id 421018 --home ~/
 # Step 1: Initialize
 infinited init testnet-validator --chain-id infinite_421018001-1 --home ~/.infinited
 
-# Step 2: Apply customizations
-./scripts/customize_genesis.sh --network testnet
-
-# Step 3: Create ModuleAccounts (tokenomics pools)
-./scripts/setup_module_accounts.sh --network testnet
-
-# Step 3.5: Create Vesting Accounts (optional - for multisig wallets)
-./scripts/setup_vesting_accounts.sh --network testnet
+# Step 2: Apply customizations (automatically includes ModuleAccounts and Vesting Accounts)
+./scripts/customize_genesis.sh ~/.infinited/config/genesis.json --network testnet
 
 # Step 4: Create validator account
 infinited keys add validator --keyring-backend file --home ~/.infinited
@@ -718,14 +715,8 @@ infinited start --chain-id infinite_421018001-1 --evm.evm-chain-id 421018001 --h
 # Step 1: Initialize
 infinited init creative-validator --chain-id infinite_421018002-1 --home ~/.infinited
 
-# Step 2: Apply customizations
-./scripts/customize_genesis.sh --network creative
-
-# Step 3: Create ModuleAccounts (tokenomics pools)
-./scripts/setup_module_accounts.sh --network creative
-
-# Step 3.5: Create Vesting Accounts (optional - for multisig wallets)
-./scripts/setup_vesting_accounts.sh --network creative
+# Step 2: Apply customizations (automatically includes ModuleAccounts and Vesting Accounts)
+./scripts/customize_genesis.sh ~/.infinited/config/genesis.json --network creative
 
 # Step 4: Create validator account
 infinited keys add validator --keyring-backend file --home ~/.infinited

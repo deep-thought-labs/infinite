@@ -8,11 +8,17 @@
 # Purpose: Customize a generated genesis.json file with all Infinite Drive
 #          personalizations (denominations, token metadata, EVM config, etc.)
 #          for mainnet, testnet, or creative networks.
+#          Also automatically executes ModuleAccounts and Vesting Accounts setup scripts.
 #
 # Usage: ./scripts/customize_genesis.sh <genesis_file_path> --network <mainnet|testnet|creative>
 #
 # Example:
 #   ./scripts/customize_genesis.sh ~/.infinited/config/genesis.json --network mainnet
+#
+# This script will:
+#   1. Apply all module customizations (denominations, parameters, etc.)
+#   2. Execute setup_module_accounts.sh automatically
+#   3. Execute setup_vesting_accounts.sh automatically
 #
 # Exit codes:
 #   0 - Success
@@ -607,6 +613,67 @@ configure_consensus_params() {
         "Consensus evidence.max_bytes → $evidence_max_bytes"
 }
 
+# Execute setup scripts (ModuleAccounts and Vesting Accounts)
+execute_setup_scripts() {
+    local genesis_file="$1"
+    local network="$2"
+    
+    # Expand ~ and resolve path
+    local expanded_genesis_file
+    expanded_genesis_file="${genesis_file/#\~/$HOME}"
+    
+    # Extract genesis directory from genesis file path
+    # If genesis file is ~/.infinited/config/genesis.json, directory is ~/.infinited
+    local genesis_dir
+    genesis_dir=$(dirname "$(dirname "$expanded_genesis_file")")
+    
+    # Get script directory to find other scripts
+    local script_dir
+    script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+    
+    echo ""
+    print_info "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+    print_info "Executing ModuleAccounts and Vesting Accounts setup scripts"
+    print_info "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+    echo ""
+    
+    # Execute setup_module_accounts.sh
+    local module_accounts_script="${script_dir}/setup_module_accounts.sh"
+    if [[ -f "$module_accounts_script" ]]; then
+        print_info "Executing ModuleAccounts setup script..."
+        if bash "$module_accounts_script" --network "$network" --genesis-dir "$genesis_dir"; then
+            print_info "ModuleAccounts setup completed successfully"
+        else
+            print_error "ModuleAccounts setup failed"
+            return 1
+        fi
+        echo ""
+    else
+        print_warning "ModuleAccounts script not found: $module_accounts_script"
+        print_warning "Skipping ModuleAccounts setup"
+        echo ""
+    fi
+    
+    # Execute setup_vesting_accounts.sh
+    local vesting_accounts_script="${script_dir}/setup_vesting_accounts.sh"
+    if [[ -f "$vesting_accounts_script" ]]; then
+        print_info "Executing Vesting Accounts setup script..."
+        if bash "$vesting_accounts_script" --network "$network" --genesis-dir "$genesis_dir"; then
+            print_info "Vesting Accounts setup completed successfully"
+        else
+            print_error "Vesting Accounts setup failed"
+            return 1
+        fi
+        echo ""
+    else
+        print_warning "Vesting Accounts script not found: $vesting_accounts_script"
+        print_warning "Skipping Vesting Accounts setup"
+        echo ""
+    fi
+    
+    return 0
+}
+
 # Main function
 main() {
     parse_arguments "$@"
@@ -648,12 +715,29 @@ main() {
     print_info "Genesis file customized successfully for $NETWORK_MODE!"
     print_info "Backup saved at: $backup_file"
     echo ""
-    print_info "Next steps:"
-    echo "  1. Validate the genesis file: infinited genesis validate-genesis"
-    echo "  2. Review the changes if needed"
-    echo "  3. Remove the backup file when satisfied: rm $backup_file"
+    
+    # Execute ModuleAccounts and Vesting Accounts setup scripts
+    if ! execute_setup_scripts "$GENESIS_FILE" "$NETWORK_MODE"; then
+        print_error "Failed to execute setup scripts"
+        print_warning "Genesis customizations were applied, but account setup failed"
+        print_info "You can run the setup scripts manually:"
+        echo "  ./scripts/setup_module_accounts.sh --network $NETWORK_MODE --genesis-dir $(dirname "$(dirname "$GENESIS_FILE")")"
+        echo "  ./scripts/setup_vesting_accounts.sh --network $NETWORK_MODE --genesis-dir $(dirname "$(dirname "$GENESIS_FILE")")"
+        exit 1
+    fi
+    
     echo ""
-    print_info "Note: Use setup_genesis_accounts.sh to configure accounts and balances"
+    print_info "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+    print_info "All genesis customizations completed successfully!"
+    print_info "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+    echo ""
+    print_info "Next steps:"
+    echo "  1. Create and fund regular accounts (if needed)"
+    echo "  2. Create validators and collect gentx"
+    echo "  3. Validate the genesis file: infinited genesis validate-genesis --home $(dirname "$(dirname "$GENESIS_FILE")")"
+    echo "  4. Review the changes if needed"
+    echo "  5. Remove the backup file when satisfied: rm $backup_file"
+    echo ""
 }
 
 # Run main function
