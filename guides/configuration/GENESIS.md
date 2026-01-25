@@ -163,9 +163,6 @@ ModuleAccounts are **automatically configured** when you run `customize_genesis.
 
 **In normal workflow, skip this step entirely.** The scripts `setup_module_accounts.sh` and `setup_vesting_accounts.sh` are executed automatically by `customize_genesis.sh` and you should not run them directly.
 
-<details>
-<summary><strong>Click to expand for debugging/testing purposes only</strong></summary>
-
 **⚠️ REMINDER**: This step is only for debugging/testing. In normal workflow, ModuleAccounts are automatically configured by Step 2.
 
 If you need to manually set up or modify ModuleAccounts according to the project's tokenomics:
