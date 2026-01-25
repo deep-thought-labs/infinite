@@ -78,9 +78,11 @@ handle_error() {
 trap 'handle_error $LINENO "Unexpected error"' ERR
 
 # Parse command line arguments
+SKIP_VALIDATION=false
 parse_arguments() {
     local network=""
     local genesis_dir=""
+    SKIP_VALIDATION=false
     
     while [[ $# -gt 0 ]]; do
         case $1 in
@@ -92,12 +94,17 @@ parse_arguments() {
                 genesis_dir="$2"
                 shift 2
                 ;;
+            --skip-validation)
+                SKIP_VALIDATION=true
+                shift
+                ;;
             -h|--help)
-                echo "Usage: $0 --network <mainnet|testnet|creative> [--genesis-dir <path>]"
+                echo "Usage: $0 --network <mainnet|testnet|creative> [--genesis-dir <path>] [--skip-validation]"
                 echo ""
                 echo "Options:"
                 echo "  --network <mainnet|testnet|creative>  Network to configure (REQUIRED)"
                 echo "  --genesis-dir <path>                  Genesis directory (default: ~/.infinited)"
+                echo "  --skip-validation                     Skip validation (useful when called from customize_genesis.sh)"
                 echo ""
                 echo "Example:"
                 echo "  $0 --network mainnet"
@@ -421,8 +428,12 @@ main() {
         echo ""
     done
     
-    # Validate genesis file
-    validate_genesis
+    # Validate genesis file (unless skipped)
+    if [[ "$SKIP_VALIDATION" != "true" ]]; then
+        validate_genesis
+    else
+        print_info "Skipping validation (will be validated by customize_genesis.sh)"
+    fi
     
     # Print summary
     print_section "Summary"

@@ -740,7 +740,7 @@ execute_setup_scripts() {
     local module_accounts_script="${script_dir}/setup_module_accounts.sh"
     if [[ -f "$module_accounts_script" ]]; then
         print_info "Executing ModuleAccounts setup script..."
-        if bash "$module_accounts_script" --network "$network" --genesis-dir "$genesis_dir"; then
+        if bash "$module_accounts_script" --network "$network" --genesis-dir "$genesis_dir" --skip-validation; then
             print_info "ModuleAccounts setup completed successfully"
         else
             print_error "ModuleAccounts setup failed"
@@ -757,7 +757,7 @@ execute_setup_scripts() {
     local vesting_accounts_script="${script_dir}/setup_vesting_accounts.sh"
     if [[ -f "$vesting_accounts_script" ]]; then
         print_info "Executing Vesting Accounts setup script..."
-        if bash "$vesting_accounts_script" --network "$network" --genesis-dir "$genesis_dir"; then
+        if bash "$vesting_accounts_script" --network "$network" --genesis-dir "$genesis_dir" --skip-validation; then
             print_info "Vesting Accounts setup completed successfully"
         else
             print_error "Vesting Accounts setup failed"
