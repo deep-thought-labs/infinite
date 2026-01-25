@@ -574,8 +574,30 @@ For networks with multiple validators:
 
 ### Step 5: Validate Genesis
 
+#### 5.1: Validate Structure (Recommended)
+
 ```bash
-# Validate the genesis file
+# Validate genesis structure against Cosmos SDK specifications
+./scripts/validate_genesis_structure.sh ~/.infinited/config/genesis.json
+```
+
+**This checks**:
+- ✅ ModuleAccount structure (all required fields, correct types)
+- ✅ ContinuousVestingAccount structure (all required fields, correct types)
+- ✅ Account-balance consistency (all accounts have corresponding balances)
+- ✅ Data types (timestamps, account numbers, sequences as strings)
+- ✅ Field relationships (start_time < end_time, etc.)
+
+**This validation ensures**:
+- Structure matches Cosmos SDK specifications exactly
+- No missing required fields
+- Data types are correct
+- Accounts and balances are consistent
+
+#### 5.2: Validate Genesis (SDK Validation)
+
+```bash
+# Validate the genesis file using SDK validator
 infinited genesis validate-genesis --home ~/.infinited
 ```
 

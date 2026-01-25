@@ -100,7 +100,45 @@ Git installation: ✅ Installed (version 2.x)
 
 ---
 
-### 3. `validate_token_config.sh`
+### 3. `validate_genesis_structure.sh`
+
+**Purpose**: Validate that the genesis.json structure is correct according to Cosmos SDK specifications.
+
+**What it validates**:
+- ✅ **ModuleAccount structure**: All required fields (@type, base_account, name, permissions)
+- ✅ **ContinuousVestingAccount structure**: All required fields (base_vesting_account, start_time, end_time)
+- ✅ **Account-balance consistency**: All accounts have corresponding bank balances
+- ✅ **Data types**: Timestamps, account numbers, sequences are correct types (strings)
+- ✅ **Field relationships**: start_time < end_time, etc.
+- ✅ **Required fields**: All accounts have address, account_number, sequence
+
+**When to use**:
+- **After creating genesis file** to ensure structure is correct
+- **Before launching network** to catch structural issues early
+- **When troubleshooting** genesis-related errors
+
+**Usage**:
+```bash
+./scripts/validate_genesis_structure.sh ~/.infinited/config/genesis.json
+```
+
+**Output**:
+- Detailed validation report with pass/fail for each check
+- Summary with total validations, passed, and failed counts
+- Exit code: 0 = all validations passed, 1 = errors found
+
+**This validation ensures**:
+- Structure matches Cosmos SDK specifications exactly
+- No missing required fields
+- Data types are correct
+- Accounts and balances are consistent
+- Genesis file is ready for network launch
+
+**For complete genesis creation guide**, see **[configuration/GENESIS.md](../configuration/GENESIS.md)**.
+
+---
+
+### 4. `validate_token_config.sh`
 
 **Purpose**: Validate that the Improbability (42) token configuration is correct in the running node.
 
