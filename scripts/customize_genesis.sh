@@ -770,6 +770,13 @@ execute_setup_scripts() {
         echo ""
     fi
     
+    # Final validation after all account setup scripts
+    print_section "Final Genesis Validation"
+    if ! validate_genesis_structure_and_sdk "$expanded_genesis_file" "$genesis_dir"; then
+        print_warning "Final validation failed, but scripts completed"
+        print_info "Review the genesis file and run validation manually if needed"
+    fi
+    
     return 0
 }
 
