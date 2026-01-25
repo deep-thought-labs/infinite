@@ -4,6 +4,6 @@
     "amount_tokens": 100000000,
     "vesting_type": "continuous",
     "vesting_start_time": 1769666400,
-    "vesting_end_time": 3095042400
+    "vesting_end_time": 3095388000
   }
 ]
