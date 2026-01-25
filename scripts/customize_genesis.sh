@@ -236,6 +236,26 @@ configure_cosmos_chain_id() {
         "Cosmos Chain ID → $COSMOS_CHAIN_ID"
 }
 
+# Configure Auth Module parameters (multisig signature limit)
+configure_auth_module() {
+    local genesis_file="$1"
+    
+    print_info "Configuring Auth Module parameters (multisig signature limit)..."
+    
+    local tx_sig_limit
+    
+    tx_sig_limit=$(jq -r '.auth.tx_sig_limit' "$CONFIG_FILE")
+    
+    if [[ -z "$tx_sig_limit" || "$tx_sig_limit" == "null" ]]; then
+        print_warning "tx_sig_limit not found in config file, skipping..."
+        return 0
+    fi
+    
+    apply_jq_modification "$genesis_file" \
+        ".app_state[\"auth\"][\"params\"][\"tx_sig_limit\"]=\"$tx_sig_limit\"" \
+        "Auth tx_sig_limit → $tx_sig_limit (max signatures for multisig wallets)"
+}
+
 # Customize module denominations
 customize_denominations() {
     local genesis_file="$1"
@@ -722,6 +742,7 @@ main() {
     
     # Apply customizations
     configure_cosmos_chain_id "$GENESIS_FILE"
+    configure_auth_module "$GENESIS_FILE"
     customize_denominations "$GENESIS_FILE"
     add_token_metadata "$GENESIS_FILE"
     configure_evm_precompiles "$GENESIS_FILE"

@@ -14,6 +14,9 @@
   "cosmos": {
     "chain_id": "infinite_421018001-1"
   },
+  "auth": {
+    "tx_sig_limit": "10"
+  },
   "staking": {
     "unbonding_time": "1814400s",
     "max_validators": 100,
