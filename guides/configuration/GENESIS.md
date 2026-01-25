@@ -130,11 +130,26 @@ These files contain all network-specific parameters (denominations, token metada
 - **Testnet**: `scripts/genesis-configs/testnet-vesting-accounts.json`
 - **Creative**: `scripts/genesis-configs/creative-vesting-accounts.json`
 
-**Note**: You don't need to run `setup_module_accounts.sh` or `setup_vesting_accounts.sh` separately. They are executed automatically by `customize_genesis.sh` after applying module customizations.
+**⚠️ IMPORTANT**: You don't need to run `setup_module_accounts.sh` or `setup_vesting_accounts.sh` separately. They are executed automatically by `customize_genesis.sh` after applying module customizations.
+
+**Advanced option**: If you need to skip automatic account setup (for debugging/testing), use the `--skip-accounts` flag:
+```bash
+./scripts/customize_genesis.sh ~/.infinited/config/genesis.json --network mainnet --skip-accounts
+```
+This will only apply module customizations without executing the account setup scripts. You can then run them manually if needed (see Steps 3 and 3.5 for debugging/testing purposes only).
 
 ---
 
-### Step 3: Configure ModuleAccounts (Optional)
+### Step 3: Configure ModuleAccounts (Debugging/Testing Only - Do NOT Run Normally)
+
+**⚠️ IMPORTANT**: **You should NOT run this step manually in normal circumstances.**
+
+ModuleAccounts are **automatically configured** when you run `customize_genesis.sh` in Step 2. This step is only documented here for:
+- **Debugging**: If you need to troubleshoot ModuleAccounts setup
+- **Testing**: If you want to test the ModuleAccounts script in isolation
+- **Manual modifications**: If you need to add or modify ModuleAccounts after Step 2
+
+**In normal workflow, skip this step entirely.** The scripts `setup_module_accounts.sh` and `setup_vesting_accounts.sh` are executed automatically by `customize_genesis.sh` and you should not run them directly.
 
 <details>
 <summary><strong>Click to expand if you need ModuleAccounts</strong></summary>
@@ -228,7 +243,16 @@ See **[MODULE_ACCOUNTS.md](MODULE_ACCOUNTS.md)** for complete documentation.
 
 ---
 
-### Step 3.5: Configure Vesting Accounts (Optional)
+### Step 3.5: Configure Vesting Accounts (Debugging/Testing Only - Do NOT Run Normally)
+
+**⚠️ IMPORTANT**: **You should NOT run this step manually in normal circumstances.**
+
+Vesting Accounts are **automatically configured** when you run `customize_genesis.sh` in Step 2. This step is only documented here for:
+- **Debugging**: If you need to troubleshoot Vesting Accounts setup
+- **Testing**: If you want to test the Vesting Accounts script in isolation
+- **Manual modifications**: If you need to add or modify vesting accounts after Step 2
+
+**In normal workflow, skip this step entirely.** The scripts `setup_module_accounts.sh` and `setup_vesting_accounts.sh` are executed automatically by `customize_genesis.sh` and you should not run them directly.
 
 <details>
 <summary><strong>Click to expand if you need Vesting Accounts</strong></summary>

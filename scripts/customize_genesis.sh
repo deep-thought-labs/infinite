@@ -10,15 +10,16 @@
 #          for mainnet, testnet, or creative networks.
 #          Also automatically executes ModuleAccounts and Vesting Accounts setup scripts.
 #
-# Usage: ./scripts/customize_genesis.sh <genesis_file_path> --network <mainnet|testnet|creative>
+# Usage: ./scripts/customize_genesis.sh <genesis_file_path> --network <mainnet|testnet|creative> [--skip-accounts]
 #
 # Example:
 #   ./scripts/customize_genesis.sh ~/.infinited/config/genesis.json --network mainnet
+#   ./scripts/customize_genesis.sh ~/.infinited/config/genesis.json --network mainnet --skip-accounts
 #
 # This script will:
 #   1. Apply all module customizations (denominations, parameters, etc.)
-#   2. Execute setup_module_accounts.sh automatically
-#   3. Execute setup_vesting_accounts.sh automatically
+#   2. Execute setup_module_accounts.sh automatically (unless --skip-accounts is used)
+#   3. Execute setup_vesting_accounts.sh automatically (unless --skip-accounts is used)
 #
 # Exit codes:
 #   0 - Success
@@ -43,6 +44,7 @@ EVM_CHAIN_ID=0
 COSMOS_CHAIN_ID=""
 NETWORK_MODE=""
 CONFIG_FILE=""
+SKIP_ACCOUNTS_SETUP=false
 
 # Print colored messages
 print_info() {
@@ -61,6 +63,7 @@ print_warning() {
 parse_arguments() {
     local genesis_file=""
     local network=""
+    SKIP_ACCOUNTS_SETUP=false
     
     while [[ $# -gt 0 ]]; do
         case $1 in
@@ -68,11 +71,31 @@ parse_arguments() {
                 network="$2"
                 shift 2
                 ;;
+            --skip-accounts)
+                SKIP_ACCOUNTS_SETUP=true
+                shift
+                ;;
+            -h|--help)
+                echo "Usage: $0 <genesis_file_path> --network <mainnet|testnet|creative> [--skip-accounts]"
+                echo ""
+                echo "Options:"
+                echo "  --network <mainnet|testnet|creative>  Network to configure (REQUIRED)"
+                echo "  --skip-accounts                        Skip automatic ModuleAccounts and Vesting Accounts setup"
+                echo ""
+                echo "By default, this script automatically executes:"
+                echo "  - setup_module_accounts.sh"
+                echo "  - setup_vesting_accounts.sh"
+                echo ""
+                echo "Use --skip-accounts to disable automatic execution (for debugging/testing)."
+                exit 0
+                ;;
             *)
                 if [[ -z "$genesis_file" ]]; then
                     genesis_file="$1"
                 else
                     print_error "Unknown argument: $1"
+                    echo ""
+                    echo "Usage: $0 <genesis_file_path> --network <mainnet|testnet|creative> [--skip-accounts]"
                     exit 1
                 fi
                 shift
@@ -716,14 +739,22 @@ main() {
     print_info "Backup saved at: $backup_file"
     echo ""
     
-    # Execute ModuleAccounts and Vesting Accounts setup scripts
-    if ! execute_setup_scripts "$GENESIS_FILE" "$NETWORK_MODE"; then
-        print_error "Failed to execute setup scripts"
-        print_warning "Genesis customizations were applied, but account setup failed"
-        print_info "You can run the setup scripts manually:"
+    # Execute ModuleAccounts and Vesting Accounts setup scripts (unless skipped)
+    if [[ "$SKIP_ACCOUNTS_SETUP" == "true" ]]; then
+        print_info "Skipping automatic ModuleAccounts and Vesting Accounts setup (--skip-accounts flag used)"
+        print_info "You can run these scripts manually if needed:"
         echo "  ./scripts/setup_module_accounts.sh --network $NETWORK_MODE --genesis-dir $(dirname "$(dirname "$GENESIS_FILE")")"
         echo "  ./scripts/setup_vesting_accounts.sh --network $NETWORK_MODE --genesis-dir $(dirname "$(dirname "$GENESIS_FILE")")"
-        exit 1
+        echo ""
+    else
+        if ! execute_setup_scripts "$GENESIS_FILE" "$NETWORK_MODE"; then
+            print_error "Failed to execute setup scripts"
+            print_warning "Genesis customizations were applied, but account setup failed"
+            print_info "You can run the setup scripts manually:"
+            echo "  ./scripts/setup_module_accounts.sh --network $NETWORK_MODE --genesis-dir $(dirname "$(dirname "$GENESIS_FILE")")"
+            echo "  ./scripts/setup_vesting_accounts.sh --network $NETWORK_MODE --genesis-dir $(dirname "$(dirname "$GENESIS_FILE")")"
+            exit 1
+        fi
     fi
     
     echo ""
