@@ -130,9 +130,11 @@ These files contain all network-specific parameters (denominations, token metada
 <details>
 <summary><strong>Click to expand if you need ModuleAccounts</strong></summary>
 
-If you need to set up ModuleAccounts (e.g., treasury, development, community pools):
+If you need to set up ModuleAccounts according to the project's tokenomics:
 
 **Important**: ModuleAccounts are created according to Cosmos SDK specification with `@type: "/cosmos.auth.v1beta1.ModuleAccount"`, containing `base_account`, `name`, and `permissions` fields. Custom ModuleAccounts created by this script always have an empty permissions array (`permissions: []`). Permissions are only effective when registered in `infinited/config/permissions.go`, which requires code changes.
+
+**For complete ModuleAccounts documentation**, including the full list of configured ModuleAccounts and their purposes, see **[MODULE_ACCOUNTS.md](MODULE_ACCOUNTS.md)**.
 
 <details>
 <summary><strong>Mainnet</strong> (click to expand)</summary>
@@ -197,7 +199,17 @@ If you need to set up ModuleAccounts (e.g., treasury, development, community poo
 3. Review the summary report to confirm all ModuleAccounts were created successfully
 4. The script validates the genesis file automatically at the end
 
-**When to use**: Setting up treasury accounts, development funds, or community pools as ModuleAccounts.
+**When to use**: Setting up tokenomics pools (strategic delegation, security rewards, perpetual R&D, fish bootstrap, privacy & resistance, community growth) as ModuleAccounts according to the project's economic model.
+
+**ModuleAccounts configured**:
+- `strategic_delegation` (40%) - Never spent, only delegated
+- `security_rewards` (25%) - Validator + staker rewards
+- `perpetual_rd` (15%) - Institutional funding (Deep Thought Labs)
+- `fish_bootstrap` (10%) - Seed liquidity pools
+- `privacy_resistance` (7%) - ZK, anti-censura R&D
+- `community_growth` (3%) - Grants, education, integrations
+
+See **[MODULE_ACCOUNTS.md](MODULE_ACCOUNTS.md)** for complete documentation.
 
 **When NOT to use**: If you don't need ModuleAccounts, or for regular user accounts (use Step 4 instead).
 
@@ -475,7 +487,7 @@ infinited genesis validate-genesis --home ~/.infinited
 
 **This checks**:
 - ✅ All denominations are consistent
-- ✅ Total supply equals sum of balances
+- ✅ Total supply equals sum of balances (see [TOKEN_SUPPLY.md](TOKEN_SUPPLY.md) for details)
 - ✅ Validator configurations are correct
 - ✅ JSON structure is valid
 

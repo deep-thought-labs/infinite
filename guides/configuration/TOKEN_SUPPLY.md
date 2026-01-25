@@ -1,4 +1,6 @@
-# Token Supply in Genesis - Where Do Tokens Come From?
+# Token Creation in Genesis - Understanding Supply
+
+**Objective**: Understand how tokens are created in Genesis and the fundamental relationship between supply and balances in the Cosmos SDK.
 
 ## The Key Question
 
@@ -11,6 +13,21 @@
 ### ✅ **Tokens Do NOT Come from Any Previous Place**
 
 In Genesis, tokens are created **ex nihilo** (from nothing). There is no previous "central bank" or external source.
+
+---
+
+## Context: Project Tokenomics
+
+**Important**: This document explains the **technical mechanism** of how tokens are created in Genesis. 
+
+For information about:
+- **Actual tokenomics structure** (6 pools: strategic_delegation, security_rewards, etc.)
+- **ModuleAccounts configuration** and their purposes
+- **Token distribution** according to the project's economic model
+
+See **[MODULE_ACCOUNTS.md](MODULE_ACCOUNTS.md)**.
+
+**Note**: In Infinite Drive, all tokens are **locked at genesis** and released gradually over **42 years**, controlled by the DAO. The ModuleAccounts represent the total allocation pools, but actual liquid supply is managed separately through the release mechanism.
 
 ### How it works:
 
@@ -149,32 +166,45 @@ infinited genesis collect-gentxs
 
 ## How Many Tokens to Create Initially?
 
-### For Mainnet (example):
+### ModuleAccounts (Tokenomics Pools)
+
+For mainnet and testnet, ModuleAccounts are configured according to the project's tokenomics structure. These are created using the `setup_module_accounts.sh` script:
 
 ```bash
-# Main team account (for operations)
-infinited genesis add-genesis-account team-wallet 10000000000000000000000000drop  # 10M 42
+# ModuleAccounts are configured in JSON files:
+# - scripts/genesis-configs/mainnet-module-accounts.json
+# - scripts/genesis-configs/testnet-module-accounts.json
 
-# Validator 1
-infinited genesis add-genesis-account validator-1 1000000000000000000000000drop   # 1M 42
-
-# Validator 2  
-infinited genesis add-genesis-account validator-2 1000000000000000000000000drop   # 1M 42
-
-# Validator 3
-infinited genesis add-genesis-account validator-3 1000000000000000000000000drop   # 1M 42
-
-# Total supply: 13M 42
+# Create ModuleAccounts automatically:
+./scripts/setup_module_accounts.sh --network mainnet
 ```
 
-### For Testnet (example):
+**ModuleAccounts configured** (see [MODULE_ACCOUNTS.md](MODULE_ACCOUNTS.md) for details):
+- `strategic_delegation` (40%) - Never spent, only delegated
+- `security_rewards` (25%) - Validator + staker rewards
+- `perpetual_rd` (15%) - Institutional funding
+- `fish_bootstrap` (10%) - Seed liquidity pools
+- `privacy_resistance` (7%) - ZK, anti-censura R&D
+- `community_growth` (3%) - Grants, education, integrations
+
+**Note**: All tokens are locked at genesis and released gradually over 42 years. The ModuleAccounts represent the total allocation pools.
+
+### Regular Accounts (Validators, Team, etc.)
+
+For regular accounts (validators, team wallets, etc.), you add them manually:
 
 ```bash
-# Test accounts (more generous)
-infinited genesis add-genesis-account test-account-1 100000000000000000000000000drop  # 100M 42
-infinited genesis add-genesis-account test-account-2 100000000000000000000000000drop  # 100M 42
-infinited genesis add-genesis-account validator-1 10000000000000000000000000drop     # 10M 42
+# Example: Validator account
+infinited genesis add-genesis-account validator-1 1000000000000000000000000drop   # 1M tokens
+
+# Example: Team account
+infinited genesis add-genesis-account team-wallet 10000000000000000000000000drop  # 10M tokens
 ```
+
+**Important**: 
+- Decide token amounts carefully based on your network's needs
+- Validators need tokens to create `gentx` for staking
+- Total supply will be automatically calculated from all balances
 
 ---
 
@@ -183,18 +213,28 @@ infinited genesis add-genesis-account validator-1 10000000000000000000000000drop
 ### 1. **No initial inflation**
 - Tokens are created once in Genesis
 - After that, there's only inflation if configured in the `mint` module
+- In Infinite Drive, tokens are locked at genesis and released gradually over 42 years
 
 ### 2. **Initial distribution**
 - Carefully decide who receives how many tokens
 - Genesis tokens are the only ones that will exist initially
+- ModuleAccounts represent tokenomics pools (see [MODULE_ACCOUNTS.md](MODULE_ACCOUNTS.md))
+- Regular accounts (validators, team) are added separately
 
 ### 3. **Validators need tokens for staking**
 - A validator must have tokens to make `gentx`
 - Tokens are "burned" (go to staking module) during `gentx`
+- Validators receive tokens through inflation rewards over time
 
 ### 4. **Total supply must be realistic**
 - Don't create too many tokens (future inflation)
 - Don't create too few (insufficient liquidity)
+- In Infinite Drive, ModuleAccounts hold the total allocation (100M tokens), but most are locked initially
+
+### 5. **ModuleAccounts vs Regular Accounts**
+- **ModuleAccounts**: Created via `setup_module_accounts.sh`, represent tokenomics pools
+- **Regular Accounts**: Created via `add-genesis-account`, for validators, team, etc.
+- Both contribute to total supply: `supply = sum of all balances`
 
 ---
 
@@ -237,3 +277,15 @@ jq '.app_state.bank.balances | length' genesis.json
 | **Can they be created later?** | Only via inflation (mint module) or new modules |
 
 **Conclusion**: Genesis tokens are the "initial currency" of your blockchain. They are created when you assign them to accounts, and that's the only way to have tokens from block 0.
+
+---
+
+## Related Documentation
+
+- **[MODULE_ACCOUNTS.md](MODULE_ACCOUNTS.md)** - Complete ModuleAccounts structure and tokenomics configuration
+- **[GENESIS.md](GENESIS.md)** - Step-by-step guide for creating genesis files
+- **[development/SCRIPTS.md](../development/SCRIPTS.md)** - Scripts documentation including `setup_module_accounts.sh`
+
+---
+
+**Last Updated**: 2025-01-27

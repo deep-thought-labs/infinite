@@ -50,7 +50,8 @@ Guides for configuring specific aspects of the system.
 | Guide | Description | When to Use |
 |-------|-------------|-------------|
 | **[configuration/GENESIS.md](configuration/GENESIS.md)** | Genesis configuration | Configure genesis for mainnet |
-| **[configuration/TOKEN_SUPPLY.md](configuration/TOKEN_SUPPLY.md)** | Token supply configuration | Configure tokenomics |
+| **[configuration/MODULE_ACCOUNTS.md](configuration/MODULE_ACCOUNTS.md)** | ModuleAccounts structure and configuration | Understand and configure tokenomics pools |
+| **[configuration/TOKEN_SUPPLY.md](configuration/TOKEN_SUPPLY.md)** | Understanding token creation in Genesis | Learn how tokens are created and supply/balance relationship |
 
 ### 🏭 Infrastructure
 
@@ -85,6 +86,7 @@ Reference documentation and troubleshooting.
 - **...create a release**: [infrastructure/RELEASES.md](infrastructure/RELEASES.md)
 - **...deploy to production**: [deployment/PRODUCTION.md](deployment/PRODUCTION.md)
 - **...configure genesis**: [configuration/GENESIS.md](configuration/GENESIS.md)
+- **...understand ModuleAccounts**: [configuration/MODULE_ACCOUNTS.md](configuration/MODULE_ACCOUNTS.md)
 - **...resolve a problem**: [reference/TROUBLESHOOTING.md](reference/TROUBLESHOOTING.md)
 
 ### By Experience Level

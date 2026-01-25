@@ -517,19 +517,37 @@ Each configuration file is a JSON array of ModuleAccount configurations. Each Mo
 
 **Important**: Custom ModuleAccounts created by this script always have an empty permissions array (`permissions: []`). Permissions are only effective when registered in `infinited/config/permissions.go`, which requires code changes. Since custom ModuleAccounts are not registered there, they will not have minting or burning capabilities.
 
-**Example configuration file**:
+**Example configuration file** (mainnet/testnet):
 ```json
 [
   {
-    "name": "treasury",
-    "amount_tokens": 1000000
+    "name": "strategic_delegation",
+    "amount_tokens": 40
   },
   {
-    "name": "development",
-    "amount_tokens": 500000
+    "name": "security_rewards",
+    "amount_tokens": 25
+  },
+  {
+    "name": "perpetual_rd",
+    "amount_tokens": 15
+  },
+  {
+    "name": "fish_bootstrap",
+    "amount_tokens": 10
+  },
+  {
+    "name": "privacy_resistance",
+    "amount_tokens": 7
+  },
+  {
+    "name": "community_growth",
+    "amount_tokens": 3
   }
 ]
 ```
+
+**For complete ModuleAccounts documentation**, including all configured ModuleAccounts, their purposes, and tokenomics details, see **[configuration/MODULE_ACCOUNTS.md](../configuration/MODULE_ACCOUNTS.md)**.
 
 **Prerequisites**:
 - `jq` must be installed
