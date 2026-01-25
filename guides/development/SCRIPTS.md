@@ -404,10 +404,10 @@ These files contain all parameters for each network, making it easy to modify va
 
 **Purpose**: Configure pure ModuleAccounts (without vesting) directly in genesis.json for mainnet, testnet, or creative networks. The script **EXECUTES** commands and modifies the genesis file automatically.
 
-**Important**: This script creates ModuleAccounts as pure accounts (BaseAccount + name + permissions), not vesting accounts. Cosmos SDK does not natively support ModuleAccounts with vesting. For vesting tokens, a separate vesting account script will be created in the future.
+**Important**: This script creates ModuleAccounts as pure accounts (BaseAccount + name + permissions) according to Cosmos SDK specifications. ModuleAccounts are managed by modules and have a name and optional permissions.
 
 **What it does**:
-- Reads network-specific module configuration from `*-vesting.json` files
+- Reads network-specific module configuration from `*-module-accounts.json` files
 - Calculates deterministic module addresses using `calc_module_addr.go`
 - Converts token amounts from full units to atomic units (multiplies by 10^18)
 - **Executes** commands directly to create ModuleAccounts:
@@ -507,19 +507,29 @@ Summary
 
 **Configuration Files**:
 The script reads module configuration from JSON files located in `scripts/genesis-configs/`:
-- `mainnet-vesting.json` - Mainnet ModuleAccounts configuration
-- `testnet-vesting.json` - Testnet ModuleAccounts configuration
-- `creative-vesting.json` - Creative network ModuleAccounts configuration
+- `mainnet-module-accounts.json` - Mainnet ModuleAccounts configuration
+- `testnet-module-accounts.json` - Testnet ModuleAccounts configuration
+- `creative-module-accounts.json` - Creative network ModuleAccounts configuration
 
-Each configuration file contains:
-- `pools`: Array of ModuleAccount pools, each with:
-  - `name`: Module account name (required)
-  - `amount_tokens`: Initial balance in full token units (will be converted to atomic units × 10^18)
-  - `permissions`: Optional permissions (e.g., "minter,burner") - empty string or omitted if no permissions
-  - `fee_share_percent`: Percentage for future token distribution from vesting account (reserved for future use)
-- `vesting_start_time`: Unix timestamp (reserved for future vesting account script, not used by ModuleAccounts)
-- `vesting_end_time`: Unix timestamp (reserved for future vesting account script, not used by ModuleAccounts)
-- `fee_burn_percent`: Percentage (reserved for future vesting account script, not used by ModuleAccounts)
+Each configuration file is a JSON array of ModuleAccount configurations. Each ModuleAccount object contains:
+- `name`: Module account name (required) - used to calculate deterministic address
+- `amount_tokens`: Initial balance in full token units (will be converted to atomic units × 10^18)
+
+**Important**: Custom ModuleAccounts created by this script always have an empty permissions array (`permissions: []`). Permissions are only effective when registered in `infinited/config/permissions.go`, which requires code changes. Since custom ModuleAccounts are not registered there, they will not have minting or burning capabilities.
+
+**Example configuration file**:
+```json
+[
+  {
+    "name": "treasury",
+    "amount_tokens": 1000000
+  },
+  {
+    "name": "development",
+    "amount_tokens": 500000
+  }
+]
+```
 
 **Prerequisites**:
 - `jq` must be installed
@@ -530,15 +540,13 @@ Each configuration file contains:
 
 **Notes**:
 - **This script EXECUTES commands directly** and modifies the genesis file automatically
-- ModuleAccounts are created as pure accounts (BaseAccount + name + permissions), **without vesting**
-- Cosmos SDK does not natively support ModuleAccounts with vesting
+- ModuleAccounts are created according to Cosmos SDK specification: `@type: "/cosmos.auth.v1beta1.ModuleAccount"` with `base_account`, `name`, and `permissions` fields
 - Token amounts are automatically converted from full units to atomic units (× 10^18)
 - Supports accounts with 0 tokens (creates ModuleAccount with empty balance)
 - Idempotent: automatically skips ModuleAccounts that already exist
 - Validates the genesis file automatically after all changes
 - Provides detailed error reporting if any step fails
 - Exit code: 0 = success, 1 = errors encountered
-- For vesting tokens, a separate vesting account script will be created in the future
 
 **Integration with Genesis Creation Process**:
 This script is typically used **after** running `customize_genesis.sh`:

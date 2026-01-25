@@ -1,0 +1,14 @@
+[
+  {
+    "name": "treasury",
+    "amount_tokens": 1000000
+  },
+  {
+    "name": "development",
+    "amount_tokens": 500000
+  },
+  {
+    "name": "community",
+    "amount_tokens": 300000
+  }
+]

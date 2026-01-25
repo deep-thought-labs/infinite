@@ -118,10 +118,10 @@ The script reads all network-specific parameters from JSON configuration files l
 
 These files contain all network-specific parameters (denominations, token metadata, staking, mint, governance, slashing, fee market, distribution, and consensus parameters). You can modify these files to customize the genesis parameters for each network.
 
-**For ModuleAccounts vesting configuration**:
-- **Mainnet**: `scripts/genesis-configs/mainnet-vesting.json`
-- **Testnet**: `scripts/genesis-configs/testnet-vesting.json`
-- **Creative**: `scripts/genesis-configs/creative-vesting.json`
+**For ModuleAccounts configuration**:
+- **Mainnet**: `scripts/genesis-configs/mainnet-module-accounts.json`
+- **Testnet**: `scripts/genesis-configs/testnet-module-accounts.json`
+- **Creative**: `scripts/genesis-configs/creative-module-accounts.json`
 
 ---
 
@@ -132,7 +132,7 @@ These files contain all network-specific parameters (denominations, token metada
 
 If you need to set up ModuleAccounts (e.g., treasury, development, community pools):
 
-**Important**: ModuleAccounts are created as pure accounts (without vesting), as Cosmos SDK does not natively support ModuleAccounts with vesting. For vesting tokens, use a separate vesting account (to be implemented in a future script).
+**Important**: ModuleAccounts are created according to Cosmos SDK specification with `@type: "/cosmos.auth.v1beta1.ModuleAccount"`, containing `base_account`, `name`, and `permissions` fields. Custom ModuleAccounts created by this script always have an empty permissions array (`permissions: []`). Permissions are only effective when registered in `infinited/config/permissions.go`, which requires code changes.
 
 <details>
 <summary><strong>Mainnet</strong> (click to expand)</summary>
@@ -149,7 +149,7 @@ If you need to set up ModuleAccounts (e.g., treasury, development, community poo
 # jq '(.app_state.auth.accounts[] | select(.address == "infinite1vmafl8f3s6uuzwnxkqz0eza47v6ecn0tqw4y9p")) |= (. | del(."@type") | {"@type":"/cosmos.auth.v1beta1.ModuleAccount","base_account":.,"name":"treasury","permissions":["minter","burner"]})' ~/.infinited/config/genesis.json > ~/.infinited/config/genesis.json.tmp && mv ~/.infinited/config/genesis.json.tmp ~/.infinited/config/genesis.json
 ```
 
-**Configuration file**: `scripts/genesis-configs/mainnet-vesting.json`
+**Configuration file**: `scripts/genesis-configs/mainnet-module-accounts.json`
 
 </details>
 
@@ -168,7 +168,7 @@ If you need to set up ModuleAccounts (e.g., treasury, development, community poo
 # jq '...' ~/.infinited/config/genesis.json > ~/.infinited/config/genesis.json.tmp && mv ~/.infinited/config/genesis.json.tmp ~/.infinited/config/genesis.json
 ```
 
-**Configuration file**: `scripts/genesis-configs/testnet-vesting.json`
+**Configuration file**: `scripts/genesis-configs/testnet-module-accounts.json`
 
 </details>
 
@@ -187,7 +187,7 @@ If you need to set up ModuleAccounts (e.g., treasury, development, community poo
 # jq '...' ~/.infinited/config/genesis.json > ~/.infinited/config/genesis.json.tmp && mv ~/.infinited/config/genesis.json.tmp ~/.infinited/config/genesis.json
 ```
 
-**Configuration file**: `scripts/genesis-configs/creative-vesting.json`
+**Configuration file**: `scripts/genesis-configs/creative-module-accounts.json`
 
 </details>
 
@@ -201,7 +201,7 @@ If you need to set up ModuleAccounts (e.g., treasury, development, community poo
 
 **When NOT to use**: If you don't need ModuleAccounts, or for regular user accounts (use Step 4 instead).
 
-**Note**: For vesting tokens, a separate vesting account script will be created in the future. ModuleAccounts created by this script are pure accounts without vesting.
+**Note**: ModuleAccounts created by this script follow the official Cosmos SDK structure for ModuleAccounts.
 
 </details>
 

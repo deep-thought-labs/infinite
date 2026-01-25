@@ -140,7 +140,7 @@ parse_arguments() {
 load_config_files() {
     SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
     NETWORK_CONFIG_FILE="${SCRIPT_DIR}/genesis-configs/${NETWORK_MODE}.json"
-    MODULE_CONFIG_FILE="${SCRIPT_DIR}/genesis-configs/${NETWORK_MODE}-vesting.json"
+    MODULE_CONFIG_FILE="${SCRIPT_DIR}/genesis-configs/${NETWORK_MODE}-module-accounts.json"
     GENESIS_FILE="${GENESIS_DIR}/config/genesis.json"
     
     # Validate network config file exists
@@ -211,10 +211,12 @@ module_account_exists() {
 }
 
 # Create ModuleAccount
+# Note: Custom ModuleAccounts always have empty permissions array.
+# Permissions are only effective when registered in permissions.go (requires code changes).
 create_module_account() {
     local pool_name="$1"
     local pool_amount="$2"
-    local pool_permissions="$3"
+    local pool_permissions="$3"  # Always empty for custom ModuleAccounts, kept for compatibility
     
     TOTAL_COUNT=$((TOTAL_COUNT + 1))
     
@@ -262,13 +264,9 @@ create_module_account() {
     # Step 2: Convert to ModuleAccount
     print_info "  Step 2: Converting to ModuleAccount..."
     
-    local permissions_json
-    if [[ -n "$pool_permissions" && "$pool_permissions" != "null" && "$pool_permissions" != "" ]]; then
-        # Split permissions by comma and create JSON array (compact format, single line)
-        permissions_json=$(echo "$pool_permissions" | tr ',' '\n' | jq -R . | jq -s -c .)
-    else
-        permissions_json="[]"
-    fi
+    # Custom ModuleAccounts always have empty permissions array
+    # Permissions are only effective when registered in permissions.go (code changes required)
+    local permissions_json="[]"
     
     # Create temporary file for jq modification
     local temp_file="${GENESIS_FILE}.tmp.$$"
@@ -364,18 +362,19 @@ main() {
     echo ""
     
     for ((i=0; i<pools_count; i++)); do
-        local pool_name pool_amount pool_permissions
+        local pool_name pool_amount
         
         pool_name=$(jq -r "${POOLS_SELECTOR}[$i].name" "$MODULE_CONFIG_FILE")
         pool_amount=$(jq -r "${POOLS_SELECTOR}[$i].amount_tokens" "$MODULE_CONFIG_FILE")
-        pool_permissions=$(jq -r "${POOLS_SELECTOR}[$i].permissions // empty" "$MODULE_CONFIG_FILE")
         
         # Handle null values
         if [[ "$pool_amount" == "null" ]]; then
             pool_amount="0"
         fi
         
-        if ! create_module_account "$pool_name" "$pool_amount" "$pool_permissions"; then
+        # Custom ModuleAccounts always have empty permissions array
+        # Permissions are only effective when registered in permissions.go
+        if ! create_module_account "$pool_name" "$pool_amount" ""; then
             # Error already logged in create_module_account
             continue
         fi

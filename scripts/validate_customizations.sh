@@ -134,25 +134,25 @@ check "scripts/genesis-configs/creative.json" "base_denom" "Creative config cont
 check "scripts/genesis-configs/creative.json" "\"cosmos\"" "Creative config contains cosmos section"
 check "scripts/genesis-configs/creative.json" "infinite_421018002-1" "Creative config contains correct Cosmos Chain ID"
 
-# ModuleAccounts vesting setup script
-echo "ModuleAccounts vesting setup script..."
+# ModuleAccounts setup script
+echo "ModuleAccounts setup script..."
 check "scripts/setup_module_accounts.sh" "Deep Thought Labs" "ModuleAccounts setup script header"
 check "scripts/setup_module_accounts.sh" "setup_module_accounts.sh" "Script file exists"
 check "scripts/setup_module_accounts.sh" "Error.*--network flag is required" "Script requires --network flag"
 check "scripts/setup_module_accounts.sh" "mainnet|testnet|creative" "Script supports all three networks"
-check "scripts/setup_module_accounts.sh" "add-module-vesting-account" "Script generates vesting account commands"
-check "scripts/setup_module_accounts.sh" "genesis-configs.*-vesting.json" "Script references vesting config files"
+check "scripts/setup_module_accounts.sh" "genesis-configs.*-module-accounts.json" "Script references module accounts config files"
 check "scripts/setup_module_accounts.sh" "convert_to_atomic" "Script converts tokens to atomic units"
-check "scripts/setup_module_accounts.sh" "calculate_duration" "Script calculates vesting duration"
+check "scripts/setup_module_accounts.sh" "create_module_account" "Script has create_module_account function"
+check "scripts/setup_module_accounts.sh" "ModuleAccount" "Script creates ModuleAccounts"
 
-# Vesting configuration files (REQUIRED for ModuleAccounts script to work)
-echo "Vesting configuration files..."
-check "scripts/genesis-configs/mainnet-vesting.json" "vesting_start_time" "Mainnet vesting config exists"
-check "scripts/genesis-configs/mainnet-vesting.json" "pools" "Mainnet vesting config contains pools"
-check "scripts/genesis-configs/testnet-vesting.json" "vesting_start_time" "Testnet vesting config exists"
-check "scripts/genesis-configs/testnet-vesting.json" "pools" "Testnet vesting config contains pools"
-check "scripts/genesis-configs/creative-vesting.json" "vesting_start_time" "Creative vesting config exists"
-check "scripts/genesis-configs/creative-vesting.json" "pools" "Creative vesting config contains pools"
+# ModuleAccounts configuration files (REQUIRED for ModuleAccounts script to work)
+echo "ModuleAccounts configuration files..."
+check "scripts/genesis-configs/mainnet-module-accounts.json" "name" "Mainnet module accounts config exists"
+check "scripts/genesis-configs/mainnet-module-accounts.json" "amount_tokens" "Mainnet module accounts config contains amount_tokens"
+check "scripts/genesis-configs/testnet-module-accounts.json" "name" "Testnet module accounts config exists"
+check "scripts/genesis-configs/testnet-module-accounts.json" "amount_tokens" "Testnet module accounts config contains amount_tokens"
+check "scripts/genesis-configs/creative-module-accounts.json" "name" "Creative module accounts config exists"
+check "scripts/genesis-configs/creative-module-accounts.json" "amount_tokens" "Creative module accounts config contains amount_tokens"
 
 # Added files - Critical documentation
 echo "Added files - Documentation..."
