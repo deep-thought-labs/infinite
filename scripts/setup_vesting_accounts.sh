@@ -200,7 +200,15 @@ validate_address() {
 # Check if account already exists in genesis
 account_exists() {
     local address="$1"
-    jq -e --arg addr "$address" '.app_state.auth.accounts[] | select(.address == $addr or (.base_account.address == $addr))' "$GENESIS_FILE" > /dev/null 2>&1
+    # Check for different account types:
+    # - BaseAccount: .address
+    # - ModuleAccount: .base_account.address
+    # - ContinuousVestingAccount/DelayedVestingAccount: .base_vesting_account.base_account.address
+    jq -e --arg addr "$address" '.app_state.auth.accounts[] | select(
+        .address == $addr or 
+        (.base_account.address == $addr) or 
+        (.base_vesting_account.base_account.address == $addr)
+    )' "$GENESIS_FILE" > /dev/null 2>&1
 }
 
 # Create vesting account
@@ -319,10 +327,11 @@ main() {
     
     print_info "Network: $NETWORK_MODE"
     print_info "Genesis directory: $GENESIS_DIR"
-    print_info "Genesis file: $GENESIS_FILE"
-    print_info "Base denom: $BASE_DENOM"
     
     init_config
+    
+    print_info "Genesis file: $GENESIS_FILE"
+    print_info "Base denom: $BASE_DENOM"
     
     print_section "Creating Vesting Accounts"
     
