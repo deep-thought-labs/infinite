@@ -126,14 +126,22 @@ validate "ModuleAccount base_account.sequence is \"0\" (correct for genesis)" \
     '.app_state.auth.accounts[] | select(."@type" == "/cosmos.auth.v1beta1.ModuleAccount") | .base_account.sequence == "0"'
 
 echo ""
-print_info "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-print_info "ContinuousVestingAccount Structure Validation"
-print_info "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-echo ""
 
-# Check all ContinuousVestingAccounts have correct structure
-validate "All ContinuousVestingAccounts have @type field" \
-    '.app_state.auth.accounts[] | select(."@type" == "/cosmos.vesting.v1beta1.ContinuousVestingAccount") | ."@type" != null'
+# Check if there are any ContinuousVestingAccounts
+HAS_VESTING_ACCOUNTS=false
+if jq -e '.app_state.auth.accounts[] | select(."@type" == "/cosmos.vesting.v1beta1.ContinuousVestingAccount")' "$GENESIS_FILE" > /dev/null 2>&1; then
+    HAS_VESTING_ACCOUNTS=true
+fi
+
+if [[ "$HAS_VESTING_ACCOUNTS" == "true" ]]; then
+    print_info "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+    print_info "ContinuousVestingAccount Structure Validation"
+    print_info "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+    echo ""
+    
+    # Check all ContinuousVestingAccounts have correct structure
+    validate "All ContinuousVestingAccounts have @type field" \
+        '.app_state.auth.accounts[] | select(."@type" == "/cosmos.vesting.v1beta1.ContinuousVestingAccount") | ."@type" != null'
 
 validate "All ContinuousVestingAccounts have base_vesting_account" \
     '.app_state.auth.accounts[] | select(."@type" == "/cosmos.vesting.v1beta1.ContinuousVestingAccount") | .base_vesting_account != null'
@@ -173,6 +181,9 @@ validate "ContinuousVestingAccount has delegated_free field" \
 
 validate "ContinuousVestingAccount has delegated_vesting field" \
     '.app_state.auth.accounts[] | select(."@type" == "/cosmos.vesting.v1beta1.ContinuousVestingAccount") | .base_vesting_account.delegated_vesting != null'
+else
+    print_info "No ContinuousVestingAccounts found in genesis (skipping vesting validation)"
+fi
 
 echo ""
 print_info "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
@@ -205,6 +216,13 @@ check_module_account_balances() {
 }
 
 check_vesting_account_balances() {
+    if [[ "$HAS_VESTING_ACCOUNTS" != "true" ]]; then
+        VALIDATION_COUNT=$((VALIDATION_COUNT + 1))
+        print_success "No ContinuousVestingAccounts to validate (skipping)"
+        PASSED_COUNT=$((PASSED_COUNT + 1))
+        return 0
+    fi
+    
     VALIDATION_COUNT=$((VALIDATION_COUNT + 1))
     local vesting_addrs
     vesting_addrs=$(jq -r '.app_state.auth.accounts[] | select(."@type" == "/cosmos.vesting.v1beta1.ContinuousVestingAccount") | .base_vesting_account.base_account.address' "$GENESIS_FILE")
@@ -232,6 +250,13 @@ check_vesting_account_balances
 
 # Check balance amounts match original_vesting for vesting accounts
 check_vesting_balance_amounts() {
+    if [[ "$HAS_VESTING_ACCOUNTS" != "true" ]]; then
+        VALIDATION_COUNT=$((VALIDATION_COUNT + 1))
+        print_success "No ContinuousVestingAccounts to validate (skipping)"
+        PASSED_COUNT=$((PASSED_COUNT + 1))
+        return 0
+    fi
+    
     VALIDATION_COUNT=$((VALIDATION_COUNT + 1))
     local vesting_accounts
     vesting_accounts=$(jq -c '.app_state.auth.accounts[] | select(."@type" == "/cosmos.vesting.v1beta1.ContinuousVestingAccount")' "$GENESIS_FILE")
@@ -280,14 +305,16 @@ validate "account_number fields are strings" \
 validate "sequence fields are strings" \
     '.app_state.auth.accounts[] | .base_account.sequence? // .base_vesting_account.base_account.sequence? | type == "string"'
 
-validate "end_time is string (Unix timestamp)" \
-    '.app_state.auth.accounts[] | select(."@type" == "/cosmos.vesting.v1beta1.ContinuousVestingAccount") | .base_vesting_account.end_time | type == "string"'
-
-validate "start_time is string (Unix timestamp)" \
-    '.app_state.auth.accounts[] | select(."@type" == "/cosmos.vesting.v1beta1.ContinuousVestingAccount") | .start_time | type == "string"'
-
-validate "original_vesting amounts are strings" \
-    '.app_state.auth.accounts[] | select(."@type" == "/cosmos.vesting.v1beta1.ContinuousVestingAccount") | .base_vesting_account.original_vesting[0].amount | type == "string"'
+if [[ "$HAS_VESTING_ACCOUNTS" == "true" ]]; then
+    validate "end_time is string (Unix timestamp)" \
+        '.app_state.auth.accounts[] | select(."@type" == "/cosmos.vesting.v1beta1.ContinuousVestingAccount") | .base_vesting_account.end_time | type == "string"'
+    
+    validate "start_time is string (Unix timestamp)" \
+        '.app_state.auth.accounts[] | select(."@type" == "/cosmos.vesting.v1beta1.ContinuousVestingAccount") | .start_time | type == "string"'
+    
+    validate "original_vesting amounts are strings" \
+        '.app_state.auth.accounts[] | select(."@type" == "/cosmos.vesting.v1beta1.ContinuousVestingAccount") | .base_vesting_account.original_vesting[0].amount | type == "string"'
+fi
 
 echo ""
 print_info "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
