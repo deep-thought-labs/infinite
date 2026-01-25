@@ -219,6 +219,70 @@ See **[MODULE_ACCOUNTS.md](MODULE_ACCOUNTS.md)** for complete documentation.
 
 ---
 
+### Step 3.5: Configure Vesting Accounts (Optional)
+
+<details>
+<summary><strong>Click to expand if you need Vesting Accounts</strong></summary>
+
+If you need to set up vesting accounts (e.g., multisig wallets with locked tokens that unlock gradually):
+
+**Important**: Vesting accounts are regular accounts (not ModuleAccounts) with a vesting schedule. Tokens unlock gradually over time according to the configured schedule. This is useful for multisig wallets or accounts that should have tokens locked at genesis.
+
+<details>
+<summary><strong>Mainnet</strong> (click to expand)</summary>
+
+```bash
+# Create vesting accounts from configuration file (mainnet)
+./scripts/setup_vesting_accounts.sh --network mainnet --genesis-dir ~/.infinited
+```
+
+**Configuration file**: `scripts/genesis-configs/mainnet-vesting-accounts.json`
+
+</details>
+
+<details>
+<summary><strong>Testnet</strong> (click to expand)</summary>
+
+```bash
+# Create vesting accounts from configuration file (testnet)
+./scripts/setup_vesting_accounts.sh --network testnet --genesis-dir ~/.infinited
+```
+
+**Configuration file**: `scripts/genesis-configs/testnet-vesting-accounts.json`
+
+</details>
+
+<details>
+<summary><strong>Creative</strong> (click to expand)</summary>
+
+```bash
+# Create vesting accounts from configuration file (creative)
+./scripts/setup_vesting_accounts.sh --network creative --genesis-dir ~/.infinited
+```
+
+**Configuration file**: `scripts/genesis-configs/creative-vesting-accounts.json`
+
+</details>
+
+**What to do**:
+1. Edit the configuration file for your network and add the multisig wallet address
+2. Set the vesting schedule (start time, end time, amount)
+3. Run the script with the appropriate `--network` flag
+4. The script will **execute commands automatically** and create all vesting accounts
+5. Review the summary report to confirm all accounts were created successfully
+
+**When to use**: Setting up multisig wallets or accounts that need tokens locked at genesis with gradual unlock over time.
+
+**When NOT to use**: For regular accounts (use Step 4) or ModuleAccounts (use Step 3).
+
+**Note**: Vesting accounts can be added using only the public address - no keyring or private keys required. This is perfect for multisig wallets where you only have the public address.
+
+**For complete vesting accounts documentation**, including examples, timestamp calculation, and troubleshooting, see **[VESTING_ACCOUNTS.md](VESTING_ACCOUNTS.md)**.
+
+</details>
+
+---
+
 ### Step 4: Create and Fund Accounts
 
 #### 4.1: Create Account
@@ -561,13 +625,19 @@ infinited start \
 infinited init mainnet-validator --chain-id infinite_421018-1 --home ~/.infinited
 
 # Step 2: Apply customizations
-./scripts/customize_genesis.sh ~/.infinited/config/genesis.json --network mainnet
+./scripts/customize_genesis.sh --network mainnet
 
-# Step 3: Create validator account
+# Step 3: Create ModuleAccounts (tokenomics pools)
+./scripts/setup_module_accounts.sh --network mainnet
+
+# Step 3.5: Create Vesting Accounts (optional - for multisig wallets)
+./scripts/setup_vesting_accounts.sh --network mainnet
+
+# Step 4: Create validator account
 infinited keys add validator --keyring-backend file --home ~/.infinited
 # Save the mnemonic securely!
 
-# Step 4: Fund validator account (100 tokens)
+# Step 4.2: Fund validator account (100 tokens)
 infinited genesis add-genesis-account validator 100000000000000000000drop \
   --keyring-backend file --home ~/.infinited
 
@@ -582,13 +652,13 @@ infinited genesis gentx validator 1000000000000000000drop \
   --keyring-backend file \
   --home ~/.infinited
 
-# Step 6: Collect gentx
+# Step 5.2: Collect gentx
 infinited genesis collect-gentxs --home ~/.infinited
 
-# Step 7: Validate
+# Step 6: Validate
 infinited genesis validate-genesis --home ~/.infinited
 
-# Step 8: Distribute genesis.json to all nodes, then start
+# Step 7: Distribute genesis.json to all nodes, then start
 infinited start --chain-id infinite_421018-1 --evm.evm-chain-id 421018 --home ~/.infinited
 ```
 
@@ -602,13 +672,19 @@ infinited start --chain-id infinite_421018-1 --evm.evm-chain-id 421018 --home ~/
 infinited init testnet-validator --chain-id infinite_421018001-1 --home ~/.infinited
 
 # Step 2: Apply customizations
-./scripts/customize_genesis.sh ~/.infinited/config/genesis.json --network testnet
+./scripts/customize_genesis.sh --network testnet
 
-# Step 3: Create validator account
+# Step 3: Create ModuleAccounts (tokenomics pools)
+./scripts/setup_module_accounts.sh --network testnet
+
+# Step 3.5: Create Vesting Accounts (optional - for multisig wallets)
+./scripts/setup_vesting_accounts.sh --network testnet
+
+# Step 4: Create validator account
 infinited keys add validator --keyring-backend file --home ~/.infinited
 # Save the mnemonic securely!
 
-# Step 4: Fund validator account (100 tokens)
+# Step 4.2: Fund validator account (100 tokens)
 infinited genesis add-genesis-account validator 100000000000000000000tdrop \
   --keyring-backend file --home ~/.infinited
 
@@ -643,13 +719,19 @@ infinited start --chain-id infinite_421018001-1 --evm.evm-chain-id 421018001 --h
 infinited init creative-validator --chain-id infinite_421018002-1 --home ~/.infinited
 
 # Step 2: Apply customizations
-./scripts/customize_genesis.sh ~/.infinited/config/genesis.json --network creative
+./scripts/customize_genesis.sh --network creative
 
-# Step 3: Create validator account
+# Step 3: Create ModuleAccounts (tokenomics pools)
+./scripts/setup_module_accounts.sh --network creative
+
+# Step 3.5: Create Vesting Accounts (optional - for multisig wallets)
+./scripts/setup_vesting_accounts.sh --network creative
+
+# Step 4: Create validator account
 infinited keys add validator --keyring-backend file --home ~/.infinited
 # Save the mnemonic securely!
 
-# Step 4: Fund validator account (100 tokens)
+# Step 4.2: Fund validator account (100 tokens)
 infinited genesis add-genesis-account validator 100000000000000000000cdrop \
   --keyring-backend file --home ~/.infinited
 

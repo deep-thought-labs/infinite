@@ -51,6 +51,7 @@ Guides for configuring specific aspects of the system.
 |-------|-------------|-------------|
 | **[configuration/GENESIS.md](configuration/GENESIS.md)** | Genesis configuration | Configure genesis for mainnet |
 | **[configuration/MODULE_ACCOUNTS.md](configuration/MODULE_ACCOUNTS.md)** | ModuleAccounts structure and configuration | Understand and configure tokenomics pools |
+| **[configuration/VESTING_ACCOUNTS.md](configuration/VESTING_ACCOUNTS.md)** | Vesting accounts configuration | Configure accounts with locked tokens and gradual unlock |
 | **[configuration/TOKEN_SUPPLY.md](configuration/TOKEN_SUPPLY.md)** | Understanding token creation in Genesis | Learn how tokens are created and supply/balance relationship |
 
 ### 🏭 Infrastructure
@@ -87,6 +88,7 @@ Reference documentation and troubleshooting.
 - **...deploy to production**: [deployment/PRODUCTION.md](deployment/PRODUCTION.md)
 - **...configure genesis**: [configuration/GENESIS.md](configuration/GENESIS.md)
 - **...understand ModuleAccounts**: [configuration/MODULE_ACCOUNTS.md](configuration/MODULE_ACCOUNTS.md)
+- **...configure vesting accounts**: [configuration/VESTING_ACCOUNTS.md](configuration/VESTING_ACCOUNTS.md)
 - **...resolve a problem**: [reference/TROUBLESHOOTING.md](reference/TROUBLESHOOTING.md)
 
 ### By Experience Level

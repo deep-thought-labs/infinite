@@ -576,6 +576,147 @@ This script is typically used **after** running `customize_genesis.sh`:
 
 ---
 
+### 9. `setup_vesting_accounts.sh` - Configure Vesting Accounts
+
+**Purpose**: Configure vesting accounts in genesis.json for accounts that need tokens locked with gradual unlock schedules (e.g., multisig wallets).
+
+**Important**: This script creates vesting accounts (regular accounts with vesting schedules) that can be added using only the public address - no keyring or private keys required. This is perfect for multisig wallets.
+
+**What it does**:
+- Reads network-specific vesting configuration from `*-vesting-accounts.json` files
+- Validates address format (bech32)
+- Converts token amounts from full units to atomic units (multiplies by 10^18)
+- Validates vesting timestamps (end_time > start_time)
+- **Executes** commands directly to create vesting accounts:
+  1. Runs `infinited genesis add-genesis-account` with vesting flags (`--vesting-amount`, `--vesting-start-time`, `--vesting-end-time`)
+  2. Creates either ContinuousVestingAccount or DelayedVestingAccount based on configuration
+- Validates the genesis file after all changes
+- Provides detailed progress reports and error handling
+- Idempotent: skips accounts that already exist
+
+**When to use**:
+- **Network genesis creation**: When setting up vesting accounts for multisig wallets or accounts that need locked tokens
+- As part of the network deployment pipeline after running `setup_module_accounts.sh`
+- When you need to configure accounts with gradual token unlock schedules
+
+**When NOT to use**:
+- **Regular local development**: Not needed for local testing chains
+- For ModuleAccounts: Use `setup_module_accounts.sh` instead (ModuleAccounts cannot have vesting)
+- For regular accounts without vesting: Use `infinited genesis add-genesis-account` directly
+
+**Usage**:
+```bash
+./scripts/setup_vesting_accounts.sh --network <mainnet|testnet|creative> [--genesis-dir <path>]
+```
+
+**Example**:
+```bash
+# Create vesting accounts for mainnet
+./scripts/setup_vesting_accounts.sh --network mainnet
+
+# Or specify a custom genesis directory
+./scripts/setup_vesting_accounts.sh --network testnet --genesis-dir ~/.infinited-testnet
+
+# Or for creative network
+./scripts/setup_vesting_accounts.sh --network creative
+```
+
+**Expected output** (mainnet example):
+```
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Vesting Accounts Setup for MAINNET
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+ℹ Network: mainnet
+ℹ Genesis directory: /Users/alberto/.infinited
+
+ℹ Genesis file: /Users/alberto/.infinited/config/genesis.json
+ℹ Base denom: drop
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Creating Vesting Accounts
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+ℹ Found 1 vesting account(s) to configure
+
+ℹ Processing Vesting Account: infinite1abc123...
+ℹ   Amount: 100000000 tokens (100000000000000000000000000drop)
+ℹ   Vesting Type: continuous
+ℹ   Start Time: 1735689600 (2025-01-01 00:00:00 UTC)
+ℹ   End Time: 2208988800 (2030-01-01 00:00:00 UTC)
+ℹ   Adding vesting account to genesis...
+✓   Vesting account created successfully
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Validating Genesis File
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+✓ Genesis file is valid
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Summary
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+ℹ Configuration:
+  - Network: mainnet
+  - Base denom: drop
+  - Total Vesting Accounts: 1
+  - Successfully created: 1
+  - Skipped (already exist): 0
+  - Errors: 0
+
+✓ Vesting accounts created successfully!
+```
+
+**Configuration file format** (`*-vesting-accounts.json`):
+```json
+[
+  {
+    "address": "infinite1<multisig_wallet_address>",
+    "amount_tokens": 100000000,
+    "vesting_type": "continuous",
+    "vesting_start_time": 1735689600,
+    "vesting_end_time": 2208988800
+  }
+]
+```
+
+**Fields**:
+- `address`: Public address (bech32 format) - no keyring required
+- `amount_tokens`: Total amount in full token units (converted to atomic automatically)
+- `vesting_type`: `"continuous"` (linear unlock) or `"delayed"` (all at end time)
+- `vesting_start_time`: Unix timestamp when vesting starts (required for continuous)
+- `vesting_end_time`: Unix timestamp when vesting ends (required for both)
+
+**For complete vesting accounts documentation**, including examples, timestamp calculation, and troubleshooting, see **[configuration/VESTING_ACCOUNTS.md](../configuration/VESTING_ACCOUNTS.md)**.
+
+**Prerequisites**:
+- `jq` must be installed
+- `bc` is recommended for precise calculations (optional, has fallback)
+- Vesting configuration file for the specified network must exist in `scripts/genesis-configs/`
+- Network configuration file (e.g., `mainnet.json`) must exist to read base denom
+
+**Notes**:
+- **This script EXECUTES commands directly** and modifies the genesis file automatically
+- Vesting accounts are created according to Cosmos SDK specification: `@type: "/cosmos.vesting.v1beta1.ContinuousVestingAccount"` or `"/cosmos.vesting.v1beta1.DelayedVestingAccount"`
+- Token amounts are automatically converted from full units to atomic units (× 10^18)
+- Can use only public address - perfect for multisig wallets
+- Idempotent: automatically skips accounts that already exist
+- Validates the genesis file automatically after all changes
+- Provides detailed error reporting if any step fails
+- Exit code: 0 = success, 1 = errors encountered
+
+**Integration with Genesis Creation Process**:
+This script is typically used **after** running `setup_module_accounts.sh`:
+1. Run `infinited init` to generate base genesis
+2. Run `customize_genesis.sh` to apply all module customizations
+3. Run `setup_module_accounts.sh` to create ModuleAccounts
+4. Run `setup_vesting_accounts.sh` to create vesting accounts
+5. The script validates the genesis file automatically
+6. Review the summary report to confirm all accounts were created successfully
+
+---
+
 ## 🧪 Testing Scripts
 
 ### 10. Compatibility Scripts
