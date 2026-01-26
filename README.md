@@ -2,9 +2,9 @@
 
 > *"Governments of the Industrial World, you weary giants of flesh and steel — we are building the infrastructure you cannot control."*
 
-**Part of Infinite Drive** — A cypherpunk nation in cyberspace. Powered by improbability.
+**Project 42: Infinite Drive** — A cypherpunk nation in cyberspace. Powered by improbability.
 
-> Infinite Drive is the complete ecosystem: **Infinite Improbability Drive** and **Drive**, the infrastructure management client. Part of **Project 42**. Developed by [Deep Thought Labs](https://deep-thought.computer).
+> Infinite Drive is **Project 42**: the complete ecosystem encompassing **Infinite Improbability Drive** (the blockchain), **Drive** (the infrastructure management client), and other foundational technologies. The blockchain is a core component of Project 42, alongside other infrastructure pieces that together form the cypherpunk nation. Developed by [Deep Thought Labs](https://deep-thought.computer).
 
 
 
@@ -372,4 +372,4 @@ infinited start --home ~/.infinited
 
 ---
 
-*Part of Project 42. Building infrastructure for the cypherpunk nation. A [Deep Thought Labs](https://deep-thought.computer) project.*
+*Project 42. Building infrastructure for the cypherpunk nation. A [Deep Thought Labs](https://deep-thought.computer) project.*
