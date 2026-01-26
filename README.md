@@ -35,21 +35,25 @@
 
 ---
 
-## Tokenomics – Rubro Allocation (Executive Summary)
+## Tokenomics – Pool Allocation (Executive Summary)
 
 **Total Supply (Initial):** `100,000,000 Improbability [42]`**  
 **Initial Circulating Supply:** `100 Improbability [42]`** – **Dedicated exclusively to bootstrap the initial validator set**  
-**Vesting:** Gradual linear unlocking over extended periods (tailored per rubro, e.g., 10–20 years for perpetual sustainability)**  
+**Vesting:** All tokens locked at genesis, released gradually over **42 years**, controlled by on-chain DAO  
 **Sole Controller:** On-chain DAO from block 1, with lab oversight on development operations  
 **Inflation:** Dynamic, target-bonded, and governance-adjustable
 
-| **Rubro** | **% of Supply** | **Tokens Locked** | **Annual Unlock (Approx.)** | **Operational Mandate** |
-|----------|------------------|-------------------|-----------------------------|--------------------------|
-| **A. Consensus & Network Security** | 50 % | 50,000,000 Improbability [42] | 5,000,000 Improbability [42] | Perpetual validator & staker rewards |
-| **B. Distributed Infrastructure** | 25 % | 25,000,000 Improbability [42] | 2,500,000 Improbability [42] | P2P nodes, relays, storage, IBC |
-| **C. Development & Evolution** | 18 % | 18,000,000 Improbability [42] | 1,800,000 Improbability [42] | Upgrades, audits, R&D |
-| **D. Governance & Ecosystem** | 5 % | 5,000,000 Improbability [42] | 500,000 Improbability [42] | Technical grants, proposals, docs |
-| **E. Continuity Reserve** | 2 % | 2,000,000 Improbability [42] | 200,000 Improbability [42] | Systemic emergencies, succession |
+| **Pool** | **ModuleAccount** | **% of Supply** | **Tokens Locked** | **Operational Mandate** |
+|----------|-------------------|-----------------|-------------------|--------------------------|
+| **A** | `strategic_delegation` | 40% | 40,000,000 Improbability [42] | Never spent — only delegated to validators |
+| **B** | `security_rewards` | 25% | 25,000,000 Improbability [42] | Validator + staker rewards |
+| **C** | `perpetual_rd` | 15% | 15,000,000 Improbability [42] | Institutional funding (Deep Thought Labs) |
+| **D** | `fish_bootstrap` | 10% | 10,000,000 Improbability [42] | Seed liquidity pools |
+| **E** | `privacy_resistance` | 7% | 7,000,000 Improbability [42] | ZK, anti-censura R&D |
+| **F** | `community_growth` | 3% | 3,000,000 Improbability [42] | Grants, education, integrations |
+| **TOTAL** | - | **100%** | **100,000,000 Improbability [42]** | - |
+
+> **Note**: All pools are implemented as ModuleAccounts in genesis. For detailed configuration and technical implementation, see [guides/configuration/MODULE_ACCOUNTS.md](guides/configuration/MODULE_ACCOUNTS.md).
 
 ---
 
@@ -60,37 +64,92 @@
 
 ---
 
-### **Dynamic Inflation Model (Target-Bonded)**
+### **Dynamic Inflation Model (Target-Bonded with Gradual Adjustment)**
 
-- **Base Inflation:** Starts at `7%` annually on circulating supply  
-- **Target Stake Ratio:** `67%` of total liquid supply staked  
-- **Automatic Adjustment:**  
-  - If **staking < 60%** → inflation **increases** (max `10%`)  
-  - If **staking > 75%** → inflation **decreases** (min `3%`)  
-  - Adjustment occurs **per epoch** (automated via on-chain logic)  
-- **Governance Override:** DAO can adjust:  
-  - Inflation bounds  
-  - Target stake ratio  
-  - Adjustment sensitivity  
-  via **on-chain parameter change proposals**
+#### **Initial Configuration**
+- **Initial Inflation:** Starts at `10%` annually on circulating supply  
+- **Target Stake Ratio:** `67%` of total liquid supply staked (`goal_bonded`)  
+- **Inflation Bounds (Initial):**  
+  - **Minimum:** `7%` annually (`inflation_min`)  
+  - **Maximum:** `20%` annually (`inflation_max`)  
+- **Automatic Adjustment (Per Block):**  
+  - Inflation adjusts **each block** based on actual bonded ratio vs. target  
+  - If **bonded ratio < 67%** → inflation **increases** (up to max `20%`)  
+  - If **bonded ratio = 67%** → inflation **stays constant**  
+  - If **bonded ratio > 67%** → inflation **decreases** (down to min `7%`)  
+  - Rate of change: `13%` per year maximum (`inflation_rate_change`)  
+  - Formula: `inflationRateChange = (1 - bondedRatio/goalBonded) × inflationRateChange`  
+
+#### **Long-Term Strategy: Gradual Parameter Reduction (Bitcoin-Style)**
+
+To maintain a **controlled and limited supply** while ensuring network security, we implement a **3-phase gradual adjustment strategy** via DAO governance:
+
+**Phase 1: Initial Growth (Years 1-5)**
+- **Initial Inflation:** `10%` annually
+- **Bounds:** `7%` min, `20%` max
+- **Objective:** Maximum incentives for validators, network security, and organic growth
+- **Expected Supply Growth:** ~240K - 1.5M tokens/year (as circulating supply grows from 2.4M to 11.9M)
+
+**Phase 2: Controlled Growth (Years 5-15) - Via Governance**
+- **Proposed Reductions (via DAO proposals):**
+  - **Year 5:** Reduce `inflation_min` to `5%`, `inflation_max` to `15%`
+  - **Year 10:** Reduce `inflation_min` to `3%`, `inflation_max` to `10%`
+- **Objective:** Control supply growth while maintaining sufficient validator incentives
+- **Expected Supply Growth:** ~950K - 2.9M tokens/year (as circulating supply grows from 11.9M to 23.8M)
+
+**Phase 3: Mature Network (Years 15+) - Via Governance**
+- **Proposed Reductions (via DAO proposals):**
+  - **Year 15:** Reduce `inflation_min` to `3%`, `inflation_max` to `7%`
+  - **Years 20+:** Maintain minimum sustainable inflation (3-5% min, 7-10% max)
+- **Objective:** Limited and controlled supply (Bitcoin-style), minimal sustainable incentives
+- **Expected Supply Growth:** ~1.4M - 7M tokens/year (as circulating supply grows from 47.6M to 100M)
+
+**Total Expected Supply (42 years with gradual adjustment):** ~150-200M tokens  
+**vs without adjustment (10% constant):** ~300M+ tokens
+
+#### **Governance Mechanism**
+
+Parameter adjustments are implemented via **on-chain parameter change proposals**:
+- **Proposal Type:** `MsgUpdateParams` for mint module
+- **Decision Criteria:** Based on circulating supply, staking ratio, network health metrics
+- **Frequency:** Every 2-5 years, aligned with network maturity phases
+- **Flexibility:** DAO can adjust timing and values based on real-world conditions
+
+**Governance Override:** DAO can adjust at any time via **on-chain parameter change proposals**:  
+  - `inflation_min` and `inflation_max` (bounds)  
+  - `goal_bonded` (target stake ratio)  
+  - `inflation_rate_change` (adjustment sensitivity)
+
+> **Note:** This strategy ensures a **gradual and limited supply** (Bitcoin-style) while maintaining network security through adequate validator incentives. The automatic per-block adjustment responds to staking ratios, while the gradual parameter reduction (via governance) controls long-term supply growth.
 
 ---
 
 ### **Market Birth & Liquidity Path**
 1. **Block 1:** `100 [42]` → initial validators → staking begins  
 2. **Inflation kicks in** → new tokens minted per block  
-3. **Year 1+:** Rubro A unlocks `5 M [42]/year` → delegated via DAO → validators  
+3. **Year 1+:** Pools unlock gradually over 42 years → delegated/spent via DAO governance  
 4. **Validators control market release** → Bitcoin-style organic liquidity
 
 ---
 
 ### **Perpetual Commitment**
-- **All rubros unlock gradually over decades**, aligned with operational horizons  
+- **All pools unlock gradually over 42 years**, aligned with operational horizons  
 - **DAO governs destination of every unlock and inflation stream**  
-- **Lab retains operational control over Rubro C (development)**  
-- **Each rubro’s accounts are continuously refilled via block fees + inflation**  
+- **Lab retains operational control over Pool C (perpetual_rd)**  
+- **Each pool’s ModuleAccounts are continuously refilled via block fees + inflation**  
 - **No token enters circulation without validator custody first**  
 - **Security, alignment, and long-term resilience from genesis**
+
+---
+
+### **Technical Implementation**
+
+All tokenomics pools are implemented as **ModuleAccounts** in genesis:
+
+- **Configuration**: JSON files in `scripts/genesis-configs/` (mainnet, testnet, creative)
+- **Automation**: `setup_module_accounts.sh` script creates ModuleAccounts automatically
+- **Documentation**: Complete technical details in [guides/configuration/MODULE_ACCOUNTS.md](guides/configuration/MODULE_ACCOUNTS.md)
+- **Genesis Creation**: See [guides/configuration/GENESIS.md](guides/configuration/GENESIS.md) for step-by-step guide
 
 ---
 
