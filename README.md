@@ -37,9 +37,15 @@
 
 ## Tokenomics – Pool Allocation (Executive Summary)
 
-**Total Supply (Initial):** `100,000,000 Improbability [42]`**  
-**Initial Circulating Supply:** `200 Improbability [42]`** – **Distributed at genesis for bootstrap and visibility**  
-**Vesting:** All tokens locked at genesis, released gradually over **42 years**, controlled by on-chain DAO  
+**Total Supply (Initial):** `100,000,200 Improbability [42]`**  
+- **Circulating (Liquid):** `200 Improbability [42]`** – Distributed at genesis for bootstrap and visibility  
+- **Locked (Vesting):** `100,000,000 Improbability [42]`** – Released gradually over **42 years**, controlled by on-chain DAO  
+
+**Breakdown:**
+- The **200 liquid tokens** enable immediate network operation (100 for validators, 100 for tokenomics pools)
+- The **100,000,000 locked tokens** are held in vesting accounts and unlock linearly over 42 years
+- **Total at genesis:** 100,000,200 tokens (200 liquid + 100,000,000 locked)
+
 **Sole Controller:** On-chain DAO from block 1, with lab oversight on development operations  
 **Inflation:** Dynamic, target-bonded, and governance-adjustable
 
@@ -52,6 +58,8 @@
 | **E** | `privacy_resistance` | 7% | 7,000,000 Improbability [42] | ZK, anti-censura R&D |
 | **F** | `community_growth` | 3% | 3,000,000 Improbability [42] | Grants, education, integrations |
 | **TOTAL** | - | **100%** | **100,000,000 Improbability [42]** | - |
+
+> **Note:** The table above shows the **locked tokens** (100,000,000) that will unlock over 42 years. These are separate from the **200 liquid tokens** distributed at genesis (100 for validators + 100 for pools visibility).
 
 > **Note**: All pools are implemented as ModuleAccounts in genesis. For detailed configuration and technical implementation, see [guides/configuration/MODULE_ACCOUNTS.md](guides/configuration/MODULE_ACCOUNTS.md).
 
@@ -81,7 +89,11 @@ At **Block 1**, exactly **200 Improbability [42]** are minted as liquid tokens a
   - The numbers directly correspond to percentages, making the tokenomics **visually transparent** from day one
   - Anyone can verify the distribution by simply looking at the balances: 40 + 25 + 15 + 10 + 7 + 3 = 100
 
-> **Note:** These 100 tokens in ModuleAccounts are **governed by the DAO** and represent the initial liquid allocation visible at chain launch. The remaining 99,999,800 tokens are locked in vesting and will unlock gradually over 42 years.
+> **Note:** These 100 tokens in ModuleAccounts are **governed by the DAO** and represent the initial liquid allocation visible at chain launch.  
+> **Total Supply Breakdown:**  
+> - **200 tokens liquid** (100 validators + 100 pools)  
+> - **100,000,000 tokens locked** in vesting (unlock over 42 years)  
+> - **Total: 100,000,200 tokens** at genesis
 
 ---
 
