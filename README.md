@@ -38,7 +38,7 @@
 ## Tokenomics – Pool Allocation (Executive Summary)
 
 **Total Supply (Initial):** `100,000,000 Improbability [42]`**  
-**Initial Circulating Supply:** `100 Improbability [42]`** – **Dedicated exclusively to bootstrap the initial validator set**  
+**Initial Circulating Supply:** `200 Improbability [42]`** – **Distributed at genesis for bootstrap and visibility**  
 **Vesting:** All tokens locked at genesis, released gradually over **42 years**, controlled by on-chain DAO  
 **Sole Controller:** On-chain DAO from block 1, with lab oversight on development operations  
 **Inflation:** Dynamic, target-bonded, and governance-adjustable
@@ -57,10 +57,31 @@
 
 ---
 
-### **Genesis Bootstrap (100 [42])**
-> **100 Improbability [42] are minted liquid at genesis.**  
-> **Sole purpose:** Distributed pro-rata to the **initial validator set** to enable immediate block production and staking.  
-> From this seed, **inflation begins**, and the network self-sustains.
+### **Genesis Bootstrap (200 [42])**
+
+At **Block 1**, exactly **200 Improbability [42]** are minted as liquid tokens and distributed as follows:
+
+#### **100 [42] → Initial Validator Set**
+- **Purpose:** Bootstrap the network and enable immediate block production
+- **Distribution:** Held by the initial validator, who distributes them pro-rata to the **first set of validators** as they join the chain
+- **Function:** As new validators join, they receive tokens from this pool to enable staking and block production
+- **From this seed, inflation begins**, and the network self-sustains
+
+#### **100 [42] → Tokenomics Pools (ModuleAccounts)**
+- **Purpose:** Provide **visual clarity and educational understanding** of the tokenomics distribution
+- **Distribution:** Split proportionally across all 6 pools according to their tokenomics percentages:
+  - **Pool A (40%):** `40 [42]` → `strategic_delegation`
+  - **Pool B (25%):** `25 [42]` → `security_rewards`
+  - **Pool C (15%):** `15 [42]` → `perpetual_rd`
+  - **Pool D (10%):** `10 [42]` → `fish_bootstrap`
+  - **Pool E (7%):** `7 [42]` → `privacy_resistance`
+  - **Pool F (3%):** `3 [42]` → `community_growth`
+- **Why 100 tokens?** This makes it **intuitively easy to understand** the distribution:
+  - When you see `40 [42]` in the genesis file or on-chain, you immediately understand it represents **40% of the total allocation**
+  - The numbers directly correspond to percentages, making the tokenomics **visually transparent** from day one
+  - Anyone can verify the distribution by simply looking at the balances: 40 + 25 + 15 + 10 + 7 + 3 = 100
+
+> **Note:** These 100 tokens in ModuleAccounts are **governed by the DAO** and represent the initial liquid allocation visible at chain launch. The remaining 99,999,800 tokens are locked in vesting and will unlock gradually over 42 years.
 
 ---
 
@@ -125,10 +146,13 @@ Parameter adjustments are implemented via **on-chain parameter change proposals*
 ---
 
 ### **Market Birth & Liquidity Path**
-1. **Block 1:** `100 [42]` → initial validators → staking begins  
-2. **Inflation kicks in** → new tokens minted per block  
-3. **Year 1+:** Pools unlock gradually over 42 years → delegated/spent via DAO governance  
-4. **Validators control market release** → Bitcoin-style organic liquidity
+1. **Block 1:** `200 [42]` liquid:
+   - `100 [42]` → initial validator (distributes to first validator set)
+   - `100 [42]` → tokenomics pools (40+25+15+10+7+3, visible on-chain)
+2. **Staking begins** → validators start producing blocks  
+3. **Inflation kicks in** → new tokens minted per block  
+4. **Year 1+:** Pools unlock gradually over 42 years → delegated/spent via DAO governance  
+5. **Validators control market release** → Bitcoin-style organic liquidity
 
 ---
 
