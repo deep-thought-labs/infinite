@@ -36,7 +36,7 @@ Complete guide for validation and testing scripts for Infinite Drive.
 - ✅ Chain information (chain ID, height, etc.)
 
 **Requirements**:
-- Running node (started with `./local_node.sh` or manually)
+- Running node (started with Drive or direct installation)
 - `jq` installed
 - `curl` installed
 

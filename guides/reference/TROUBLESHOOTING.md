@@ -196,7 +196,7 @@ infinited start --log-level debug
 
 # Reset data directory if corrupted (WARNING: This deletes all data)
 rm -rf ~/.infinited
-./local_node.sh
+# Then reinitialize using Drive or direct installation (see README.md)
 ```
 
 ### 8. API Endpoints Not Responding

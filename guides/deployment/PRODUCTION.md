@@ -500,7 +500,11 @@ curl -s http://localhost:26657/status | jq '.result.node_info'
 
 ```bash
 # Download genesis file (if joining existing network)
-sudo -u infinited wget -O /opt/infinited/config/genesis.json https://your-network.com/genesis.json
+# For mainnet:
+sudo -u infinited wget -O /opt/infinited/config/genesis.json https://assets.infinitedrive.xyz/mainnet/genesis.json
+
+# For testnet:
+# sudo -u infinited wget -O /opt/infinited/config/genesis.json https://assets.infinitedrive.xyz/testnet/genesis.json
 
 # Or configure custom genesis (if setting up new network)
 sudo -u infinited nano /opt/infinited/config/genesis.json

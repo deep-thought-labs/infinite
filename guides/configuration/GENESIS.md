@@ -4,7 +4,7 @@
 
 **⚠️ IMPORTANT**: 
 - This guide is **specifically for mainnet/testnet/creative creation** (one-time setup process)
-- **Regular users** running local development chains should use `local_node.sh` instead, which handles genesis customization automatically
+- **For joining an existing network**, see [Obtaining Genesis from URL](#obtaining-genesis-from-url) below
 
 ---
 
@@ -819,4 +819,44 @@ For detailed information about genesis parameters, module configurations, and te
 
 ---
 
-**Note**: For local development, use `local_node.sh` instead, which handles all genesis customization automatically.
+---
+
+## Obtaining Genesis from URL
+
+**For users joining an existing network** (mainnet or testnet), you can download the official genesis file directly:
+
+### Mainnet
+
+```bash
+# Initialize the node
+infinited init my-node --chain-id infinite_421018-1 --home ~/.infinited
+
+# Download the official genesis file
+curl -o ~/.infinited/config/genesis.json \
+  https://assets.infinitedrive.xyz/mainnet/genesis.json
+
+# Validate the genesis file
+infinited genesis validate-genesis --home ~/.infinited
+
+# Start the node
+infinited start --chain-id infinite_421018-1 --evm.evm-chain-id 421018 --home ~/.infinited
+```
+
+### Testnet
+
+```bash
+# Initialize the node
+infinited init my-node --chain-id infinite_421018001-1 --home ~/.infinited
+
+# Download the official genesis file
+curl -o ~/.infinited/config/genesis.json \
+  https://assets.infinitedrive.xyz/testnet/genesis.json
+
+# Validate the genesis file
+infinited genesis validate-genesis --home ~/.infinited
+
+# Start the node
+infinited start --chain-id infinite_421018001-1 --evm.evm-chain-id 421018001 --home ~/.infinited
+```
+
+**Note**: The genesis file downloaded from the URL is already fully configured with all Infinite Drive customizations, ModuleAccounts, and vesting accounts. No additional customization is needed.

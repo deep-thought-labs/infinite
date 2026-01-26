@@ -63,7 +63,7 @@ After running `infinited init` **for mainnet/testnet creation**, you must **appl
 
 This automatically applies all required customizations.
 
-**Note for regular users**: If you're running a local development chain, use `local_node.sh` instead, which handles genesis customization automatically.
+**Note for regular users**: If you're joining an existing network (mainnet/testnet), download the official genesis file from `https://assets.infinitedrive.xyz/<network>/genesis.json` instead of creating a new one.
 
 **ALTERNATIVE (Manual)**: If you prefer manual editing:
 
@@ -737,7 +737,7 @@ Before launching, verify:
 - [CometBFT Genesis Documentation](https://docs.cometbft.com/v0.38/core/genesis)
 - Production Guide: `guides/deployment/PRODUCTION.md`
 - **Genesis Customization Script**: `scripts/customize_genesis.sh`
-- Development example: `local_node.sh` (lines 233-256) - Includes genesis customization plus account setup
+- Genesis customization script: `scripts/customize_genesis.sh` - Applies all Infinite Drive customizations
 
 ---
 

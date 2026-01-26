@@ -59,29 +59,78 @@ infinited version
 # infinited version 0.1.9-...
 ```
 
-## 🚀 Start Local Node (Optional)
+## 🚀 Run a Node
 
-If you want to test the complete node with a local blockchain:
+To run a node, you have two options:
 
+### Option 1: Using Drive (Recommended)
+
+The easiest way to run a node is using **[Drive](https://github.com/deep-thought-labs/drive)**, the infrastructure management client:
+
+**For Mainnet:**
 ```bash
-# Compile + configure + start local node
-./local_node.sh
+# 1. Clone Drive repository
+git clone https://github.com/deep-thought-labs/drive.git
+cd drive
+
+# 2. Navigate to mainnet service directory
+cd services/node0-infinite
+
+# 3. Start the container
+./drive.sh up -d
+
+# 4. Initialize the node (first time only)
+./drive.sh node-ui
+# Or via command line (simplified syntax):
+./drive.sh node-init
+
+# 5. Start the node
+./drive.sh node-start
 ```
 
-**What it does**:
-- Compiles the binary (if not already compiled)
-- Creates local blockchain configuration
-- Initializes genesis with test accounts
-- Starts the node with all services
-
-**Useful options**:
+**For Testnet:**
 ```bash
-# If already compiled, skip compilation (faster)
-./local_node.sh --no-install
-
-# See all options
-./local_node.sh --help
+# Same steps, but use testnet service directory
+cd drive/services/node1-infinite-testnet
+./drive.sh up -d
+./drive.sh node-ui
 ```
+
+**Key Points:**
+- Use `./drive.sh` for all commands (automatically handles permissions and detects service name)
+- **Simplified syntax:** `./drive.sh node-start` (no need to specify `exec` or service name)
+- The `node-init` command automatically downloads the official genesis file from the configured URL
+- See [README.md](../README.md) for complete instructions
+
+> **Note:** The simplified syntax (`./drive.sh node-start`) is available from Drive v0.1.12+. For earlier versions, use the complete syntax: `./drive.sh exec infinite node-start`
+
+### Option 2: Direct Installation
+
+For direct installation from source:
+
+```bash
+# 1. Clone the repository
+git clone https://github.com/deep-thought-labs/infinite.git
+cd infinite
+
+# 2. Compile the binary
+make install
+
+# 3. Initialize the node
+infinited init my-node --chain-id infinite_421018-1 --home ~/.infinited
+
+# 4. Obtain the official genesis file from URL
+curl -o ~/.infinited/config/genesis.json \
+  https://assets.infinitedrive.xyz/mainnet/genesis.json
+
+# 5. Validate the genesis file
+infinited genesis validate-genesis --home ~/.infinited
+
+# 6. Start the node
+infinited start --home ~/.infinited
+```
+
+See [README.md](../README.md) for more details.
 
 ## 📚 Next Steps
 
@@ -109,9 +158,9 @@ If you want to test the complete node with a local blockchain:
 |---------|--------------|-------------|
 | `make install` | Compiles and installs binary | Local development |
 | `make build` | Only compiles (doesn't install) | Compilation testing |
-| `./local_node.sh` | Compiles + starts node | Complete testing |
 | `make test-unit` | Runs unit tests | Verify changes |
 | `infinited version` | Shows version | Verify installation |
+| `./drive.sh node-start` | Starts node using Drive | Running a node |
 
 ## ⚠️ Important Notes
 

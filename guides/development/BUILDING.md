@@ -143,30 +143,38 @@ make install
 
 **When to use**: Complete testing, development with full node, integration testing
 
-### Command
+### Running a Node
 
+After compiling, you can run a node using one of these methods:
+
+**Option 1: Using Drive (Recommended)**
 ```bash
-# Full setup and start
-./local_node.sh
+# Navigate to Drive service directory
+cd drive/services/node0-infinite  # or node1-infinite-testnet
 
-# Skip compilation (if already compiled)
-./local_node.sh --no-install
+# Start the container
+./drive.sh up -d
 
-# Overwrite existing data without prompt
-./local_node.sh -y
-
-# See all options
-./local_node.sh --help
+# Initialize and start the node
+./drive.sh node-init
+./drive.sh node-start
 ```
 
-### What `local_node.sh` Does
+**Option 2: Direct Installation**
+```bash
+# Initialize the node
+infinited init my-node --chain-id infinite_421018-1 --home ~/.infinited
 
-The script performs a complete setup in this order:
+# Download the official genesis file
+curl -o ~/.infinited/config/genesis.json \
+  https://assets.infinitedrive.xyz/mainnet/genesis.json
 
-1. **Compiles the binary** (unless `--no-install` is used)
-2. **Initializes the chain** with `infinited init`
-3. **Customizes the Genesis file** (see details below)
-4. **Creates test accounts** (validator + dev0, dev1, dev2, dev3)
+# Validate and start
+infinited genesis validate-genesis --home ~/.infinited
+infinited start --home ~/.infinited
+```
+
+See [README.md](../../README.md) for complete instructions.
 5. **Funds accounts** in genesis
 6. **Finalizes genesis** (gentx, collect-gentxs, validate-genesis)
 7. **Starts the node** with all APIs enabled
@@ -328,7 +336,7 @@ After the node starts, you can verify the configuration:
 1. **Data Location**: All data is stored in `$HOME/.infinited/`
 2. **Overwriting**: Use `-y` flag to overwrite existing data, or `-n` to keep it
 3. **Development Only**: The governance periods are set for quick testing. **Do not use these values in production**
-4. **Code vs. Script**: The code (`infinited/genesis.go`) sets defaults, but `local_node.sh` ensures they're applied correctly in the Genesis JSON
+4. **Code vs. Script**: The code (`infinited/genesis.go`) sets defaults, but the official genesis file from `assets.infinitedrive.xyz` includes all Infinite Drive customizations
 
 **More information**:
 - Genesis configuration: [configuration/GENESIS.md](../configuration/GENESIS.md)

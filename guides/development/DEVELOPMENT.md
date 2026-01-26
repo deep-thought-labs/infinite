@@ -163,7 +163,7 @@ If you make changes to customizations (tokens, chain IDs, bech32):
    ```
 4. **Test** (if possible):
    ```bash
-   ./local_node.sh --no-install
+   # Start node using Drive or direct installation, then:
    ./scripts/validate_token_config.sh
    ```
 
@@ -304,4 +304,4 @@ cat ~/.infinited/config/genesis.json
 | Compile | `make install` | After changes |
 | Validate | `./scripts/validate_customizations.sh` | Before commit |
 | Tests | `make test-unit` | Verify changes |
-| Start node | `./local_node.sh --no-install` | Test changes |
+| Start node | Use Drive or direct installation | Test changes |

@@ -356,8 +356,8 @@ make install
 - When you need to ensure all Infinite Drive customizations are applied to a genesis file
 
 **When NOT to use**:
-- **Regular local development**: Use `local_node.sh` instead, which handles genesis customization automatically
-- For quick local testing: `local_node.sh` is the recommended approach
+- **For joining an existing network**: Download the official genesis file from `https://assets.infinitedrive.xyz/<network>/genesis.json` instead
+- **For running a node**: Use Drive (see [README.md](../../README.md)) or direct installation with the official genesis file
 
 **Usage**:
 ```bash
@@ -432,7 +432,7 @@ These files contain all parameters for each network, making it easy to modify va
 - The script creates a timestamped backup automatically
 - All modifications are applied safely with error handling
 - The script validates the genesis file before making changes
-- This script extracts the genesis customization logic from `local_node.sh` into a standalone tool
+- This script provides a standalone tool for genesis customization
 
 ---
 
