@@ -114,7 +114,7 @@ Just like we use **100 tokens** in genesis for easy percentage visualization (40
 | **F** | `community_growth` | 3% | 3,000,000 Improbability [42] (3M cups) | Grants, education, integrations |
 | **TOTAL** | - | **100%** | **100,000,000 Improbability [42]** (100M cups) | - |
 
-> **Note**: All pools are implemented as ModuleAccounts in genesis. The table above shows the **locked tokens** (100,000,000) that will unlock over 42 years. For detailed configuration and technical implementation, see the [official documentation](https://docs.infinitedrive.xyz/blockchain/module-accounts).
+> **Note**: All pools are implemented as ModuleAccounts in genesis. The table above shows the **locked tokens** (100,000,000) that will unlock over 42 years. For detailed configuration and technical implementation, see the [official documentation](https://docs.infinitedrive.xyz/en/blockchain/module-accounts).
 
 ---
 
@@ -233,7 +233,7 @@ Parameter adjustments are implemented via **on-chain parameter change proposals*
 
 ### **Technical Implementation**
 
-All tokenomics pools are implemented as **ModuleAccounts** in genesis. For complete technical documentation on genesis configuration, ModuleAccounts, vesting accounts, and network parameters, see the [official documentation](https://docs.infinitedrive.xyz/blockchain).
+All tokenomics pools are implemented as **ModuleAccounts** in genesis. For complete technical documentation on genesis configuration, ModuleAccounts, vesting accounts, and network parameters, see the [official documentation](https://docs.infinitedrive.xyz/en/blockchain).
 
 ---
 
@@ -241,7 +241,7 @@ All tokenomics pools are implemented as **ModuleAccounts** in genesis. For compl
 
 **Want to compile and test Infinite Drive locally?**
 
-👉 **[Official Documentation](https://docs.infinitedrive.xyz)** - Complete guides and technical documentation
+👉 **[Official Documentation](https://docs.infinitedrive.xyz/en)** - Complete guides and technical documentation
 
 The official documentation includes:
 - **Network Overview**: Learn about Infinite Improbability Drive
@@ -331,8 +331,8 @@ infinited start --home ~/.infinited
 
 **Important Notes:**
 - For mainnet/testnet, you must compile the binary and obtain the official genesis file with Infinite Drive's complete configuration
-- See the [official documentation](https://docs.infinitedrive.xyz/blockchain/genesis) for complete guides on genesis files, ModuleAccounts, and vesting accounts
-- See the [official documentation](https://docs.infinitedrive.xyz) for detailed compilation instructions and development workflows
+- See the [official documentation](https://docs.infinitedrive.xyz/en/blockchain/genesis) for complete guides on genesis files, ModuleAccounts, and vesting accounts
+- See the [official documentation](https://docs.infinitedrive.xyz/en) for detailed compilation instructions and development workflows
 
 ---
 
@@ -365,7 +365,7 @@ infinited start --home ~/.infinited
 - **Lab**: [Deep Thought Labs](https://deep-thought.computer) - Research laboratory developing Infinite Drive
 - **X**: [@DeepThought_Lab](https://x.com/DeepThought_Lab)
 - **Telegram**: [Deep Thought Labs](https://t.me/+nt8ysid_-8VlMDVh)
-- **Docs**: [Official Documentation](https://docs.infinitedrive.xyz)
+- **Docs**: [Official Documentation](https://docs.infinitedrive.xyz/en)
 - **Client**: [Drive](https://github.com/deep-thought-labs/drive) - Infrastructure management client
 - **License**: [Apache 2.0](./LICENSE)
 - [NOTICE & Attributions](./NOTICE)
