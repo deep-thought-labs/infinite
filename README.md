@@ -114,7 +114,7 @@ Just like we use **100 tokens** in genesis for easy percentage visualization (40
 | **F** | `community_growth` | 3% | 3,000,000 Improbability [42] (3M cups) | Grants, education, integrations |
 | **TOTAL** | - | **100%** | **100,000,000 Improbability [42]** (100M cups) | - |
 
-> **Note**: All pools are implemented as ModuleAccounts in genesis. The table above shows the **locked tokens** (100,000,000) that will unlock over 42 years. For detailed configuration and technical implementation, see [guides/configuration/MODULE_ACCOUNTS.md](guides/configuration/MODULE_ACCOUNTS.md).
+> **Note**: All pools are implemented as ModuleAccounts in genesis. The table above shows the **locked tokens** (100,000,000) that will unlock over 42 years. For detailed configuration and technical implementation, see the [official documentation](https://docs.infinitedrive.xyz/blockchain/module-accounts).
 
 ---
 
@@ -233,12 +233,7 @@ Parameter adjustments are implemented via **on-chain parameter change proposals*
 
 ### **Technical Implementation**
 
-All tokenomics pools are implemented as **ModuleAccounts** in genesis:
-
-- **Configuration**: JSON files in `scripts/genesis-configs/` (mainnet, testnet, creative)
-- **Automation**: `setup_module_accounts.sh` script creates ModuleAccounts automatically
-- **Documentation**: Complete technical details in [guides/configuration/MODULE_ACCOUNTS.md](guides/configuration/MODULE_ACCOUNTS.md)
-- **Genesis Creation**: See [guides/configuration/GENESIS.md](guides/configuration/GENESIS.md) for step-by-step guide
+All tokenomics pools are implemented as **ModuleAccounts** in genesis. For complete technical documentation on genesis configuration, ModuleAccounts, vesting accounts, and network parameters, see the [official documentation](https://docs.infinitedrive.xyz/blockchain).
 
 ---
 
@@ -246,15 +241,14 @@ All tokenomics pools are implemented as **ModuleAccounts** in genesis:
 
 **Want to compile and test Infinite Drive locally?**
 
-👉 **[guides/QUICK_START.md](guides/QUICK_START.md)** - Developer entry point
+👉 **[Official Documentation](https://docs.infinitedrive.xyz)** - Complete guides and technical documentation
 
-This guide shows you the different available workflows:
-- **All-in-One Workflow**: Compile + configure + start node (`./local_node.sh`)
-- **Compilation Workflow**: Just compile the binary (`make install`)
-- **Testing Workflow**: Validate everything works
-- **Release Workflow**: Create releases with GitHub Actions
-
-**📚 More documentation**: See [guides/README.md](guides/README.md) for complete index
+The official documentation includes:
+- **Network Overview**: Learn about Infinite Improbability Drive
+- **Tokenomics**: Complete token supply and distribution details
+- **Network Parameters**: All network configurations for mainnet, testnet, and creative
+- **Genesis Configuration**: How to work with genesis files
+- **Running a Node**: Complete guides for using Drive or direct installation
 
 ---
 
@@ -264,26 +258,81 @@ This guide shows you the different available workflows:
 
 The easiest way to run a node is using **[Drive](https://github.com/deep-thought-labs/drive)**, the infrastructure management client for **Infinite Improbability Drive**:
 
+**For Mainnet:**
 ```bash
+# 1. Clone Drive repository
 git clone https://github.com/deep-thought-labs/drive.git
-cd drive/services/infinite-mainnet
-docker compose up -d
-docker compose exec infinite-mainnet node-ui
+cd drive
+
+# 2. Navigate to mainnet service directory
+cd services/node0-infinite
+
+# 3. Start the container
+./drive.sh up -d
+
+# 4. Initialize the node (first time only)
+./drive.sh node-ui
+# Then in the interface: Advanced Operations → Initialize Node (Simple)
+# Or via command line (simplified syntax):
+./drive.sh node-init
+
+# 5. Start the node
+./drive.sh node-start
+# Or via interface: Node Operations → Start Node
+
+# 6. Open graphical interface (for management)
+./drive.sh node-ui
 ```
 
-Drive provides a graphical interface and simplified node management. [Learn more →](https://github.com/deep-thought-labs/drive)
+**For Testnet:**
+```bash
+# Same steps, but use testnet service directory
+cd drive/services/node1-infinite-testnet
+./drive.sh up -d
+./drive.sh node-ui
+# Follow same initialization and startup steps
+```
+
+**Key Points:**
+- Use `./drive.sh` for all commands (automatically handles permissions and detects service name)
+- **Simplified syntax:** `./drive.sh node-start` (no need to specify `exec` or service name)
+- The `node-init` command automatically downloads the official genesis file from the configured URL
+- Use `node-ui` for a graphical interface that guides you through all operations
+- See [Drive Documentation](https://github.com/deep-thought-labs/drive) for complete guides
+
+> **Note:** The simplified syntax (`./drive.sh node-start`) is available from Drive v0.1.12+. For earlier versions, use the complete syntax: `./drive.sh exec infinite node-start`
 
 ### Option 2: Direct Installation
 
-For direct installation from source:
+For direct installation from source (requires compiling the binary and obtaining the genesis file):
 
 ```bash
+# 1. Clone the repository
 git clone https://github.com/deep-thought-labs/infinite.git
 cd infinite
-./local_node.sh
+
+# 2. Compile the binary
+make install
+# This installs infinited to $HOME/go/bin/infinited
+
+# 3. Initialize the node (generates basic genesis)
+infinited init my-node --chain-id infinite_421018-1 --home ~/.infinited
+
+# 4. Obtain the official genesis file from URL
+curl -o ~/.infinited/config/genesis.json \
+  https://assets.infinitedrive.xyz/mainnet/genesis.json
+
+# 5. Validate the genesis file
+infinited genesis validate-genesis --home ~/.infinited
+
+# 6. Start the node
+infinited start --home ~/.infinited
 ```
 
-[Full Guide →](./guides/QUICK_START.md)
+**Important Notes:**
+- For mainnet/testnet, you must compile the binary and obtain the official genesis file with Infinite Drive's complete configuration
+- See the [official documentation](https://docs.infinitedrive.xyz/blockchain/genesis) for complete guides on genesis files, ModuleAccounts, and vesting accounts
+- See the [official documentation](https://docs.infinitedrive.xyz) for detailed compilation instructions and development workflows
 
 ---
 
@@ -316,7 +365,7 @@ cd infinite
 - **Lab**: [Deep Thought Labs](https://deep-thought.computer) - Research laboratory developing Infinite Drive
 - **X**: [@DeepThought_Lab](https://x.com/DeepThought_Lab)
 - **Telegram**: [Deep Thought Labs](https://t.me/+nt8ysid_-8VlMDVh)
-- **Docs**: [Getting Started with Infinite Drive](./guides/QUICK_START.md)
+- **Docs**: [Official Documentation](https://docs.infinitedrive.xyz)
 - **Client**: [Drive](https://github.com/deep-thought-labs/drive) - Infrastructure management client
 - **License**: [Apache 2.0](./LICENSE)
 - [NOTICE & Attributions](./NOTICE)
