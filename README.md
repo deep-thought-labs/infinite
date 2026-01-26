@@ -25,49 +25,102 @@
 
 ## Infinite Improbability Drive
 
+### **Network Identity**
 - **Chain Name**: `infinite`
 - **Chain ID**: `infinite_421018-1`
-- **Token**: Improbability (42)
-- **1 42 = 10¹⁸ drop**
-- **Bech32**: `infinite`
+- **Bech32 Prefix**: `infinite`
 
-> *The drive runs on tea. Properly prepared.*
+### **Token: Improbability**
+- **Token Name**: Improbability
+- **Symbol**: `42`
+  - *Just 42. If you want to know why, we invite you to consult the [Enciclopedia Galáctica](https://grokipedia.com/page/42_(number)) for more information.*
+- **Token Format**: Improbability [42]
+
+### **Unit of Measurement: cups**
+The Improbability token is measured in **cups** (cups of Improbability), because **improbability is the fuel that powers the Infinite Improbability Drive**. The atomic unit is **drop**.
+
+- **1 cup** = 1 cup of Improbability
+- **1 cup** = 1 [42]
+- **1 cup** = 1 Improbability [42]
+- **1 cup** = 1 tasa de improbabilidad
+
+> **Note:** This friendly nomenclature is intentional, not meant to confuse. Some readers' heads explode when they hear "a forty-two," but they relax when you mention "a cup of Improbability." We use this approach to make the tokenomics more accessible and approachable.
+
+### **Equivalencies**
+- **1 Improbability [42]** = **1 cup** (1 cup of Improbability / 1 tasa de improbabilidad)
+- **1 cup** = **10¹⁸ drop**
+- **1 drop** = **10⁻¹⁸ Improbability [42]** = **10⁻¹⁸ cup**
+
+**Examples:**
+- `10 cups` = 10 Improbability [42]
+- `50 cups` = 50 Improbability [42]
+- `100 cups of Improbability` = 100 Improbability [42]
+
+---
+
+### **The Infinite Improbability Drive: A Philosophical Foundation**
+
+> *"The Infinite Improbability Drive is a wonderful new method of crossing vast interstellar distances in a mere nothingth of a second, without all that tedious mucking about in hyperspace."* — The Hitchhiker's Guide to the Galaxy
+
+The **Infinite Improbability Drive** is the engine that powers this network—both literally and metaphorically. In Douglas Adams' universe, the drive operates by generating improbability: when it reaches infinite improbability, it passes through every conceivable point in every conceivable universe simultaneously. It doesn't move through space conventionally; instead, it **warps probability itself**, causing highly improbable events to occur.
+
+#### **How It Works: Improbability as Fuel**
+
+The drive is created by connecting a Bambleweeny 57 Sub-Meson Brain to an atomic vector plotter suspended in a strong Brownian Motion producer—specifically, a **hot cup of tea**. The student who invented it realized that since an infinite improbability machine was "virtually impossible," it must have finite improbability. By feeding that improbability figure into a finite improbability generator and adding hot tea (which provides the Brownian Motion necessary to generate the improbability field), the device was born.
+
+**In our network, each cup of Improbability [42] is the improbability itself**—the raw fuel that powers the drive. When you hold a cup of Improbability, you're holding the fundamental force that makes the impossible possible, that bends probability to cross vast distances, that transforms the highly unlikely into reality.
+
+#### **Improbability and Entropy: The Cosmic Dance**
+
+Both Douglas Adams and Isaac Asimov explored the relationship between improbability and entropy—the measure of disorder in the universe. Asimov, in his Foundation series, described psychohistory as predicting the future through the statistical behavior of large populations, where individual improbabilities average out into predictable patterns. Adams, in his satirical genius, took this concept to its absurd conclusion: if you can generate enough improbability, you can make anything happen.
+
+**Improbability is the counterforce to entropy.** While entropy drives the universe toward disorder and decay, improbability introduces the possibility of order emerging from chaos, of structure forming from randomness, of the highly unlikely becoming reality. In the Infinite Improbability Drive, this manifests as the ability to be everywhere at once—to exist in all possible states simultaneously, until probability collapses into a single, chosen reality.
+
+#### **The Network as Infinite Improbability Drive**
+
+Our blockchain network operates on the same principle: through the collective improbability of decentralized consensus, we create order from the chaos of distributed systems. Each validator contributes to the improbability field. Each transaction is an improbable event made certain through cryptographic proof. Each block is a moment where probability collapses into consensus—where the infinite possibilities of the network state converge into a single, verifiable truth.
+
+**Every cup of Improbability [42] you hold is a quantum of this force**—a measure of the improbability that makes our network possible, that allows us to build infrastructure that cannot be controlled, that powers a cypherpunk nation in cyberspace.
+
+> *The drive runs on tea. Properly prepared.*  
+> *"I'd far rather be happy than right any day."* — The Hitchhiker's Guide to the Galaxy  
+> *"The most exciting phrase to hear in science, the one that heralds new discoveries, is not 'Eureka!' but 'That's funny...'"* — Isaac Asimov
 
 ---
 
 ## Tokenomics – Pool Allocation (Executive Summary)
 
-**Total Supply (Initial):** `100,000,200 Improbability [42]`**  
-- **Circulating (Liquid):** `200 Improbability [42]`** – Distributed at genesis for bootstrap and visibility  
-- **Locked (Vesting):** `100,000,000 Improbability [42]`** – Released gradually over **42 years**, controlled by on-chain DAO  
+**Total Supply (Initial):** `100,000,200 Improbability [42]`** (100,000,200 cups)**  
+- **Circulating (Liquid):** `200 Improbability [42]`** (200 cups) – Distributed at genesis (see [Genesis Bootstrap](#genesis-bootstrap-200-42) for details)  
+- **Locked (Vesting):** `100,000,000 Improbability [42]`** (100,000,000 cups) – Released gradually over **42 years**, controlled by on-chain DAO  
 
-**Breakdown:**
-- The **200 liquid tokens** enable immediate network operation (100 for validators, 100 for tokenomics pools)
-- The **100,000,000 locked tokens** are held in vesting accounts and unlock linearly over 42 years
-- **Total at genesis:** 100,000,200 tokens (200 liquid + 100,000,000 locked)
+**Why 100 Million Tokens?**  
+Just like we use **100 tokens** in genesis for easy percentage visualization (40 tokens = 40%), we use **100 million tokens** as the total supply because it makes it **intuitively easy to understand** the project's lifecycle and market cap evolution:
+- **Percentage calculations are straightforward**: 40% = 40 million, 25% = 25 million, etc.
+- **Market cap tracking is simple**: At any price point, you can easily calculate total market cap
+- **Supply growth is transparent**: As tokens unlock and inflation adds new tokens, the math remains clear and verifiable
+- **No "magic numbers"**: Using a round number (100M) makes the tokenomics more accessible and easier to communicate
 
 **Sole Controller:** On-chain DAO from block 1, with lab oversight on development operations  
 **Inflation:** Dynamic, target-bonded, and governance-adjustable
 
 | **Pool** | **ModuleAccount** | **% of Supply** | **Tokens Locked** | **Operational Mandate** |
 |----------|-------------------|-----------------|-------------------|--------------------------|
-| **A** | `strategic_delegation` | 40% | 40,000,000 Improbability [42] | Never spent — only delegated to validators |
-| **B** | `security_rewards` | 25% | 25,000,000 Improbability [42] | Validator + staker rewards |
-| **C** | `perpetual_rd` | 15% | 15,000,000 Improbability [42] | Institutional funding (Deep Thought Labs) |
-| **D** | `fish_bootstrap` | 10% | 10,000,000 Improbability [42] | Seed liquidity pools |
-| **E** | `privacy_resistance` | 7% | 7,000,000 Improbability [42] | ZK, anti-censura R&D |
-| **F** | `community_growth` | 3% | 3,000,000 Improbability [42] | Grants, education, integrations |
-| **TOTAL** | - | **100%** | **100,000,000 Improbability [42]** | - |
+| **A** | `strategic_delegation` | 40% | 40,000,000 Improbability [42] (40M cups) | Never spent — only delegated to validators |
+| **B** | `security_rewards` | 25% | 25,000,000 Improbability [42] (25M cups) | Validator + staker rewards |
+| **C** | `perpetual_rd` | 15% | 15,000,000 Improbability [42] (15M cups) | Institutional funding (Deep Thought Labs) |
+| **D** | `fish_bootstrap` | 10% | 10,000,000 Improbability [42] (10M cups) | Seed liquidity pools |
+| **E** | `privacy_resistance` | 7% | 7,000,000 Improbability [42] (7M cups) | ZK, anti-censura R&D |
+| **F** | `community_growth` | 3% | 3,000,000 Improbability [42] (3M cups) | Grants, education, integrations |
+| **TOTAL** | - | **100%** | **100,000,000 Improbability [42]** (100M cups) | - |
 
-> **Note:** The table above shows the **locked tokens** (100,000,000) that will unlock over 42 years. These are separate from the **200 liquid tokens** distributed at genesis (100 for validators + 100 for pools visibility).
-
-> **Note**: All pools are implemented as ModuleAccounts in genesis. For detailed configuration and technical implementation, see [guides/configuration/MODULE_ACCOUNTS.md](guides/configuration/MODULE_ACCOUNTS.md).
+> **Note**: All pools are implemented as ModuleAccounts in genesis. The table above shows the **locked tokens** (100,000,000) that will unlock over 42 years. For detailed configuration and technical implementation, see [guides/configuration/MODULE_ACCOUNTS.md](guides/configuration/MODULE_ACCOUNTS.md).
 
 ---
 
 ### **Genesis Bootstrap (200 [42])**
 
-At **Block 1**, exactly **200 Improbability [42]** are minted as liquid tokens and distributed as follows:
+At **Block 1**, exactly **200 Improbability [42]** (200 cups) are minted as liquid tokens and distributed as follows:
 
 #### **100 [42] → Initial Validator Set**
 - **Purpose:** Bootstrap the network and enable immediate block production
@@ -89,11 +142,11 @@ At **Block 1**, exactly **200 Improbability [42]** are minted as liquid tokens a
   - The numbers directly correspond to percentages, making the tokenomics **visually transparent** from day one
   - Anyone can verify the distribution by simply looking at the balances: 40 + 25 + 15 + 10 + 7 + 3 = 100
 
-> **Note:** These 100 tokens in ModuleAccounts are **governed by the DAO** and represent the initial liquid allocation visible at chain launch.  
-> **Total Supply Breakdown:**  
-> - **200 tokens liquid** (100 validators + 100 pools)  
-> - **100,000,000 tokens locked** in vesting (unlock over 42 years)  
-> - **Total: 100,000,200 tokens** at genesis
+> **Complete Supply at Genesis:**  
+> - **200 Improbability [42] liquid** (200 cups: 100 for validators + 100 for tokenomics pools visibility)  
+> - **100,000,000 Improbability [42] locked** (100M cups) in vesting accounts (unlock linearly over 42 years)  
+> - **Total: 100,000,200 Improbability [42]** (100,000,200 cups)  
+> The 100 tokens in ModuleAccounts are **governed by the DAO** and represent the initial liquid allocation visible at chain launch.
 
 ---
 
@@ -158,9 +211,9 @@ Parameter adjustments are implemented via **on-chain parameter change proposals*
 ---
 
 ### **Market Birth & Liquidity Path**
-1. **Block 1:** `200 [42]` liquid:
-   - `100 [42]` → initial validator (distributes to first validator set)
-   - `100 [42]` → tokenomics pools (40+25+15+10+7+3, visible on-chain)
+1. **Block 1:** `200 Improbability [42]` (200 cups) liquid:
+   - `100 [42]` (100 cups) → initial validator (distributes to first validator set)
+   - `100 [42]` (100 cups) → tokenomics pools (40+25+15+10+7+3, visible on-chain)
 2. **Staking begins** → validators start producing blocks  
 3. **Inflation kicks in** → new tokens minted per block  
 4. **Year 1+:** Pools unlock gradually over 42 years → delegated/spent via DAO governance  
