@@ -2,15 +2,20 @@
 
 > *"Governments of the Industrial World, you weary giants of flesh and steel — we are building the infrastructure you cannot control."*
 
-**Project 42: Infinite Drive** — A cypherpunk nation in cyberspace. Powered by improbability.
+**Project 42** — A cypherpunk nation in cyberspace. Powered by improbability.
 
-> Infinite Drive is **Project 42**: the complete ecosystem encompassing **Infinite Improbability Drive** (the blockchain), **Drive** (the infrastructure management client), and other foundational technologies. The blockchain is a core component of Project 42, alongside other infrastructure pieces that together form the cypherpunk nation. Developed by [Deep Thought Labs](https://deep-thought.computer).
+**🌐 [infinitedrive.xyz](https://infinitedrive.xyz)** | **📚 [Official Documentation](https://docs.infinitedrive.xyz/en)** | **🔬 [Deep Thought Labs](https://deep-thought.computer)** 
 
-
+<div align="center">
+  <img src="assets/dontpanic-space.jpg" alt="Don't Panic - Infinite Improbability Drive" width="600" style="max-width: 100%; height: auto; border-radius: 8px; margin: 2rem 0;" />
+</div>
 
 ---
 
-## The Network
+
+## Sovereign Infrastructure
+
+The foundational capabilities that power the cypherpunk nation — built for sovereignty, interoperability, and resilience.
 
 | Feature | Status |
 |-------|--------|
@@ -25,6 +30,10 @@
 
 ## Infinite Improbability Drive
 
+Infinite Improbability Drive is **operational infrastructure** — the cryptographic backbone of our digital nation. It serves as the foundational layer upon which services, protocols, and implementations are constructed across the new cyberspace.
+
+This is infrastructure for the future: maintained, secured, and built by cypherpunks. Every transaction, every smart contract, every protocol built on this foundation contributes to a resilient digital ecosystem that operates independently of traditional power structures. The blockchain provides the trust, security, and economic coordination necessary for a sovereign cyberspace to thrive — the operational foundation for a new kind of internet, by the people, for the people.
+
 ### **Network Identity**
 - **Chain Name**: `infinite`
 - **Chain ID**: `infinite_421018-1`
@@ -33,7 +42,7 @@
 ### **Token: Improbability**
 - **Token Name**: Improbability
 - **Symbol**: `42`
-  - *Just 42. If you want to know why, we invite you to consult the [Enciclopedia Galáctica](https://grokipedia.com/page/42_(number)) for more information.*
+  - *42. The [Enciclopedia Galáctica](https://grokipedia.com/page/42_(number)) contains the answer — and the question.*
 - **Token Format**: Improbability [42]
 
 ### **Unit of Measurement: cups**
@@ -151,6 +160,8 @@ At **Block 1**, exactly **200 Improbability [42]** (200 cups) are minted as liqu
 ---
 
 ### **Dynamic Inflation Model (Target-Bonded with Gradual Adjustment)**
+
+**Design Philosophy:** Infinite Improbability Drive is an **operational infrastructure blockchain**, not a monetary store-of-value system. The inflation model and token distribution strategy are designed to sustain network operations, validator incentives, and ecosystem development—not to preserve purchasing power or function as digital hard money. Unlike Bitcoin's deflationary model optimized for value preservation, our controlled inflation ensures the network remains economically viable for infrastructure services, protocol operations, and long-term sustainability.
 
 #### **Initial Configuration**
 - **Initial Inflation:** Starts at `10%` annually on circulating supply  
@@ -362,7 +373,7 @@ infinited start --home ~/.infinited
 
 ## Community
 - **Project**: [infinitedrive.xyz](https://infinitedrive.xyz)
-- **Lab**: [Deep Thought Labs](https://deep-thought.computer) - Research laboratory developing Infinite Drive
+- **Lab**: [Deep Thought Labs](https://deep-thought.computer) - Research laboratory
 - **X**: [@DeepThought_Lab](https://x.com/DeepThought_Lab)
 - **Telegram**: [Deep Thought Labs](https://t.me/+nt8ysid_-8VlMDVh)
 - **Docs**: [Official Documentation](https://docs.infinitedrive.xyz/en)
