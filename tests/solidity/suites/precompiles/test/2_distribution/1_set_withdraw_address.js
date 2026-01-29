@@ -14,7 +14,7 @@ describe('Distribution – set withdraw address', function () {
     });
 
     it('should set withdraw address and emit SetWithdrawerAddress event', async function () {
-        const newWithdrawAddress = 'cosmos1fx944mzagwdhx0wz7k9tfztc8g3lkfk6pzezqh';
+        const newWithdrawAddress = 'infinite1fx944mzagwdhx0wz7k9tfztc8g3lkfk6pzezqh';
         const tx = await distribution
             .connect(signer)
             .setWithdrawAddress(signer.address, newWithdrawAddress, {gasLimit: GAS_LIMIT});
