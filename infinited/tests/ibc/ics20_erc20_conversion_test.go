@@ -9,8 +9,9 @@ import (
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/stretchr/testify/suite"
 
-	"github.com/cosmos/evm/evmd"
-	"github.com/cosmos/evm/evmd/tests/integration"
+	"github.com/cosmos/evm"
+	"github.com/cosmos/evm/infinited"
+	"github.com/cosmos/evm/infinited/tests/integration"
 	"github.com/cosmos/evm/precompiles/ics20"
 	evmibctesting "github.com/cosmos/evm/testutil/ibc"
 	erc20types "github.com/cosmos/evm/x/erc20/types"

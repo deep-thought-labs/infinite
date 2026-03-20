@@ -4,7 +4,7 @@ go 1.25.8
 
 replace (
 	github.com/cosmos/evm => ../../
-	github.com/cosmos/evm/evmd => ../../evmd
+	github.com/cosmos/evm/infinited => ../../infinited
 	// use Cosmos geth fork
 	// branch: release/1.16
 	github.com/ethereum/go-ethereum => github.com/cosmos/go-ethereum v1.16.2-cosmos-1
@@ -15,7 +15,7 @@ require (
 	github.com/cosmos/cosmos-db v1.1.3
 	github.com/cosmos/cosmos-sdk v0.54.0-rc.1.0.20260311165803-2c527014f3ee
 	github.com/cosmos/evm v0.2.0
-	github.com/cosmos/evm/evmd v0.0.0-20251112193856-d450ea1d6bd0
+	github.com/cosmos/evm/infinited v0.0.0-00010101000000-000000000000
 	github.com/ethereum/go-ethereum v1.16.8
 	github.com/spf13/cobra v1.10.2
 )
