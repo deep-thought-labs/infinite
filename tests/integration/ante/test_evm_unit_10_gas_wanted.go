@@ -12,6 +12,7 @@ import (
 	testkeyring "github.com/cosmos/evm/testutil/keyring"
 	evmtypes "github.com/cosmos/evm/x/vm/types"
 
+	cmtproto "github.com/cometbft/cometbft/proto/tendermint/types"
 	storetypes "cosmossdk.io/store/types"
 
 	sdktypes "github.com/cosmos/cosmos-sdk/types"
@@ -33,11 +34,10 @@ func (s *EvmUnitAnteTestSuite) TestCheckGasWanted() {
 	commonGasLimit := uint64(100_000)
 
 	testCases := []struct {
-		name                       string
-		expectedError              error
-		getCtx                     func() sdktypes.Context
-		isLondon                   bool
-		expectedTransientGasWanted uint64
+		name          string
+		expectedError error
+		getCtx        func() sdktypes.Context
+		isLondon      bool
 	}{
 		{
 			name:          "success: if isLondon false it should not error",
@@ -47,8 +47,7 @@ func (s *EvmUnitAnteTestSuite) TestCheckGasWanted() {
 				blockMeter := storetypes.NewGasMeter(commonGasLimit - 10000)
 				return unitNetwork.GetContext().WithBlockGasMeter(blockMeter)
 			},
-			isLondon:                   false,
-			expectedTransientGasWanted: 0,
+			isLondon: false,
 		},
 		{
 			name:          "success: gasWanted is less than blockGasLimit",
@@ -57,18 +56,25 @@ func (s *EvmUnitAnteTestSuite) TestCheckGasWanted() {
 				blockMeter := storetypes.NewGasMeter(commonGasLimit + 10000)
 				return unitNetwork.GetContext().WithBlockGasMeter(blockMeter)
 			},
-			isLondon:                   true,
-			expectedTransientGasWanted: commonGasLimit,
+			isLondon: true,
 		},
 		{
 			name:          "fail: gasWanted is more than blockGasLimit",
 			expectedError: errortypes.ErrOutOfGas,
 			getCtx: func() sdktypes.Context {
-				blockMeter := storetypes.NewGasMeter(commonGasLimit - 10000)
-				return unitNetwork.GetContext().WithBlockGasMeter(blockMeter)
+				// BlockGasLimit reads consensus Block.MaxGas, not ctx.BlockGasMeter (see ante/types/block.go).
+				base := unitNetwork.GetContext()
+				cp := base.ConsensusParams()
+				// Shallow copy of ConsensusParams still aliases cp.Block; copy Block before mutating MaxGas.
+				block := cmtproto.BlockParams{}
+				if cp.Block != nil {
+					block = *cp.Block
+				}
+				block.MaxGas = int64(commonGasLimit - 10000)
+				cp.Block = &block
+				return base.WithConsensusParams(cp)
 			},
-			isLondon:                   true,
-			expectedTransientGasWanted: 0,
+			isLondon: true,
 		},
 		{
 			name:          "success: gasWanted is less than blockGasLimit and basefee param is disabled",
@@ -90,8 +96,7 @@ func (s *EvmUnitAnteTestSuite) TestCheckGasWanted() {
 				blockMeter := storetypes.NewGasMeter(commonGasLimit + 10_000)
 				return unitNetwork.GetContext().WithBlockGasMeter(blockMeter)
 			},
-			isLondon:                   true,
-			expectedTransientGasWanted: 0,
+			isLondon: true,
 		},
 	}
 
@@ -124,10 +129,6 @@ func (s *EvmUnitAnteTestSuite) TestCheckGasWanted() {
 				s.Contains(err.Error(), tc.expectedError.Error())
 			} else {
 				s.Require().NoError(err)
-				transientGasWanted := feemarketkeeper.GetTransientGasWanted(
-					unitNetwork.GetContext(),
-				)
-				s.Require().Equal(tc.expectedTransientGasWanted, transientGasWanted)
 			}
 
 			// Start from a fresh block and ctx

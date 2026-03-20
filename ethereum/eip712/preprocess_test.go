@@ -2,7 +2,7 @@ package eip712_test
 
 import (
 	"encoding/hex"
-	"fmt"
+	"os"
 	"strings"
 	"testing"
 
@@ -21,6 +21,7 @@ import (
 	codectypes "github.com/cosmos/cosmos-sdk/codec/types"
 	"github.com/cosmos/cosmos-sdk/crypto/keyring"
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	"github.com/cosmos/cosmos-sdk/types/bech32"
 	"github.com/cosmos/cosmos-sdk/types/tx/signing"
 	"github.com/cosmos/cosmos-sdk/x/auth/ante"
 	banktypes "github.com/cosmos/cosmos-sdk/x/bank/types"
@@ -31,16 +32,33 @@ var (
 	// chainID is used in EIP-712 tests.
 	chainID = uint64(constants.EighteenDecimalsChainID)
 
-	ctx = client.Context{}.WithTxConfig(
-		encoding.MakeConfig(chainID).TxConfig,
-	)
+	// ctx is initialized in TestMain after global bech32 prefixes match the fork (encoding.MakeConfig reads them).
+	ctx client.Context
 
-	// feePayerAddress is the address of the fee payer used in EIP-712 tests.
-	feePayerAddress = fmt.Sprintf(
-		"%s17xpfvakm2amg962yls6f84z3kell8c5lserqta",
-		constants.ExampleBech32Prefix,
-	)
+	// feePayerAddress: same 20-byte payload as upstream cosmos1 test address, re-encoded for ExampleBech32Prefix.
+	feePayerAddress string
 )
+
+func init() {
+	_, data, err := bech32.DecodeAndConvert("cosmos17xpfvakm2amg962yls6f84z3kell8c5lserqta")
+	if err != nil {
+		panic(err)
+	}
+	feePayerAddress, err = bech32.ConvertAndEncode(constants.ExampleBech32Prefix, data)
+	if err != nil {
+		panic(err)
+	}
+}
+
+func TestMain(m *testing.M) {
+	p := constants.ExampleBech32Prefix
+	cfg := sdk.GetConfig()
+	cfg.SetBech32PrefixForAccount(p, p+sdk.PrefixPublic)
+	cfg.SetBech32PrefixForValidator(p+sdk.PrefixValidator+sdk.PrefixOperator, p+sdk.PrefixValidator+sdk.PrefixOperator+sdk.PrefixPublic)
+	cfg.SetBech32PrefixForConsensusNode(p+sdk.PrefixValidator+sdk.PrefixConsensus, p+sdk.PrefixValidator+sdk.PrefixConsensus+sdk.PrefixPublic)
+	ctx = client.Context{}.WithTxConfig(encoding.MakeConfig(chainID).TxConfig)
+	os.Exit(m.Run())
+}
 
 type TestCaseStruct struct {
 	txBuilder              client.TxBuilder
@@ -53,8 +71,6 @@ type TestCaseStruct struct {
 }
 
 func TestLedgerPreprocessing(t *testing.T) {
-	// Update bech32 prefix
-	sdk.GetConfig().SetBech32PrefixForAccount(constants.ExampleBech32Prefix, "")
 	evmConfigurator := evmtypes.NewEVMConfigurator().
 		WithEVMCoinInfo(constants.ExampleChainCoinInfo[constants.ExampleChainID])
 	err := evmConfigurator.Configure()
@@ -81,7 +97,7 @@ func TestLedgerPreprocessing(t *testing.T) {
 		require.True(t, len(hasExtOptsTx.GetExtensionOptions()) == 1)
 
 		expectedExt := eip712.ExtensionOptionsWeb3Tx{
-			TypedDataChainID: 9001,
+			TypedDataChainID: chainID,
 			FeePayer:         feePayerAddress,
 			FeePayerSig:      tc.expectedSignatureBytes,
 		}
@@ -218,9 +234,12 @@ func createPopulatedTestCase(t *testing.T) TestCaseStruct {
 	txBuilder.SetGasLimit(gasLimit)
 	txBuilder.SetMemo(memo)
 
+	toAddr := sdk.MustBech32ifyAddressBytes(constants.ExampleBech32Prefix, []byte{
+		1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20,
+	})
 	msgSend := banktypes.MsgSend{
 		FromAddress: feePayerAddress,
-		ToAddress:   "cosmos12luku6uxehhak02py4rcz65zu0swh7wjun6msa",
+		ToAddress:   toAddr,
 		Amount: sdk.NewCoins(
 			sdk.NewCoin(
 				evmtypes.GetEVMCoinDenom(),

@@ -120,6 +120,35 @@ Si upstream simplifica **`.github/workflows`**, revisar jobs que el fork **debe 
 
 Un conflicto mal fusionado puede dejar **`import` sin uso** que rompe `go build`. Tras `go mod tidy`, ejecutar **`make build`** y corregir lo que el compilador marque (incluidos test helpers en `infinited/`).
 
+### A.7 Tests y APIs tras merge upstream
+
+Lecciones cuando **`make test-unit`** o integración fallan tras sincronizar con cosmos/evm, por cambios de API o por identidad del fork.
+
+**Dónde viven los tests**
+
+- El módulo raíz **`github.com/cosmos/evm`** ejecuta la mayoría de paquetes con `go test` / `make test-unit` desde la **raíz del repo**.
+- Varios tests de integración (p. ej. suite **`TestEvmUnitAnteTestSuite`**) están bajo **`infinited/tests/integration/...`**: conviene validarlos con `cd infinited && go test ./tests/integration/...` (o path equivalente), no solo con tests en la raíz.
+
+**`BlockGasLimit` vs `BlockGasMeter`**
+
+- En este repo, `ante/types.BlockGasLimit` obtiene el tope de **`ConsensusParams().Block.MaxGas`**, no del `BlockGasMeter` del contexto (ver `ante/types/block.go`).
+- Los tests que quieran el caso “gas pedido por la tx > límite de bloque” deben bajar **`MaxGas`** vía **`WithConsensusParams`** (copiando bien los params; ver siguiente punto), no confiar solo en **`WithBlockGasMeter`**.
+
+**Trampa: copia superficial de `ConsensusParams` en tests**
+
+- `ctx.ConsensusParams()` devuelve un struct **por valor**, pero el campo **`Block` suele ser un puntero** compartido con el estado de la app/red en tests de integración.
+- Si se hace `cp := base.ConsensusParams(); cp.Block.MaxGas = …` sin clonar el bloque, se **muta el estado global** del `UnitTestNetwork` y los subtests siguientes ven un `MaxGas` inesperado (fallos enrevesados tipo “tx gas exceeds block gas limit (90000)” en casos que deberían pasar).
+- Mitigación: copiar el mensaje antes de tocarlo, p. ej. `block := *cp.Block` (tras nil-check), `block.MaxGas = …`, `cp.Block = &block`; o **`proto.Clone`** sobre el proto completo si se prefiere.
+
+**Identidad del fork en tests (denom, bech32)**
+
+- Expectativas de fees/denoms en tests deben alinearse con **`testutil/constants`** y el token del fork (p. ej. **`drop`**, no sufijos genéricos tipo `atom` de ejemplos upstream).
+- Con prefijo bech32 **`infinite`**, tests que armen `encoding.MakeConfig`, firmas o `GetSigners` deben fijar prefijos del fork **en el orden correcto** (p. ej. `TestMain` o init **antes** de construir el config global; en mempool, prefijos coherentes con la app **antes** de `MakeConfig`). Si no, errores tipo `hrp does not match` o checksum bech32 inválido en EIP-712.
+
+**APIs de keepers eliminadas o renombradas**
+
+- Tras el merge, puede desaparecer métodos que los tests de integración llamaban (ej. histórico **`GetTransientGasWanted`** en feemarket). **`go build`** del paquete `tests/integration/...` debe pasar; actualizar aserciones o eliminar checks obsoletos frente a la API real del keeper.
+
 ## Referencias rápidas
 
 - [VERIFICATION.md](VERIFICATION.md)

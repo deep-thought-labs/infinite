@@ -55,6 +55,13 @@ Ajustar `upstream/main` si la integración usa otra rama.
 - **`make build`** o **`make install`** tras **`go mod tidy`**.
 - Si el path del clone contiene **espacios**, el `Makefile` debe usar rutas entrecomilladas en las recetas relevantes; si falla tras merge, ver [PLAYBOOK.md — Apéndice A.3](PLAYBOOK.md#apéndice-a-cierre-del-merge-y-trampas-frecuentes).
 
+## Tests tras merge
+
+- Ejecutar al menos **`make test-unit`** desde la raíz del módulo `cosmos/evm`.
+- Parte de la integración vive en el submódulo **`infinited/`** (p. ej. `TestEvmUnitAnteTestSuite` en `infinited/tests/integration/ante`). Si solo pasan los tests de la raíz pero falló algo en ante/EIP-712/mempool, validar explícitamente:  
+  `cd infinited && go test ./tests/integration/...`
+- Si aparecen fallos por denom/bech32, por límites de gas de bloque en tests, o por **compilación** en `tests/integration/**`, revisar [PLAYBOOK.md — Apéndice A.7](PLAYBOOK.md#a7-tests-y-apis-tras-merge-upstream).
+
 ## Más contexto
 
 - Guía de desarrollo: [guides/development/DEVELOPMENT.md](../../guides/development/DEVELOPMENT.md)

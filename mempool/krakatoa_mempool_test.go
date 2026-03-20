@@ -570,6 +570,16 @@ type testMempoolDependencies struct {
 	accounts        []testAccount
 }
 
+// setTestBech32Prefixes aligns global SDK prefixes with testutil constants before encoding.MakeConfig.
+func setTestBech32Prefixes(t *testing.T) {
+	t.Helper()
+	p := constants.ExampleBech32Prefix
+	cfg := sdk.GetConfig()
+	cfg.SetBech32PrefixForAccount(p, p+sdk.PrefixPublic)
+	cfg.SetBech32PrefixForValidator(p+sdk.PrefixValidator+sdk.PrefixOperator, p+sdk.PrefixValidator+sdk.PrefixOperator+sdk.PrefixPublic)
+	cfg.SetBech32PrefixForConsensusNode(p+sdk.PrefixValidator+sdk.PrefixConsensus, p+sdk.PrefixValidator+sdk.PrefixConsensus+sdk.PrefixPublic)
+}
+
 func setupKrakatoaMempoolWithAccounts(t *testing.T, numAccounts int) (*mempool.KrakatoaMempool, testMempoolDependencies) {
 	t.Helper()
 
@@ -642,6 +652,9 @@ func setupKrakatoaMempoolWithAccounts(t *testing.T, numAccounts int) (*mempool.K
 			WithBlockHeight(height).
 			WithChainID(strconv.Itoa(constants.EighteenDecimalsChainID)), nil
 	}
+
+	// Match fork bech32 prefixes so signing/address codec agrees with MsgSend (testutil constants).
+	setTestBech32Prefixes(t)
 
 	// Create TxConfig using proper encoding config with address codec
 	encodingConfig := encoding.MakeConfig(constants.EighteenDecimalsChainID)
@@ -836,7 +849,7 @@ func createTestCosmosTx(t *testing.T, txConfig client.TxConfig, key *ecdsa.Priva
 	msg := &banktypes.MsgSend{
 		FromAddress: addrStr,
 		ToAddress:   addrStr, // send to self
-		Amount:      sdk.NewCoins(sdk.NewInt64Coin("aevmos", 1000)),
+		Amount:      sdk.NewCoins(sdk.NewInt64Coin(constants.ExampleAttoDenom, 1000)),
 	}
 
 	txBuilder := txConfig.NewTxBuilder()
@@ -844,7 +857,7 @@ func createTestCosmosTx(t *testing.T, txConfig client.TxConfig, key *ecdsa.Priva
 	require.NoError(t, err)
 
 	txBuilder.SetGasLimit(100000)
-	txBuilder.SetFeeAmount(sdk.NewCoins(sdk.NewInt64Coin("aevmos", 1000000)))
+	txBuilder.SetFeeAmount(sdk.NewCoins(sdk.NewInt64Coin(constants.ExampleAttoDenom, 1000000)))
 
 	// Set signature with pubkey (unsigned but has signer info)
 	sigData := &signingtypes.SingleSignatureData{
@@ -881,7 +894,7 @@ func createTestMultiSignerCosmosTx(t *testing.T, txConfig client.TxConfig, keys 
 		msg := &banktypes.MsgSend{
 			FromAddress: addrStr,
 			ToAddress:   addrStr, // send to self
-			Amount:      sdk.NewCoins(sdk.NewInt64Coin("aevmos", 1000)),
+			Amount:      sdk.NewCoins(sdk.NewInt64Coin(constants.ExampleAttoDenom, 1000)),
 		}
 		msgs = append(msgs, msg)
 
@@ -903,7 +916,7 @@ func createTestMultiSignerCosmosTx(t *testing.T, txConfig client.TxConfig, keys 
 	require.NoError(t, err)
 
 	txBuilder.SetGasLimit(100000 * uint64(len(keys)))
-	txBuilder.SetFeeAmount(sdk.NewCoins(sdk.NewInt64Coin("aevmos", 1000000)))
+	txBuilder.SetFeeAmount(sdk.NewCoins(sdk.NewInt64Coin(constants.ExampleAttoDenom, 1000000)))
 
 	err = txBuilder.SetSignatures(sigs...)
 	require.NoError(t, err)

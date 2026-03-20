@@ -7,7 +7,7 @@ Punto único en el repositorio para **divergencia frente a upstream**, **procedi
 | Documento | Descripción |
 |-----------|-------------|
 | [**UPSTREAM_DIVERGENCE_RECORD.md**](UPSTREAM_DIVERGENCE_RECORD.md) | Registro técnico de valores, rutas y artefactos que difieren de [cosmos/evm](https://github.com/cosmos/evm) en *este* repositorio. |
-| [**PLAYBOOK.md**](PLAYBOOK.md) | Procedimiento de integración con upstream (antes, durante, después), incluye **Apéndice A** (marcadores de conflicto, `evmd`/`infinited`, Make con espacios, CI). |
+| [**PLAYBOOK.md**](PLAYBOOK.md) | Procedimiento de integración con upstream (antes, durante, después), incluye **Apéndice A** (marcadores de conflicto, `evmd`/`infinited`, Make con espacios, CI, **tests/APIs post-upstream** [A.7](PLAYBOOK.md#a7-tests-y-apis-tras-merge-upstream)). |
 | [**REFERENCE.md**](REFERENCE.md) | Uso de `list_all_customizations.sh`, informes de diff y notas sobre estadísticas esperadas. |
 | [**VERIFICATION.md**](VERIFICATION.md) | Comprobaciones manuales y script `validate_customizations.sh`. |
 | [**templates/MERGE_LOG_TEMPLATE.md**](templates/MERGE_LOG_TEMPLATE.md) | Plantilla para bitácoras de merge. |

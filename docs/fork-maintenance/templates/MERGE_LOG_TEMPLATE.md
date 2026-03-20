@@ -48,7 +48,17 @@ Breve descripción (p. ej. “Sincronizar con cosmos/evm main hasta PR #NNN”, 
 | `./scripts/validate_customizations.sh` | | |
 | `make build` / `make install` (probar si el path del clone tiene espacios) | | |
 | `make test-unit` | | |
+| `cd infinited && go test ./tests/integration/...` (si hubo cambios en ante/feemarket/mempool) | | |
 | Otros (p. ej. `make test-all`) | | |
+
+## Aprendizajes y puntos a recordar
+
+*Opcional; ayuda al siguiente merge. Ver también [PLAYBOOK.md — Apéndice A.7](../PLAYBOOK.md#a7-tests-y-apis-tras-merge-upstream).*
+
+- **Identidad en tests** (denom, bech32, orden de init de codec/config):
+- **Contexto SDK** (p. ej. `BlockGasLimit` ↔ `ConsensusParams`, no mutar punteros compartidos al ajustar `MaxGas` en tests):
+- **APIs rotas** (métodos de keeper o paquetes públicos eliminados/renombrados; tests bajo `infinited/tests/...`):
+- **Otros** (paths, CI, scripts):
 
 ## Seguimiento post-merge
 

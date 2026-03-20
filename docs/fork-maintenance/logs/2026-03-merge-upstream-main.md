@@ -57,7 +57,16 @@ Integrar `upstream/main` en el fork Infinite Drive y **resolver marcadores de co
 | `./scripts/validate_customizations.sh` | OK | Ejecutado tras limpiar marcadores. |
 | `make build` / `make install` | pendiente en este entorno | `go` no está en PATH del runner; ejecutar en máquina dev/CI. |
 | `make test-unit` | pendiente | — |
+| `cd infinited && go test ./tests/integration/...` | pendiente | Suite ante bajo `infinited/` (p. ej. `TestEvmUnitAnteTestSuite`). |
 | Otros (p. ej. `make test-all`) | pendiente | — |
+
+## Aprendizajes y puntos a recordar
+
+Documentación canónica: [PLAYBOOK.md — A.7](../PLAYBOOK.md#a7-tests-y-apis-tras-merge-upstream).
+
+- **`BlockGasLimit`**: en `ante/types/block.go` el límite sale de **`ConsensusParams().Block.MaxGas`**, no del `BlockGasMeter`; tests que simulen “tx gas > límite de bloque” deben usar **`WithConsensusParams`** y **clonar `BlockParams`** antes de mutar `MaxGas` (evita contaminar el `UnitTestNetwork` para subtests posteriores).
+- **Identidad**: expectativas de denom (**`drop`**) y bech32 **`infinite`** en tests (`fee_checker`, EIP-712, mempool); orden de init de prefijos vs `MakeConfig`.
+- **APIs**: keepers pueden perder métodos usados solo en integración (p. ej. **`GetTransientGasWanted`**); actualizar `tests/integration/ante` hasta que **`go build`** del paquete pase.
 
 ## Seguimiento post-merge
 
