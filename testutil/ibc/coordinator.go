@@ -10,6 +10,8 @@ import (
 
 	"github.com/cosmos/evm/x/vm/types"
 	ibctesting "github.com/cosmos/ibc-go/v10/testing"
+
+	sdk "github.com/cosmos/cosmos-sdk/types"
 )
 
 var (
@@ -31,6 +33,12 @@ type Coordinator struct {
 // NewCoordinator initializes Coordinator with N EVM TestChain's (Cosmos EVM apps) and M Cosmos chains (Simulation Apps)
 func NewCoordinator(t *testing.T, nEVMChains, mCosmosChains int, evmAppCreator ibctesting.AppCreator) *Coordinator {
 	t.Helper()
+	// SimApp uses "cosmos" HRP while EVM chains use the fork prefix; AccAddress.String() caches
+	// bech32 by raw bytes only, so mixed coordinators must disable the cache or SimApp init fails.
+	if mCosmosChains > 0 {
+		sdk.SetAddrCacheEnabled(false)
+		t.Cleanup(func() { sdk.SetAddrCacheEnabled(true) })
+	}
 	chains := make(map[string]*TestChain)
 	coord := &Coordinator{
 		T:           t,

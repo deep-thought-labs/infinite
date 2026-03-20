@@ -12,7 +12,6 @@ import (
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/stretchr/testify/suite"
 
-	"github.com/cosmos/evm"
 	"github.com/cosmos/evm/infinited"
 	"github.com/cosmos/evm/infinited/tests/integration"
 	"github.com/cosmos/evm/precompiles/ics20"
@@ -149,7 +148,7 @@ func (suite *ICS20SequentialPrecompileCallsTestSuite) TestReceiveAndSendTwice() 
 		pathAToB.EndpointA.ChannelConfig.PortID,
 		pathAToB.EndpointA.ChannelID,
 		denom,
-		suite.chainB.SenderAccount.GetAddress().String(),
+		suite.chainB.Bech32ForAccount(suite.chainB.SenderAccount),
 		uint64(SeqICS20TimeoutHeight),
 		big.NewInt(SeqICS20InitialTokenAmount),
 	)

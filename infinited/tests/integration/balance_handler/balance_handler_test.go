@@ -14,6 +14,7 @@ import (
 	"github.com/cosmos/evm"
 	"github.com/cosmos/evm/contracts"
 	"github.com/cosmos/evm/infinited/tests/integration"
+	testconstants "github.com/cosmos/evm/testutil/constants"
 	debugprecompile "github.com/cosmos/evm/infinited/tests/testdata/debug"
 	evmibctesting "github.com/cosmos/evm/testutil/ibc"
 	testutiltypes "github.com/cosmos/evm/testutil/types"
@@ -77,7 +78,7 @@ func (s *BalanceHandlerTestSuite) TestRecursivePrecompileCallsWithDebugPrecompil
 	s.Require().NoError(err)
 
 	// Fund Contract
-	err = evmApp.GetBankKeeper().SendCoins(ctx, s.chain.SenderAccounts[0].SenderAccount.GetAddress(), callerAddr.Bytes(), types.NewCoins(types.NewCoin("aatom", sdkmath.NewInt(10000000))))
+	err = evmApp.GetBankKeeper().SendCoins(ctx, s.chain.SenderAccounts[0].SenderAccount.GetAddress(), callerAddr.Bytes(), types.NewCoins(types.NewCoin(testconstants.ExampleAttoDenom, sdkmath.NewInt(10000000))))
 	s.Require().NoError(err)
 
 	res, _, _, err := s.chain.SendEvmTx(

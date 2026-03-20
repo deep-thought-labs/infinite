@@ -26,6 +26,7 @@ import (
 
 	"github.com/cosmos/cosmos-sdk/crypto/keys/secp256k1"
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	sdkbech32 "github.com/cosmos/cosmos-sdk/types/bech32"
 	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
 	govtypes "github.com/cosmos/cosmos-sdk/x/gov/types"
 )
@@ -37,14 +38,15 @@ func (s *KeeperTestSuite) TestOnRecvPacketRegistered() {
 	// secp256k1 account
 	secpPk := secp256k1.GenPrivKey()
 	secpAddr := sdk.AccAddress(secpPk.PubKey().Address())
-	secpAddrCosmos := sdk.MustBech32ifyAddressBytes(sdk.Bech32MainPrefix, secpAddr)
+	bech32Prefix := sdk.GetConfig().GetBech32AccountAddrPrefix()
+	secpAddrCosmos := sdk.MustBech32ifyAddressBytes(bech32Prefix, secpAddr)
 
 	// ethsecp256k1 account
 	ethPk, err := ethsecp256k1.GenerateKey()
 	s.Require().Nil(err)
 	ethsecpAddr := sdk.AccAddress(ethPk.PubKey().Address())
 	ethsecpAddrEvmos := sdk.AccAddress(ethPk.PubKey().Address()).String()
-	ethsecpAddrCosmos := sdk.MustBech32ifyAddressBytes(sdk.Bech32MainPrefix, ethsecpAddr)
+	ethsecpAddrCosmos := sdk.MustBech32ifyAddressBytes(bech32Prefix, ethsecpAddr)
 
 	// Setup Cosmos <=> Cosmos EVM IBC relayer
 	sourceChannel := "channel-292"
@@ -359,7 +361,9 @@ func (s *KeeperTestSuite) TestOnRecvPacketRegistered() {
 
 func (s *KeeperTestSuite) TestConvertCoinToERC20FromPacket() {
 	var ctx sdk.Context
-	senderAddr := "cosmos1x2w87cvt5mqjncav4lxy8yfreynn273x34qlwy"
+	_, senderBz, err := sdkbech32.DecodeAndConvert("cosmos1x2w87cvt5mqjncav4lxy8yfreynn273x34qlwy")
+	s.Require().NoError(err)
+	senderAddr := sdk.AccAddress(senderBz).String()
 
 	baseDenom, err := sdk.GetBaseDenom()
 	s.Require().NoError(err)

@@ -436,8 +436,8 @@ func (suite *ICS20RecursivePrecompileCallsTestSuite) TestHandleMsgTransfer() {
 				pathAToB.EndpointA.ChannelID,
 				originalCoin.Denom,
 				originalCoin.Amount.BigInt(),
-				common.BytesToAddress(senderAddr.Bytes()),        // source addr should be evm hex addr
-				suite.chainB.SenderAccount.GetAddress().String(), // receiver should be cosmos bech32 addr
+				common.BytesToAddress(senderAddr.Bytes()),                 // source addr should be evm hex addr
+				suite.chainB.Bech32ForAccount(suite.chainB.SenderAccount), // receiver should be cosmos bech32 addr
 				timeoutHeight,
 				uint64(0),
 				"",
@@ -502,7 +502,7 @@ func (suite *ICS20RecursivePrecompileCallsTestSuite) TestHandleMsgTransfer() {
 			chainBDenom := transfertypes.NewDenom(originalCoin.Denom, traceAToB)
 			chainBBalance := evmAppB.BankKeeper.GetBalance(
 				suite.chainB.GetContext(),
-				suite.chainB.SenderAccount.GetAddress(),
+				suite.chainB.AccAddressForAccount(suite.chainB.SenderAccount),
 				chainBDenom.IBCDenom(),
 			)
 			coinSentFromAToB := sdk.NewCoin(chainBDenom.IBCDenom(), transferAmount)
@@ -667,16 +667,16 @@ func (suite *ICS20RecursivePrecompileCallsTestSuite) TestContractICS20TransferWi
 	// Call scenario9_transferICS20Transfer from tester contract
 	callData, err := testerData.ABI.Pack(
 		"scenario9_transferICS20Transfer",
-		regularTokenAddr,                                 // token (regular token without hooks)
-		recipient1,                                       // recipient for dummy transfer
-		big.NewInt(100),                                  // transferAmount (dummy transfer to avoid triggering hookToken hook)
-		pathAToB.EndpointA.ChannelConfig.PortID,          // sourcePort
-		pathAToB.EndpointA.ChannelID,                     // sourceChannel
-		hookTokenDenom,                                   // denom
-		transferTokenAmount.BigInt(),                     // ics20Amount
-		suite.chainB.SenderAccount.GetAddress().String(), // ics20Receiver
-		timeoutHeight,                                    // timeoutHeight
-		uint64(0),                                        // timeoutTimestamp
+		regularTokenAddr,                        // token (regular token without hooks)
+		recipient1,                              // recipient for dummy transfer
+		big.NewInt(100),                         // transferAmount (dummy transfer to avoid triggering hookToken hook)
+		pathAToB.EndpointA.ChannelConfig.PortID, // sourcePort
+		pathAToB.EndpointA.ChannelID,            // sourceChannel
+		hookTokenDenom,                          // denom
+		transferTokenAmount.BigInt(),            // ics20Amount
+		suite.chainB.Bech32ForAccount(suite.chainB.SenderAccount), // ics20Receiver
+		timeoutHeight, // timeoutHeight
+		uint64(0),     // timeoutTimestamp
 	)
 	suite.Require().NoError(err)
 
@@ -875,16 +875,16 @@ func (suite *ICS20RecursivePrecompileCallsTestSuite) TestContractICS20TransferRe
 	excessiveAmount := big.NewInt(InitialTokenAmount) // More than the minted amount
 	callData, err := testerData.ABI.Pack(
 		"scenario10_transferICS20TransferRevert",
-		regularTokenAddr,                                 // token (will revert)
-		recipient1,                                       // recipient
-		excessiveAmount,                                  // excessive transferAmount (will revert)
-		pathAToB.EndpointA.ChannelConfig.PortID,          // sourcePort
-		pathAToB.EndpointA.ChannelID,                     // sourceChannel
-		hookTokenDenom,                                   // denom
-		transferTokenAmount.BigInt(),                     // ics20Amount
-		suite.chainB.SenderAccount.GetAddress().String(), // ics20Receiver
-		timeoutHeight,                                    // timeoutHeight
-		uint64(0),                                        // timeoutTimestamp
+		regularTokenAddr,                        // token (will revert)
+		recipient1,                              // recipient
+		excessiveAmount,                         // excessive transferAmount (will revert)
+		pathAToB.EndpointA.ChannelConfig.PortID, // sourcePort
+		pathAToB.EndpointA.ChannelID,            // sourceChannel
+		hookTokenDenom,                          // denom
+		transferTokenAmount.BigInt(),            // ics20Amount
+		suite.chainB.Bech32ForAccount(suite.chainB.SenderAccount), // ics20Receiver
+		timeoutHeight, // timeoutHeight
+		uint64(0),     // timeoutTimestamp
 	)
 	suite.Require().NoError(err)
 

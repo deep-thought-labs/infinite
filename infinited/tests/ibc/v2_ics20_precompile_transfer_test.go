@@ -164,8 +164,8 @@ func (suite *ICS20TransferV2TestSuite) TestHandleMsgTransfer() {
 				pathAToB.EndpointA.ClientID, // Note: should be client id on v2 packet
 				originalCoin.Denom,
 				originalCoin.Amount.BigInt(),
-				common.BytesToAddress(senderAddr.Bytes()),        // Note: source addr should be evm hex addr
-				suite.chainB.SenderAccount.GetAddress().String(), // Note: receiver should be cosmos bech32 addr
+				common.BytesToAddress(senderAddr.Bytes()),                 // Note: source addr should be evm hex addr
+				suite.chainB.Bech32ForAccount(suite.chainB.SenderAccount), // Note: receiver should be cosmos bech32 addr
 				timeoutHeight,
 				timeoutTimestamp,
 				"",
@@ -228,7 +228,7 @@ func (suite *ICS20TransferV2TestSuite) TestHandleMsgTransfer() {
 			chainBDenom := transfertypes.NewDenom(originalCoin.Denom, traceAToB)
 			chainBBalance := evmAppB.BankKeeper.GetBalance(
 				suite.chainB.GetContext(),
-				suite.chainB.SenderAccount.GetAddress(),
+				suite.chainB.AccAddressForAccount(suite.chainB.SenderAccount),
 				chainBDenom.IBCDenom(),
 			)
 			coinSentFromAToB := sdk.NewCoin(chainBDenom.IBCDenom(), transferAmount)
@@ -237,7 +237,7 @@ func (suite *ICS20TransferV2TestSuite) TestHandleMsgTransfer() {
 			// ---------------------------------------------
 			// Tests for Query endpoints of ICS20 precompile
 			// denoms query method
-			chainBAddr := common.BytesToAddress(suite.chainB.SenderAccount.GetAddress().Bytes())
+			chainBAddr := common.BytesToAddress(suite.chainB.AccAddressForAccount(suite.chainB.SenderAccount).Bytes())
 			ctxB := evmante.BuildEvmExecutionCtx(suite.chainB.GetContext())
 			stateDB := statedb.New(ctxB, suite.chainB.App.(evm.EvmApp).GetEVMKeeper(), statedb.NewEmptyTxConfig())
 			evmRes, err := evmAppB.EVMKeeper.CallEVM(

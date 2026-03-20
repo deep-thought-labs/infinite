@@ -27,35 +27,27 @@ func (s *GenesisTestSuite) TestInitGenesis() {
 	s.Require().NoError(err)
 	address := common.HexToAddress(privkey.PubKey().Address().String())
 
-	params := types.Params{
-		EvmDenom:                "aatom",
-		ExtraEIPs:               types.DefaultExtraEIPs,
-		EVMChannels:             types.DefaultEVMChannels,
-		AccessControl:           types.DefaultAccessControl,
-		ActiveStaticPrecompiles: types.DefaultStaticPrecompiles,
-		HistoryServeWindow:      types.DefaultHistoryServeWindow,
-		ExtendedDenomOptions:    nil,
-	}
-
 	var (
 		vmdb *statedb.StateDB
 		ctx  sdk.Context
 	)
 
-	// table-driven cases
+	// table-driven cases (genesis params use the running app's EVM denom / extended denom so forks like infinited match bank metadata)
 	testCases := []struct {
-		name     string
-		malleate func(*network.UnitTestNetwork)
-		genState *types.GenesisState
-		code     common.Hash
-		expPanic bool
+		name          string
+		malleate      func(*network.UnitTestNetwork)
+		buildGenState func(types.Params) *types.GenesisState
+		code          common.Hash
+		expPanic      bool
 	}{
 		{
 			name:     "pass - default",
 			malleate: func(_ *network.UnitTestNetwork) {},
-			genState: &types.GenesisState{
-				Params:   params,
-				Accounts: []types.GenesisAccount{},
+			buildGenState: func(p types.Params) *types.GenesisState {
+				return &types.GenesisState{
+					Params:   p,
+					Accounts: []types.GenesisAccount{},
+				}
 			},
 			expPanic: false,
 		},
@@ -64,29 +56,33 @@ func (s *GenesisTestSuite) TestInitGenesis() {
 			malleate: func(_ *network.UnitTestNetwork) {
 				vmdb.AddBalance(address, uint256.NewInt(1), tracing.BalanceChangeUnspecified)
 			},
-			genState: &types.GenesisState{
-				Params: params,
-				Accounts: []types.GenesisAccount{
-					{
-						Address: address.String(),
-						Storage: types.Storage{
-							{Key: common.BytesToHash([]byte("key")).String(), Value: common.BytesToHash([]byte("value")).String()},
+			buildGenState: func(p types.Params) *types.GenesisState {
+				return &types.GenesisState{
+					Params: p,
+					Accounts: []types.GenesisAccount{
+						{
+							Address: address.String(),
+							Storage: types.Storage{
+								{Key: common.BytesToHash([]byte("key")).String(), Value: common.BytesToHash([]byte("value")).String()},
+							},
 						},
 					},
-				},
+				}
 			},
 			expPanic: false,
 		},
 		{
 			name:     "account not found",
 			malleate: func(_ *network.UnitTestNetwork) {},
-			genState: &types.GenesisState{
-				Params: params,
-				Accounts: []types.GenesisAccount{
-					{
-						Address: address.String(),
+			buildGenState: func(p types.Params) *types.GenesisState {
+				return &types.GenesisState{
+					Params: p,
+					Accounts: []types.GenesisAccount{
+						{
+							Address: address.String(),
+						},
 					},
-				},
+				}
 			},
 			expPanic: true,
 		},
@@ -96,14 +92,16 @@ func (s *GenesisTestSuite) TestInitGenesis() {
 				acc := network.App.GetAccountKeeper().NewAccountWithAddress(ctx, address.Bytes())
 				network.App.GetAccountKeeper().SetAccount(ctx, acc)
 			},
-			genState: &types.GenesisState{
-				Params: params,
-				Accounts: []types.GenesisAccount{
-					{
-						Address: address.String(),
-						Code:    "",
+			buildGenState: func(p types.Params) *types.GenesisState {
+				return &types.GenesisState{
+					Params: p,
+					Accounts: []types.GenesisAccount{
+						{
+							Address: address.String(),
+							Code:    "",
+						},
 					},
-				},
+				}
 			},
 			expPanic: false,
 		},
@@ -113,14 +111,16 @@ func (s *GenesisTestSuite) TestInitGenesis() {
 				acc := network.App.GetAccountKeeper().NewAccountWithAddress(ctx, address.Bytes())
 				network.App.GetAccountKeeper().SetAccount(ctx, acc)
 			},
-			genState: &types.GenesisState{
-				Params: params,
-				Accounts: []types.GenesisAccount{
-					{
-						Address: address.String(),
-						Code:    "1234",
+			buildGenState: func(p types.Params) *types.GenesisState {
+				return &types.GenesisState{
+					Params: p,
+					Accounts: []types.GenesisAccount{
+						{
+							Address: address.String(),
+							Code:    "1234",
+						},
 					},
-				},
+				}
 			},
 			expPanic: false,
 		},
@@ -134,6 +134,12 @@ func (s *GenesisTestSuite) TestInitGenesis() {
 			vmdb = statedb.New(
 				ctx, s.network.App.GetEVMKeeper(),
 				statedb.NewEmptyTxConfig())
+
+			params := s.network.App.GetEVMKeeper().GetParams(ctx)
+			params.ActiveStaticPrecompiles = types.DefaultStaticPrecompiles
+			params.ExtendedDenomOptions = nil
+
+			genState := tc.buildGenState(params)
 
 			tc.malleate(s.network)
 			err := vmdb.Commit()
@@ -149,7 +155,7 @@ func (s *GenesisTestSuite) TestInitGenesis() {
 						s.network.App.GetEVMKeeper(),
 						s.network.App.GetAccountKeeper(),
 						s.network.App.GetBankKeeper(),
-						*tc.genState,
+						*genState,
 						&sync.Once{},
 					)
 				})
@@ -160,12 +166,12 @@ func (s *GenesisTestSuite) TestInitGenesis() {
 						s.network.App.GetEVMKeeper(),
 						s.network.App.GetAccountKeeper(),
 						s.network.App.GetBankKeeper(),
-						*tc.genState,
+						*genState,
 						&sync.Once{},
 					)
 				})
 				// verify state for each account
-				for _, acct := range tc.genState.Accounts {
+				for _, acct := range genState.Accounts {
 					s.Require().NotNil(
 						s.network.App.GetAccountKeeper().GetAccount(ctx, common.HexToAddress(acct.Address).Bytes()),
 					)
@@ -194,7 +200,7 @@ func (s *GenesisTestSuite) TestInitGenesis() {
 				}
 
 				// verify preinstalls
-				for _, preinstall := range tc.genState.Preinstalls {
+				for _, preinstall := range genState.Preinstalls {
 					preinstallAddr := common.HexToAddress(preinstall.Address)
 					accAddress := sdk.AccAddress(preinstallAddr.Bytes())
 					s.Require().NotNil(

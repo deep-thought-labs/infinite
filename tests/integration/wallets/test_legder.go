@@ -205,8 +205,6 @@ func (suite *LedgerTestSuite) TestGetAddressPubKeySECP256K1() {
 	suite.Require().NoError(err)
 
 	addr := crypto.PubkeyToAddress(privKey.PublicKey)
-	expAddr, err := sdk.Bech32ifyAddressBytes("cosmos", common.HexToAddress(addr.String()).Bytes())
-	suite.Require().NoError(err)
 
 	testCases := []struct {
 		name     string
@@ -250,6 +248,8 @@ func (suite *LedgerTestSuite) TestGetAddressPubKeySECP256K1() {
 	for _, tc := range testCases {
 		suite.Run(tc.name, func() {
 			suite.SetupTest() // reset
+			expAddr, err := sdk.Bech32ifyAddressBytes(sdk.GetConfig().GetBech32AccountAddrPrefix(), common.HexToAddress(addr.String()).Bytes())
+			suite.Require().NoError(err)
 			tc.mockFunc()
 			_, addr, err := suite.ledger.GetAddressPubKeySECP256K1(gethaccounts.DefaultBaseDerivationPath, suite.hrp)
 			if tc.expPass {

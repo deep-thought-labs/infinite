@@ -12,9 +12,9 @@ import (
 	testifysuite "github.com/stretchr/testify/suite"
 
 	"github.com/cosmos/evm/contracts"
+	"github.com/cosmos/evm/ibc"
 	"github.com/cosmos/evm/infinited"
 	"github.com/cosmos/evm/infinited/tests/integration"
-	"github.com/cosmos/evm/ibc"
 	ics20precompile "github.com/cosmos/evm/precompiles/ics20"
 	"github.com/cosmos/evm/testutil"
 	evmibctesting "github.com/cosmos/evm/testutil/ibc"
@@ -392,7 +392,7 @@ func (suite *MiddlewareTestSuite) TestOnRecvPacketWithCallback() {
 
 			// Generate the isolated address for the sender
 			sendAmt := ibctesting.DefaultCoinAmount
-			isolatedAddr := callbacktypes.GenerateIsolatedAddress(path.EndpointA.ChannelID, suite.chainB.SenderAccount.GetAddress().String())
+			isolatedAddr := callbacktypes.GenerateIsolatedAddress(path.EndpointA.ChannelID, suite.chainB.Bech32ForAccount(suite.chainB.SenderAccount))
 
 			// Get callback tester contract and deploy it
 			contractData, err = ibctestutil.LoadCounterWithCallbacksContract()
@@ -410,7 +410,7 @@ func (suite *MiddlewareTestSuite) TestOnRecvPacketWithCallback() {
 			packetData := transfertypes.NewFungibleTokenPacketData(
 				bondDenom,
 				sendAmt.String(),
-				suite.chainB.SenderAccount.GetAddress().String(),
+				suite.chainB.Bech32ForAccount(suite.chainB.SenderAccount),
 				isolatedAddr.String(),
 				"", // Will be set by memo function
 			)
@@ -578,7 +578,7 @@ func (suite *MiddlewareTestSuite) TestOnRecvPacket() {
 			packetData := transfertypes.NewFungibleTokenPacketData(
 				bondDenom,
 				sendAmt.String(),
-				suite.chainB.SenderAccount.GetAddress().String(),
+				suite.chainB.Bech32ForAccount(suite.chainB.SenderAccount),
 				receiver.String(),
 				"",
 			)
@@ -659,7 +659,7 @@ func (suite *MiddlewareTestSuite) TestOnRecvPacketNativeErc20() {
 			setupRecipient: func(suite *MiddlewareTestSuite) (string, common.Address) {
 				recipient := callbacktypes.GenerateIsolatedAddress(
 					suite.path.EndpointA.ChannelID,
-					suite.chainB.SenderAccount.GetAddress().String(),
+					suite.chainB.Bech32ForAccount(suite.chainB.SenderAccount),
 				).String()
 				return recipient, common.Address{}
 			},
@@ -688,7 +688,7 @@ func (suite *MiddlewareTestSuite) TestOnRecvPacketNativeErc20() {
 			// Scenario: Native ERC20 token transfer from evmChainA to chainB
 			timeoutHeight := clienttypes.NewHeight(1, 110)
 			path := suite.path
-			chainBAccount := suite.chainB.SenderAccount.GetAddress()
+			chainBBech32 := suite.chainB.Bech32ForAccount(suite.chainB.SenderAccount)
 
 			sendAmt := math.NewIntFromBigInt(nativeErc20.InitialBal).Quo(math.NewInt(2))
 			senderEthAddr := nativeErc20.Account
@@ -702,7 +702,7 @@ func (suite *MiddlewareTestSuite) TestOnRecvPacketNativeErc20() {
 				path.EndpointA.ChannelID,
 				sdk.NewCoin(nativeErc20.Denom, sendAmt),
 				sender.String(),
-				chainBAccount.String(),
+				chainBBech32,
 				timeoutHeight,
 				0,
 				"",
@@ -787,7 +787,7 @@ func (suite *MiddlewareTestSuite) TestOnRecvPacketNativeErc20() {
 				packetData = transfertypes.NewFungibleTokenPacketData(
 					chainBNativeErc20Denom.Path(),
 					recvAmt.String(),
-					chainBAccount.String(),
+					chainBBech32,
 					recipient,
 					destCallback,
 				)
@@ -796,7 +796,7 @@ func (suite *MiddlewareTestSuite) TestOnRecvPacketNativeErc20() {
 				packetData = transfertypes.NewFungibleTokenPacketData(
 					chainBNativeErc20Denom.Path(),
 					recvAmt.String(),
-					chainBAccount.String(),
+					chainBBech32,
 					recipient,
 					"",
 				)
@@ -885,7 +885,7 @@ func (suite *MiddlewareTestSuite) TestOnRecvPacketNativeErc20() {
 				// the packet that failed conversion due to the minting restriction should instead remain as the bank token
 				// and will be in the isolated address used to invoke the callback
 				isolatedAddr := callbacktypes.GenerateIsolatedAddress(path.EndpointA.ChannelID,
-					suite.chainB.SenderAccount.GetAddress().String())
+					suite.chainB.Bech32ForAccount(suite.chainB.SenderAccount))
 				trappedBal := evmApp.BankKeeper.GetBalance(evmCtx, isolatedAddr, nativeErc20.Denom)
 				suite.Require().Equal(recvAmt.String(), trappedBal.Amount.String())
 			} else {
@@ -1181,7 +1181,8 @@ func (suite *MiddlewareTestSuite) TestOnAcknowledgementPacketWithCallback() {
 
 			sendAmt := ibctesting.DefaultCoinAmount
 			sender := suite.evmChainA.SenderAccount.GetAddress()
-			receiver := suite.chainB.SenderAccount.GetAddress()
+			receiver := suite.chainB.AccAddressForAccount(suite.chainB.SenderAccount)
+			receiverBech32 := suite.chainB.Bech32ForAccount(suite.chainB.SenderAccount)
 
 			// Deploy callback contract on source chain (evmChainA)
 			contractData, err = ibctestutil.LoadCounterWithCallbacksContract()
@@ -1200,7 +1201,7 @@ func (suite *MiddlewareTestSuite) TestOnAcknowledgementPacketWithCallback() {
 				bondDenom,
 				sendAmt.String(),
 				sender.String(),
-				receiver.String(),
+				receiverBech32,
 				tc.memo(),
 			)
 
@@ -1243,7 +1244,7 @@ func (suite *MiddlewareTestSuite) TestOnAcknowledgementPacketWithCallback() {
 					path.EndpointA.ChannelID,
 					sdk.NewCoin(bondDenom, sendAmt),
 					sender.String(),
-					receiver.String(),
+					receiverBech32,
 					timeoutHeight, 0, tc.memo(),
 				)
 				err = suite.evmChainA.SenderAccount.SetSequence(suite.evmChainA.SenderAccount.GetSequence() + 1)
@@ -1419,13 +1420,14 @@ func (suite *MiddlewareTestSuite) TestOnAcknowledgementPacket() {
 
 			sendAmt := ibctesting.DefaultCoinAmount
 			sender := suite.evmChainA.SenderAccount.GetAddress()
-			receiver := suite.chainB.SenderAccount.GetAddress()
+			receiver := suite.chainB.AccAddressForAccount(suite.chainB.SenderAccount)
+			chainBBech32 := suite.chainB.Bech32ForAccount(suite.chainB.SenderAccount)
 
 			packetData := transfertypes.NewFungibleTokenPacketData(
 				bondDenom,
 				sendAmt.String(),
 				sender.String(),
-				receiver.String(),
+				chainBBech32,
 				"",
 			)
 
@@ -1466,7 +1468,7 @@ func (suite *MiddlewareTestSuite) TestOnAcknowledgementPacket() {
 					path.EndpointA.ChannelID,
 					sdk.NewCoin(bondDenom, sendAmt),
 					sender.String(),
-					receiver.String(),
+					chainBBech32,
 					timeoutHeight, 0, "",
 				)
 				balBeforeTransfer := evmApp.BankKeeper.GetBalance(ctxA, sender, bondDenom)
@@ -1568,12 +1570,12 @@ func (suite *MiddlewareTestSuite) TestOnAcknowledgementPacketNativeErc20() {
 
 			timeoutHeight := clienttypes.NewHeight(1, 110)
 			path := suite.path
-			chainBAccount := suite.chainB.SenderAccount.GetAddress()
+			chainBBech32 := suite.chainB.Bech32ForAccount(suite.chainB.SenderAccount)
 
 			sendAmt := math.NewIntFromBigInt(nativeErc20.InitialBal)
 			senderEthAddr := nativeErc20.Account
 			sender := sdk.AccAddress(senderEthAddr.Bytes())
-			receiver := suite.chainB.SenderAccount.GetAddress()
+			receiver := suite.chainB.AccAddressForAccount(suite.chainB.SenderAccount)
 
 			escrowAddr := transfertypes.GetEscrowAddress(path.EndpointA.ChannelConfig.PortID, path.EndpointA.ChannelID)
 			// checkEscrow is a check function to ensure the native erc20 token is escrowed.
@@ -1604,7 +1606,7 @@ func (suite *MiddlewareTestSuite) TestOnAcknowledgementPacketNativeErc20() {
 				path.EndpointA.ChannelID,
 				sdk.NewCoin(nativeErc20.Denom, sendAmt),
 				sender.String(),
-				receiver.String(),
+				chainBBech32,
 				timeoutHeight,
 				0,
 				"",
@@ -1621,7 +1623,7 @@ func (suite *MiddlewareTestSuite) TestOnAcknowledgementPacketNativeErc20() {
 				nativeErc20.Denom,
 				sendAmt.String(),
 				sender.String(),
-				chainBAccount.String(),
+				chainBBech32,
 				"",
 			)
 			packet = channeltypes.Packet{
@@ -1705,13 +1707,13 @@ func (suite *MiddlewareTestSuite) TestOnTimeoutPacket() {
 
 			sendAmt := ibctesting.DefaultCoinAmount
 			sender := suite.evmChainA.SenderAccount.GetAddress()
-			receiver := suite.chainB.SenderAccount.GetAddress()
+			chainBBech32 := suite.chainB.Bech32ForAccount(suite.chainB.SenderAccount)
 
 			packetData := transfertypes.NewFungibleTokenPacketData(
 				bondDenom,
 				sendAmt.String(),
 				sender.String(),
-				receiver.String(),
+				chainBBech32,
 				"",
 			)
 
@@ -1754,7 +1756,7 @@ func (suite *MiddlewareTestSuite) TestOnTimeoutPacket() {
 					path.EndpointA.ChannelID,
 					sdk.NewCoin(bondDenom, sendAmt),
 					sender.String(),
-					receiver.String(),
+					chainBBech32,
 					timeoutHeight, 0, "",
 				)
 
@@ -2024,7 +2026,8 @@ func (suite *MiddlewareTestSuite) TestOnTimeoutPacketWithCallback() {
 
 			sendAmt := ibctesting.DefaultCoinAmount
 			sender := suite.evmChainA.SenderAccount.GetAddress()
-			receiver := suite.chainB.SenderAccount.GetAddress()
+			receiver := suite.chainB.AccAddressForAccount(suite.chainB.SenderAccount)
+			receiverBech32 := suite.chainB.Bech32ForAccount(suite.chainB.SenderAccount)
 
 			// Deploy callback contract on source chain (evmChainA)
 			contractData, err = ibctestutil.LoadCounterWithCallbacksContract()
@@ -2043,7 +2046,7 @@ func (suite *MiddlewareTestSuite) TestOnTimeoutPacketWithCallback() {
 				bondDenom,
 				sendAmt.String(),
 				sender.String(),
-				receiver.String(),
+				receiverBech32,
 				tc.memo(),
 			)
 
@@ -2078,7 +2081,7 @@ func (suite *MiddlewareTestSuite) TestOnTimeoutPacketWithCallback() {
 					path.EndpointA.ChannelID,
 					sdk.NewCoin(bondDenom, sendAmt),
 					sender.String(),
-					receiver.String(),
+					receiverBech32,
 					timeoutHeight, 0, tc.memo(),
 				)
 				err = suite.evmChainA.SenderAccount.SetSequence(suite.evmChainA.SenderAccount.GetSequence() + 1)
@@ -2232,12 +2235,12 @@ func (suite *MiddlewareTestSuite) TestOnTimeoutPacketNativeErc20() {
 
 			timeoutHeight := clienttypes.NewHeight(1, 110)
 			path := suite.path
-			chainBAccount := suite.chainB.SenderAccount.GetAddress()
+			chainBBech32 := suite.chainB.Bech32ForAccount(suite.chainB.SenderAccount)
 
 			sendAmt := math.NewIntFromBigInt(nativeErc20.InitialBal)
 			senderEthAddr := nativeErc20.Account
 			sender := sdk.AccAddress(senderEthAddr.Bytes())
-			receiver := suite.chainB.SenderAccount.GetAddress()
+			receiver := suite.chainB.AccAddressForAccount(suite.chainB.SenderAccount)
 
 			escrowAddr := transfertypes.GetEscrowAddress(path.EndpointA.ChannelConfig.PortID, path.EndpointA.ChannelID)
 			// checkEscrow is a check function to ensure the native erc20 token is escrowed.
@@ -2268,7 +2271,7 @@ func (suite *MiddlewareTestSuite) TestOnTimeoutPacketNativeErc20() {
 				path.EndpointA.ChannelID,
 				sdk.NewCoin(nativeErc20.Denom, sendAmt),
 				sender.String(),
-				receiver.String(),
+				chainBBech32,
 				timeoutHeight,
 				0,
 				"",
@@ -2285,7 +2288,7 @@ func (suite *MiddlewareTestSuite) TestOnTimeoutPacketNativeErc20() {
 				nativeErc20.Denom,
 				sendAmt.String(),
 				sender.String(),
-				chainBAccount.String(),
+				chainBBech32,
 				"",
 			)
 			packet = channeltypes.Packet{

@@ -152,7 +152,7 @@ func (suite *MiddlewareV2TestSuite) TestOnSendPacket() {
 				bondDenom,
 				ibctesting.DefaultCoinAmount.String(),
 				suite.evmChainA.SenderAccount.GetAddress().String(),
-				suite.chainB.SenderAccount.GetAddress().String(),
+				suite.chainB.Bech32ForAccount(suite.chainB.SenderAccount),
 				"",
 			)
 
@@ -234,7 +234,7 @@ func (suite *MiddlewareV2TestSuite) TestOnRecvPacket() {
 			packetData = transfertypes.NewFungibleTokenPacketData(
 				bondDenom,
 				sendAmt.String(),
-				suite.chainB.SenderAccount.GetAddress().String(),
+				suite.chainB.Bech32ForAccount(suite.chainB.SenderAccount),
 				receiver.String(),
 				"",
 			)
@@ -348,10 +348,10 @@ func (suite *MiddlewareV2TestSuite) TestOnRecvPacketNativeERC20() {
 
 			// 2: Transfer erc20 native coin to chainB through IBC.
 			path := suite.pathAToB
-			chainBAcc := suite.chainB.SenderAccount.GetAddress()
+			chainBBech32 := suite.chainB.Bech32ForAccount(suite.chainB.SenderAccount)
 			packetData = transfertypes.NewFungibleTokenPacketData(
 				nativeErc20.Denom, sendAmt.String(),
-				sender.String(), chainBAcc.String(),
+				sender.String(), chainBBech32,
 				"",
 			)
 			payload = channeltypesv2.NewPayload(
@@ -386,7 +386,7 @@ func (suite *MiddlewareV2TestSuite) TestOnRecvPacketNativeERC20() {
 			receiver := suite.evmChainA.SenderAccount.GetAddress()
 			packetData = transfertypes.NewFungibleTokenPacketData(
 				chainBNativeErc20Denom.Path(), sendAmt.String(),
-				chainBAcc.String(), receiver.String(), "",
+				chainBBech32, receiver.String(), "",
 			)
 			payload = channeltypesv2.NewPayload(
 				transfertypes.PortID, transfertypes.PortID,
@@ -495,7 +495,7 @@ func (suite *MiddlewareV2TestSuite) TestOnAcknowledgementPacket() {
 				bondDenom,
 				sendAmt.String(),
 				suite.evmChainA.SenderAccount.GetAddress().String(),
-				suite.chainB.SenderAccount.GetAddress().String(),
+				suite.chainB.Bech32ForAccount(suite.chainB.SenderAccount),
 				"",
 			)
 
@@ -655,10 +655,10 @@ func (suite *MiddlewareV2TestSuite) TestOnAcknowledgementPacketNativeErc20() {
 			}
 
 			// 2: Transfer erc20 native coin to chainB through IBC.
-			chainBAcc := suite.chainB.SenderAccount.GetAddress()
+			chainBBech32 := suite.chainB.Bech32ForAccount(suite.chainB.SenderAccount)
 			packetData := transfertypes.NewFungibleTokenPacketData(
 				nativeErc20.Denom, sendAmt.String(),
-				sender.String(), chainBAcc.String(),
+				sender.String(), chainBBech32,
 				"",
 			)
 			payload = channeltypesv2.NewPayload(
@@ -752,7 +752,7 @@ func (suite *MiddlewareV2TestSuite) TestOnTimeoutPacket() {
 				bondDenom,
 				ibctesting.DefaultCoinAmount.String(),
 				suite.evmChainA.SenderAccount.GetAddress().String(),
-				suite.chainB.SenderAccount.GetAddress().String(),
+				suite.chainB.Bech32ForAccount(suite.chainB.SenderAccount),
 				"",
 			)
 
@@ -889,10 +889,10 @@ func (suite *MiddlewareV2TestSuite) TestOnTimeoutPacketNativeErc20() {
 			}
 
 			// 2: Transfer erc20 native coin to chainB through IBC.
-			chainBAcc := suite.chainB.SenderAccount.GetAddress()
+			chainBBech32 := suite.chainB.Bech32ForAccount(suite.chainB.SenderAccount)
 			packetData := transfertypes.NewFungibleTokenPacketData(
 				nativeErc20.Denom, sendAmt.String(),
-				sender.String(), chainBAcc.String(),
+				sender.String(), chainBBech32,
 				"",
 			)
 			payload = channeltypesv2.NewPayload(
@@ -966,10 +966,10 @@ func (suite *MiddlewareV2TestSuite) TestOnRecvPacketNativeERC20Rollback() {
 	suite.Require().NoError(err)
 
 	path := suite.pathAToB
-	chainBAcc := suite.chainB.SenderAccount.GetAddress()
+	chainBBech32 := suite.chainB.Bech32ForAccount(suite.chainB.SenderAccount)
 	packetData := transfertypes.NewFungibleTokenPacketData(
 		nativeErc20.Denom, sendAmt.String(),
-		sender.String(), chainBAcc.String(),
+		sender.String(), chainBBech32,
 		"",
 	)
 	payload := channeltypesv2.NewPayload(
@@ -1001,7 +1001,7 @@ func (suite *MiddlewareV2TestSuite) TestOnRecvPacketNativeERC20Rollback() {
 	receiver := suite.evmChainA.SenderAccount.GetAddress()
 	returnData := transfertypes.NewFungibleTokenPacketData(
 		chainBNativeErc20Denom.Path(), sendAmt.String(),
-		chainBAcc.String(), receiver.String(), "",
+		chainBBech32, receiver.String(), "",
 	)
 	returnPayload := channeltypesv2.NewPayload(
 		transfertypes.PortID, transfertypes.PortID,

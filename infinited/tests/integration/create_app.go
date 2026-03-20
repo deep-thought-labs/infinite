@@ -9,6 +9,7 @@ import (
 	"github.com/cosmos/evm/infinited"
 	srvflags "github.com/cosmos/evm/server/flags"
 	"github.com/cosmos/evm/testutil/constants"
+	erc20types "github.com/cosmos/evm/x/erc20/types"
 	feemarkettypes "github.com/cosmos/evm/x/feemarket/types"
 	ibctesting "github.com/cosmos/ibc-go/v10/testing"
 
@@ -87,6 +88,12 @@ func SetupEvmd() (ibctesting.TestingApp, map[string]json.RawMessage) {
 	mintGen := minttypes.DefaultGenesisState()
 	mintGen.Params.MintDenom = constants.ExampleAttoDenom
 	genesisState[minttypes.ModuleName] = app.AppCodec().MustMarshalJSON(mintGen)
+
+	// IBC / ICS20 precompile tests expect the example WEVMOS pair and native precompile (bond denom).
+	erc20Gen := erc20types.DefaultGenesisState()
+	erc20Gen.TokenPairs = constants.ExampleTokenPairs
+	erc20Gen.NativePrecompiles = []string{constants.WEVMOSContractMainnet}
+	genesisState[erc20types.ModuleName] = app.AppCodec().MustMarshalJSON(erc20Gen)
 
 	return app, genesisState
 }

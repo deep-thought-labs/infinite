@@ -124,7 +124,7 @@ func (endpoint *Endpoint) CreateClient() (err error) {
 	}
 
 	msg, err := clienttypes.NewMsgCreateClient(
-		clientState, consensusState, endpoint.Chain.SenderAccount.GetAddress().String(),
+		clientState, consensusState, endpoint.Chain.SenderAddrStringForMsg(),
 	)
 	require.NoError(endpoint.Chain.TB, err)
 
@@ -161,7 +161,7 @@ func (endpoint *Endpoint) UpdateClient() (err error) {
 
 	msg, err := clienttypes.NewMsgUpdateClient(
 		endpoint.ClientID, header,
-		endpoint.Chain.SenderAccount.GetAddress().String(),
+		endpoint.Chain.SenderAddrStringForMsg(),
 	)
 	require.NoError(endpoint.Chain.TB, err)
 
@@ -239,7 +239,7 @@ func (endpoint *Endpoint) ConnOpenInit() error {
 		endpoint.ClientID,
 		endpoint.Counterparty.ClientID,
 		endpoint.Counterparty.Chain.GetPrefix(), DefaultOpenInitVersion, endpoint.ConnectionConfig.DelayPeriod,
-		endpoint.Chain.SenderAccount.GetAddress().String(),
+		endpoint.Chain.SenderAddrStringForMsg(),
 	)
 	res, err := endpoint.Chain.SendMsgs(msg)
 	if err != nil {
@@ -263,7 +263,7 @@ func (endpoint *Endpoint) ConnOpenTry() error {
 		endpoint.ClientID, endpoint.Counterparty.ConnectionID, endpoint.Counterparty.ClientID,
 		endpoint.Counterparty.Chain.GetPrefix(), []*connectiontypes.Version{ConnectionVersion},
 		endpoint.ConnectionConfig.DelayPeriod, initProof, proofHeight,
-		endpoint.Chain.SenderAccount.GetAddress().String(),
+		endpoint.Chain.SenderAddrStringForMsg(),
 	)
 	res, err := endpoint.Chain.SendMsgs(msg)
 	if err != nil {
@@ -288,7 +288,7 @@ func (endpoint *Endpoint) ConnOpenAck() error {
 	msg := connectiontypes.NewMsgConnectionOpenAck(
 		endpoint.ConnectionID, endpoint.Counterparty.ConnectionID, // testing doesn't use flexible selection
 		tryProof, proofHeight, ConnectionVersion,
-		endpoint.Chain.SenderAccount.GetAddress().String(),
+		endpoint.Chain.SenderAddrStringForMsg(),
 	)
 	return endpoint.Chain.sendMsgs(msg)
 }
@@ -304,7 +304,7 @@ func (endpoint *Endpoint) ConnOpenConfirm() error {
 	msg := connectiontypes.NewMsgConnectionOpenConfirm(
 		endpoint.ConnectionID,
 		proof, height,
-		endpoint.Chain.SenderAccount.GetAddress().String(),
+		endpoint.Chain.SenderAddrStringForMsg(),
 	)
 	return endpoint.Chain.sendMsgs(msg)
 }
@@ -341,7 +341,7 @@ func (endpoint *Endpoint) ChanOpenInit() error {
 		endpoint.ChannelConfig.PortID,
 		endpoint.ChannelConfig.Version, endpoint.ChannelConfig.Order, []string{endpoint.ConnectionID},
 		endpoint.Counterparty.ChannelConfig.PortID,
-		endpoint.Chain.SenderAccount.GetAddress().String(),
+		endpoint.Chain.SenderAddrStringForMsg(),
 	)
 	res, err := endpoint.Chain.SendMsgs(msg)
 	if err != nil {
@@ -373,7 +373,7 @@ func (endpoint *Endpoint) ChanOpenTry() error {
 		endpoint.ChannelConfig.Version, endpoint.ChannelConfig.Order, []string{endpoint.ConnectionID},
 		endpoint.Counterparty.ChannelConfig.PortID, endpoint.Counterparty.ChannelID, endpoint.Counterparty.ChannelConfig.Version,
 		proof, height,
-		endpoint.Chain.SenderAccount.GetAddress().String(),
+		endpoint.Chain.SenderAddrStringForMsg(),
 	)
 	res, err := endpoint.Chain.SendMsgs(msg)
 	if err != nil {
@@ -405,7 +405,7 @@ func (endpoint *Endpoint) ChanOpenAck() error {
 		endpoint.ChannelConfig.PortID, endpoint.ChannelID,
 		endpoint.Counterparty.ChannelID, endpoint.Counterparty.ChannelConfig.Version, // testing doesn't use flexible selection
 		proof, height,
-		endpoint.Chain.SenderAccount.GetAddress().String(),
+		endpoint.Chain.SenderAddrStringForMsg(),
 	)
 
 	if err = endpoint.Chain.sendMsgs(msg); err != nil {
@@ -428,7 +428,7 @@ func (endpoint *Endpoint) ChanOpenConfirm() error {
 	msg := channeltypes.NewMsgChannelOpenConfirm(
 		endpoint.ChannelConfig.PortID, endpoint.ChannelID,
 		proof, height,
-		endpoint.Chain.SenderAccount.GetAddress().String(),
+		endpoint.Chain.SenderAddrStringForMsg(),
 	)
 	return endpoint.Chain.sendMsgs(msg)
 }
@@ -439,7 +439,7 @@ func (endpoint *Endpoint) ChanOpenConfirm() error {
 func (endpoint *Endpoint) ChanCloseInit() error {
 	msg := channeltypes.NewMsgChannelCloseInit(
 		endpoint.ChannelConfig.PortID, endpoint.ChannelID,
-		endpoint.Chain.SenderAccount.GetAddress().String(),
+		endpoint.Chain.SenderAddrStringForMsg(),
 	)
 	return endpoint.Chain.sendMsgs(msg)
 }
@@ -488,7 +488,7 @@ func (endpoint *Endpoint) RecvPacketWithResult(packet channeltypes.Packet) (*abc
 	packetKey := host.PacketCommitmentKey(packet.GetSourcePort(), packet.GetSourceChannel(), packet.GetSequence())
 	proof, proofHeight := endpoint.Counterparty.Chain.QueryProof(packetKey)
 
-	recvMsg := channeltypes.NewMsgRecvPacket(packet, proof, proofHeight, endpoint.Chain.SenderAccount.GetAddress().String())
+	recvMsg := channeltypes.NewMsgRecvPacket(packet, proof, proofHeight, endpoint.Chain.SenderAddrStringForMsg())
 
 	// receive on counterparty and update source client
 	res, err := endpoint.Chain.SendMsgs(recvMsg)
@@ -524,7 +524,7 @@ func (endpoint *Endpoint) AcknowledgePacket(packet channeltypes.Packet, ack []by
 	packetKey := host.PacketAcknowledgementKey(packet.GetDestPort(), packet.GetDestChannel(), packet.GetSequence())
 	proof, proofHeight := endpoint.Counterparty.QueryProof(packetKey)
 
-	ackMsg := channeltypes.NewMsgAcknowledgement(packet, ack, proof, proofHeight, endpoint.Chain.SenderAccount.GetAddress().String())
+	ackMsg := channeltypes.NewMsgAcknowledgement(packet, ack, proof, proofHeight, endpoint.Chain.SenderAddrStringForMsg())
 
 	return endpoint.Chain.sendMsgs(ackMsg)
 }
@@ -535,7 +535,7 @@ func (endpoint *Endpoint) AcknowledgePacketWithResult(packet channeltypes.Packet
 	packetKey := host.PacketAcknowledgementKey(packet.GetDestPort(), packet.GetDestChannel(), packet.GetSequence())
 	proof, proofHeight := endpoint.Counterparty.QueryProof(packetKey)
 
-	ackMsg := channeltypes.NewMsgAcknowledgement(packet, ack, proof, proofHeight, endpoint.Chain.SenderAccount.GetAddress().String())
+	ackMsg := channeltypes.NewMsgAcknowledgement(packet, ack, proof, proofHeight, endpoint.Chain.SenderAddrStringForMsg())
 
 	return endpoint.Chain.SendMsgs(ackMsg)
 }
@@ -561,7 +561,7 @@ func (endpoint *Endpoint) TimeoutPacketWithResult(packet channeltypes.Packet) (*
 
 	timeoutMsg := channeltypes.NewMsgTimeout(
 		packet, nextSeqRecv,
-		proof, proofHeight, endpoint.Chain.SenderAccount.GetAddress().String(),
+		proof, proofHeight, endpoint.Chain.SenderAddrStringForMsg(),
 	)
 
 	return endpoint.Chain.SendMsgs(timeoutMsg)
@@ -597,7 +597,7 @@ func (endpoint *Endpoint) TimeoutOnClose(packet channeltypes.Packet) error {
 
 	timeoutOnCloseMsg := channeltypes.NewMsgTimeoutOnClose(
 		packet, nextSeqRecv,
-		proof, closedProof, proofHeight, endpoint.Chain.SenderAccount.GetAddress().String(),
+		proof, closedProof, proofHeight, endpoint.Chain.SenderAddrStringForMsg(),
 	)
 
 	return endpoint.Chain.sendMsgs(timeoutOnCloseMsg)

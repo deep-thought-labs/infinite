@@ -8,7 +8,7 @@
 | Campo | Valor |
 |--------|--------|
 | Fecha inicio | 2026-03-19 |
-| Fecha cierre | 2026-03-19 (resolución conflictos pendiente cierre final) |
+| Fecha cierre | 2026-03-20 (fecha informativa de último update; mismo proceso de merge) |
 | Responsable(s) | — |
 | Rama local de trabajo | `red/merge-cosmos-evm` |
 | Rama/ref upstream fusionada | `upstream/main` (vía rama `upstream-main`) |
@@ -50,15 +50,38 @@ Integrar `upstream/main` en el fork Infinite Drive y **resolver marcadores de co
 - **Makefile / systemtests**: binario real `infinited` en `build/`; copia con nombre `evmd` solo para la suite que aún espera ese nombre.
 - **CI**: conservar fuzz tests del fork.
 
+## Actualización de la misma sesión de merge (2026-03-19)
+
+Se realizó una pasada de estabilización para dejar `make test-infinited` en verde tras la integración con upstream.
+
+### Cambios aplicados
+
+| Área | Archivo(s) | Decisión aplicada | Resultado |
+|------|------------|-------------------|-----------|
+| IBC test harness (SimApp vs EVM bech32) | `testutil/ibc/chain.go`, `infinited/tests/ibc/*` | Encapsular direcciones con helpers (`AccAddressForAccount`, `Bech32ForAccount`) y evitar uso directo de `GetAddress().String()` en cadenas SimApp. | Se eliminan errores `missing recipient address` y `hrp does not match ... expected 'cosmos' got 'infinite'` en suites IBC. |
+| Setup de app para tests IBC/precompile | `infinited/tests/integration/create_app.go` | Inyectar en `SetupEvmd()` el estado ERC20 esperado por tests (`ExampleTokenPairs` + `WEVMOSContractMainnet`) sin cambiar defaults productivos de `infinited/genesis.go`. | `IsNativePrecompileAvailable` y flujos ICS20 precompile consistentes en tests. |
+| Tests de wallets/ledger | `tests/integration/wallets/test_ledger_suite.go`, `tests/integration/wallets/test_legder.go` | Alinear HRP esperado con `sdk.GetConfig().GetBech32AccountAddrPrefix()`, normalizar direcciones de fixtures y corregir checksum inválido en dirección amino. | Se eliminan panics por prefijo (`expected infinite, got cosmos`) y mismatch de dirección esperada. |
+| Tests ERC20 IBC callback | `tests/integration/x/erc20/test_ibc_callback.go` | Eliminar hardcode de `sdk.Bech32MainPrefix`; derivar direcciones desde bytes y recodificar con HRP activo. | Se eliminan fallos por `hrp does not match bech32 prefix`. |
+| Tests EVM state transition | `tests/integration/x/vm/test_state_transition.go` | Reemplazar denom fijo `"aatom"` por `types.GetEVMCoinDenom()`. | Se corrigen fallos de refund/fee por mezcla de denoms (`aatom` vs `drop`). |
+
+### Tests ejecutados en cierre
+
+- `go test -tags=test -mod=readonly ./infinited/tests/ibc/...`
+- `go test -tags=test -mod=readonly ./infinited/tests/integration -count=1`
+- `make test-infinited`
+
+Estado final: **OK** (suite `infinited` completa en verde).
+
 ## Verificación
 
 | Check | Resultado (OK / falló) | Notas |
 |-------|------------------------|-------|
 | `./scripts/validate_customizations.sh` | OK | Ejecutado tras limpiar marcadores. |
-| `make build` / `make install` | pendiente en este entorno | `go` no está en PATH del runner; ejecutar en máquina dev/CI. |
-| `make test-unit` | pendiente | — |
-| `cd infinited && go test ./tests/integration/...` | pendiente | Suite ante bajo `infinited/` (p. ej. `TestEvmUnitAnteTestSuite`). |
-| Otros (p. ej. `make test-all`) | pendiente | — |
+| `make build` / `make install` | pendiente | No se ejecutó en este cierre (foco en estabilización de tests). |
+| `make test-unit` | pendiente | No incluido en esta pasada. |
+| `cd infinited && go test ./tests/integration/...` | OK | En verde tras correcciones de HRP/denom/tests. |
+| `make test-infinited` | OK | En verde (incluye `tests/ibc` + `tests/integration` de `infinited`). |
+| Otros (p. ej. `make test-all`) | pendiente | Fuera del alcance de este cierre. |
 
 ## Aprendizajes y puntos a recordar
 
@@ -73,6 +96,7 @@ Documentación canónica: [PLAYBOOK.md — A.7](../PLAYBOOK.md#a7-tests-y-apis-t
 - [ ] CHANGELOG actualizado
 - [ ] [UPSTREAM_DIVERGENCE_RECORD.md](../UPSTREAM_DIVERGENCE_RECORD.md) actualizado (solo si cambió el inventario o la política)
 - [ ] Guía de migración consultada o actualizada (`docs/migrations/`)
+- [x] CI local equivalente para `make test-infinited` en verde
 - [ ] CI en PR verde
 
 ## Referencias
