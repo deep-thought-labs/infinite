@@ -24,6 +24,7 @@
 ### DOCUMENTATION & DEVELOPER TOOLS
 
 - **Structured documentation**: Clear entry points (`QUICK_START.md`, `BUILDING.md`), categorized guides, and AI-friendly format
+- **Fork maintenance (`docs/fork-maintenance/`)**: Upstream divergence record (`UPSTREAM_DIVERGENCE_RECORD.md`), merge playbook, diff reference, verification checklist, merge-log templates and archives
 - **Validation suite**: Comprehensive validation scripts (`validate_customizations.sh`, `validate_token_config.sh`, `check_build_prerequisites.sh`)
 - **Development utilities**: Scripts for customization tracking, health checks, and build verification
 - **Genesis creation guides**: Step-by-step instructions for network genesis creation across mainnet/testnet/creative networks

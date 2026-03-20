@@ -6,7 +6,7 @@
 # This file is part of the Infinite Drive blockchain tooling.
 #
 # Purpose: List all files that differ from upstream repository.
-#          Helps identify all customizations for documentation.
+#          See docs/fork-maintenance/REFERENCE.md for usage in merge workflows.
 #
 # Usage: ./scripts/list_all_customizations.sh [upstream-branch]
 #        Default: upstream/main (original repository)

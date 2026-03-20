@@ -231,7 +231,7 @@ ls -la coverage.txt
 
 - **[guides/testing/VALIDATION.md](../testing/VALIDATION.md)** - Node validation scripts
 - **[guides/development/BUILDING.md](BUILDING.md)** - Compilation guide
-- **[CUSTOMIZATIONS.md](../../CUSTOMIZATIONS.md)** - Customizations reference
+- **[docs/fork-maintenance/UPSTREAM_DIVERGENCE_RECORD.md](../../docs/fork-maintenance/UPSTREAM_DIVERGENCE_RECORD.md)** - Upstream divergence record
 
 ---
 

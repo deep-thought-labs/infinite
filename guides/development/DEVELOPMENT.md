@@ -142,7 +142,7 @@ infinite/
 | `infinited/genesis.go` | Custom genesis functions |
 | `infinited/app.go` | DefaultGenesis() that applies customizations |
 
-**More information**: See [CUSTOMIZATIONS.md](../../CUSTOMIZATIONS.md)
+**More information**: See [UPSTREAM_DIVERGENCE_RECORD.md](../../docs/fork-maintenance/UPSTREAM_DIVERGENCE_RECORD.md)
 
 ---
 
@@ -293,7 +293,8 @@ cat ~/.infinited/config/genesis.json
 - **[guides/development/BUILDING.md](BUILDING.md)** - Compilation guide
 - **[guides/development/TESTING.md](TESTING.md)** - Testing guide
 - **[guides/testing/VALIDATION.md](../testing/VALIDATION.md)** - Validation scripts
-- **[CUSTOMIZATIONS.md](../../CUSTOMIZATIONS.md)** - Customizations reference
+- **[docs/fork-maintenance/UPSTREAM_DIVERGENCE_RECORD.md](../../docs/fork-maintenance/UPSTREAM_DIVERGENCE_RECORD.md)** - Upstream divergence record
+- **[docs/fork-maintenance/](../../docs/fork-maintenance/README.md)** - Merge playbook, verification, templates, merge logs
 
 ---
 

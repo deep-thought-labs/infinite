@@ -887,7 +887,7 @@ head -10 scripts/*.sh | grep -B 5 "Deep Thought Labs"
 
 - **[guides/testing/VALIDATION.md](../testing/VALIDATION.md)** - Complete validation guide
 - **[guides/development/BUILDING.md](BUILDING.md)** - Compilation guide
-- **[CUSTOMIZATIONS.md](../../CUSTOMIZATIONS.md)** - Customizations reference
+- **[docs/fork-maintenance/UPSTREAM_DIVERGENCE_RECORD.md](../../docs/fork-maintenance/UPSTREAM_DIVERGENCE_RECORD.md)** - Upstream divergence record
 
 ---
 

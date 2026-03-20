@@ -81,7 +81,7 @@ check "infinited/config/bech32.go" 'Bech32Prefix = "infinite"' "Bech32 prefix"
 
 # ⚠️ CRITICAL: Verify upstream compliance (package paths)
 echo "⚠️  Upstream Compliance - Package Paths..."
-if grep -r "deep-thought-labs/infinite" --include="*.go" --include="*.mod" . 2>/dev/null | grep -v "CUSTOMIZATIONS.md" | grep -v "validate_customizations.sh" | grep -v ".git"; then
+if grep -r "deep-thought-labs/infinite" --include="*.go" --include="*.mod" . 2>/dev/null | grep -v "validate_customizations.sh" | grep -v ".git"; then
     echo "❌ Found incorrect package paths (should use github.com/cosmos/evm)"
     FAILED=1
 else
