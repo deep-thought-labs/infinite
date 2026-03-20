@@ -2,6 +2,7 @@ package evmd
 
 import (
 	"context"
+<<<<<<< HEAD:infinited/upgrades.go
 
 	banktypes "github.com/cosmos/cosmos-sdk/x/bank/types"
 	"github.com/cosmos/evm/x/vm/types"
@@ -11,6 +12,13 @@ import (
 
 	storetypes "cosmossdk.io/store/types"
 	upgradetypes "cosmossdk.io/x/upgrade/types"
+=======
+	storetypes "cosmossdk.io/store/types"
+
+	sdk "github.com/cosmos/cosmos-sdk/types"
+	"github.com/cosmos/cosmos-sdk/types/module"
+	upgradetypes "github.com/cosmos/cosmos-sdk/x/upgrade/types"
+>>>>>>> upstream-main:evmd/upgrades.go
 )
 
 // UpgradeName defines the on-chain upgrade name for the sample EVMD upgrade
@@ -27,6 +35,7 @@ func (app EVMD) RegisterUpgradeHandlers() {
 		func(ctx context.Context, _ upgradetypes.Plan, fromVM module.VersionMap) (module.VersionMap, error) {
 			sdkCtx := sdk.UnwrapSDKContext(ctx)
 			sdkCtx.Logger().Debug("this is a debug level message to test that verbose logging mode has properly been enabled during a chain upgrade")
+<<<<<<< HEAD:infinited/upgrades.go
 
 			app.BankKeeper.SetDenomMetaData(ctx, banktypes.Metadata{
 				Description: "Example description",
@@ -64,6 +73,8 @@ func (app EVMD) RegisterUpgradeHandlers() {
 			if err := app.EVMKeeper.InitEvmCoinInfo(sdkCtx); err != nil {
 				return nil, err
 			}
+=======
+>>>>>>> upstream-main:evmd/upgrades.go
 			return app.ModuleManager.RunMigrations(ctx, app.Configurator(), fromVM)
 		},
 	)

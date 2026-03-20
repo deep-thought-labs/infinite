@@ -96,10 +96,17 @@ endif
 
 # Build into $(BUILDDIR)
 build: go.sum $(BUILDDIR)/
+<<<<<<< HEAD
 	@echo "🏗️  Building infinited to $(BUILDDIR)/$(EXAMPLE_BINARY) ..."
 	@echo "BUILD_FLAGS: $(BUILD_FLAGS)"
 	@cd $(INFINITED_DIR) && CGO_ENABLED="1" \
 	  go build $(BUILD_FLAGS) -o $(BUILDDIR)/$(EXAMPLE_BINARY) $(INFINITED_MAIN_PKG)
+=======
+	echo "🏗️  Building evmd to $(BUILDDIR)/$(EXAMPLE_BINARY) ..."
+	echo "BUILD_FLAGS: $(BUILD_FLAGS)"
+	cd $(EVMD_DIR) && CGO_ENABLED="1" \
+	  go build $(BUILD_FLAGS) -o $(BUILDDIR)/$(EXAMPLE_BINARY) $(EVMD_MAIN_PKG)
+>>>>>>> upstream-main
 
 # Cross-compile for Linux AMD64
 build-linux:
@@ -233,17 +240,6 @@ else
 	go test -race -tags=test -mod=readonly $(ARGS) $(EXTRA_ARGS) $(TEST_PACKAGES)
 endif
 
-# Use the old Apple linker to workaround broken xcode - https://github.com/golang/go/issues/65169
-ifeq ($(OS_FAMILY),Darwin)
-  FUZZLDFLAGS := -ldflags=-extldflags=-Wl,-ld_classic
-endif
-
-test-fuzz:
-	go test -race -tags=test $(FUZZLDFLAGS) -run NOTAREALTEST -v -fuzztime 10s -fuzz=FuzzMintCoins ./x/precisebank/keeper
-	go test -race -tags=test $(FUZZLDFLAGS) -run NOTAREALTEST -v -fuzztime 10s -fuzz=FuzzBurnCoins ./x/precisebank/keeper
-	go test -race -tags=test $(FUZZLDFLAGS) -run NOTAREALTEST -v -fuzztime 10s -fuzz=FuzzSendCoins ./x/precisebank/keeper
-	go test -race -tags=test $(FUZZLDFLAGS) -run NOTAREALTEST -v -fuzztime 10s -fuzz=FuzzGenesisStateValidate_NonZeroRemainder ./x/precisebank/types
-	go test -race -tags=test $(FUZZLDFLAGS) -run NOTAREALTEST -v -fuzztime 10s -fuzz=FuzzGenesisStateValidate_ZeroRemainder ./x/precisebank/types
 
 test-scripts:
 	@echo "Running scripts tests"
@@ -264,7 +260,7 @@ benchmark:
 ###                                Linting                                  ###
 ###############################################################################
 golangci_lint_cmd=golangci-lint
-golangci_version=v2.2.2
+golangci_version=v2.10.1
 
 lint: lint-go lint-python lint-contracts
 
@@ -332,7 +328,7 @@ format-shell:
 ###                                Protobuf                                 ###
 ###############################################################################
 
-protoVer=0.14.0
+protoVer=0.18.1
 protoImageName=ghcr.io/cosmos/proto-builder:$(protoVer)
 protoImage=$(DOCKER) run --rm -v $(CURDIR):/workspace --workdir /workspace --user 0 $(protoImageName)
 
@@ -486,7 +482,7 @@ test-rpc-compat:
 test-rpc-compat-stop:
 	cd tests/jsonrpc && docker compose down
 
-.PHONY: localnet-start localnet-stop localnet-build-env localnet-build-nodes test-rpc-compat test-rpc-compat-stop
+.PHONY: localnet-start localnet-stop localnet-build-env localnet-build-nodes test-rpc-compat test-rpc-compat-stop mocks
 
 test-system: build-v04 build
 	mkdir -p ./tests/systemtests/binaries/
@@ -494,9 +490,15 @@ test-system: build-v04 build
 	cd tests/systemtests/Counter && forge build
 	$(MAKE) -C tests/systemtests test
 
+<<<<<<< HEAD
 build-v04:
 	mkdir -p ./tests/systemtests/binaries/v0.4
 	git checkout v0.4.1
+=======
+build-v05:
+	mkdir -p ./tests/systemtests/binaries/v0.5
+	git checkout v0.5.1
+>>>>>>> upstream-main
 	make build
 	cp $(BUILDDIR)/evmd ./tests/systemtests/binaries/v0.4
 	git checkout -

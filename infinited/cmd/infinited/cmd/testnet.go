@@ -9,12 +9,15 @@ import (
 	"path/filepath"
 	"time"
 
+<<<<<<< HEAD:infinited/cmd/infinited/cmd/testnet.go
 	"github.com/cosmos/evm/infinited/config"
 
 	cosmosevmhd "github.com/cosmos/evm/crypto/hd"
 	cosmosevmkeyring "github.com/cosmos/evm/crypto/keyring"
 	"github.com/cosmos/evm/infinited"
 	cosmosevmserverconfig "github.com/cosmos/evm/server/config"
+=======
+>>>>>>> upstream-main:evmd/cmd/evmd/cmd/testnet.go
 	"github.com/spf13/cobra"
 	"github.com/spf13/pflag"
 
@@ -23,8 +26,16 @@ import (
 	tmtime "github.com/cometbft/cometbft/types/time"
 
 	dbm "github.com/cosmos/cosmos-db"
+	cosmosevmhd "github.com/cosmos/evm/crypto/hd"
+	cosmosevmkeyring "github.com/cosmos/evm/crypto/keyring"
+	"github.com/cosmos/evm/evmd"
+	"github.com/cosmos/evm/evmd/config"
+	customnetwork "github.com/cosmos/evm/evmd/tests/network"
+	cosmosevmserverconfig "github.com/cosmos/evm/server/config"
+	evmnetwork "github.com/cosmos/evm/testutil/integration/evm/network"
+	evmtypes "github.com/cosmos/evm/x/vm/types"
 
-	"cosmossdk.io/log"
+	"cosmossdk.io/log/v2"
 	"cosmossdk.io/math"
 
 	"github.com/cosmos/cosmos-sdk/client"
@@ -47,10 +58,13 @@ import (
 	"github.com/cosmos/cosmos-sdk/x/genutil"
 	genutiltypes "github.com/cosmos/cosmos-sdk/x/genutil/types"
 	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
+<<<<<<< HEAD:infinited/cmd/infinited/cmd/testnet.go
 
 	customnetwork "github.com/cosmos/evm/infinited/tests/network"
 	evmnetwork "github.com/cosmos/evm/testutil/integration/evm/network"
 	evmtypes "github.com/cosmos/evm/x/vm/types"
+=======
+>>>>>>> upstream-main:evmd/cmd/evmd/cmd/testnet.go
 )
 
 var (
