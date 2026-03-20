@@ -95,11 +95,12 @@ ifneq (,$(findstring nooptimization,$(COSMOS_BUILD_OPTIONS)))
 endif
 
 # Build into $(BUILDDIR)
-build: go.sum $(BUILDDIR)/
+build: go.sum
+	@mkdir -p "$(BUILDDIR)"
 	@echo "🏗️  Building infinited to $(BUILDDIR)/$(EXAMPLE_BINARY) ..."
 	@echo "BUILD_FLAGS: $(BUILD_FLAGS)"
-	@cd $(INFINITED_DIR) && CGO_ENABLED="1" \
-	  go build $(BUILD_FLAGS) -o $(BUILDDIR)/$(EXAMPLE_BINARY) $(INFINITED_MAIN_PKG)
+	@cd "$(INFINITED_DIR)" && CGO_ENABLED="1" \
+	  go build $(BUILD_FLAGS) -o "$(BUILDDIR)/$(EXAMPLE_BINARY)" $(INFINITED_MAIN_PKG)
 
 # Cross-compile for Linux AMD64
 build-linux:
@@ -113,51 +114,49 @@ build-linux:
 build-cross-linux-amd64:
 	@echo "🏗️  Building binary for Linux AMD64 (requires cross-compilation tools)..."
 	@echo "⚠️  Note: Cross-compilation with CGO from macOS to Linux may require additional setup"
-	@mkdir -p $(BUILDDIR)
-	@cd $(INFINITED_DIR) && CGO_ENABLED=1 GOOS=linux GOARCH=amd64 \
-	  go build $(BUILD_FLAGS) -o $(BUILDDIR)/infinited-linux-amd64 $(INFINITED_MAIN_PKG)
+	@mkdir -p "$(BUILDDIR)"
+	@cd "$(INFINITED_DIR)" && CGO_ENABLED=1 GOOS=linux GOARCH=amd64 \
+	  go build $(BUILD_FLAGS) -o "$(BUILDDIR)/infinited-linux-amd64" $(INFINITED_MAIN_PKG)
 
 build-cross-linux-arm64:
 	@echo "🏗️  Building binary for Linux ARM64 (requires cross-compilation tools)..."
-	@mkdir -p $(BUILDDIR)
-	@cd $(INFINITED_DIR) && CGO_ENABLED=1 GOOS=linux GOARCH=arm64 \
-	  go build $(BUILD_FLAGS) -o $(BUILDDIR)/infinited-linux-arm64 $(INFINITED_MAIN_PKG)
+	@mkdir -p "$(BUILDDIR)"
+	@cd "$(INFINITED_DIR)" && CGO_ENABLED=1 GOOS=linux GOARCH=arm64 \
+	  go build $(BUILD_FLAGS) -o "$(BUILDDIR)/infinited-linux-arm64" $(INFINITED_MAIN_PKG)
 
 build-cross-darwin-amd64:
 	@echo "🏗️  Building binary for macOS Intel..."
-	@mkdir -p $(BUILDDIR)
-	@cd $(INFINITED_DIR) && CGO_ENABLED=1 GOOS=darwin GOARCH=amd64 \
-	  go build $(BUILD_FLAGS) -o $(BUILDDIR)/infinited-darwin-amd64 $(INFINITED_MAIN_PKG)
+	@mkdir -p "$(BUILDDIR)"
+	@cd "$(INFINITED_DIR)" && CGO_ENABLED=1 GOOS=darwin GOARCH=amd64 \
+	  go build $(BUILD_FLAGS) -o "$(BUILDDIR)/infinited-darwin-amd64" $(INFINITED_MAIN_PKG)
 
 build-cross-darwin-arm64:
 	@echo "🏗️  Building binary for macOS Apple Silicon..."
-	@mkdir -p $(BUILDDIR)
-	@cd $(INFINITED_DIR) && CGO_ENABLED=1 GOOS=darwin GOARCH=arm64 \
-	  go build $(BUILD_FLAGS) -o $(BUILDDIR)/infinited-darwin-arm64 $(INFINITED_MAIN_PKG)
+	@mkdir -p "$(BUILDDIR)"
+	@cd "$(INFINITED_DIR)" && CGO_ENABLED=1 GOOS=darwin GOARCH=arm64 \
+	  go build $(BUILD_FLAGS) -o "$(BUILDDIR)/infinited-darwin-arm64" $(INFINITED_MAIN_PKG)
 
 build-cross-windows-amd64:
 	@echo "🏗️  Building binary for Windows AMD64 (requires cross-compilation tools)..."
 	@echo "⚠️  Note: Cross-compilation to Windows from macOS/Linux may require additional setup"
-	@mkdir -p $(BUILDDIR)
-	@cd $(INFINITED_DIR) && CGO_ENABLED=1 GOOS=windows GOARCH=amd64 \
-	  go build $(BUILD_FLAGS) -o $(BUILDDIR)/infinited-windows-amd64.exe $(INFINITED_MAIN_PKG)
+	@mkdir -p "$(BUILDDIR)"
+	@cd "$(INFINITED_DIR)" && CGO_ENABLED=1 GOOS=windows GOARCH=amd64 \
+	  go build $(BUILD_FLAGS) -o "$(BUILDDIR)/infinited-windows-amd64.exe" $(INFINITED_MAIN_PKG)
 
 # Simple build from infinited directory (works reliably)
 # Use this when you need to build manually and can change to the infinited directory
 build-from-infinited:
 	@echo "🏗️  Building from infinited directory..."
 	@echo "💡 Tip: Run 'cd infinited && go build ./cmd/infinited' for direct control"
-	@cd $(INFINITED_DIR) && go build $(BUILD_FLAGS) -o $(BUILDDIR)/infinited $(INFINITED_MAIN_PKG)
+	@mkdir -p "$(BUILDDIR)"
+	@cd "$(INFINITED_DIR)" && go build $(BUILD_FLAGS) -o "$(BUILDDIR)/infinited" $(INFINITED_MAIN_PKG)
 
 # Install into $(BINDIR)
 install: go.sum
 	@echo "🚚  Installing infinited to $(BINDIR) ..."
 	@echo "BUILD_FLAGS: $(BUILD_FLAGS)"
-	@cd $(INFINITED_DIR) && CGO_ENABLED="1" \
+	@cd "$(INFINITED_DIR)" && CGO_ENABLED="1" \
 	  go install $(BUILD_FLAGS) $(INFINITED_MAIN_PKG)
-
-$(BUILDDIR)/:
-	mkdir -p $(BUILDDIR)/
 
 # Default & all target
 .PHONY: all build build-linux install build-cross-linux-amd64 build-cross-linux-arm64 \
@@ -479,7 +478,7 @@ test-rpc-compat-stop:
 
 test-system: build-v05 build
 	mkdir -p ./tests/systemtests/binaries/
-	cp $(BUILDDIR)/$(EXAMPLE_BINARY) ./tests/systemtests/binaries/evmd
+	cp "$(BUILDDIR)/$(EXAMPLE_BINARY)" ./tests/systemtests/binaries/evmd
 	cd tests/systemtests/Counter && forge build
 	$(MAKE) -C tests/systemtests test
 
@@ -487,7 +486,7 @@ build-v05:
 	mkdir -p ./tests/systemtests/binaries/v0.5
 	git checkout v0.5.1
 	make build
-	cp $(BUILDDIR)/$(EXAMPLE_BINARY) ./tests/systemtests/binaries/v0.5/evmd
+	cp "$(BUILDDIR)/$(EXAMPLE_BINARY)" ./tests/systemtests/binaries/v0.5/evmd
 	git checkout -
 
 mocks:
