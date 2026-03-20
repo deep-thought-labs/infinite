@@ -37,12 +37,13 @@ git fetch upstream
 |------|--------|
 | 1.1 | `git merge upstream/main` (o la rama/tag acordado). Si preferís otra estrategia (merge vs rebase), que sea **decisión explícita del equipo**; con muchos renombres `evmd`→`infinited`, merge suele ser más trazable. |
 | 1.2 | Si hay conflictos, **no** hacer `git checkout --theirs` masivo sobre paths de identidad o `infinited/` sin revisar. |
+| 1.3 | **Antes de `git commit`** del merge (o del primer commit que cierre la integración): comprobar que **no queden marcadores de conflicto** en el árbol (ver [Apéndice A](#apéndice-a-cierre-del-merge-y-trampas-frecuentes)). Un merge “cerrado” con `<<<<<<<` en el repo es un incidente evitable. |
 
 ## Fase 2 — Resolución de conflictos
 
 Orden sugerido (ajustar según el diff real):
 
-1. **Módulos y dependencias** — `go.mod`, `go.sum`: alinear con upstream salvo lo documentado en [UPSTREAM_DIVERGENCE_RECORD.md](UPSTREAM_DIVERGENCE_RECORD.md); luego `go mod tidy`.
+1. **Módulos y dependencias** — `go.mod`, `go.sum`: alinear con upstream salvo lo documentado en [UPSTREAM_DIVERGENCE_RECORD.md](UPSTREAM_DIVERGENCE_RECORD.md); luego **`go mod tidy`** y revisar que no convivan imports **`github.com/cosmos/evm/evmd`** (módulo upstream del binario) con el árbol local **`infinited/`** (ver [Apéndice A](#apéndice-a-cierre-del-merge-y-trampas-frecuentes)).
 2. **Código compartido** (`x/`, `ante/`, etc.) — Preferir la versión upstream; re-aplicar manualmente solo lo imprescindible de identidad si el conflicto mezcla ambas.
 3. **`infinited/`** — Mantener estructura y nombres del fork; incorporar cambios funcionales que upstream haya hecho en `evmd/` equivalente (comparar archivo a archivo).
 4. **Archivos “solo fork”** — Scripts, guías, `docs/fork-maintenance/`: normalmente conservar la versión del fork; si upstream añadió algo equivalente, fusionar contenido.
@@ -58,7 +59,7 @@ make install
 
 ## Fase 3 — Verificación
 
-Ejecutar en este orden (o CI equivalente). Detalle en [VERIFICATION.md](VERIFICATION.md).
+Ejecutar en este orden (o CI equivalente). Detalle en [VERIFICATION.md](VERIFICATION.md). Incluir al menos la comprobación de marcadores de conflicto del apéndice si el merge fue voluminoso o hubo resolución manual masiva.
 
 | Orden | Comando / acción |
 |-------|------------------|
@@ -80,6 +81,44 @@ Ejecutar en este orden (o CI equivalente). Detalle en [VERIFICATION.md](VERIFICA
 
 - **Revertir el merge** antes de push compartido: `git merge --abort` (si aún no completaste el merge) o `git reset` según política del equipo.
 - **Después de push**: revertir con commit de revert o fix forward; dejar constancia en la bitácora.
+
+## Apéndice A — Cierre del merge y trampas frecuentes
+
+Lecciones de integraciones reales (p. ej. merge con dejar conflictos sin limpiar, o convivencia errónea de módulos `evmd` / `infinited`).
+
+### A.1 Marcadores de conflicto en el árbol
+
+Antes de considerar el merge cerrado y **obligatorio antes de push**:
+
+```bash
+# Debe no devolver coincidencias en checkout limpio tras resolución
+grep -R -n '^<<<<<<<' . --exclude-dir=.git || echo "OK: sin marcadores"
+```
+
+Incluir también `=======` y `>>>>>>>` si se usaron herramientas que dejaron solo parte del marcador (raro pero posible). En CI/review, cualquier `<<<<<<<` en diff es señal de alarma.
+
+### A.2 Solo `infinited` como módulo del binario en este fork
+
+- El path de módulo del binario en este repo es **`github.com/cosmos/evm/infinited`**, no `.../evmd`.
+- **No** debe existir un árbol paralelo **`evmd/`** en la raíz del módulo salvo que upstream lo traiga de forma explícita y acordada: en forks renombrados, solemos **eliminar restos** de `evmd/` y usar solo `infinited/`.
+- Los imports en código del fork deben apuntar a **`github.com/cosmos/evm/infinited`** (y subpaquetes) donde corresponda al binario y tests de integración bajo ese árbol. Mantener imports **`github.com/cosmos/evm/evmd`** junto con `replace` local hacia `./infinited` provoca ambigüedad con el módulo remoto homónimo y fallos de `go mod tidy` / compilación.
+- Revisar módulos anidados: p. ej. si **`tests/speedtest/go.mod`** usa `replace` a `infinited`, la ruta relativa debe seguir coincidiendo tras movimientos de carpetas.
+
+### A.3 Makefile y rutas con espacios
+
+Si el clone vive bajo un directorio con espacios en el nombre, las reglas de `make` que usen `mkdir`, `cd`, `-o` o `cp` con `BUILDDIR` / rutas al binario deben ir **entrecomilladas** en la receta shell. Tras un merge que sobrescriba el `Makefile`, volver a probar **`make build`** en esa ruta. Mitigación alternativa: clonar el repo en una ruta sin espacios.
+
+### A.4 Binario nombre `evmd` en pruebas de sistema
+
+Algunos scripts de **system test** / `test-system` pueden esperar el binario con nombre **`evmd`** aunque el proyecto use **`infinited`** como nombre lógico. Tras resolver conflictos en playbooks o scripts de test, verificar que la copia o el symlink al ejecutable coincida con lo que documenta la guía de tests del momento (p. ej. referencia a playbook **v0.5** si aplica).
+
+### A.5 CI y jobs preservados del fork
+
+Si upstream simplifica **`.github/workflows`**, revisar jobs que el fork **debe conservar** (p. ej. **`test-fuzz`** u otros acordados) y fusionar YAML en lugar de sustituir ciegamente por la versión upstream.
+
+### A.6 Imports muertos tras resolver conflictos
+
+Un conflicto mal fusionado puede dejar **`import` sin uso** que rompe `go build`. Tras `go mod tidy`, ejecutar **`make build`** y corregir lo que el compilador marque (incluidos test helpers en `infinited/`).
 
 ## Referencias rápidas
 

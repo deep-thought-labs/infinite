@@ -42,8 +42,11 @@ Breve descripción (p. ej. “Sincronizar con cosmos/evm main hasta PR #NNN”, 
 
 | Check | Resultado (OK / falló) | Notas |
 |-------|------------------------|-------|
+| Sin marcadores `<<<<<<<` en el árbol (`grep -R '^<<<<<<<' . --exclude-dir=.git`) | | |
+| `go mod tidy` (raíz y submódulos `go.mod` tocados) | | |
+| Sin imports indebidos `github.com/cosmos/evm/evmd` / sin árbol `evmd/` residual | | |
 | `./scripts/validate_customizations.sh` | | |
-| `make build` / `make install` | | |
+| `make build` / `make install` (probar si el path del clone tiene espacios) | | |
 | `make test-unit` | | |
 | Otros (p. ej. `make test-all`) | | |
 
@@ -52,6 +55,7 @@ Breve descripción (p. ej. “Sincronizar con cosmos/evm main hasta PR #NNN”, 
 - [ ] CHANGELOG actualizado
 - [ ] [UPSTREAM_DIVERGENCE_RECORD.md](../UPSTREAM_DIVERGENCE_RECORD.md) actualizado (solo si cambió el inventario o la política)
 - [ ] Guía de migración consultada o actualizada (`docs/migrations/`)
+- [ ] Workflow(s) de CI del fork conservados donde aplique (p. ej. fuzz, jobs acordados) tras fusionar `.github/workflows`
 - [ ] CI en PR verde
 
 ## Referencias

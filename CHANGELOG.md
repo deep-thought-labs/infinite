@@ -39,6 +39,11 @@
 
 ## UNRELEASED
 
+### DOCUMENTATION (Infinite Drive fork)
+
+- `docs/fork-maintenance/`: playbook con **Apéndice A** (cierre de merge: `grep` de marcadores, política `infinited` vs imports `.../evmd`, `go mod tidy`, rutas con espacios en `Makefile`, binario `evmd` en system tests, jobs CI del fork); ampliación de **REFERENCE**, **VERIFICATION** y plantilla de bitácora; registro de divergencia con trampa `evmd`/`infinited`.
+- Guías **DEVELOPMENT**, **BUILDING**, **QUICK_START**: requisito de Go alineado con `go.mod` (p. ej. 1.25.8).
+
 ### DEPENDENCIES
 
 ### IMPROVEMENTS

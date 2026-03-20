@@ -33,7 +33,8 @@ Solo se personalizan aspectos de **identidad** de la cadena Infinite Drive. Lo t
 
 - Raíz: `github.com/cosmos/evm`
 - Submódulo binario: `module github.com/cosmos/evm/infinited` (análogo a `evmd` upstream)
-- Imports: `github.com/cosmos/evm/...`
+- Imports: `github.com/cosmos/evm/...` para el resto del árbol; **`github.com/cosmos/evm/infinited`** para el binario y tests bajo ese árbol
+- **No** mezclar con imports **`github.com/cosmos/evm/evmd`** en código que deba usar el fork renombrado: Go resolvería también el módulo remoto upstream y genera conflictos con `go mod tidy` y árboles duplicados (`evmd/` residual vs `infinited/`). Tras merge, eliminar restos de `evmd/` en raíz si no son intencionales.
 - Directiva `replace github.com/cosmos/evm => ./` solo para desarrollo local
 
 ### Disciplina en integraciones con upstream

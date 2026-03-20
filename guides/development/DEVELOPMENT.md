@@ -15,7 +15,7 @@ Guide for developers working on Infinite Drive code.
 
 ### Requirements
 
-- **Go**: 1.21 or higher
+- **Go**: versión en `go.mod` en la raíz del repo (actualmente **1.25.8**; actualizar esta guía si cambia la directiva `go`)
 - **Git**: For version control
 - **jq**: For configuration scripts
 - **Make**: For build commands
@@ -25,7 +25,7 @@ Guide for developers working on Infinite Drive code.
 ```bash
 # Verify Go
 go version
-# Should show: go version go1.21.x or higher
+# Debe coincidir (major.minor.patch) con la línea `go` de go.mod
 
 # Verify Git
 git --version

@@ -38,7 +38,7 @@ Choose the workflow based on your objective:
 
 ### Requirements
 
-- **Go**: 1.21 or higher
+- **Go**: versión en `go.mod` en la raíz (actualmente **1.25.8**)
 - **Space**: ~5GB for dependencies
 
 ### Automatic Prerequisites Verification
@@ -71,7 +71,7 @@ This script verifies:
 **Option B: Manual Verification**
 ```bash
 go version
-# Should show: go version go1.21.x or higher
+# Debe coincidir con la directiva `go` de go.mod
 ```
 
 #### 2. Compile and Install
@@ -357,7 +357,7 @@ After the node starts, you can verify the configuration:
 
 ### Requirements
 
-- **Go**: 1.21 or higher
+- **Go**: versión en `go.mod` en la raíz (actualmente **1.25.8**)
 
 ### Steps
 
@@ -415,7 +415,7 @@ make build-cross-windows-amd64
 ### Requirements
 
 - **Docker**: Installed and running
-- **Go**: 1.21 or higher
+- **Go**: versión en `go.mod` en la raíz (actualmente **1.25.8**)
 - **Time**: 10-30 minutes
 
 ### Verify Docker

@@ -24,7 +24,7 @@ This script verifies:
 Make sure you have installed:
 
 ```bash
-# Verify Go (required: 1.21+)
+# Verify Go (version must match root go.mod, e.g. 1.25.8)
 go version
 
 # Verify jq (required for scripts)

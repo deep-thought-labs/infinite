@@ -41,3 +41,29 @@ Después de un merge grande, conviene guardar el output en la bitácora bajo `lo
 3. Comparar o archivar en la bitácora del merge
 
 Ver [PLAYBOOK.md](PLAYBOOK.md) fase 0 y 4.
+
+## Chequeos post-merge (anti-regresión)
+
+Complementan [VERIFICATION.md](VERIFICATION.md) y el [Apéndice A de PLAYBOOK.md](PLAYBOOK.md#apéndice-a-cierre-del-merge-y-trampas-frecuentes).
+
+### Conflictos no resueltos
+
+```bash
+grep -R -n '^<<<<<<<' . --exclude-dir=.git || echo "OK"
+```
+
+### Mezcla prohibida `evmd` / `infinited` en imports
+
+```bash
+# En raíz del repo; evaluar cada coincidencia (en fork: suele tener que desaparecer evmd como path de binario local)
+grep -R 'github.com/cosmos/evm/evmd' --include='*.go' . --exclude-dir=.git
+```
+
+### Organización esperada del árbol
+
+- Binario y main package: carpeta **`infinited/`**, no una duplicada **`evmd/`** en la raíz del mismo módulo.
+- Tras ediciones amplias: **`go mod tidy`** desde la raíz y, si existe, desde submódulos bajo **`tests/`** que tengan su propio `go.mod`.
+
+### Dependencias Go vs upstream
+
+Tras cerrar el merge, es normal que `go.mod` / `go.sum` difieran de upstream *más allá* del nombre del submódulo `infinited`; [validate_customizations.sh](../../scripts/validate_customizations.sh) puede avisar por ello. Conviene **documentar** en la bitácora si hubo cambios de `replace`, exclusiones o líneas solo-fork.
