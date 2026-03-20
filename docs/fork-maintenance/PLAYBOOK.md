@@ -66,7 +66,22 @@ Ejecutar en este orden (o CI equivalente). Detalle en [VERIFICATION.md](VERIFICA
 | 1 | `./scripts/validate_customizations.sh` |
 | 2 | `make build` o `make install` |
 | 3 | Tests unitarios como mínimo: `make test-unit` |
-| 4 | Si el merge es amplio: `make test-all` o el subconjunto que el equipo considere obligatorio |
+| 4 | **`make test-infinited`** — suite del binario `infinited` (IBC + integración bajo `infinited/tests/`); obligatoria en este fork. |
+| 5 | Si el merge es amplio: `make test-all` o el subconjunto que el equipo considere obligatorio |
+
+### Matriz de regresión por área (referencia rápida)
+
+Usar como guía cuando sepas qué directorios tocaste; no sustituye la batería completa de la Fase 3.
+
+| Área / riesgo | Comando o comprobación sugerida |
+|---------------|----------------------------------|
+| Identidad (denom `drop`, bech32 `infinite`, chain IDs) | `./scripts/validate_customizations.sh` + [VERIFICATION.md](VERIFICATION.md) (greps de identidad) |
+| Módulo binario `infinited` vs restos `evmd` | `grep` de imports `github.com/cosmos/evm/evmd` y ausencia de árbol `evmd/` residual (ver [Apéndice A](#apéndice-a-cierre-del-merge-y-trampas-frecuentes), sección **A.2**) |
+| `Makefile` / rutas con espacios | `make build` en el mismo path de trabajo que usará el equipo |
+| Ante / feemarket / mempool / EIP-712 | `cd infinited && go test ./tests/integration/...` (o subpaquete concreto si el cambio es local) |
+| IBC (helpers `testutil/ibc`, tests bajo `infinited/tests/ibc`) | `make test-infinited` o `cd infinited && go test -tags=test ./tests/ibc/...` |
+| Integración amplia `infinited` | `make test-infinited` |
+| Cobertura máxima antes de release | `make test-all` (si el tiempo lo permite) |
 
 ## Fase 4 — Cierre
 

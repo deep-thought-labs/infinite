@@ -48,7 +48,8 @@ Breve descripción (p. ej. “Sincronizar con cosmos/evm main hasta PR #NNN”, 
 | `./scripts/validate_customizations.sh` | | |
 | `make build` / `make install` (probar si el path del clone tiene espacios) | | |
 | `make test-unit` | | |
-| `cd infinited && go test ./tests/integration/...` (si hubo cambios en ante/feemarket/mempool) | | |
+| `make test-infinited` | | Obligatorio en este fork: suite del submódulo `infinited` (`tests/ibc`, `tests/integration`). |
+| `cd infinited && go test ./tests/integration/...` (opcional, focalizado si solo tocaste ante/feemarket/mempool) | | |
 | Otros (p. ej. `make test-all`) | | |
 
 ## Aprendizajes y puntos a recordar
