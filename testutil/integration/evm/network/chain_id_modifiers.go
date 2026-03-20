@@ -26,15 +26,10 @@ func GenerateBankGenesisMetadata(evmChainID uint64) []banktypes.Metadata {
 	denomConfig := testconstants.ChainsCoinInfo[evmChainID]
 
 	// Basic denom settings
-<<<<<<< HEAD
 	displayDenom := denomConfig.DisplayDenom // e.g., "Improbability"
 	evmDenom := denomConfig.Denom            // e.g., "drop"
 	extDenom := denomConfig.ExtendedDenom    // always 18-decimals base denom
 	evmDecimals := denomConfig.Decimals      // native decimal precision, e.g., 6, 12, ..., or 18
-=======
-	displayDenom := denomConfig.DisplayDenom // e.g., "atom"
-	evmDenom := denomConfig.Denom            // e.g., "uatom"
->>>>>>> upstream-main
 
 	// Standard metadata fields - use chain-specific values for mainnet (421018)
 	var name, symbol string
@@ -48,7 +43,6 @@ func GenerateBankGenesisMetadata(evmChainID uint64) []banktypes.Metadata {
 
 	var metas []banktypes.Metadata
 
-<<<<<<< HEAD
 	if evmDenom != extDenom {
 		// This means we are initializing a chain with non-18 decimals
 		//
@@ -87,25 +81,11 @@ func GenerateBankGenesisMetadata(evmChainID uint64) []banktypes.Metadata {
 			Description: description,
 			Base:        evmDenom,
 			DenomUnits: denomUnits,
-			Name:       name,
-			Symbol:     symbol,
-			Display:    displayDenom,
+			Name:        name,
+			Symbol:      symbol,
+			Display:     displayDenom,
 		})
 	}
-=======
-	// EVM native chain: single metadata with 18-decimals
-	metas = append(metas, banktypes.Metadata{
-		Description: "Native 18-decimal denom metadata for Cosmos EVM chain",
-		Base:        evmDenom,
-		DenomUnits: []*banktypes.DenomUnit{
-			{Denom: evmDenom, Exponent: 0},
-			{Denom: displayDenom, Exponent: uint32(evmtypes.EighteenDecimals)},
-		},
-		Name:    name,
-		Symbol:  symbol,
-		Display: displayDenom,
-	})
->>>>>>> upstream-main
 
 	return metas
 }

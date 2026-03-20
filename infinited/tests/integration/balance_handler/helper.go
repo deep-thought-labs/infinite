@@ -9,13 +9,10 @@ import (
 
 	"github.com/cosmos/evm"
 	testutiltypes "github.com/cosmos/evm/testutil/types"
-<<<<<<< HEAD:infinited/tests/integration/balance_handler/helper.go
 	evmibctesting "github.com/cosmos/evm/testutil/ibc"
-=======
 	"github.com/cosmos/evm/x/vm/statedb"
 
 	errorsmod "cosmossdk.io/errors"
->>>>>>> upstream-main:evmd/tests/integration/balance_handler/helper.go
 )
 
 // DeployContract deploys a contract to the test chain

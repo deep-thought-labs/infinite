@@ -96,17 +96,10 @@ endif
 
 # Build into $(BUILDDIR)
 build: go.sum $(BUILDDIR)/
-<<<<<<< HEAD
 	@echo "🏗️  Building infinited to $(BUILDDIR)/$(EXAMPLE_BINARY) ..."
 	@echo "BUILD_FLAGS: $(BUILD_FLAGS)"
 	@cd $(INFINITED_DIR) && CGO_ENABLED="1" \
 	  go build $(BUILD_FLAGS) -o $(BUILDDIR)/$(EXAMPLE_BINARY) $(INFINITED_MAIN_PKG)
-=======
-	echo "🏗️  Building evmd to $(BUILDDIR)/$(EXAMPLE_BINARY) ..."
-	echo "BUILD_FLAGS: $(BUILD_FLAGS)"
-	cd $(EVMD_DIR) && CGO_ENABLED="1" \
-	  go build $(BUILD_FLAGS) -o $(BUILDDIR)/$(EXAMPLE_BINARY) $(EVMD_MAIN_PKG)
->>>>>>> upstream-main
 
 # Cross-compile for Linux AMD64
 build-linux:
@@ -484,23 +477,17 @@ test-rpc-compat-stop:
 
 .PHONY: localnet-start localnet-stop localnet-build-env localnet-build-nodes test-rpc-compat test-rpc-compat-stop mocks
 
-test-system: build-v04 build
+test-system: build-v05 build
 	mkdir -p ./tests/systemtests/binaries/
-	cp $(BUILDDIR)/evmd ./tests/systemtests/binaries/
+	cp $(BUILDDIR)/$(EXAMPLE_BINARY) ./tests/systemtests/binaries/evmd
 	cd tests/systemtests/Counter && forge build
 	$(MAKE) -C tests/systemtests test
 
-<<<<<<< HEAD
-build-v04:
-	mkdir -p ./tests/systemtests/binaries/v0.4
-	git checkout v0.4.1
-=======
 build-v05:
 	mkdir -p ./tests/systemtests/binaries/v0.5
 	git checkout v0.5.1
->>>>>>> upstream-main
 	make build
-	cp $(BUILDDIR)/evmd ./tests/systemtests/binaries/v0.4
+	cp $(BUILDDIR)/$(EXAMPLE_BINARY) ./tests/systemtests/binaries/v0.5/evmd
 	git checkout -
 
 mocks:

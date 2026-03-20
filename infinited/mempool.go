@@ -3,11 +3,8 @@ package evmd
 import (
 	"errors"
 	"fmt"
-<<<<<<< HEAD:infinited/mempool.go
-=======
 
 	evmmempool "github.com/cosmos/evm/mempool"
->>>>>>> upstream-main:evmd/mempool.go
 	"github.com/cosmos/evm/server"
 	evmtypes "github.com/cosmos/evm/x/vm/types"
 

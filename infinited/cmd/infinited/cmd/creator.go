@@ -9,7 +9,7 @@ import (
 	"github.com/spf13/viper"
 
 	dbm "github.com/cosmos/cosmos-db"
-	"github.com/cosmos/evm/evmd"
+	"github.com/cosmos/evm/infinited"
 
 	"cosmossdk.io/log/v2"
 	"cosmossdk.io/store"
@@ -23,18 +23,6 @@ import (
 	servertypes "github.com/cosmos/cosmos-sdk/server/types"
 	simtestutil "github.com/cosmos/cosmos-sdk/testutil/sims"
 	genutiltypes "github.com/cosmos/cosmos-sdk/x/genutil/types"
-<<<<<<< HEAD:infinited/cmd/infinited/cmd/creator.go
-	"github.com/cosmos/evm/infinited"
-	"github.com/spf13/cast"
-	"github.com/spf13/viper"
-
-	"cosmossdk.io/log"
-	"cosmossdk.io/store"
-	"cosmossdk.io/store/snapshots"
-	snapshottypes "cosmossdk.io/store/snapshots/types"
-	storetypes "cosmossdk.io/store/types"
-=======
->>>>>>> upstream-main:evmd/cmd/evmd/cmd/creator.go
 )
 
 type appCreator struct{}

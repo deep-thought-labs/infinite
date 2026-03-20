@@ -12,14 +12,9 @@ import (
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/stretchr/testify/suite"
 
-<<<<<<< HEAD:infinited/tests/ibc/ics20_recursive_precompile_calls_test.go
+	"github.com/cosmos/evm/contracts"
 	"github.com/cosmos/evm/infinited"
 	"github.com/cosmos/evm/infinited/tests/integration"
-=======
-	"github.com/cosmos/evm/contracts"
-	"github.com/cosmos/evm/evmd"
-	"github.com/cosmos/evm/evmd/tests/integration"
->>>>>>> upstream-main:evmd/tests/ibc/ics20_recursive_precompile_calls_test.go
 	"github.com/cosmos/evm/precompiles/ics20"
 	evmibctesting "github.com/cosmos/evm/testutil/ibc"
 	testutiltypes "github.com/cosmos/evm/testutil/types"

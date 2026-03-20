@@ -75,7 +75,6 @@ jobs:
           make test-scripts
         if: env.GIT_DIFF
 
-<<<<<<< HEAD
   test-fuzz:
     runs-on: ubuntu-latest
     steps:
@@ -97,5 +96,3 @@ jobs:
         run: |
           make test-fuzz
         if: env.GIT_DIFF
-=======
->>>>>>> upstream-main

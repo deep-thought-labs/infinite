@@ -2,18 +2,9 @@ package cmd
 
 import (
 	"errors"
-<<<<<<< HEAD:infinited/cmd/infinited/cmd/root.go
-	"github.com/cosmos/evm/utils"
-	"github.com/cosmos/evm/x/vm/types"
 	"io"
 	"os"
 
-	banktypes "github.com/cosmos/cosmos-sdk/x/bank/types"
-=======
-	"io"
-	"os"
-
->>>>>>> upstream-main:evmd/cmd/evmd/cmd/root.go
 	"github.com/spf13/cast"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"

@@ -14,14 +14,9 @@ import (
 	"github.com/ethereum/go-ethereum/core/vm"
 	"github.com/stretchr/testify/suite"
 
-<<<<<<< HEAD:infinited/tests/ibc/v2_ics20_precompile_transfer_test.go
+	"github.com/cosmos/evm"
 	"github.com/cosmos/evm/infinited"
 	"github.com/cosmos/evm/infinited/tests/integration"
-=======
-	"github.com/cosmos/evm"
-	"github.com/cosmos/evm/evmd"
-	"github.com/cosmos/evm/evmd/tests/integration"
->>>>>>> upstream-main:evmd/tests/ibc/v2_ics20_precompile_transfer_test.go
 	"github.com/cosmos/evm/precompiles/ics20"
 	chainutil "github.com/cosmos/evm/testutil"
 	evmibctesting "github.com/cosmos/evm/testutil/ibc"

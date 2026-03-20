@@ -3,12 +3,6 @@ package evmd
 import (
 	"encoding/json"
 	"fmt"
-<<<<<<< HEAD:infinited/test_helpers.go
-	"github.com/cosmos/evm/infinited/config"
-	"github.com/cosmos/evm/testutil/integration/evm/network"
-	"github.com/cosmos/evm/x/vm/types"
-=======
->>>>>>> upstream-main:evmd/test_helpers.go
 	"testing"
 
 	"github.com/stretchr/testify/require"
@@ -17,7 +11,7 @@ import (
 	cmttypes "github.com/cometbft/cometbft/types"
 
 	dbm "github.com/cosmos/cosmos-db"
-	"github.com/cosmos/evm/evmd/config"
+	"github.com/cosmos/evm/infinited/config"
 	testconstants "github.com/cosmos/evm/testutil/constants"
 	"github.com/cosmos/evm/testutil/integration/evm/network"
 	feemarkettypes "github.com/cosmos/evm/x/feemarket/types"

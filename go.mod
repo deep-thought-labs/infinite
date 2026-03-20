@@ -200,11 +200,8 @@ require (
 	github.com/inconshreveable/mousetrap v1.1.0 // indirect
 	github.com/ipfs/go-cid v0.5.0 // indirect
 	github.com/jackpal/go-nat-pmp v1.0.2 // indirect
-<<<<<<< HEAD
-=======
 	github.com/jbenet/go-temp-err-catcher v0.1.0 // indirect
 	github.com/jinzhu/copier v0.4.0 // indirect
->>>>>>> upstream-main
 	github.com/jmhodges/levigo v1.0.0 // indirect
 	github.com/klauspost/compress v1.18.4 // indirect
 	github.com/klauspost/cpuid/v2 v2.3.0 // indirect
@@ -310,11 +307,8 @@ require (
 	github.com/tklauser/numcpus v0.11.0 // indirect
 	github.com/twitchyliquid64/golang-asm v0.15.1 // indirect
 	github.com/ulikunitz/xz v0.5.15 // indirect
-<<<<<<< HEAD
-=======
 	github.com/vektra/mockery/v2 v2.53.6 // indirect
 	github.com/wlynxg/anet v0.0.5 // indirect
->>>>>>> upstream-main
 	github.com/yusufpapurcu/wmi v1.2.4 // indirect
 	github.com/zondax/golem v0.27.0 // indirect
 	github.com/zondax/ledger-go v1.0.1 // indirect
@@ -354,18 +348,6 @@ require (
 	go.uber.org/zap v1.27.1 // indirect
 	go.yaml.in/yaml/v2 v2.4.3 // indirect
 	go.yaml.in/yaml/v3 v3.0.4 // indirect
-<<<<<<< HEAD
-	golang.org/x/arch v0.21.0 // indirect
-	golang.org/x/exp v0.0.0-20250506013437-ce4c2cf36ca6 // indirect
-	golang.org/x/oauth2 v0.31.0 // indirect
-	golang.org/x/sys v0.37.0 // indirect
-	golang.org/x/term v0.36.0 // indirect
-	golang.org/x/time v0.13.0 // indirect
-	golang.org/x/tools v0.37.0 // indirect
-	google.golang.org/api v0.247.0 // indirect
-	google.golang.org/genproto v0.0.0-20250603155806-513f23925822 // indirect
-	google.golang.org/genproto/googleapis/rpc v0.0.0-20250818200422-3122310a409c // indirect
-=======
 	golang.org/x/arch v0.24.0 // indirect
 	golang.org/x/exp v0.0.0-20260218203240-3dfff04db8fa // indirect
 	golang.org/x/mod v0.33.0 // indirect
@@ -378,7 +360,6 @@ require (
 	google.golang.org/api v0.269.0 // indirect
 	google.golang.org/genproto v0.0.0-20260128011058-8636f8732409 // indirect
 	google.golang.org/genproto/googleapis/rpc v0.0.0-20260226221140-a57be14db171 // indirect
->>>>>>> upstream-main
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 	gotest.tools/v3 v3.5.2 // indirect
