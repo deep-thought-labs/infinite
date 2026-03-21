@@ -1,24 +1,25 @@
-# Bitácora de merge upstream — PLANTILLA
+# Bitácora de merge upstream — marzo 2026 (`upstream/main` → fork)
 
-> Copiar este archivo a `../logs/` y renombrar según [logs/README.md](../logs/README.md).  
-> Eliminar bloques de ayuda comentados al cerrar la bitácora.
+**Estado:** cerrada (2026-03-21).  
+Procedimiento: [PLAYBOOK.md](../PLAYBOOK.md), [UPSTREAM_DIVERGENCE_RECORD.md](../UPSTREAM_DIVERGENCE_RECORD.md). Estrategias de integración futuras: [MERGE_STRATEGIES.md](../MERGE_STRATEGIES.md).
 
 ## Metadatos
 
 | Campo | Valor |
 |--------|--------|
 | Fecha inicio | 2026-03-19 |
-| Fecha cierre | 2026-03-20 (fecha informativa de último update; mismo proceso de merge) |
-| Responsable(s) | — |
+| Fecha cierre | 2026-03-21 |
+| Responsable(s) | — (sesión de integración; completar si aplica política interna) |
 | Rama local de trabajo | `red/merge-cosmos-evm` |
-| Rama/ref upstream fusionada | `upstream/main` (vía rama `upstream-main`) |
-| SHA upstream (antes del merge) | *(ver `git merge-base` / historial; commit merge: `8bc0bd33`)* |
-| SHA local (antes del merge) | *(bitácora previa en commit `69b445a9`)* |
-| SHA merge resultante (tras cerrar) | *(tras commit de limpieza de conflictos)* |
+| Rama/ref upstream fusionada | `upstream/main` (integrada vía rama `upstream-main`) |
+| SHA upstream (punta fusionada) | `50b4817017187cbda2a0af767fda39a895b9989a` — *fix: handle replacement txs in TxStore (#1074)* |
+| SHA local (antes del merge commit) | `69b445a9ca6b68c92e18ba9086c0584962a60cfb` |
+| SHA commit de merge | `8bc0bd3364a779b278b4fef6135bd78b30170c0f` — *Merge branch 'upstream-main' into red/merge-cosmos-evm* |
+| SHA commit de cierre documental | Resolver con `git log -1 --format=%H -- docs/fork-maintenance/logs/2026-03-merge-upstream-main.md` en la rama donde se fusione esta bitácora (commit que archiva este archivo). |
 
 ## Objetivo
 
-Integrar `upstream/main` en el fork Infinite Drive y **resolver marcadores de conflicto** que quedaron tras el merge inicial, según [PLAYBOOK.md](../PLAYBOOK.md) y [UPSTREAM_DIVERGENCE_RECORD.md](../UPSTREAM_DIVERGENCE_RECORD.md).
+Integrar `upstream/main` en el fork Infinite Drive, resolver conflictos y estabilizar tests (`infinited`) tras el merge. Los **workflows de GitHub Actions** quedan fuera del cierre funcional de esta bitácora: se planifica una **pasada dedicada** de alineación con upstream conservando `release.yml` (ver [MERGE_STRATEGIES.md](../MERGE_STRATEGIES.md) y seguimiento post-merge).
 
 ## Línea base (opcional)
 
@@ -48,7 +49,7 @@ Integrar `upstream/main` en el fork Infinite Drive y **resolver marcadores de co
 
 - **README**: prioridad identidad Infinite Drive frente al texto genérico de Cosmos EVM.
 - **Makefile / systemtests**: binario real `infinited` en `build/`; copia con nombre `evmd` solo para la suite que aún espera ese nombre.
-- **CI**: conservar fuzz tests del fork.
+- **CI**: conservar fuzz tests del fork en `test.yml` hasta la **alineación dedicada** de workflows con upstream.
 
 ## Actualización de la misma sesión de merge (2026-03-19)
 
@@ -70,17 +71,21 @@ Se realizó una pasada de estabilización para dejar `make test-infinited` en ve
 - `go test -tags=test -mod=readonly ./infinited/tests/integration -count=1`
 - `make test-infinited`
 
-Estado final: **OK** (suite `infinited` completa en verde).
+Estado final (sesión de estabilización): **OK** (suite `infinited` completa en verde).
 
-## Verificación
+## Verificación (cierre de bitácora)
 
-| Check | Resultado (OK / falló) | Notas |
-|-------|------------------------|-------|
-| `./scripts/validate_customizations.sh` | OK | Ejecutado tras limpiar marcadores. |
-| `make build` / `make install` | pendiente | No se ejecutó en este cierre (foco en estabilización de tests). |
-| `make test-unit` | pendiente | No incluido en esta pasada. |
-| `cd infinited && go test ./tests/integration/...` | OK | En verde tras correcciones de HRP/denom/tests. |
-| `make test-infinited` | OK | En verde (incluye `tests/ibc` + `tests/integration` de `infinited`). |
+| Check | Resultado (OK / falló / N/A) | Notas |
+|-------|------------------------------|-------|
+| Sin marcadores `<<<<<<<` en el árbol (`grep -R '^<<<<<<<' . --exclude-dir=.git`) | OK | Sin coincidencias en código/markdown/yaml relevante. |
+| `go mod tidy` (raíz y `infinited/`) | OK | Ejecutado al cierre de bitácora. |
+| Sin imports `github.com/cosmos/evm/evmd` / sin árbol `evmd/` residual en raíz | OK | Sin imports `evmd` en `*.go`; sin directorio `evmd/` en la raíz del módulo. |
+| `./scripts/validate_customizations.sh` | OK | Advertencias esperadas: `go.mod` / `go.sum` difieren de upstream más allá de `replace`. |
+| `make build` | OK | Genera `build/infinited`. |
+| `make install` | N/A en entorno de cierre | Verificar en máquina con `GOPATH`/`GOBIN` escribible (p. ej. CI o laptop del equipo). |
+| `make test-unit` | pendiente | Recomendado antes de fusionar PR a `main`; no ejecutado en esta sesión de cierre. |
+| `make test-infinited` | OK | Ejecutado al cierre (~10 min); todos los paquetes listados OK. |
+| `cd infinited && go test ./tests/integration/...` (focalizado) | OK | Cubierto por `make test-infinited`. |
 | Otros (p. ej. `make test-all`) | pendiente | Fuera del alcance de este cierre. |
 
 ## Aprendizajes y puntos a recordar
@@ -93,13 +98,14 @@ Documentación canónica: [PLAYBOOK.md — A.7](../PLAYBOOK.md#a7-tests-y-apis-t
 
 ## Seguimiento post-merge
 
-- [ ] CHANGELOG actualizado
-- [ ] [UPSTREAM_DIVERGENCE_RECORD.md](../UPSTREAM_DIVERGENCE_RECORD.md) actualizado (solo si cambió el inventario o la política)
-- [ ] Guía de migración consultada o actualizada (`docs/migrations/`)
-- [x] CI local equivalente para `make test-infinited` en verde
-- [ ] CI en PR verde
+- [ ] CHANGELOG actualizado (opcional hasta publicar versión; completar si el PR lo exige).
+- [ ] [UPSTREAM_DIVERGENCE_RECORD.md](../UPSTREAM_DIVERGENCE_RECORD.md) actualizado — *omitir si no cambió inventario ni política en esta sesión*.
+- [ ] Guía de migración consultada o actualizada (`docs/migrations/`) si aplica salto mayor.
+- [ ] **PR dedicado**: alinear `.github/workflows/` con snapshot de `upstream/main`, conservar `release.yml` y deltas mínimos (`infinited`, fuzz, CodeQL) — ver [MERGE_STRATEGIES.md](../MERGE_STRATEGIES.md).
+- [x] `make test-infinited` en verde al cierre de bitácora.
+- [ ] CI en PR verde (tras abrir PR y completar `make test-unit` / jobs acordados).
 
 ## Referencias
 
-- PR(s): 
-- Issues: 
+- PR(s): *(añadir al abrir PR de `red/merge-cosmos-evm` → `main`)*  
+- Issues: —

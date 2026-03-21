@@ -33,6 +33,8 @@ git fetch upstream
 
 ## Fase 1 — Integración
 
+Alternativas (merge por defecto, etapas, ramas largas, qué zonas no pisar): [MERGE_STRATEGIES.md](MERGE_STRATEGIES.md).
+
 | Paso | Acción |
 |------|--------|
 | 1.1 | `git merge upstream/main` (o la rama/tag acordado). Si preferís otra estrategia (merge vs rebase), que sea **decisión explícita del equipo**; con muchos renombres `evmd`→`infinited`, merge suele ser más trazable. |
