@@ -86,6 +86,7 @@ Lista de verificación rápida: [VERIFICATION.md](VERIFICATION.md), `make build`
 | Nombre del binario en pasos descriptivos | Alinear con **`make build` / `make install`** del `Makefile` del fork (`infinited`). |
 | Jobs que upstream no tiene y el fork sí quiere | **Reaplicar** encima del snapshot: p. ej. `test-fuzz` en `test.yml`, **CodeQL** si se mantiene política de escaneo en PR. |
 | Secretos (`BUF_TOKEN`, `DOCS_REPO_TOKEN`, Codecov, etc.) | Comprobar en ajustes del repo GitHub; jobs sin secreto pueden fallar o deben deshabilitarse con criterio documentado en la bitácora. |
+| Integraciones **solo upstream** (`trigger-docs-update.yml`, `bsr-push.yml`) | En este fork quedan **conservadas pero inactivas**: solo `workflow_dispatch` y `if: false` en el job hasta que haya token y política clara; instrucciones de reactivación en cabecera de cada YAML. |
 | Runners **`depot-ubuntu-*`** (upstream) | [Depot](https://depot.dev) es un servicio aparte. Si la **org del fork no** tiene Depot contratado e integrado en GitHub, los jobs **no encontrarán runner** → sustituir por **`ubuntu-latest`** (o el hosted estándar acordado) en los YAML afectados. Si más adelante se contrata Depot, se puede volver a alinear con upstream. |
 
 ### 4.4 Cómo incorporarlo al proceso (mismo ciclo o PR dedicado)

@@ -1,27 +1,33 @@
 name: Push to Buf Schema Registry
-#  This workflow publishes Protobuf files to the Buf Schema Registry at
-# https://buf.build/cosmos/evm when proto files change on main or a version tag
-# is pushed.
+# Publishes Protobuf files to the Buf Schema Registry (upstream: https://buf.build/cosmos/evm).
+#
+# Fork policy — DISABLED by default (no push/tag triggers; safe without BUF_TOKEN).
+# To re-enable:
+#   1. Remove `if: false` from the job below.
+#   2. Restore automatic triggers, e.g.:
+#        on:
+#          push:
+#            branches: [main]
+#            paths:
+#              - "proto/**"
+#              - "buf.work.yaml"
+#              - "buf.gen.yaml"
+#              - "buf.gen.proto.yaml"
+#          tags:
+#            - "v*.*.*"
+#   3. Configure BUF_TOKEN with push access to the target Buf module (or change module).
 on:
-  push:
-    branches:
-      - main
-    paths:
-      - "proto/**"
-      - "buf.work.yaml"
-      - "buf.gen.yaml"
-      - "buf.gen.proto.yaml"
-    tags:
-      - "v*.*.*"
+  workflow_dispatch:
+
 permissions: read-all
 
 jobs:
   push:
+    if: false
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: bufbuild/buf-setup-action@v1.50.0
-      # Push Cosmos EVM protos to the Buf Schema Registry
       - uses: bufbuild/buf-push-action@v1.2.0
         with:
           input: ./proto
