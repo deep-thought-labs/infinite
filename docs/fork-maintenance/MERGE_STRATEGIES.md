@@ -86,6 +86,7 @@ Lista de verificación rápida: [VERIFICATION.md](VERIFICATION.md), `make build`
 | Nombre del binario en pasos descriptivos | Alinear con **`make build` / `make install`** del `Makefile` del fork (`infinited`). |
 | Jobs que upstream no tiene y el fork sí quiere | **Reaplicar** encima del snapshot: p. ej. `test-fuzz` en `test.yml`, **CodeQL** si se mantiene política de escaneo en PR. |
 | Secretos (`BUF_TOKEN`, `DOCS_REPO_TOKEN`, Codecov, etc.) | Comprobar en ajustes del repo GitHub; jobs sin secreto pueden fallar o deben deshabilitarse con criterio documentado en la bitácora. |
+| Runners **`depot-ubuntu-*`** (upstream) | [Depot](https://depot.dev) es un servicio aparte. Si la **org del fork no** tiene Depot contratado e integrado en GitHub, los jobs **no encontrarán runner** → sustituir por **`ubuntu-latest`** (o el hosted estándar acordado) en los YAML afectados. Si más adelante se contrata Depot, se puede volver a alinear con upstream. |
 
 ### 4.4 Cómo incorporarlo al proceso (mismo ciclo o PR dedicado)
 
@@ -105,6 +106,7 @@ git show upstream/main:.github/workflows/test.yml | head
 - [ ] `release.yml` y `.goreleaser.yml` del fork **intactos** o cambiados solo con acuerdo explícito.
 - [ ] Sin referencias rotas a `evmd/` donde el árbol sea solo `infinited/`.
 - [ ] Reaplicados jobs **fork-only** acordados (fuzz, CodeQL, etc.).
+- [ ] **Runners:** confirmado si se usan labels `depot-ubuntu-*` o **`ubuntu-latest`** según contratación real (ver §4.3).
 - [ ] PR de CI **verde** o fallos documentados como aceptados temporalmente.
 
 Procedimiento en el playbook: [Fase 3b](PLAYBOOK.md#fase-3b--alineación-de-github-actions-con-upstream).

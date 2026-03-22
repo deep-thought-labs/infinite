@@ -98,7 +98,7 @@ Rama de trabajo: `red/ci-align-upstream-2026-03` (PR sugerido → `red/merge-cos
 | ¿`release.yml` conservado del fork sin cambios? | **Sí** |
 | Jobs fork-only | **CodeQL** (`codeql-analysis.yml`); patrones ampliados con `infinited/go.mod`, `infinited/go.sum` |
 | Ajustes `evmd` → `infinited` | `build.yml`, `test.yml` (patrones diff), `jsonrpc-compatibility.yml`, nombres de paso en `tests-compatibility-*.yml` |
-| Novedades tomadas de upstream | `dependencies.yml`, `stale.yml`; runners Depot en `lint` / `test` / `system-test` / `jsonrpc` como upstream |
+| Novedades tomadas de upstream | `dependencies.yml`, `stale.yml`. Tras copiar upstream, runners **`depot-ubuntu-*`** sustituidos por **`ubuntu-latest`** (fork sin Depot) en `lint`, `test`, `system-test`, `jsonrpc`, `build`. |
 | `make test-fuzz` | **No** reañadido: upstream no incluye job y el `Makefile` actual no define `test-fuzz` (reintroducir job + target si el equipo lo retoma). |
 | Secretos / jobs | `trigger-docs-update` / `bsr-push` siguen requiriendo secretos del org; sin secretos, fallarán hasta configurarlos o deshabilitar. |
 
@@ -109,6 +109,7 @@ Documentación canónica: [PLAYBOOK.md — A.7](../PLAYBOOK.md#a7-tests-y-apis-t
 - **`BlockGasLimit`**: en `ante/types/block.go` el límite sale de **`ConsensusParams().Block.MaxGas`**, no del `BlockGasMeter`; tests que simulen “tx gas > límite de bloque” deben usar **`WithConsensusParams`** y **clonar `BlockParams`** antes de mutar `MaxGas` (evita contaminar el `UnitTestNetwork` para subtests posteriores).
 - **Identidad**: expectativas de denom (**`drop`**) y bech32 **`infinite`** en tests (`fee_checker`, EIP-712, mempool); orden de init de prefijos vs `MakeConfig`.
 - **APIs**: keepers pueden perder métodos usados solo en integración (p. ej. **`GetTransientGasWanted`**); actualizar `tests/integration/ante` hasta que **`go build`** del paquete pase.
+- **CI / runners:** al traer workflows de upstream, revisar **`runs-on`**: `depot-ubuntu-*` solo si hay Depot; si no, **`ubuntu-latest`**. Ver [MERGE_STRATEGIES §4.3](../MERGE_STRATEGIES.md#43-deltas-obligatorios-en-el-fork-tras-copiarfusionar-yaml).
 
 ## Seguimiento post-merge
 

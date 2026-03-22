@@ -95,7 +95,7 @@ Objetivo: que la **estructura lógica** de los workflows coincida con **`upstrea
 |------|--------|
 | 3b.1 | `git fetch upstream`. Tomar como referencia el **SHA** de `upstream/main` que documentarás en la bitácora (misma integración de código o la más reciente si el PR de CI es posterior). |
 | 3b.2 | Sustituir o fusionar ficheros bajo `.github/workflows/` con los de upstream **excepto** [`.github/workflows/release.yml`](../../.github/workflows/release.yml) (versión del fork). Revisar también [`.github/labeler.yml`](../../.github/labeler.yml) u otros si upstream los cambió. |
-| 3b.3 | Aplicar **deltas del fork**: rutas `evmd` → `infinited`, pasos que llamen al binario correcto, reaplicar jobs acordados (p. ej. **fuzz** en `test.yml`, **CodeQL** si aplica). |
+| 3b.3 | Aplicar **deltas del fork**: rutas `evmd` → `infinited`, pasos que llamen al binario correcto, reaplicar jobs acordados (p. ej. **fuzz** en `test.yml`, **CodeQL** si aplica). Revisar **`runs-on`**: sin Depot, usar **`ubuntu-latest`** (ver [MERGE_STRATEGIES §4.3](MERGE_STRATEGIES.md#43-deltas-obligatorios-en-el-fork-tras-copiarfusionar-yaml)). |
 | 3b.4 | Revisar **secretos** del repositorio (Codecov, Buf, docs dispatch, etc.): o bien configurados, o jobs deshabilitados/documentados en la bitácora. |
 | 3b.5 | Abrir o actualizar **PR** y comprobar que la **CI en GitHub** refleja los mismos gates que el equipo espera; completar la sección **GitHub Actions** de la bitácora. |
 
@@ -151,6 +151,8 @@ Algunos scripts de **system test** / `test-system` pueden esperar el binario con
 Si upstream simplifica **`.github/workflows`**, revisar jobs que el fork **debe conservar** (p. ej. **`test-fuzz`** u otros acordados) y fusionar YAML en lugar de sustituir ciegamente por la versión upstream.
 
 Política completa (snapshot upstream + `release.yml` + deltas `infinited`): [MERGE_STRATEGIES.md — §4](MERGE_STRATEGIES.md#4-github-actions-alinear-con-upstream-en-el-plan-de-merge) y [Fase 3b](#fase-3b--alineación-de-github-actions-con-upstream).
+
+**Runners:** upstream puede usar **`depot-ubuntu-*`**; en el fork, sin Depot contratado, usar **`ubuntu-latest`** (detalle en [MERGE_STRATEGIES — §4.3](MERGE_STRATEGIES.md#43-deltas-obligatorios-en-el-fork-tras-copiarfusionar-yaml)).
 
 ### A.6 Imports muertos tras resolver conflictos
 

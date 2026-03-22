@@ -62,6 +62,7 @@ Breve descripción (p. ej. “Sincronizar con cosmos/evm main hasta PR #NNN”, 
 | ¿`release.yml` conservado del fork sin cambios? (sí / no + notas) | |
 | Jobs fork-only reaplicados (p. ej. fuzz, CodeQL) | |
 | Ajustes `evmd` → `infinited` (workflows tocados) | |
+| Runners (`depot-ubuntu-*` vs `ubuntu-latest`) | |
 | Secretos / jobs deshabilitados (si aplica) | |
 | PR de solo-CI (enlace) | |
 
