@@ -41,6 +41,8 @@ jobs:
             **/**.go
             go.mod
             go.sum
+            infinited/go.mod
+            infinited/go.sum
             *.toml
             **/**.py
             **/**.js

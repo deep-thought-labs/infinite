@@ -88,6 +88,20 @@ Estado final (sesión de estabilización): **OK** (suite `infinited` completa en
 | `cd infinited && go test ./tests/integration/...` (focalizado) | OK | Cubierto por `make test-infinited`. |
 | Otros (p. ej. `make test-all`) | pendiente | Fuera del alcance de este cierre. |
 
+## GitHub Actions (alineación con upstream)
+
+Rama de trabajo: `red/ci-align-upstream-2026-03` (PR sugerido → `red/merge-cosmos-evm` o `main` según política del equipo).
+
+| Campo | Valor |
+|--------|--------|
+| SHA `upstream/main` usado como fuente de workflows | `50b4817017187cbda2a0af767fda39a895b9989a` (misma punta que el merge `8bc0bd33`) |
+| ¿`release.yml` conservado del fork sin cambios? | **Sí** |
+| Jobs fork-only | **CodeQL** (`codeql-analysis.yml`); patrones ampliados con `infinited/go.mod`, `infinited/go.sum` |
+| Ajustes `evmd` → `infinited` | `build.yml`, `test.yml` (patrones diff), `jsonrpc-compatibility.yml`, nombres de paso en `tests-compatibility-*.yml` |
+| Novedades tomadas de upstream | `dependencies.yml`, `stale.yml`; runners Depot en `lint` / `test` / `system-test` / `jsonrpc` como upstream |
+| `make test-fuzz` | **No** reañadido: upstream no incluye job y el `Makefile` actual no define `test-fuzz` (reintroducir job + target si el equipo lo retoma). |
+| Secretos / jobs | `trigger-docs-update` / `bsr-push` siguen requiriendo secretos del org; sin secretos, fallarán hasta configurarlos o deshabilitar. |
+
 ## Aprendizajes y puntos a recordar
 
 Documentación canónica: [PLAYBOOK.md — A.7](../PLAYBOOK.md#a7-tests-y-apis-tras-merge-upstream).
@@ -101,7 +115,7 @@ Documentación canónica: [PLAYBOOK.md — A.7](../PLAYBOOK.md#a7-tests-y-apis-t
 - [ ] CHANGELOG actualizado (opcional hasta publicar versión; completar si el PR lo exige).
 - [ ] [UPSTREAM_DIVERGENCE_RECORD.md](../UPSTREAM_DIVERGENCE_RECORD.md) actualizado — *omitir si no cambió inventario ni política en esta sesión*.
 - [ ] Guía de migración consultada o actualizada (`docs/migrations/`) si aplica salto mayor.
-- [ ] **PR dedicado**: alinear `.github/workflows/` con snapshot de `upstream/main`, conservar `release.yml` y deltas mínimos (`infinited`, fuzz, CodeQL) — ver [MERGE_STRATEGIES.md](../MERGE_STRATEGIES.md).
+- [x] **PR dedicado CI**: rama `red/ci-align-upstream-2026-03` — alineación con `upstream/main` @ `50b48170`, `release.yml` preservado, deltas `infinited` + CodeQL — ver [MERGE_STRATEGIES.md](../MERGE_STRATEGIES.md).
 - [x] `make test-infinited` en verde al cierre de bitácora.
 - [ ] CI en PR verde (tras abrir PR y completar `make test-unit` / jobs acordados).
 

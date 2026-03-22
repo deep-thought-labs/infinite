@@ -5,12 +5,12 @@ on:
       - '.github/workflows/jsonrpc-compatibility.yml'
       - 'tests/jsonrpc/**'
       - 'rpc/**'
-      - 'evmd/**'
+      - 'infinited/**'
       - '**/**.go'
       - 'go.mod'
       - 'go.sum'
-      - 'evmd/go.mod'
-      - 'evmd/go.sum'
+      - 'infinited/go.mod'
+      - 'infinited/go.sum'
   merge_group:
   push:
     branches:
@@ -28,7 +28,7 @@ jobs:
     if: ${{ !startsWith(github.ref, 'refs/tags/') && github.ref != 'refs/heads/main' }}
 
   jsonrpc-compatibility-test:
-    runs-on: ubuntu-latest
+    runs-on: depot-ubuntu-22.04-8
     timeout-minutes: 45
     steps:
       - uses: actions/setup-go@v5
@@ -44,12 +44,12 @@ jobs:
             .github/workflows/jsonrpc-compatibility.yml
             tests/jsonrpc/**
             rpc/**
-            evmd/**
+            infinited/**
             **/**.go
             go.mod
             go.sum
-            evmd/go.mod
-            evmd/go.sum
+            infinited/go.mod
+            infinited/go.sum
       
       - name: Set up Docker
         uses: docker/setup-buildx-action@v3
