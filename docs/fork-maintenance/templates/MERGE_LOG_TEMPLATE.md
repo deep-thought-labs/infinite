@@ -52,6 +52,19 @@ Breve descripción (p. ej. “Sincronizar con cosmos/evm main hasta PR #NNN”, 
 | `cd infinited && go test ./tests/integration/...` (opcional, focalizado si solo tocaste ante/feemarket/mempool) | | |
 | Otros (p. ej. `make test-all`) | | |
 
+## GitHub Actions (alineación con upstream)
+
+*Rellenar si en este ciclo se sincronizó `.github/` con `upstream/main` (mismo PR de merge o PR dedicado). Política: [MERGE_STRATEGIES.md — §4](../MERGE_STRATEGIES.md#4-github-actions-alinear-con-upstream-en-el-plan-de-merge).*
+
+| Campo | Valor |
+|--------|--------|
+| SHA `upstream/main` usado como fuente de workflows | |
+| ¿`release.yml` conservado del fork sin cambios? (sí / no + notas) | |
+| Jobs fork-only reaplicados (p. ej. fuzz, CodeQL) | |
+| Ajustes `evmd` → `infinited` (workflows tocados) | |
+| Secretos / jobs deshabilitados (si aplica) | |
+| PR de solo-CI (enlace) | |
+
 ## Aprendizajes y puntos a recordar
 
 *Opcional; ayuda al siguiente merge. Ver también [PLAYBOOK.md — Apéndice A.7](../PLAYBOOK.md#a7-tests-y-apis-tras-merge-upstream).*
@@ -66,8 +79,9 @@ Breve descripción (p. ej. “Sincronizar con cosmos/evm main hasta PR #NNN”, 
 - [ ] CHANGELOG actualizado
 - [ ] [UPSTREAM_DIVERGENCE_RECORD.md](../UPSTREAM_DIVERGENCE_RECORD.md) actualizado (solo si cambió el inventario o la política)
 - [ ] Guía de migración consultada o actualizada (`docs/migrations/`)
-- [ ] Workflow(s) de CI del fork conservados donde aplique (p. ej. fuzz, jobs acordados) tras fusionar `.github/workflows`
-- [ ] CI en PR verde
+- [ ] Alineación de `.github/workflows/` con `upstream/main` completada o planificada (ver [MERGE_STRATEGIES.md §4](../MERGE_STRATEGIES.md#4-github-actions-alinear-con-upstream-en-el-plan-de-merge)); `release.yml` del fork preservado salvo acuerdo explícito
+- [ ] Jobs fork-only necesarios reaplicados (p. ej. fuzz, CodeQL)
+- [ ] CI en PR verde (merge de código y, si aplica, PR de CI)
 
 ## Referencias
 

@@ -62,17 +62,64 @@ No basta con “aceptar” el merge: lo que upstream asume para `evmd` o su CI d
 
 Lista de verificación rápida: [VERIFICATION.md](VERIFICATION.md), `make build`, `make test-unit`, `make test-infinited`, y la tabla de la Fase 3 del playbook.
 
-## 4. Documentación obligatoria por merge (proceso único)
+## 4. GitHub Actions: alinear con upstream en el plan de merge
+
+**Objetivo:** que `.github/workflows/` (y archivos relacionados bajo `.github/`, p. ej. `labeler.yml`) reflejen **la misma lógica y estructura que `upstream/main` en el momento elegido**, con **ajustes mínimos** para que el fork sea funcional, y sin romper el **flujo de release** propio.
+
+### 4.1 Invariantes del fork (no sobrescribir con upstream)
+
+| Artefacto | Motivo |
+|-----------|--------|
+| `.github/workflows/release.yml` | Pipeline de release del proyecto (GoReleaser, tags, permisos). **Mantener la versión del fork** salvo revisión explícita conjunta con [`.goreleaser.yml`](../../.goreleaser.yml). |
+| `.goreleaser.yml` | Define binarios `infinited` y metadatos de Infinite Drive. No sustituir por el de upstream (orientado a `evmd`). |
+
+### 4.2 Qué tomar de upstream
+
+- **Todo el resto** de workflows en `.github/workflows/` del snapshot de **`upstream/main`** (o del SHA acordado en la bitácora), salvo que el equipo decida desactivar explícitamente un job (p. ej. dispatch a repos de Cosmos sin secretos).
+- Incluye mejoras de **versiones de acciones**, **runners**, workflows añadidos allí (p. ej. revisión de dependencias, `stale`, etc.).
+
+### 4.3 Deltas obligatorios en el fork (tras copiar/fusionar YAML)
+
+| Tema | Acción |
+|------|--------|
+| Rutas `evmd/` | Sustituir por **`infinited/`** donde el repo no tenga `evmd` (build, `paths`, `get-diff`, pasos que hagan `cd evmd`). |
+| Nombre del binario en pasos descriptivos | Alinear con **`make build` / `make install`** del `Makefile` del fork (`infinited`). |
+| Jobs que upstream no tiene y el fork sí quiere | **Reaplicar** encima del snapshot: p. ej. `test-fuzz` en `test.yml`, **CodeQL** si se mantiene política de escaneo en PR. |
+| Secretos (`BUF_TOKEN`, `DOCS_REPO_TOKEN`, Codecov, etc.) | Comprobar en ajustes del repo GitHub; jobs sin secreto pueden fallar o deben deshabilitarse con criterio documentado en la bitácora. |
+
+### 4.4 Cómo incorporarlo al proceso (mismo ciclo o PR dedicado)
+
+- **Opción A — Mismo PR que el merge de código:** útil si el equipo quiere un solo cierre; el diff de YAML puede ser grande.
+- **Opción B — PR dedicado inmediatamente después** (recomendado si el merge de código ya está cerrado): título claro, p. ej. `ci: align workflows with upstream/main @ <SHA>`, enlace a la bitácora de merge.
+
+Comando típico para inspeccionar un fichero upstream sin checkout:
+
+```bash
+git fetch upstream
+git show upstream/main:.github/workflows/test.yml | head
+```
+
+### 4.5 Checklist antes de dar por buena la alineación
+
+- [ ] Anotado en bitácora el **SHA de `upstream/main`** usado como fuente de workflows.
+- [ ] `release.yml` y `.goreleaser.yml` del fork **intactos** o cambiados solo con acuerdo explícito.
+- [ ] Sin referencias rotas a `evmd/` donde el árbol sea solo `infinited/`.
+- [ ] Reaplicados jobs **fork-only** acordados (fuzz, CodeQL, etc.).
+- [ ] PR de CI **verde** o fallos documentados como aceptados temporalmente.
+
+Procedimiento en el playbook: [Fase 3b](PLAYBOOK.md#fase-3b--alineación-de-github-actions-con-upstream).
+
+## 5. Documentación obligatoria por merge (proceso único)
 
 Cada integración debe dejar **trazabilidad** en tres capas:
 
-1. **Bitácora** (`docs/fork-maintenance/logs/`, plantilla [MERGE_LOG_TEMPLATE.md](templates/MERGE_LOG_TEMPLATE.md)): conflictos, decisiones no triviales, verificación (incluido `make test-infinited`), SHAs y referencias a PR.
+1. **Bitácora** (`docs/fork-maintenance/logs/`, plantilla [MERGE_LOG_TEMPLATE.md](templates/MERGE_LOG_TEMPLATE.md)): conflictos, decisiones no triviales, verificación (incluido `make test-infinited`), **sección GitHub Actions** si hubo alineación de CI, SHAs y referencias a PR.
 2. **[UPSTREAM_DIVERGENCE_RECORD.md](UPSTREAM_DIVERGENCE_RECORD.md):** actualizar solo si cambia inventario, política o lista de archivos sensibles (no duplicar el relato del merge).
 3. **Este documento:** no hace falta editarlo en cada merge salvo que el equipo **adopte una nueva estrategia** (p. ej. pasar a integración por etapas) o quiera añadir una advertencia aprendida.
 
 Opcional pero útil: una línea en [CHANGELOG.md](../../CHANGELOG.md) si el merge introduce cambios relevantes para operadores o nodos.
 
-## 5. Resumen
+## 6. Resumen
 
 | Prioridad | Estrategia |
 |-----------|------------|
@@ -81,4 +128,4 @@ Opcional pero útil: una línea en [CHANGELOG.md](../../CHANGELOG.md) si el merg
 | Rama larga de integración | **Merge frecuente** con `main` del fork en la rama de trabajo. |
 | Evitar | Rebase masivo de historia publicada; `theirs` sobre zonas protegidas sin revisión. |
 
-Para el procedimiento paso a paso, seguir siempre [PLAYBOOK.md](PLAYBOOK.md).
+Para el procedimiento paso a paso, seguir siempre [PLAYBOOK.md](PLAYBOOK.md) (incluye **Fase 3b** para CI).

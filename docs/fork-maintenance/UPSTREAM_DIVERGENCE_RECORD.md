@@ -39,7 +39,7 @@ Solo se personalizan aspectos de **identidad** de la cadena Infinite Drive. Lo t
 
 ### Disciplina en integraciones con upstream
 
-No duplicar aquí el procedimiento detallado: seguir [PLAYBOOK.md](PLAYBOOK.md). Tras integrar, validar según [VERIFICATION.md](VERIFICATION.md) y, para listados de diff, [REFERENCE.md](REFERENCE.md).
+No duplicar aquí el procedimiento detallado: seguir [PLAYBOOK.md](PLAYBOOK.md). Tras integrar, validar según [VERIFICATION.md](VERIFICATION.md) y, para listados de diff, [REFERENCE.md](REFERENCE.md). **GitHub Actions:** alinear workflows con `upstream/main` como parte del plan de merge, conservando `release.yml` y `.goreleaser.yml` del fork; detalle en [MERGE_STRATEGIES.md — §4](MERGE_STRATEGIES.md#4-github-actions-alinear-con-upstream-en-el-plan-de-merge).
 
 ---
 

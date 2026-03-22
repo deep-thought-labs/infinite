@@ -7,6 +7,7 @@ Procedimiento detallado para integrar cambios de [cosmos/evm](https://github.com
 1. **Identidad solo donde toca** — Token, chain IDs, bech32, nombre `infinited`, branding y archivos añadidos por el fork se conservan según [UPSTREAM_DIVERGENCE_RECORD.md](UPSTREAM_DIVERGENCE_RECORD.md).
 2. **Prioridad upstream en lo técnico** — Lógica compartida, dependencias alineadas con upstream, rutas de import `github.com/cosmos/evm/...` sin sustituir por paths del fork.
 3. **Decisiones explícitas en fork-only** — Archivos que upstream eliminó y nosotros mantenemos (p. ej. `ante/evm/10_gas_wanted.go`) no se resuelven “a ciegas”: se documenta en la bitácora.
+4. **CI como extensión del merge** — La alineación de **GitHub Actions** con `upstream/main` forma parte del plan de integración (mismo PR o PR dedicado), conservando **release** y aplicando deltas `infinited` — ver [MERGE_STRATEGIES.md — §4](MERGE_STRATEGIES.md#4-github-actions-alinear-con-upstream-en-el-plan-de-merge) y [Fase 3b](#fase-3b--alineación-de-github-actions-con-upstream).
 
 ## Prerrequisitos
 
@@ -30,6 +31,7 @@ git fetch upstream
 | 0.3 | **Línea base de divergencia** (recomendado): `./scripts/list_all_customizations.sh upstream/main > /tmp/diff-pre-merge.txt` — ver [REFERENCE.md](REFERENCE.md). |
 | 0.4 | Si aplica un **salto de versión mayor**, abrir la guía en `docs/migrations/` correspondiente y tenerla a mano durante conflictos. |
 | 0.5 | Copiar [templates/MERGE_LOG_TEMPLATE.md](templates/MERGE_LOG_TEMPLATE.md) a `docs/fork-maintenance/logs/` con nombre acordado (ver [logs/README.md](logs/README.md)) y rellenar ya metadatos y SHAs. |
+| 0.6 | **CI (planificación):** decidir si la alineación de `.github/workflows/` con `upstream/main` ocurre **en este mismo ciclo** o en un **PR inmediatamente posterior**; anotarlo en la bitácora. Política detallada: [MERGE_STRATEGIES.md — §4](MERGE_STRATEGIES.md#4-github-actions-alinear-con-upstream-en-el-plan-de-merge). |
 
 ## Fase 1 — Integración
 
@@ -85,14 +87,29 @@ Usar como guía cuando sepas qué directorios tocaste; no sustituye la batería 
 | Integración amplia `infinited` | `make test-infinited` |
 | Cobertura máxima antes de release | `make test-all` (si el tiempo lo permite) |
 
+## Fase 3b — Alineación de GitHub Actions con upstream
+
+Objetivo: que la **estructura lógica** de los workflows coincida con **`upstream/main`** en el SHA acordado, con **ajustes mínimos** para `infinited/` y el entorno del fork, y **sin reemplazar** el flujo de release propio.
+
+| Paso | Acción |
+|------|--------|
+| 3b.1 | `git fetch upstream`. Tomar como referencia el **SHA** de `upstream/main` que documentarás en la bitácora (misma integración de código o la más reciente si el PR de CI es posterior). |
+| 3b.2 | Sustituir o fusionar ficheros bajo `.github/workflows/` con los de upstream **excepto** [`.github/workflows/release.yml`](../../.github/workflows/release.yml) (versión del fork). Revisar también [`.github/labeler.yml`](../../.github/labeler.yml) u otros si upstream los cambió. |
+| 3b.3 | Aplicar **deltas del fork**: rutas `evmd` → `infinited`, pasos que llamen al binario correcto, reaplicar jobs acordados (p. ej. **fuzz** en `test.yml`, **CodeQL** si aplica). |
+| 3b.4 | Revisar **secretos** del repositorio (Codecov, Buf, docs dispatch, etc.): o bien configurados, o jobs deshabilitados/documentados en la bitácora. |
+| 3b.5 | Abrir o actualizar **PR** y comprobar que la **CI en GitHub** refleja los mismos gates que el equipo espera; completar la sección **GitHub Actions** de la bitácora. |
+
+Checklist extendida: [MERGE_STRATEGIES.md — §4.5](MERGE_STRATEGIES.md#45-checklist-antes-de-dar-por-buena-la-alineación).
+
 ## Fase 4 — Cierre
 
 | Paso | Acción |
 |------|--------|
 | 4.1 | Actualizar [CHANGELOG.md](../../CHANGELOG.md) con entradas upstream pertinentes. |
-| 4.2 | Completar la bitácora en `docs/fork-maintenance/logs/`. |
+| 4.2 | Completar la bitácora en `docs/fork-maintenance/logs/` (incl. CI si aplica). |
 | 4.3 | Opcional: nuevo listado post-merge según [REFERENCE.md](REFERENCE.md). |
 | 4.4 | PR de revisión con enlace a la bitácora en la descripción. |
+| 4.5 | Si la alineación de CI fue **PR aparte**: enlazar ese PR en la bitácora del merge de código o en una nota de seguimiento; cerrar ambos antes de considerar el ciclo completo. |
 
 ## Si algo sale mal
 
@@ -132,6 +149,8 @@ Algunos scripts de **system test** / `test-system` pueden esperar el binario con
 ### A.5 CI y jobs preservados del fork
 
 Si upstream simplifica **`.github/workflows`**, revisar jobs que el fork **debe conservar** (p. ej. **`test-fuzz`** u otros acordados) y fusionar YAML en lugar de sustituir ciegamente por la versión upstream.
+
+Política completa (snapshot upstream + `release.yml` + deltas `infinited`): [MERGE_STRATEGIES.md — §4](MERGE_STRATEGIES.md#4-github-actions-alinear-con-upstream-en-el-plan-de-merge) y [Fase 3b](#fase-3b--alineación-de-github-actions-con-upstream).
 
 ### A.6 Imports muertos tras resolver conflictos
 
