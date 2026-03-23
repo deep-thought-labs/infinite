@@ -22,7 +22,7 @@
 #   - Generates checksums for verification
 #   - Includes changelog from git commits
 #
-# See: guides/BUILDING_AND_RELEASES.md for detailed documentation
+# See: docs/guides/development/BUILDING.md and docs/guides/infrastructure/RELEASES.md
 #
 name: Release
 

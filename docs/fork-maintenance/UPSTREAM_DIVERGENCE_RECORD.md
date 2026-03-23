@@ -63,7 +63,7 @@ No duplicar aquí el procedimiento detallado: seguir [PLAYBOOK.md](PLAYBOOK.md).
 - `infinited/genesis.go`: funciones de genesis que fijan denom `drop` (mint, staking, gov)
 - `infinited/app.go`: `DefaultGenesis()` aplica los estados anteriores
 - `infinited/tests/integration/create_app.go`: tests con configuración de identidad
-- `scripts/customize_genesis.sh`: personalización de `genesis.json` por red (mainnet / testnet / creative); parámetros en JSON bajo `scripts/genesis-configs/`. Detalle operativo: [guides/configuration/GENESIS.md](../../guides/configuration/GENESIS.md)
+- `scripts/customize_genesis.sh`: personalización de `genesis.json` por red (mainnet / testnet / creative); parámetros en JSON bajo `scripts/genesis-configs/`. Detalle operativo: [docs/guides/configuration/GENESIS.md](../guides/configuration/GENESIS.md)
 - `scripts/genesis-configs/mainnet.json`, `testnet.json`, `creative.json`
 - `scripts/setup_module_accounts.sh` y `scripts/genesis-configs/*-module-accounts.json`
 - `local_node.sh`: desarrollo local con genesis ya ajustada
@@ -116,7 +116,7 @@ Renombres representativos: `evmd/app.go` → `infinited/app.go`, `evmd/cmd/evmd/
 
 ### Documentación
 
-- `guides/*.md` y resto de guías bajo `guides/`
+- `docs/guides/*.md` y resto de guías bajo `docs/guides/`
 - `docs/fork-maintenance/` (este registro y documentos de mantenimiento del fork)
 
 ### Scripts

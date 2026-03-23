@@ -78,7 +78,7 @@ Make sure GitHub Actions has permissions to:
 2. "Workflow permissions" → "Read and write permissions"
 3. Save
 
-**More details**: See [guides/infrastructure/CI_CD.md](CI_CD.md)
+**More details**: See [CI_CD.md](CI_CD.md)
 
 ## 🚀 Complete Release Workflow
 
@@ -414,9 +414,9 @@ git tag v1.0.0
 
 ## 📚 More Information
 
-- **[guides/QUICK_START.md](../QUICK_START.md)** - Quick start
-- **[guides/development/BUILDING.md](../development/BUILDING.md)** - Compilation guide
-- **[guides/infrastructure/CI_CD.md](CI_CD.md)** - Complete CI/CD configuration
+- **[QUICK_START.md](../QUICK_START.md)** - Quick start
+- **[BUILDING.md](../development/BUILDING.md)** - Compilation guide
+- **[CI_CD.md](CI_CD.md)** - Complete CI/CD configuration
 - **[Semantic Versioning](https://semver.org/)** - Versioning specification
 
 ## 🔗 Quick Reference

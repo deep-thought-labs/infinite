@@ -177,7 +177,7 @@ go tool cover -html=coverage.txt
 - Before commit
 - During merges with upstream
 
-**More information**: See [guides/testing/VALIDATION.md](../testing/VALIDATION.md)
+**More information**: See [VALIDATION.md](../testing/VALIDATION.md)
 
 ---
 
@@ -244,9 +244,9 @@ ls -la coverage.txt
 
 ## 📚 More Information
 
-- **[guides/testing/VALIDATION.md](../testing/VALIDATION.md)** - Node validation scripts
-- **[guides/development/BUILDING.md](BUILDING.md)** - Compilation guide
-- **[docs/fork-maintenance/UPSTREAM_DIVERGENCE_RECORD.md](../../docs/fork-maintenance/UPSTREAM_DIVERGENCE_RECORD.md)** - Upstream divergence record
+- **[VALIDATION.md](../testing/VALIDATION.md)** - Node validation scripts
+- **[BUILDING.md](BUILDING.md)** - Compilation guide
+- **[fork-maintenance/UPSTREAM_DIVERGENCE_RECORD.md](../../fork-maintenance/UPSTREAM_DIVERGENCE_RECORD.md)** - Upstream divergence record
 
 ---
 

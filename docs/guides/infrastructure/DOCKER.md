@@ -194,8 +194,8 @@ sudo systemctl enable docker  # To start automatically
 
 ## 📚 More Information
 
-- **[guides/infrastructure/RELEASES.md](RELEASES.md)** - Release guide
-- **[guides/development/BUILDING.md](../development/BUILDING.md)** - Compilation guide
+- **[RELEASES.md](RELEASES.md)** - Release guide
+- **[BUILDING.md](../development/BUILDING.md)** - Compilation guide
 - **[Docker Documentation](https://docs.docker.com/)** - Official documentation
 
 ---

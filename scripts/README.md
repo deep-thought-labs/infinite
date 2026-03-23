@@ -7,7 +7,7 @@
 
 **All scripts documentation is now centralized in the main guides:**
 
-👉 **[guides/development/SCRIPTS.md](../guides/development/SCRIPTS.md)** - Complete scripts guide
+👉 **[docs/guides/development/SCRIPTS.md](../docs/guides/development/SCRIPTS.md)** - Complete scripts guide
 
 This guide includes:
 
@@ -41,10 +41,10 @@ grep -l "Deep Thought Labs" scripts/*.sh
 
 | Script | Purpose | Documentation |
 |-------|---------|---------------|
-| `check_build_prerequisites.sh` | Verify build prerequisites | [SCRIPTS.md](../guides/development/SCRIPTS.md#1-check_build_prerequisitessh) |
-| `validate_customizations.sh` | Validate customizations | [SCRIPTS.md](../guides/development/SCRIPTS.md#2-validate_customizationssh) |
-| `validate_token_config.sh` | Validate token configuration | [SCRIPTS.md](../guides/development/SCRIPTS.md#3-validate_token_configsh) |
-| `infinite_health_check.sh` | Node health check | [SCRIPTS.md](../guides/development/SCRIPTS.md#4-infinite_health_checksh) |
-| `list_all_customizations.sh` | List all customizations | [SCRIPTS.md](../guides/development/SCRIPTS.md#5-list_all_customizationssh) |
+| `check_build_prerequisites.sh` | Verify build prerequisites | [SCRIPTS.md](../docs/guides/development/SCRIPTS.md#1-check_build_prerequisitessh) |
+| `validate_customizations.sh` | Validate customizations | [SCRIPTS.md](../docs/guides/development/SCRIPTS.md#2-validate_customizationssh) |
+| `validate_token_config.sh` | Validate token configuration | [SCRIPTS.md](../docs/guides/development/SCRIPTS.md#3-validate_token_configsh) |
+| `infinite_health_check.sh` | Node health check | [SCRIPTS.md](../docs/guides/development/SCRIPTS.md#4-infinite_health_checksh) |
+| `list_all_customizations.sh` | List all customizations | [SCRIPTS.md](../docs/guides/development/SCRIPTS.md#5-list_all_customizationssh) |
 
-**For complete documentation, see [guides/development/SCRIPTS.md](../guides/development/SCRIPTS.md)**
+**For complete documentation, see [docs/guides/development/SCRIPTS.md](../docs/guides/development/SCRIPTS.md)**

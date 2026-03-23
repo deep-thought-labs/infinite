@@ -74,7 +74,7 @@ Git installation: ✅ Installed (version 2.x)
 ✅ All critical prerequisites are met!
 ```
 
-**More information**: See [guides/development/BUILDING.md](BUILDING.md)
+**More information**: See [BUILDING.md](BUILDING.md)
 
 ---
 
@@ -104,7 +104,7 @@ Git installation: ✅ Installed (version 2.x)
 
 **Requirements**: Only needs code access (doesn't require running node)
 
-**More information**: See [guides/testing/VALIDATION.md](../testing/VALIDATION.md)
+**More information**: See [VALIDATION.md](../testing/VALIDATION.md)
 
 ---
 
@@ -179,7 +179,7 @@ Git installation: ✅ Installed (version 2.x)
 
 **Requirements**: Running node, `jq` installed, `curl` installed
 
-**More information**: See [guides/testing/VALIDATION.md](../testing/VALIDATION.md)
+**More information**: See [VALIDATION.md](../testing/VALIDATION.md)
 
 ---
 
@@ -212,7 +212,7 @@ Git installation: ✅ Installed (version 2.x)
 
 **Requirements**: Running node, `jq` installed, `curl` installed
 
-**More information**: See [guides/testing/VALIDATION.md](../testing/VALIDATION.md)
+**More information**: See [VALIDATION.md](../testing/VALIDATION.md)
 
 ---
 
@@ -952,9 +952,9 @@ head -10 scripts/*.sh | grep -B 5 "Deep Thought Labs"
 
 ## 📚 More Information
 
-- **[guides/testing/VALIDATION.md](../testing/VALIDATION.md)** - Complete validation guide
-- **[guides/development/BUILDING.md](BUILDING.md)** - Compilation guide
-- **[docs/fork-maintenance/UPSTREAM_DIVERGENCE_RECORD.md](../../docs/fork-maintenance/UPSTREAM_DIVERGENCE_RECORD.md)** - Upstream divergence record
+- **[VALIDATION.md](../testing/VALIDATION.md)** - Complete validation guide
+- **[BUILDING.md](BUILDING.md)** - Compilation guide
+- **[fork-maintenance/UPSTREAM_DIVERGENCE_RECORD.md](../../fork-maintenance/UPSTREAM_DIVERGENCE_RECORD.md)** - Upstream divergence record
 
 ---
 

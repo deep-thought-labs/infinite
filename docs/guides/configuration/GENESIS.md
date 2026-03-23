@@ -841,8 +841,8 @@ infinited start --chain-id infinite_421018002-1 --evm.evm-chain-id 421018002 --h
 For detailed information about genesis parameters, module configurations, and technical background:
 
 - 📖 **[Genesis Reference Guide](GENESIS_REFERENCE.md)** - Complete technical reference for all genesis parameters, modules, and configurations
-- 🔧 **Scripts Documentation**: See `guides/development/SCRIPTS.md` for detailed script documentation
-- 🚀 **Production Guide**: See `guides/deployment/PRODUCTION.md` for production deployment considerations
+- 🔧 **Scripts Documentation**: See `docs/guides/development/SCRIPTS.md` for detailed script documentation
+- 🚀 **Production Guide**: See `docs/guides/deployment/PRODUCTION.md` for production deployment considerations
 - 📚 **External Resources**:
 - [Cosmos SDK Genesis Documentation](https://docs.cosmos.network/main/building-modules/genesis)
 - [CometBFT Genesis Documentation](https://docs.cometbft.com/v0.38/core/genesis)

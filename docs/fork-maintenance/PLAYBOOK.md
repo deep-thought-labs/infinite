@@ -192,4 +192,4 @@ Lecciones cuando **`make test-unit`** o integración fallan tras sincronizar con
 
 - [VERIFICATION.md](VERIFICATION.md)
 - [REFERENCE.md](REFERENCE.md)
-- [guides/development/DEVELOPMENT.md](../../guides/development/DEVELOPMENT.md)
+- [docs/guides/development/DEVELOPMENT.md](../guides/development/DEVELOPMENT.md)

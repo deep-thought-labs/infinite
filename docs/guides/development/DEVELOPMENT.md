@@ -128,7 +128,7 @@ infinite/
 ├── testutil/               # Test utilities
 │   └── constants/          # Constants (denoms, chain IDs)
 ├── scripts/                # Utility scripts
-├── guides/                 # Documentation
+├── docs/guides/            # Developer guides (this documentation tree)
 └── Makefile               # Build commands
 ```
 
@@ -142,7 +142,7 @@ infinite/
 | `infinited/genesis.go` | Custom genesis functions |
 | `infinited/app.go` | DefaultGenesis() that applies customizations |
 
-**More information**: See [UPSTREAM_DIVERGENCE_RECORD.md](../../docs/fork-maintenance/UPSTREAM_DIVERGENCE_RECORD.md)
+**More information**: See [UPSTREAM_DIVERGENCE_RECORD.md](../../fork-maintenance/UPSTREAM_DIVERGENCE_RECORD.md)
 
 ---
 
@@ -301,12 +301,12 @@ cat ~/.infinited/config/genesis.json
 
 ## 📚 More Information
 
-- **[guides/QUICK_START.md](../QUICK_START.md)** - Quick start
-- **[guides/development/BUILDING.md](BUILDING.md)** - Compilation guide
-- **[guides/development/TESTING.md](TESTING.md)** - Testing guide
-- **[guides/testing/VALIDATION.md](../testing/VALIDATION.md)** - Validation scripts
-- **[docs/fork-maintenance/UPSTREAM_DIVERGENCE_RECORD.md](../../docs/fork-maintenance/UPSTREAM_DIVERGENCE_RECORD.md)** - Upstream divergence record
-- **[docs/fork-maintenance/](../../docs/fork-maintenance/README.md)** - Merge playbook, verification, templates, merge logs
+- **[QUICK_START.md](../QUICK_START.md)** - Quick start
+- **[BUILDING.md](BUILDING.md)** - Compilation guide
+- **[TESTING.md](TESTING.md)** - Testing guide
+- **[VALIDATION.md](../testing/VALIDATION.md)** - Validation scripts
+- **[fork-maintenance/UPSTREAM_DIVERGENCE_RECORD.md](../../fork-maintenance/UPSTREAM_DIVERGENCE_RECORD.md)** - Upstream divergence record
+- **[fork-maintenance/README.md](../../fork-maintenance/README.md)** - Merge playbook, verification, templates, merge logs
 
 ---
 

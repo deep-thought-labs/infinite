@@ -10,7 +10,7 @@ Antes de elegir estrategia, conviene tener claro qué el merge **no debe destrui
 |------|----------------|----------------------|
 | Identidad | Denoms, chain IDs, bech32, genesis y tests que los fijan | `UPSTREAM_DIVERGENCE_RECORD.md`, bitácora |
 | Binario y módulo | Árbol `infinited/`, imports `github.com/cosmos/evm/infinited`, sin `evmd/` residual no acordado | Mismo + conflictos en bitácora |
-| Release y despliegue | `.goreleaser.yml`, `release.yml`, `guides/` de build, secretos y tokens de CI del org | Bitácora + sección “Decisiones de fork” |
+| Release y despliegue | `.goreleaser.yml`, `release.yml`, `docs/guides/` de build, secretos y tokens de CI del org | Bitácora + sección “Decisiones de fork” |
 | CI propio | Jobs que el fork debe conservar (p. ej. fuzz, CodeQL, runners alternativos) | Bitácora + [PLAYBOOK — A.5](PLAYBOOK.md#a5-ci-y-jobs-preservados-del-fork) |
 | Documentación de proceso | `docs/fork-maintenance/`, plantillas, bitácoras | Siempre versión del fork; fusionar contenido si upstream añade equivalente |
 

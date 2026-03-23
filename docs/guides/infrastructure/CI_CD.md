@@ -256,8 +256,8 @@ Logs update in real time while the workflow runs. You can see:
 
 ## 📚 More Information
 
-- **[guides/infrastructure/RELEASES.md](RELEASES.md)** - Complete guide on how to create releases
-- **[guides/development/BUILDING.md](../development/BUILDING.md)** - Compilation guide
+- **[RELEASES.md](RELEASES.md)** - Complete guide on how to create releases
+- **[BUILDING.md](../development/BUILDING.md)** - Compilation guide
 - **[GitHub Actions Documentation](https://docs.github.com/en/actions)** - Official documentation
 
 ---

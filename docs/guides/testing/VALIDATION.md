@@ -389,7 +389,7 @@ make release-dry-run-linux
 1. Verify changes are saved
 2. Verify you're on the correct branch
 3. Review the specific error message
-4. See [UPSTREAM_DIVERGENCE_RECORD.md](../../docs/fork-maintenance/UPSTREAM_DIVERGENCE_RECORD.md) for reference
+4. See [UPSTREAM_DIVERGENCE_RECORD.md](../../fork-maintenance/UPSTREAM_DIVERGENCE_RECORD.md) for reference
 
 ### Tests Fail
 
@@ -404,6 +404,6 @@ make release-dry-run-linux
 
 ## 📚 More Information
 
-- **[guides/QUICK_START.md](../QUICK_START.md)** - Quick start
-- **[guides/development/BUILDING.md](../development/BUILDING.md)** - Compilation guide
-- **[docs/fork-maintenance/UPSTREAM_DIVERGENCE_RECORD.md](../../docs/fork-maintenance/UPSTREAM_DIVERGENCE_RECORD.md)** - Upstream divergence record
+- **[QUICK_START.md](../QUICK_START.md)** - Quick start
+- **[BUILDING.md](../development/BUILDING.md)** - Compilation guide
+- **[fork-maintenance/UPSTREAM_DIVERGENCE_RECORD.md](../../fork-maintenance/UPSTREAM_DIVERGENCE_RECORD.md)** - Upstream divergence record

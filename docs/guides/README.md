@@ -25,7 +25,7 @@ Guides for developers working on the code.
 | **[development/DEVELOPMENT.md](development/DEVELOPMENT.md)** | Development guide | Active code development |
 | **[development/TESTING.md](development/TESTING.md)** | Unit and integration tests | Run tests, validate code |
 | **[development/SCRIPTS.md](development/SCRIPTS.md)** | Complete guide of useful scripts | Use validation and development scripts |
-| **[../docs/fork-maintenance/README.md](../docs/fork-maintenance/README.md)** | Fork maintenance: divergence record, merge playbook, logs | Sync with cosmos/evm safely |
+| **[fork-maintenance/README.md](../fork-maintenance/README.md)** | Fork maintenance: divergence record, merge playbook, logs | Sync with cosmos/evm safely |
 
 ### 🧪 Testing and Validation
 
@@ -91,14 +91,14 @@ Reference documentation and troubleshooting.
 - **...understand ModuleAccounts**: [configuration/MODULE_ACCOUNTS.md](configuration/MODULE_ACCOUNTS.md)
 - **...configure vesting accounts**: [configuration/VESTING_ACCOUNTS.md](configuration/VESTING_ACCOUNTS.md)
 - **...resolve a problem**: [reference/TROUBLESHOOTING.md](reference/TROUBLESHOOTING.md)
-- **...merge upstream (cosmos/evm)**: [docs/fork-maintenance/README.md](../docs/fork-maintenance/README.md) → [PLAYBOOK.md](../docs/fork-maintenance/PLAYBOOK.md)
+- **...merge upstream (cosmos/evm)**: [fork-maintenance/README.md](../fork-maintenance/README.md) → [PLAYBOOK.md](../fork-maintenance/PLAYBOOK.md)
 
 ### By Experience Level
 
 **I am...**
 
 - **New**: Start with [QUICK_START.md](QUICK_START.md)
-- **Active developer**: [development/DEVELOPMENT.md](development/DEVELOPMENT.md); upstream sync: [docs/fork-maintenance/README.md](../docs/fork-maintenance/README.md)
+- **Active developer**: [development/DEVELOPMENT.md](development/DEVELOPMENT.md); upstream sync: [fork-maintenance/README.md](../fork-maintenance/README.md)
 - **DevOps/Infrastructure**: [infrastructure/RELEASES.md](infrastructure/RELEASES.md) and [infrastructure/CI_CD.md](infrastructure/CI_CD.md)
 - **Validator**: [deployment/VALIDATORS.md](deployment/VALIDATORS.md)
 
@@ -108,7 +108,7 @@ Reference documentation and troubleshooting.
 
 ### Structure
 
-- **Main guides** are in the root of `guides/`
+- **Main guides** are in the root of `docs/guides/` (this folder)
 - **Specialized guides** are in subfolders by category
 - **Each guide** is focused on a specific objective
 - **Differentiated workflows** - each guide clearly explains different scenarios
@@ -142,13 +142,13 @@ If you find outdated information, please open an issue or PR.
 | Validate | [testing/VALIDATION.md](testing/VALIDATION.md) |
 | Release | [infrastructure/RELEASES.md](infrastructure/RELEASES.md) |
 | Problems | [reference/TROUBLESHOOTING.md](reference/TROUBLESHOOTING.md) |
-| Upstream merge | [docs/fork-maintenance/README.md](../docs/fork-maintenance/README.md) |
+| Upstream merge | [fork-maintenance/README.md](../fork-maintenance/README.md) |
 
 ---
 
 ## 📚 External Documentation
 
-- **[docs/fork-maintenance/UPSTREAM_DIVERGENCE_RECORD.md](../docs/fork-maintenance/UPSTREAM_DIVERGENCE_RECORD.md)** - Upstream divergence record (this fork)
-- **[docs/fork-maintenance/README.md](../docs/fork-maintenance/README.md)** - Merge playbook, verification, logs
-- **[README.md](../README.md)** - Project overview
-- **[scripts/README.md](../scripts/README.md)** - Scripts documentation (if exists)
+- **[fork-maintenance/UPSTREAM_DIVERGENCE_RECORD.md](../fork-maintenance/UPSTREAM_DIVERGENCE_RECORD.md)** - Upstream divergence record (this fork)
+- **[fork-maintenance/README.md](../fork-maintenance/README.md)** - Merge playbook, verification, logs
+- **[README.md](../../README.md)** - Project overview
+- **[scripts/README.md](../../scripts/README.md)** - Scripts documentation (if exists)

@@ -489,7 +489,7 @@ ls -lh dist/
 
 **Note about Mac M1**: ARM64 builds may fail on Mac M1 with Docker emulation. This is expected. Builds work correctly in GitHub Actions.
 
-**More information**: See [guides/infrastructure/RELEASES.md](../infrastructure/RELEASES.md) for official releases.
+**More information**: See [RELEASES.md](../infrastructure/RELEASES.md) for official releases.
 
 ---
 
@@ -654,9 +654,9 @@ sudo usermod -aG docker $USER
 
 ## 📚 More Information
 
-- **[guides/QUICK_START.md](../QUICK_START.md)** - Quick start
-- **[guides/infrastructure/RELEASES.md](../infrastructure/RELEASES.md)** - Official releases with GitHub Actions
-- **[guides/reference/TROUBLESHOOTING.md](../reference/TROUBLESHOOTING.md)** - More problem solutions
+- **[QUICK_START.md](../QUICK_START.md)** - Quick start
+- **[RELEASES.md](../infrastructure/RELEASES.md)** - Official releases with GitHub Actions
+- **[TROUBLESHOOTING.md](../reference/TROUBLESHOOTING.md)** - More problem solutions
 
 ---
 
