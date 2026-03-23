@@ -3,6 +3,8 @@ package ante
 import (
 	"fmt"
 
+	cmtproto "github.com/cometbft/cometbft/proto/tendermint/types"
+
 	"github.com/cosmos/evm/ante/evm"
 	testconstants "github.com/cosmos/evm/testutil/constants"
 	"github.com/cosmos/evm/testutil/integration/evm/factory"
@@ -12,7 +14,6 @@ import (
 	testkeyring "github.com/cosmos/evm/testutil/keyring"
 	evmtypes "github.com/cosmos/evm/x/vm/types"
 
-	cmtproto "github.com/cometbft/cometbft/proto/tendermint/types"
 	storetypes "cosmossdk.io/store/types"
 
 	sdktypes "github.com/cosmos/cosmos-sdk/types"
@@ -70,7 +71,7 @@ func (s *EvmUnitAnteTestSuite) TestCheckGasWanted() {
 				if cp.Block != nil {
 					block = *cp.Block
 				}
-				block.MaxGas = int64(commonGasLimit - 10000)
+				block.MaxGas = int64(commonGasLimit - 10000) //nolint:gosec // G115: test fixture; commonGasLimit is 100_000
 				cp.Block = &block
 				return base.WithConsensusParams(cp)
 			},

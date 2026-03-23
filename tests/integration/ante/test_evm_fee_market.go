@@ -3,6 +3,8 @@ package ante
 import (
 	"math/big"
 
+	ethtypes "github.com/ethereum/go-ethereum/core/types"
+
 	"github.com/cosmos/evm/ante/evm"
 	"github.com/cosmos/evm/ante/types"
 	"github.com/cosmos/evm/server/config"
@@ -10,7 +12,6 @@ import (
 	testconstants "github.com/cosmos/evm/testutil/constants"
 	utiltx "github.com/cosmos/evm/testutil/tx"
 	evmtypes "github.com/cosmos/evm/x/vm/types"
-	ethtypes "github.com/ethereum/go-ethereum/core/types"
 
 	sdkmath "cosmossdk.io/math"
 
