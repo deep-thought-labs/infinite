@@ -2,7 +2,8 @@
 
 **Objective**: Create a customized genesis file for a new Infinite Drive network (mainnet, testnet, or creative) with accounts and validators.
 
-**⚠️ IMPORTANT**: 
+**⚠️ IMPORTANT**:
+
 - This guide is **specifically for mainnet/testnet/creative creation** (one-time setup process)
 - **For joining an existing network**, see [Obtaining Genesis from URL](#obtaining-genesis-from-url) below
 
@@ -66,6 +67,7 @@ infinited init my-moniker --chain-id infinite_421018002-1 --home ~/.infinited
 ```
 
 **Network configuration**:
+
 - Base denom: `drop`
 - Display denom: `Improbability`
 - Symbol: `42`
@@ -81,6 +83,7 @@ infinited init my-moniker --chain-id infinite_421018002-1 --home ~/.infinited
 ```
 
 **Network configuration**:
+
 - Base denom: `tdrop`
 - Display denom: `TestImprobability`
 - Symbol: `T42`
@@ -96,6 +99,7 @@ infinited init my-moniker --chain-id infinite_421018002-1 --home ~/.infinited
 ```
 
 **Network configuration**:
+
 - Base denom: `cdrop`
 - Display denom: `CreativeImprobability`
 - Symbol: `C42`
@@ -104,6 +108,7 @@ infinited init my-moniker --chain-id infinite_421018002-1 --home ~/.infinited
 </details>
 
 **What this script does automatically**:
+
 - ✅ Sets all module denominations to network-specific denom
 - ✅ Adds complete token metadata
 - ✅ Configures EVM precompiles and ERC20 pairs
@@ -114,6 +119,7 @@ infinited init my-moniker --chain-id infinite_421018002-1 --home ~/.infinited
 
 **Configuration files location**:
 The script reads all network-specific parameters from JSON configuration files located in:
+
 - **Mainnet**: `scripts/genesis-configs/mainnet.json`
 - **Testnet**: `scripts/genesis-configs/testnet.json`
 - **Creative**: `scripts/genesis-configs/creative.json`
@@ -121,11 +127,13 @@ The script reads all network-specific parameters from JSON configuration files l
 These files contain all network-specific parameters (denominations, token metadata, staking, mint, governance, slashing, fee market, distribution, and consensus parameters). You can modify these files to customize the genesis parameters for each network.
 
 **For ModuleAccounts configuration** (automatically executed):
+
 - **Mainnet**: `scripts/genesis-configs/mainnet-module-accounts.json`
 - **Testnet**: `scripts/genesis-configs/testnet-module-accounts.json`
 - **Creative**: `scripts/genesis-configs/creative-module-accounts.json`
 
 **For Vesting Accounts configuration** (automatically executed):
+
 - **Mainnet**: `scripts/genesis-configs/mainnet-vesting-accounts.json`
 - **Testnet**: `scripts/genesis-configs/testnet-vesting-accounts.json`
 - **Creative**: `scripts/genesis-configs/creative-vesting-accounts.json`
@@ -133,9 +141,11 @@ These files contain all network-specific parameters (denominations, token metada
 **⚠️ IMPORTANT**: You don't need to run `setup_module_accounts.sh` or `setup_vesting_accounts.sh` separately. They are executed automatically by `customize_genesis.sh` after applying module customizations.
 
 **Advanced option**: If you need to skip automatic account setup (for debugging/testing), use the `--skip-accounts` flag:
+
 ```bash
 ./scripts/customize_genesis.sh ~/.infinited/config/genesis.json --network mainnet --skip-accounts
 ```
+
 This will only apply module customizations without executing the account setup scripts. You can then run them manually if needed (see technical details below).
 
 <details>
@@ -157,6 +167,7 @@ These scripts are internal to Step 2 and are not separate user-facing steps. The
 **⚠️ IMPORTANT**: **You should NOT run this step manually in normal circumstances.**
 
 ModuleAccounts are **automatically configured** when you run `customize_genesis.sh` in Step 2. This step is only documented here for:
+
 - **Debugging**: If you need to troubleshoot ModuleAccounts setup
 - **Testing**: If you want to test the ModuleAccounts script in isolation
 - **Manual modifications**: If you need to add or modify ModuleAccounts after Step 2
@@ -183,7 +194,8 @@ If you need to manually set up or modify ModuleAccounts according to the project
 # infinited genesis add-genesis-account infinite1vmafl8f3s6uuzwnxkqz0eza47v6ecn0tqw4y9p 1000000000000000000000000drop --home ~/.infinited
 #
 # Step 2: Convert to ModuleAccount with name and permissions
-# jq '(.app_state.auth.accounts[] | select(.address == "infinite1vmafl8f3s6uuzwnxkqz0eza47v6ecn0tqw4y9p")) |= (. | del(."@type") | {"@type":"/cosmos.auth.v1beta1.ModuleAccount","base_account":.,"name":"treasury","permissions":["minter","burner"]})' ~/.infinited/config/genesis.json > ~/.infinited/config/genesis.json.tmp && mv ~/.infinited/config/genesis.json.tmp ~/.infinited/config/genesis.json
+# jq '...' ~/.infinited/config/genesis.json > ~/.infinited/config/genesis.json.tmp && mv ...
+# (full jq filter for mainnet treasury is long; copy from script output or see script source)
 ```
 
 **Configuration file**: `scripts/genesis-configs/mainnet-module-accounts.json`
@@ -229,6 +241,7 @@ If you need to manually set up or modify ModuleAccounts according to the project
 </details>
 
 **What to do**:
+
 1. Run the script with the appropriate `--network` flag for your network
 2. The script will **execute commands automatically** and create all ModuleAccounts
 3. Review the summary report to confirm all ModuleAccounts were created successfully
@@ -237,6 +250,7 @@ If you need to manually set up or modify ModuleAccounts according to the project
 **When to use**: Setting up tokenomics pools (strategic delegation, security rewards, perpetual R&D, fish bootstrap, privacy & resistance, community growth) as ModuleAccounts according to the project's economic model.
 
 **ModuleAccounts configured**:
+
 - `strategic_delegation` (40%) - Never spent, only delegated
 - `security_rewards` (25%) - Validator + staker rewards
 - `perpetual_rd` (15%) - Institutional funding (Deep Thought Labs)
@@ -295,6 +309,7 @@ If you need to manually set up or modify vesting accounts (e.g., multisig wallet
 </details>
 
 **What to do**:
+
 1. Edit the configuration file for your network and add the multisig wallet address
 2. Set the vesting schedule (start time, end time, amount)
 3. Run the script with the appropriate `--network` flag
@@ -325,6 +340,7 @@ infinited keys add my-account --keyring-backend file --home ~/.infinited
 **⚠️ SECURITY**: Save the mnemonic phrase securely. You'll need it to recover the account.
 
 **Alternative: Recover from mnemonic**:
+
 ```bash
 infinited keys add my-account --recover --keyring-backend file --home ~/.infinited
 ```
@@ -421,6 +437,7 @@ infinited genesis gentx my-account 1000000000000000000drop \
 ```
 
 **Optional metadata**:
+
 ```bash
 infinited genesis gentx my-account 1000000000000000000drop \
   --chain-id infinite_421018-1 \
@@ -454,6 +471,7 @@ infinited genesis gentx my-account 1000000000000000000tdrop \
 ```
 
 **Optional metadata**:
+
 ```bash
 infinited genesis gentx my-account 1000000000000000000tdrop \
   --chain-id infinite_421018001-1 \
@@ -487,6 +505,7 @@ infinited genesis gentx my-account 1000000000000000000cdrop \
 ```
 
 **Optional metadata**:
+
 ```bash
 infinited genesis gentx my-account 1000000000000000000cdrop \
   --chain-id infinite_421018002-1 \
@@ -505,6 +524,7 @@ infinited genesis gentx my-account 1000000000000000000cdrop \
 </details>
 
 **Parameters**:
+
 - `my-account`: Account name (must exist in keyring and have funds in genesis)
 - Amount: Amount to self-delegate (1 token = 1 × 10^18, must be ≤ account balance)
   - Mainnet: `1000000000000000000drop`
@@ -526,7 +546,8 @@ infinited genesis gentx my-account 1000000000000000000cdrop \
 infinited genesis collect-gentxs --home ~/.infinited
 ```
 
-**⚠️ IMPORTANT**: 
+**⚠️ IMPORTANT**:
+
 - The chain **requires at least one validator** in genesis to produce blocks
 - If you don't run `collect-gentxs`, the chain will start but won't produce blocks
 - All validators must use the same `--chain-id`
@@ -537,6 +558,7 @@ infinited genesis collect-gentxs --home ~/.infinited
 For networks with multiple validators:
 
 1. **Each validator creates their gentx** (on their own machine):
+
    ```bash
    # Validator 1 (example: self-delegate 1 token)
    infinited genesis gentx validator1 1000000000000000000drop \
@@ -561,9 +583,11 @@ For networks with multiple validators:
 
 2. **Copy all gentx files to coordinator** (files are in `~/.infinited/config/gentx/`)
 3. **Coordinator collects all gentxs**:
+
    ```bash
    infinited genesis collect-gentxs --home ~/.infinited
    ```
+
 4. **Distribute final genesis** to all validators
 
 **Important**: All validators must use the **exact same chain ID**.
@@ -575,6 +599,7 @@ For networks with multiple validators:
 ### Step 5: Validate Genesis
 
 **Note**: Validation is **automatically executed** by the scripts:
+
 - `customize_genesis.sh` validates structure and SDK after all customizations
 - `setup_module_accounts.sh` validates structure and SDK after creating ModuleAccounts
 - `setup_vesting_accounts.sh` validates structure and SDK after creating vesting accounts
@@ -589,6 +614,7 @@ For networks with multiple validators:
 ```
 
 **This checks**:
+
 - ✅ ModuleAccount structure (all required fields, correct types)
 - ✅ ContinuousVestingAccount structure (all required fields, correct types)
 - ✅ Account-balance consistency (all accounts have corresponding balances)
@@ -596,6 +622,7 @@ For networks with multiple validators:
 - ✅ Field relationships (start_time < end_time, etc.)
 
 **This validation ensures**:
+
 - Structure matches Cosmos SDK specifications exactly
 - No missing required fields
 - Data types are correct
@@ -609,12 +636,14 @@ infinited genesis validate-genesis --home ~/.infinited
 ```
 
 **This checks**:
+
 - ✅ All denominations are consistent
 - ✅ Total supply equals sum of balances (see [TOKEN_SUPPLY.md](TOKEN_SUPPLY.md) for details)
 - ✅ Validator configurations are correct
 - ✅ JSON structure is valid
 
 **When validation runs automatically**:
+
 - After `customize_genesis.sh` completes (validates final structure)
 - After `setup_module_accounts.sh` completes (validates ModuleAccount structure)
 - After `setup_vesting_accounts.sh` completes (validates vesting account structure)
@@ -674,6 +703,7 @@ infinited start \
 </details>
 
 **Always specify both Chain IDs**:
+
 - `--chain-id`: Cosmos Chain ID (format: `{name}_{number}-{version}`)
 - `--evm.evm-chain-id`: EVM Chain ID (integer, EIP-155)
 

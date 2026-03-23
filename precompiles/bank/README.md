@@ -30,8 +30,8 @@ Each balance includes the ERC-20 contract address and amount in the token's orig
 **Returns:**
 
 - Array of `Balance` structs containing:
-    - `contractAddress`: ERC-20 contract address representing the native token
-    - `amount`: Token balance in smallest denomination
+  - `contractAddress`: ERC-20 contract address representing the native token
+  - `amount`: Token balance in smallest denomination
 
 **Gas Cost:** 2,851 + (2,851 × (n-1)) where n = number of tokens returned
 
@@ -48,8 +48,8 @@ Retrieves the total supply of all native tokens in the system.
 **Returns:**
 
 - Array of `Balance` structs containing:
-    - `contractAddress`: ERC-20 contract address representing the native token
-    - `amount`: Total supply in smallest denomination
+  - `contractAddress`: ERC-20 contract address representing the native token
+  - `amount`: Total supply in smallest denomination
 
 **Gas Cost:** 2,477 + (2,477 × (n-1)) where n = number of tokens returned
 

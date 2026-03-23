@@ -68,6 +68,7 @@ jobs:
           PATTERNS: |
             **/*.md
             .markdownlint.yml
+            .markdownlint-cli2.jsonc
             .markdownlintignore
 
       # Stable Node

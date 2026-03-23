@@ -14,6 +14,7 @@
 ```
 
 This script verifies:
+
 - ✅ Docker installed and running
 - ✅ Go installed (correct version)
 - ✅ Make, Git installed
@@ -32,8 +33,9 @@ jq --version
 ```
 
 **If you don't have them installed:**
+
 - **Go**: [Go Installation](https://go.dev/doc/install)
-- **jq**: 
+- **jq**:
   - macOS: `brew install jq`
   - Linux: `sudo apt-get install jq` or `sudo yum install jq`
 
@@ -68,6 +70,7 @@ To run a node, you have two options:
 The easiest way to run a node is using **[Drive](https://github.com/deep-thought-labs/drive)**, the infrastructure management client:
 
 **For Mainnet:**
+
 ```bash
 # 1. Clone Drive repository
 git clone https://github.com/deep-thought-labs/drive.git
@@ -89,6 +92,7 @@ cd services/node0-infinite
 ```
 
 **For Testnet:**
+
 ```bash
 # Same steps, but use testnet service directory
 cd drive/services/node1-infinite-testnet
@@ -97,6 +101,7 @@ cd drive/services/node1-infinite-testnet
 ```
 
 **Key Points:**
+
 - Use `./drive.sh` for all commands (automatically handles permissions and detects service name)
 - **Simplified syntax:** `./drive.sh node-start` (no need to specify `exec` or service name)
 - The `node-init` command automatically downloads the official genesis file from the configured URL
@@ -135,21 +140,26 @@ See [README.md](../README.md) for more details.
 ## 📚 Next Steps
 
 ### For Development
+
 - **[development/BUILDING.md](development/BUILDING.md)** - Complete compilation guide
 - **[development/DEVELOPMENT.md](development/DEVELOPMENT.md)** - Detailed development guide
 
 ### For Testing
+
 - **[testing/VALIDATION.md](testing/VALIDATION.md)** - Validation scripts and health checks
 - **[development/TESTING.md](development/TESTING.md)** - Unit and integration tests
 
 ### For Production
+
 - **[deployment/PRODUCTION.md](deployment/PRODUCTION.md)** - Production deployment
 - **[deployment/VALIDATORS.md](deployment/VALIDATORS.md)** - Validator configuration
 
 ### For Releases
+
 - **[infrastructure/RELEASES.md](infrastructure/RELEASES.md)** - Create releases with GitHub Actions
 
 ### Having Issues?
+
 - **[reference/TROUBLESHOOTING.md](reference/TROUBLESHOOTING.md)** - Common problem solutions
 
 ## 🔧 Quick Reference Commands

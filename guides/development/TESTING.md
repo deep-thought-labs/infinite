@@ -38,6 +38,7 @@ make test-unit
 ```
 
 **What it does**:
+
 - Runs all unit tests in the project
 - Shows results in real time
 - Reports failures if any
@@ -45,6 +46,7 @@ make test-unit
 **Estimated time**: 5-15 minutes
 
 **Expected output**:
+
 ```
 ?       github.com/cosmos/evm    [no test files]
 ok      github.com/cosmos/evm/x/vm/types    0.123s
@@ -81,6 +83,7 @@ make test-infinited
 ```
 
 **What it does**:
+
 - Runs integration tests specific to `infinited`
 - Tests complete application flows
 - Validates configuration and initialization
@@ -105,6 +108,7 @@ make test-all
 ```
 
 **What it does**:
+
 - Runs unit tests
 - Runs integration tests
 - Runs additional tests
@@ -129,6 +133,7 @@ make test-unit-cover
 ```
 
 **What it does**:
+
 - Runs unit tests
 - Generates coverage report in `coverage.txt`
 
@@ -153,18 +158,21 @@ go tool cover -html=coverage.txt
 **Script**: `scripts/validate_customizations.sh`
 
 **What it validates**:
+
 - ✅ Token configuration (denoms, chain ID)
 - ✅ Custom genesis functions
 - ✅ Bech32 prefixes
 - ✅ Upstream compliance
 
 **Usage**:
+
 ```bash
 # Validate customizations
 ./scripts/validate_customizations.sh
 ```
 
-**When to use**: 
+**When to use**:
+
 - After making changes
 - Before commit
 - During merges with upstream
@@ -180,7 +188,9 @@ go tool cover -html=coverage.txt
 **Problem**: Some tests fail
 
 **Solutions**:
+
 1. **Verify no processes are running**:
+
    ```bash
    # Verify infinited processes
    ps aux | grep infinited
@@ -190,12 +200,14 @@ go tool cover -html=coverage.txt
    ```
 
 2. **Clean and recompile**:
+
    ```bash
    rm -rf build/
    make install
    ```
 
 3. **Run tests again**:
+
    ```bash
    make test-unit
    ```
@@ -203,11 +215,13 @@ go tool cover -html=coverage.txt
 ### Tests Very Slow
 
 **Causes**:
+
 - First run (downloads dependencies)
 - Slow system
 - Many tests
 
 **Solutions**:
+
 - First time: It's normal, may take longer
 - Run specific tests instead of all
 - Close other applications
@@ -217,6 +231,7 @@ go tool cover -html=coverage.txt
 **Problem**: `coverage.txt` is not created
 
 **Solution**:
+
 ```bash
 # Make sure you run the correct command
 make test-unit-cover

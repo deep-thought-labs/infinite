@@ -12,15 +12,18 @@ Guide on how Docker is used in Infinite Drive's build process.
 ## 🐳 Why Docker?
 
 **Docker** is used in Infinite Drive for:
+
 - ✅ **Consistent cross-compilation**: Reproducible builds for multiple platforms
 - ✅ **Isolated environment**: Doesn't contaminate your local system
 - ✅ **Same configuration**: Same environment as GitHub Actions
 
 **When it's used**:
+
 - Release builds (`make release-dry-run`)
 - GitHub Actions (automatic)
 
 **When it's NOT used**:
+
 - Normal development compilation (`make install`)
 - Simple builds (`make build`)
 
@@ -73,6 +76,7 @@ docker run hello-world
 ### Resource Configuration (macOS/Windows)
 
 In Docker Desktop:
+
 1. Open Docker Desktop
 2. Settings → Resources
 3. Configure:
@@ -89,11 +93,13 @@ In Docker Desktop:
 **Command**: `make release-dry-run-linux` or `make release-dry-run`
 
 **What it does**:
+
 1. Uses Docker to create an isolated environment
 2. Compiles binaries inside the container
 3. Copies binaries to `./dist/`
 
 **Requirements**:
+
 - Docker running
 - Sufficient disk space
 
@@ -119,6 +125,7 @@ When you run `make release-dry-run`:
 **Problem**: Docker is not installed or not in PATH
 
 **Solution**:
+
 ```bash
 # Verify installation
 which docker
@@ -131,6 +138,7 @@ which docker
 **Problem**: Your user doesn't have permissions to use Docker (Linux)
 
 **Solution**:
+
 ```bash
 # Add user to docker group
 sudo usermod -aG docker $USER
@@ -147,6 +155,7 @@ docker ps
 **Problem**: Docker is not running
 
 **Solution**:
+
 ```bash
 # macOS/Windows: Open Docker Desktop
 
@@ -158,11 +167,13 @@ sudo systemctl enable docker  # To start automatically
 ### Build Very Slow
 
 **Causes**:
+
 - First time (downloads Docker image)
 - Emulation on Mac M1 (slower than native)
 - Limited resources
 
 **Solutions**:
+
 - First time: It's normal, may take longer
 - Mac M1: It's expected, native builds on GitHub Actions are faster
 - Increase Docker Desktop resources
@@ -172,6 +183,7 @@ sudo systemctl enable docker  # To start automatically
 **Problem**: ARM64 build fails with assembler errors
 
 **This is expected and normal**:
+
 - ✅ AMD64 build works
 - ⚠️ ARM64 build may fail on Mac M1 with Docker emulation
 - ✅ ARM64 builds work correctly on GitHub Actions (native Ubuntu)

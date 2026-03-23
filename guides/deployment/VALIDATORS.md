@@ -14,7 +14,7 @@ If you try to start a chain with a Genesis without validators:
 2. **BUT the chain will NOT produce blocks** - CometBFT cannot reach consensus without a validator set
 3. **The node will start** but will be "stuck" waiting for blocks that will never arrive
 
-### Expected behavior:
+### Expected behavior
 
 ```
 $ infinited start \
@@ -68,11 +68,13 @@ infinited genesis collect-gentxs
 ```
 
 **Advantages:**
+
 - ✅ Chain can start immediately
 - ✅ Initial validators are defined before launch
 - ✅ Does not require governance proposals
 
 **Disadvantages:**
+
 - ⚠️ All validators must coordinate and send their gentxs BEFORE launch
 - ⚠️ Requires trust and coordination between initial validators
 
@@ -102,7 +104,7 @@ If you really need a Genesis without initial validators:
 
 ## Recommendation for Infinite Drive
 
-### For Mainnet:
+### For Mainnet
 
 **✅ Use Option 1**: Define initial validators before launch.
 
@@ -128,9 +130,10 @@ If you really need a Genesis without initial validators:
      - Sending `create-validator` transactions (after accumulating enough tokens)
      - Governance processes to add institutional validators
 
-### For Testnet:
+### For Testnet
 
 Similar to Mainnet, but you can be more flexible:
+
 - Fewer initial validators (3-5 is sufficient)
 - Testnet tokens are easy to obtain
 - You can have a "development" validator controlled by the team
@@ -146,6 +149,7 @@ The current script generates the base Genesis but **does not automatically add v
 3. **Coordination**: Validators must be collected from multiple sources
 
 **The script MUST clearly document** that:
+
 - ✅ It generates a valid Genesis
 - ⚠️ BUT Genesis has NO validators
 - ⚠️ Validators MUST be added before launch
@@ -172,7 +176,7 @@ Before launching:
 
 ## Useful Commands
 
-### Verify validators in Genesis:
+### Verify validators in Genesis
 
 ```bash
 # Count validators
@@ -188,7 +192,7 @@ jq '.app_state.staking.validators[] | {operator: .operator_address, tokens: .tok
 jq '.app_state.staking.delegations | length' genesis.json
 ```
 
-### Verify Genesis can start:
+### Verify Genesis can start
 
 ```bash
 # Validate structure

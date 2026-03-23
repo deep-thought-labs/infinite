@@ -262,6 +262,7 @@ All custom ModuleAccounts have **empty permissions** (`[]`) by default because t
 To enable minting or burning capabilities:
 
 1. **Register in code**: Add to `infinited/config/permissions.go`:
+
    ```go
    var maccPerms = map[string][]string{
        // ... existing modules ...
@@ -282,6 +283,7 @@ To enable minting or burning capabilities:
 The `strategic_delegation` pool has a special restriction: **"Never spent — only delegated"**.
 
 This means:
+
 - ✅ Can delegate tokens to validators
 - ❌ Should not transfer tokens directly
 - ⚠️ Requires custom logic to enforce this restriction (not enforced by default)
@@ -289,6 +291,7 @@ This means:
 ### Token Release Schedule
 
 According to tokenomics:
+
 - All tokens are **locked at genesis**
 - Released gradually over **42 years**
 - Controlled by the **DAO** from block 1
@@ -305,21 +308,25 @@ ModuleAccounts are typically created as part of the genesis setup process:
 ### Complete Workflow
 
 1. **Initialize genesis**:
+
    ```bash
    infinited init my-moniker --chain-id infinite_421018-1
    ```
 
 2. **Customize genesis**:
+
    ```bash
    ./scripts/customize_genesis.sh --network mainnet
    ```
 
 3. **Create ModuleAccounts**:
+
    ```bash
    ./scripts/setup_module_accounts.sh --network mainnet
    ```
 
 4. **Validate genesis**:
+
    ```bash
    infinited genesis validate-genesis
    ```

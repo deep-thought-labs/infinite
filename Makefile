@@ -298,7 +298,7 @@ lint-md:
 		echo "  npx not found; install Node.js to run markdownlint (https://nodejs.org/)"; \
 		exit 1; \
 	fi
-	npx --yes markdownlint-cli2@$(markdownlint_cli2_version) --config .markdownlint.yml "**/*.md" "!tests/systemtests/Counter/**"
+	npx --yes markdownlint-cli2@$(markdownlint_cli2_version) "**/*.md"
 
 lint-fix:
 	@go install github.com/golangci/golangci-lint/v2/cmd/golangci-lint@$(golangci_version)

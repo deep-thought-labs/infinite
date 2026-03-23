@@ -86,5 +86,5 @@ Breve descripción (p. ej. “Sincronizar con cosmos/evm main hasta PR #NNN”, 
 
 ## Referencias
 
-- PR(s): 
-- Issues: 
+- PR(s):
+- Issues:

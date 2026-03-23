@@ -154,14 +154,19 @@ If you make changes to customizations (tokens, chain IDs, bech32):
 
 1. **Make the change** in the code
 2. **Validate**:
+
    ```bash
    ./scripts/validate_customizations.sh
    ```
+
 3. **Compile**:
+
    ```bash
    make install
    ```
+
 4. **Test** (if possible):
+
    ```bash
    # Start node using Drive or direct installation, then:
    ./scripts/validate_token_config.sh
@@ -173,14 +178,19 @@ If you make changes to code logic:
 
 1. **Make the change**
 2. **Compile**:
+
    ```bash
    make install
    ```
+
 3. **Run tests**:
+
    ```bash
    make test-unit
    ```
+
 4. **Validate customizations** (to ensure they weren't broken):
+
    ```bash
    ./scripts/validate_customizations.sh
    ```
@@ -224,6 +234,7 @@ make test-unit-cover
 ```
 
 **What it validates**:
+
 - ✅ Token configuration
 - ✅ Chain IDs
 - ✅ Bech32 prefixes
@@ -231,6 +242,7 @@ make test-unit-cover
 - ✅ Upstream compliance
 
 **When to use**:
+
 - After making changes
 - Before committing
 - During merges

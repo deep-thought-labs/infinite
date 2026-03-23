@@ -7,36 +7,44 @@
 ## Complete Workflow Steps
 
 ### Step 1: Initialize Genesis
+
 ```bash
 infinited init my-moniker --chain-id infinite_421018-1 --home ~/.infinited
 ```
 
 ### Step 2: Apply Infinite Drive Customizations
+
 ```bash
 ./scripts/customize_genesis.sh --network mainnet
 ```
+
 - Configures all module parameters
 - Sets network-specific chain ID
 - Configures staking, governance, mint, distribution, etc.
 
 ### Step 3: Configure ModuleAccounts (Optional)
+
 ```bash
 ./scripts/setup_module_accounts.sh --network mainnet
 ```
+
 - Creates tokenomics pools (strategic_delegation, security_rewards, etc.)
 - Configuration: `scripts/genesis-configs/mainnet-module-accounts.json`
 - See: [MODULE_ACCOUNTS.md](MODULE_ACCOUNTS.md)
 
 ### Step 3.5: Configure Vesting Accounts (Optional)
+
 ```bash
 ./scripts/setup_vesting_accounts.sh --network mainnet
 ```
+
 - Creates vesting accounts (multisig wallets with locked tokens)
 - Configuration: `scripts/genesis-configs/mainnet-vesting-accounts.json`
 - Can use only public address (no keyring required)
 - See: [VESTING_ACCOUNTS.md](VESTING_ACCOUNTS.md)
 
 ### Step 4: Create and Fund Regular Accounts
+
 ```bash
 # Create account
 infinited keys add my-account --keyring-backend file --home ~/.infinited
@@ -47,6 +55,7 @@ infinited genesis add-genesis-account my-account 100000000000000000000drop \
 ```
 
 ### Step 5: Create Validator
+
 ```bash
 # Create gentx
 infinited genesis gentx my-account 1000000000000000000drop \
@@ -59,15 +68,18 @@ infinited genesis collect-gentxs --home ~/.infinited
 ```
 
 ### Step 6: Validate Genesis
+
 ```bash
 infinited genesis validate-genesis --home ~/.infinited
 ```
 
 ### Step 7: Distribute Genesis File
+
 - Copy `genesis.json` to all nodes
 - All nodes must have the same genesis file
 
 ### Step 8: Start the Network
+
 ```bash
 infinited start --chain-id infinite_421018-1 --evm.evm-chain-id 421018
 ```

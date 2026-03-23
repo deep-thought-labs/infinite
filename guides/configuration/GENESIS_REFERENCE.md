@@ -3,6 +3,7 @@
 **Purpose**: This document provides detailed technical reference for all genesis parameters, module configurations, and background information.
 
 **When to use this**: Refer to this document when you need to understand:
+
 - What each parameter means
 - Why certain values are configured
 - Technical details about module configurations
@@ -48,6 +49,7 @@ When you run `infinited init`, the system generates an initial Genesis using def
    - **ERC20 Token pairs**: Initial configuration in `infinited/genesis.go`
 
 **Code location**:
+
 - `infinited/app.go` → `DefaultGenesis()`: Generates base Genesis
 - `infinited/genesis.go`: Defines specific values for EVM, ERC20, Mint, FeeMarket modules
 - Cosmos SDK: Default values in standard modules
@@ -57,6 +59,7 @@ When you run `infinited init`, the system generates an initial Genesis using def
 After running `infinited init` **for mainnet/testnet creation**, you must **apply Infinite Drive customizations** to the `genesis.json` file:
 
 **⚠️ RECOMMENDED APPROACH** (for mainnet/testnet setup): Use the dedicated script:
+
 ```bash
 ./scripts/customize_genesis.sh ~/.infinited/config/genesis.json --network <mainnet|testnet|creative>
 ```
@@ -68,48 +71,60 @@ This automatically applies all required customizations.
 **ALTERNATIVE (Manual)**: If you prefer manual editing:
 
 1. **Denominations (Denoms)**:
+
    ```bash
    # Example using jq (manual approach):
    jq '.app_state["staking"]["params"]["bond_denom"]="drop"' genesis.json > temp.json && mv temp.json genesis.json
    jq '.app_state["evm"]["params"]["evm_denom"]="drop"' genesis.json > temp.json && mv temp.json genesis.json
    jq '.app_state["mint"]["params"]["mint_denom"]="drop"' genesis.json > temp.json && mv temp.json genesis.json
    ```
+
    **Where**: Directly in the Genesis JSON file
 
 2. **Governance Parameters**:
    - Voting periods (change from `172800s` to appropriate values)
    - Minimum deposits
    - Thresholds (quorum, threshold, veto_threshold)
+
    ```bash
    # Example: change governance periods
    sed -i.bak 's/"max_deposit_period": "172800s"/"max_deposit_period": "172800s"/g' genesis.json
    sed -i.bak 's/"voting_period": "172800s"/"voting_period": "172800s"/g' genesis.json
    ```
+
    **Where**: Directly in the Genesis JSON file
 
 3. **Token Metadata**:
+
    ```bash
    jq '.app_state["bank"]["denom_metadata"]=[{...}]' genesis.json > temp.json && mv temp.json genesis.json
    ```
+
    **Where**: Directly in the Genesis JSON file
 
 4. **Initial Balances and Accounts**:
+
    ```bash
    infinited genesis add-genesis-account ADDRESS AMOUNTdrop
    ```
+
    **Where**: Using CLI commands that modify the Genesis JSON
 
 5. **Initial Validators**:
+
    ```bash
    infinited genesis gentx validator AMOUNT --chain-id CHAIN_ID
    infinited genesis collect-gentxs
    ```
+
    **Where**: Using CLI commands that add transactions to the Genesis JSON
 
 6. **Consensus Parameters**:
+
    ```bash
    jq '.consensus.params.block.max_gas="10000000"' genesis.json > temp.json && mv temp.json genesis.json
    ```
+
    **Where**: Directly in the Genesis JSON file
 
 ### 📋 Summary: Configuration by Parameter Type
@@ -162,6 +177,7 @@ You must define two Chain IDs that must be consistent:
   - This is the identifier used in EVM contracts and wallets
 
 **Considerations**:
+
 - The EVM Chain ID must be unique and not collide with other known networks
 - Once established, it CANNOT change without a hard fork
 - The Cosmos Chain ID can change the version (`-1`, `-2`, etc.) in upgrades
@@ -184,6 +200,7 @@ Native token configuration:
   - 1 Improbability = 10^18 drop
 
 **Token Metadata** (for Bank module):
+
 ```json
 {
   "description": "Improbability Token — Project 42: Sovereign, Perpetual, DAO-Governed",
@@ -210,6 +227,7 @@ Native token configuration:
 ### 3. Bech32 Prefix
 
 The prefix for Cosmos addresses:
+
 - Example: `infinite`
 - Used in addresses like: `infinite1abc...`
 
@@ -239,6 +257,7 @@ The prefix for Cosmos addresses:
 ```
 
 **Production considerations**:
+
 - `bond_denom`: Must exactly match the configured base denom
 - `max_validators`: Defines how many validators can be active simultaneously
 - `unbonding_time`: Time it takes for a stake to be available after undelegating
@@ -247,6 +266,7 @@ The prefix for Cosmos addresses:
 ### 2. Bank Module
 
 **Configuration**:
+
 ```json
 {
   "app_state": {
@@ -264,6 +284,7 @@ The prefix for Cosmos addresses:
 ```
 
 **Considerations**:
+
 - Total `supply` must equal the sum of all `balances`
 - You must include the balance of the `bonded_tokens_pool` module account with initially staked tokens
 
@@ -301,6 +322,7 @@ The prefix for Cosmos addresses:
 ```
 
 **⚠️ CRITICAL DIFFERENCES WITH DEVELOPMENT**:
+
 - In development, 30s periods are used for quick testing
 - In production you MUST use realistic periods (2 days is standard)
 - `min_deposit` must be high enough to prevent spam but accessible
@@ -309,6 +331,7 @@ The prefix for Cosmos addresses:
 ### 4. Mint Module
 
 **Configuration**:
+
 ```json
 {
   "app_state": {
@@ -331,6 +354,7 @@ The prefix for Cosmos addresses:
 ```
 
 **Considerations**:
+
 - If you don't want initial inflation, configure `inflation_min` and `inflation_max` to 0
 - `blocks_per_year` is calculated based on target block time
 - Inflation rewards validators and delegators
@@ -356,6 +380,7 @@ The prefix for Cosmos addresses:
 ```
 
 **⚠️ SECURITY PARAMETERS**:
+
 - `slash_fraction_double_sign`: Penalty for signing two blocks at the same height
 - `slash_fraction_downtime`: Penalty for being offline
 - `downtime_jail_duration`: Time a validator remains in jail
@@ -418,6 +443,7 @@ The prefix for Cosmos addresses:
 ```
 
 **Considerations**:
+
 - `evm_denom` MUST be exactly equal to staking's `bond_denom`
 - Active precompiles define which Cosmos functionalities are available from EVM
 - `chain_config` defines EVM version (should be compatible with Berlin/London)
@@ -425,6 +451,7 @@ The prefix for Cosmos addresses:
 ### 2. ERC20 Module
 
 **Configuration**:
+
 ```json
 {
   "app_state": {
@@ -444,12 +471,14 @@ The prefix for Cosmos addresses:
 ```
 
 **Considerations**:
+
 - `native_precompiles` includes the special address to represent native token in EVM
 - `token_pairs` can be added later via governance if needed
 
 ### 3. Fee Market Module
 
 **Configuration**:
+
 ```json
 {
   "app_state": {
@@ -469,6 +498,7 @@ The prefix for Cosmos addresses:
 ```
 
 **Considerations**:
+
 - If `no_base_fee: true`, there will be no EIP-1559 style fee market
 - For production, you may want to enable dynamic base fee (`no_base_fee: false`)
 - This affects how gas fees are calculated
@@ -496,6 +526,7 @@ This module is configured automatically but may have specific parameters accordi
 ```
 
 **Production considerations**:
+
 - `max_gas`: Adjust according to expected processing capacity
 - `max_bytes`: Higher = more transactions but more network load
 - In development, lower values are used for faster blocks
@@ -543,6 +574,7 @@ Since you're creating a Mainnet without previous validators, you must:
    - Use a `create-validator` transaction in the first block or via governance
 
 3. **Expected structure**:
+
 ```json
 {
   "app_state": {
@@ -579,6 +611,7 @@ infinited genesis collect-gentxs
 ```
 
 **Validator parameters**:
+
 - `commission-rate`: Initial commission (e.g., 10%)
 - `commission-max-rate`: Maximum allowed (e.g., 20%)
 - `commission-max-change-rate`: Maximum change per time (e.g., 1%)
@@ -630,6 +663,7 @@ You must define which accounts will have initial balances:
 ```
 
 **Critical considerations**:
+
 - Total `supply` MUST equal the sum of all `balances`
 - Include the `bonded_tokens_pool` account if there are initially staked tokens
 - Only include accounts that really need initial funds
@@ -638,6 +672,7 @@ You must define which accounts will have initial balances:
 ### 2. Initial Token Distribution
 
 You must decide:
+
 - **How to distribute initial tokens**: Airdrops, sales, treasury, initial validators, etc.
 - **Initial total supply**: How many tokens to create from the start
 - **Development reserves**: Funds for future development (governance controlled)
@@ -645,6 +680,7 @@ You must decide:
 ### 3. Module Accounts
 
 Automatic system accounts (you don't need to add them manually):
+
 - `bonded_tokens_pool`: For staked tokens
 - `not_bonded_tokens_pool`: For unbonding tokens
 - `evm`: For EVM module
@@ -670,6 +706,7 @@ Automatic system accounts (you don't need to add them manually):
 ```
 
 **Considerations**:
+
 - Define `minimum-gas-prices` in each node's `app.toml` (not in genesis)
 - Precompiles have internally configured gas costs
 
@@ -695,6 +732,7 @@ infinited genesis validate-genesis --home /path/to/config
 ```
 
 This command verifies:
+
 - ✅ Denom consistency
 - ✅ Parameter validation
 - ✅ Correct JSON structure
@@ -742,4 +780,3 @@ Before launching, verify:
 ---
 
 **Final Note**: This document is based on analysis of Infinite Drive source code. Always verify that these parameters are appropriate for your specific use case and consider security audits before Mainnet launch.
-

@@ -4,7 +4,7 @@
 
 **Project 42** — A cypherpunk nation in cyberspace. Powered by improbability.
 
-**🌐 [infinitedrive.xyz](https://infinitedrive.xyz)** | **📚 [Official Documentation](https://docs.infinitedrive.xyz/en)** | **🔬 [Deep Thought Labs](https://deep-thought.computer)** 
+**🌐 [infinitedrive.xyz](https://infinitedrive.xyz)** | **📚 [Official Documentation](https://docs.infinitedrive.xyz/en)** | **🔬 [Deep Thought Labs](https://deep-thought.computer)**
 
 <div align="center">
   <img src="assets/dontpanic-space.jpg" alt="Don't Panic - Infinite Improbability Drive" width="600" style="max-width: 100%; height: auto; border-radius: 8px; margin: 2rem 0;" />
@@ -34,17 +34,20 @@ Infinite Improbability Drive is **operational infrastructure** — the cryptogra
 This is infrastructure for the future: maintained, secured, and built by cypherpunks. Every transaction, every smart contract, every protocol built on this foundation contributes to a resilient digital ecosystem that operates independently of traditional power structures. The blockchain provides the trust, security, and economic coordination necessary for a sovereign cyberspace to thrive — the operational foundation for a new kind of internet, by the people, for the people.
 
 ### **Network Identity**
+
 - **Chain Name**: `infinite`
 - **Chain ID**: `infinite_421018-1`
 - **Bech32 Prefix**: `infinite`
 
 ### **Token: Improbability**
+
 - **Token Name**: Improbability
 - **Symbol**: `42`
   - *42. The [Enciclopedia Galáctica](https://grokipedia.com/page/42_(number)) contains the answer — and the question.*
 - **Token Format**: Improbability [42]
 
 ### **Unit of Measurement: cups**
+
 The Improbability token is measured in **cups** (cups of Improbability), because **improbability is the fuel that powers the Infinite Improbability Drive**. The atomic unit is **drop**.
 
 - **1 cup** = 1 cup of Improbability
@@ -55,11 +58,13 @@ The Improbability token is measured in **cups** (cups of Improbability), because
 > **Note:** This friendly nomenclature is intentional, not meant to confuse. Some readers' heads explode when they hear "a forty-two," but they relax when you mention "a cup of Improbability." We use this approach to make the tokenomics more accessible and approachable.
 
 ### **Equivalencies**
+
 - **1 Improbability [42]** = **1 cup** (1 cup of Improbability / 1 tasa de improbabilidad)
 - **1 cup** = **10¹⁸ drop**
 - **1 drop** = **10⁻¹⁸ Improbability [42]** = **10⁻¹⁸ cup**
 
 **Examples:**
+
 - `10 cups` = 10 Improbability [42]
 - `50 cups` = 50 Improbability [42]
 - `100 cups of Improbability` = 100 Improbability [42]
@@ -98,12 +103,14 @@ Our blockchain network operates on the same principle: through the collective im
 
 ## Tokenomics – Pool Allocation (Executive Summary)
 
-**Total Supply (Initial):** `100,000,200 Improbability [42]`** (100,000,200 cups)**  
+**Total Supply (Initial):** `100,000,200 Improbability [42]`**(100,000,200 cups)**  
+
 - **Circulating (Liquid):** `200 Improbability [42]`** (200 cups) – Distributed at genesis (see [Genesis Bootstrap](#genesis-bootstrap-200-42) for details)  
 - **Locked (Vesting):** `100,000,000 Improbability [42]`** (100,000,000 cups) – Released gradually over **42 years**, controlled by on-chain DAO  
 
 **Why 100 Million Tokens?**  
 Just like we use **100 tokens** in genesis for easy percentage visualization (40 tokens = 40%), we use **100 million tokens** as the total supply because it makes it **intuitively easy to understand** the project's lifecycle and market cap evolution:
+
 - **Percentage calculations are straightforward**: 40% = 40 million, 25% = 25 million, etc.
 - **Market cap tracking is simple**: At any price point, you can easily calculate total market cap
 - **Supply growth is transparent**: As tokens unlock and inflation adds new tokens, the math remains clear and verifiable
@@ -131,12 +138,14 @@ Just like we use **100 tokens** in genesis for easy percentage visualization (40
 At **Block 1**, exactly **200 Improbability [42]** (200 cups) are minted as liquid tokens and distributed as follows:
 
 #### **100 [42] → Initial Validator Set**
+
 - **Purpose:** Bootstrap the network and enable immediate block production
 - **Distribution:** Held by the initial validator, who distributes them pro-rata to the **first set of validators** as they join the chain
 - **Function:** As new validators join, they receive tokens from this pool to enable staking and block production
 - **From this seed, inflation begins**, and the network self-sustains
 
 #### **100 [42] → Tokenomics Pools (ModuleAccounts)**
+
 - **Purpose:** Provide **visual clarity and educational understanding** of the tokenomics distribution
 - **Distribution:** Split proportionally across all 6 pools according to their tokenomics percentages:
   - **Pool A (40%):** `40 [42]` → `strategic_delegation`
@@ -151,6 +160,7 @@ At **Block 1**, exactly **200 Improbability [42]** (200 cups) are minted as liqu
   - Anyone can verify the distribution by simply looking at the balances: 40 + 25 + 15 + 10 + 7 + 3 = 100
 
 > **Complete Supply at Genesis:**  
+>
 > - **200 Improbability [42] liquid** (200 cups: 100 for validators + 100 for tokenomics pools visibility)  
 > - **100,000,000 Improbability [42] locked** (100M cups) in vesting accounts (unlock linearly over 42 years)  
 > - **Total: 100,000,200 Improbability [42]** (100,000,200 cups)  
@@ -163,6 +173,7 @@ At **Block 1**, exactly **200 Improbability [42]** (200 cups) are minted as liqu
 **Design Philosophy:** Infinite Improbability Drive is an **operational infrastructure blockchain**, not a monetary store-of-value system. The inflation model and token distribution strategy are designed to sustain network operations, validator incentives, and ecosystem development—not to preserve purchasing power or function as digital hard money. Unlike Bitcoin's deflationary model optimized for value preservation, our controlled inflation ensures the network remains economically viable for infrastructure services, protocol operations, and long-term sustainability.
 
 #### **Initial Configuration**
+
 - **Initial Inflation:** Starts at `10%` annually on circulating supply  
 - **Target Stake Ratio:** `67%` of total liquid supply staked (`goal_bonded`)  
 - **Inflation Bounds (Initial):**  
@@ -181,12 +192,14 @@ At **Block 1**, exactly **200 Improbability [42]** (200 cups) are minted as liqu
 To maintain a **controlled and limited supply** while ensuring network security, we implement a **3-phase gradual adjustment strategy** via DAO governance:
 
 **Phase 1: Initial Growth (Years 1-5)**
+
 - **Initial Inflation:** `10%` annually
 - **Bounds:** `7%` min, `20%` max
 - **Objective:** Maximum incentives for validators, network security, and organic growth
 - **Expected Supply Growth:** ~240K - 1.5M tokens/year (as circulating supply grows from 2.4M to 11.9M)
 
 **Phase 2: Controlled Growth (Years 5-15) - Via Governance**
+
 - **Proposed Reductions (via DAO proposals):**
   - **Year 5:** Reduce `inflation_min` to `5%`, `inflation_max` to `15%`
   - **Year 10:** Reduce `inflation_min` to `3%`, `inflation_max` to `10%`
@@ -194,6 +207,7 @@ To maintain a **controlled and limited supply** while ensuring network security,
 - **Expected Supply Growth:** ~950K - 2.9M tokens/year (as circulating supply grows from 11.9M to 23.8M)
 
 **Phase 3: Mature Network (Years 15+) - Via Governance**
+
 - **Proposed Reductions (via DAO proposals):**
   - **Year 15:** Reduce `inflation_min` to `3%`, `inflation_max` to `7%`
   - **Years 20+:** Maintain minimum sustainable inflation (3-5% min, 7-10% max)
@@ -206,21 +220,24 @@ To maintain a **controlled and limited supply** while ensuring network security,
 #### **Governance Mechanism**
 
 Parameter adjustments are implemented via **on-chain parameter change proposals**:
+
 - **Proposal Type:** `MsgUpdateParams` for mint module
 - **Decision Criteria:** Based on circulating supply, staking ratio, network health metrics
 - **Frequency:** Every 2-5 years, aligned with network maturity phases
 - **Flexibility:** DAO can adjust timing and values based on real-world conditions
 
 **Governance Override:** DAO can adjust at any time via **on-chain parameter change proposals**:  
-  - `inflation_min` and `inflation_max` (bounds)  
-  - `goal_bonded` (target stake ratio)  
-  - `inflation_rate_change` (adjustment sensitivity)
+
+- `inflation_min` and `inflation_max` (bounds)  
+- `goal_bonded` (target stake ratio)  
+- `inflation_rate_change` (adjustment sensitivity)
 
 > **Note:** This strategy ensures a **gradual and limited supply** (Bitcoin-style) while maintaining network security through adequate validator incentives. The automatic per-block adjustment responds to staking ratios, while the gradual parameter reduction (via governance) controls long-term supply growth.
 
 ---
 
 ### **Market Birth & Liquidity Path**
+
 1. **Block 1:** `200 Improbability [42]` (200 cups) liquid:
    - `100 [42]` (100 cups) → initial validator (distributes to first validator set)
    - `100 [42]` (100 cups) → tokenomics pools (40+25+15+10+7+3, visible on-chain)
@@ -232,6 +249,7 @@ Parameter adjustments are implemented via **on-chain parameter change proposals*
 ---
 
 ### **Perpetual Commitment**
+
 - **All pools unlock gradually over 42 years**, aligned with operational horizons  
 - **DAO governs destination of every unlock and inflation stream**  
 - **Lab retains operational control over Pool C (perpetual_rd)**  
@@ -254,6 +272,7 @@ All tokenomics pools are implemented as **ModuleAccounts** in genesis. For compl
 👉 **[Official Documentation](https://docs.infinitedrive.xyz/en)** - Complete guides and technical documentation
 
 The official documentation includes:
+
 - **Network Overview**: Learn about Infinite Improbability Drive
 - **Tokenomics**: Complete token supply and distribution details
 - **Network Parameters**: All network configurations for mainnet, testnet, and creative
@@ -269,6 +288,7 @@ The official documentation includes:
 The easiest way to run a node is using **[Drive](https://github.com/deep-thought-labs/drive)**, the infrastructure management client for **Infinite Improbability Drive**:
 
 **For Mainnet:**
+
 ```bash
 # 1. Clone Drive repository
 git clone https://github.com/deep-thought-labs/drive.git
@@ -295,6 +315,7 @@ cd services/node0-infinite
 ```
 
 **For Testnet:**
+
 ```bash
 # Same steps, but use testnet service directory
 cd drive/services/node1-infinite-testnet
@@ -304,6 +325,7 @@ cd drive/services/node1-infinite-testnet
 ```
 
 **Key Points:**
+
 - Use `./drive.sh` for all commands (automatically handles permissions and detects service name)
 - **Simplified syntax:** `./drive.sh node-start` (no need to specify `exec` or service name)
 - The `node-init` command automatically downloads the official genesis file from the configured URL
@@ -340,6 +362,7 @@ infinited start --home ~/.infinited
 ```
 
 **Important Notes:**
+
 - For mainnet/testnet, you must compile the binary and obtain the official genesis file with Infinite Drive's complete configuration
 - See the [official documentation](https://docs.infinitedrive.xyz/en/blockchain/genesis) for complete guides on genesis files, ModuleAccounts, and vesting accounts
 - See the [official documentation](https://docs.infinitedrive.xyz/en) for detailed compilation instructions and development workflows
@@ -371,6 +394,7 @@ infinited start --home ~/.infinited
 ---
 
 ## Community
+
 - **Project**: [infinitedrive.xyz](https://infinitedrive.xyz)
 - **Lab**: [Deep Thought Labs](https://deep-thought.computer) - Research laboratory
 - **X**: [@DeepThought_Lab](https://x.com/DeepThought_Lab)

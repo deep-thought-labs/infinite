@@ -17,12 +17,14 @@ Complete guide for creating official Infinite Drive releases using GitHub Action
 ## 🎯 What is a Release?
 
 A **release** is an official version of the software that includes:
+
 - ✅ Compiled binaries for multiple platforms (Linux, macOS, Windows)
 - ✅ Release notes with changes
 - ✅ Downloadable files for users
 - ✅ Git tags for versioning
 
 **Difference with local compilation**:
+
 - **Local compilation** (`make install`): Only for your machine
 - **Release**: Binaries for all platforms, publicly published
 
@@ -39,6 +41,7 @@ docker ps  # Should work without errors
 ```
 
 **Installation**:
+
 - **macOS**: [Docker Desktop](https://www.docker.com/products/docker-desktop/)
 - **Linux**: `curl -fsSL https://get.docker.com -o get-docker.sh && sudo sh get-docker.sh`
 
@@ -64,11 +67,13 @@ GitHub Actions needs these secrets configured in the repository:
 #### Repository Permissions
 
 Make sure GitHub Actions has permissions to:
+
 - ✅ Create releases
 - ✅ Upload assets
 - ✅ Create tags
 
 **Configuration**:
+
 1. Settings → Actions → General
 2. "Workflow permissions" → "Read and write permissions"
 3. Save
@@ -171,6 +176,7 @@ git push --tags
 4. Click on the workflow to see details
 
 **What you'll see**:
+
 - Build for Linux AMD64
 - Build for Linux ARM64
 - Build for macOS AMD64
@@ -205,6 +211,7 @@ make release-dry-run-linux
 ```
 
 **What it does**:
+
 - Compiles binaries for Linux (AMD64 and ARM64)
 - Creates files in `./dist/`
 - **Does NOT** publish anything to GitHub
@@ -223,6 +230,7 @@ make release-dry-run
 ```
 
 **What it does**:
+
 - Compiles binaries for all platforms
 - Creates files in `./dist/`
 - **Does NOT** publish anything to GitHub
@@ -290,6 +298,7 @@ docker logs <container-id>
    - Download the binary for your platform
 
 3. **Verify binaries**:
+
    ```bash
    # Download and verify
    wget https://github.com/your-user/infinite/releases/download/v1.0.0/infinited-linux-amd64
@@ -315,6 +324,7 @@ git show v1.0.0
 **⚠️ IMPORTANT**: You can't easily "update" an existing release. Best practice:
 
 1. **Create a new release** with incremented version:
+
    ```bash
    git tag v1.0.1  # Patch release
    git push origin v1.0.1
@@ -332,14 +342,17 @@ git show v1.0.0
 **Problem**: The workflow fails during compilation
 
 **Solutions**:
+
 1. **View detailed logs**:
    - Click on the failed job
    - Review logs to see the specific error
 
 2. **Test locally first**:
+
    ```bash
    make release-dry-run-linux
    ```
+
    If this fails, the problem is in your local configuration
 
 3. **Verify Docker**:
@@ -355,6 +368,7 @@ git show v1.0.0
 **Problem**: `git tag v1.0.0` says the tag already exists
 
 **Solution**:
+
 ```bash
 # View existing tags
 git tag -l
@@ -374,6 +388,7 @@ git tag v1.0.0
 **Problem**: Push the tag but release is not created
 
 **Solutions**:
+
 1. **Verify GitHub Actions**:
    - Go to Actions
    - See if the workflow ran
@@ -392,6 +407,7 @@ git tag v1.0.0
 **Normal**: Builds can take 20-30 minutes, especially the first time.
 
 **If it takes more than 1 hour**:
+
 - Verify GitHub Actions is not overloaded
 - Check logs to see if there's a hung process
 - Consider canceling and retrying

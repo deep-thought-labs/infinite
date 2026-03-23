@@ -53,6 +53,7 @@ CGO_ENABLED=0 GOOS=darwin GOARCH=arm64 go build -ldflags="-w -s" -o infinited-da
 ```
 
 **What the flags do**:
+
 - `CGO_ENABLED=0`: Disables CGO for static linking
 - `-ldflags="-w -s"`: Strips debug information and symbol table
 - `GOOS` and `GOARCH`: Target operating system and architecture
@@ -81,6 +82,7 @@ CGO_ENABLED=0 GOOS=darwin GOARCH=arm64 go build -ldflags="-w -s" -o infinited-da
 **What these commands do**: Download the appropriate binary for your platform.
 
 #### Linux AMD64
+
 ```bash
 # Download Linux binary
 wget https://github.com/deep-thought-labs/infinite/releases/latest/download/infinited-linux-amd64
@@ -94,6 +96,7 @@ file infinited-linux-amd64
 ```
 
 #### macOS Intel
+
 ```bash
 # Download macOS Intel binary
 wget https://github.com/deep-thought-labs/infinite/releases/latest/download/infinited-darwin-amd64
@@ -107,6 +110,7 @@ file infinited-darwin-amd64
 ```
 
 #### macOS Apple Silicon
+
 ```bash
 # Download macOS Apple Silicon binary
 wget https://github.com/deep-thought-labs/infinite/releases/latest/download/infinited-darwin-arm64
@@ -120,6 +124,7 @@ file infinited-darwin-arm64
 ```
 
 #### Windows AMD64
+
 ```bash
 # Download Windows binary (in WSL2 or PowerShell)
 wget https://github.com/deep-thought-labs/infinite/releases/latest/download/infinited-windows-amd64.exe
@@ -238,6 +243,7 @@ sudo nano /etc/systemd/system/infinited.service
 ```
 
 **Copy this content**:
+
 ```ini
 [Unit]
 Description=Infinite Drive Blockchain Node
@@ -325,6 +331,7 @@ sudo ufw status
 ```
 
 **Port explanations**:
+
 - `8545`: JSON-RPC API for dApps and wallets
 - `1317`: REST API for blockchain queries
 - `26657`: Tendermint RPC for low-level access
@@ -354,6 +361,7 @@ sudo nano /etc/logrotate.d/infinited
 ```
 
 **Copy this content**:
+
 ```
 /var/log/infinited-health.log {
     daily
@@ -419,6 +427,7 @@ sudo nano /opt/infinited/backup.sh
 ```
 
 **Copy this content**:
+
 ```bash
 #!/bin/bash
 BACKUP_DIR="/opt/backups/infinited"
@@ -454,6 +463,7 @@ sudo nano /etc/nginx/sites-available/infinited
 ```
 
 **Example nginx configuration**:
+
 ```nginx
 server {
     listen 443 ssl;

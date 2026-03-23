@@ -16,6 +16,7 @@ This guide covers common issues you might encounter and how to solve them.
 ### PATH Configuration Issues (Fixes Most "Command Not Found" Errors)
 
 **What this fixes**: Resolves multiple "command not found" errors including:
+
 - `infinited: command not found`
 - `go: command not found`
 - Other Go-related binaries not being found
@@ -105,7 +106,8 @@ If these commands work in the new terminal without any export commands, the fix 
 
 **Why this happens**: Go wasn't installed properly or PATH wasn't configured.
 
-**Solution**: 
+**Solution**:
+
 1. **If Go is not installed**: Install it first:
    - **macOS**: `brew install go` (if using Homebrew) or download from https://golang.org/dl/
    - **Ubuntu**: `sudo apt update && sudo apt install golang-go` or download from https://golang.org/dl/
@@ -119,6 +121,7 @@ If these commands work in the new terminal without any export commands, the fix 
 **Why this happens**: Your system doesn't have the necessary build tools.
 
 **Solution**:
+
 ```bash
 # Ubuntu/Debian
 sudo apt install build-essential
@@ -137,6 +140,7 @@ make --version
 **Why this happens**: You might have another blockchain node running or another service using the same ports.
 
 **Solution**:
+
 ```bash
 # Check what's using the ports
 lsof -i :8545  # JSON-RPC
@@ -156,6 +160,7 @@ kill -9 <PID>
 **Why this happens**: The data directory was created with different permissions.
 
 **Solution**:
+
 ```bash
 # Fix permissions
 sudo chown -R $USER:$USER ~/.infinited
@@ -169,6 +174,7 @@ chmod -R 755 ~/.infinited
 **Why this happens**: Blockchain data grows over time and needs sufficient disk space.
 
 **Solution**:
+
 ```bash
 # Check disk usage
 df -h
@@ -184,6 +190,7 @@ df -h
 **Why this happens**: Configuration issues, missing dependencies, or corrupted data.
 
 **Solution**:
+
 ```bash
 # Check logs for errors
 tail -f ~/.infinited/logs/infinited.log
@@ -206,6 +213,7 @@ rm -rf ~/.infinited
 **Why this happens**: Network configuration issues or service not properly started.
 
 **Solution**:
+
 ```bash
 # Check if services are running
 curl -s http://localhost:8545 -X POST -H "Content-Type: application/json" --data '{"jsonrpc":"2.0","method":"eth_chainId","params":[],"id":1}'
@@ -224,6 +232,7 @@ curl -s http://localhost:26657/status | jq '.result.sync_info.catching_up'
 **Why this happens**: Configuration mismatch or wrong genesis file.
 
 **Solution**:
+
 ```bash
 # Check current chain ID
 curl -s http://localhost:26657/status | jq '.result.node_info.network'
@@ -240,6 +249,7 @@ cat ~/.infinited/config/genesis.json | jq '.chain_id'
 **Why this happens**: Genesis configuration issues or metadata not properly set.
 
 **Solution**:
+
 ```bash
 # Check token metadata
 curl -s http://localhost:1317/cosmos/bank/v1beta1/denoms_metadata | jq '.metadatas[] | select(.base == "drop")'
@@ -356,6 +366,7 @@ cat ~/.infinited/config/app.toml
 **Symptoms**: Node uses excessive RAM, system becomes slow.
 
 **Solutions**:
+
 ```bash
 # Check memory usage
 ps -p $(pgrep infinited) -o rss,vsz
@@ -372,6 +383,7 @@ sudo journalctl -u infinited | grep -i memory
 **Symptoms**: Blocks take longer than expected to be produced.
 
 **Solutions**:
+
 ```bash
 # Check if node is syncing
 curl -s http://localhost:26657/status | jq '.result.sync_info.catching_up'
@@ -388,6 +400,7 @@ ping -c 10 8.8.8.8
 **Symptoms**: Node uses excessive CPU, system becomes unresponsive.
 
 **Solutions**:
+
 ```bash
 # Check CPU usage
 top -p $(pgrep infinited)
@@ -404,6 +417,7 @@ sudo systemctl restart infinited
 **Symptoms**: Node stops working due to insufficient disk space.
 
 **Solutions**:
+
 ```bash
 # Check disk usage
 df -h

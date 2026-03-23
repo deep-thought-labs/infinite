@@ -24,6 +24,7 @@ Complete guide of all scripts developed by Deep Thought Labs for Infinite Drive,
 ```
 
 **To identify Deep Thought Labs scripts**:
+
 ```bash
 # Find all Deep Thought Labs scripts
 grep -l "Deep Thought Labs" scripts/*.sh
@@ -38,6 +39,7 @@ grep -l "Deep Thought Labs" scripts/*.sh
 **Purpose**: Verify that you have all prerequisites installed to compile Infinite Drive.
 
 **What it verifies**:
+
 - ✅ Docker installed and running
 - ✅ Go installed (correct version according to go.mod)
 - ✅ Make installed
@@ -46,16 +48,19 @@ grep -l "Deep Thought Labs" scripts/*.sh
 - ✅ Docker permissions (Linux)
 
 **When to use**:
+
 - **Before compiling for the first time**
 - When you have compilation errors
 - To verify your environment is ready
 
 **Usage**:
+
 ```bash
 ./scripts/check_build_prerequisites.sh
 ```
 
 **Expected output**:
+
 ```
 🔍 Checking prerequisites for Infinite Drive builds...
 
@@ -78,18 +83,21 @@ Git installation: ✅ Installed (version 2.x)
 **Purpose**: Validate that Infinite Drive customizations are correctly implemented in the code.
 
 **What it validates**:
+
 - ✅ Token configuration (denoms, chain ID)
 - ✅ Custom genesis functions
 - ✅ Bech32 prefixes
 - ✅ Upstream compliance (go.mod, package paths)
 
 **When to use**:
+
 - **After making code changes**
 - **Before committing**
 - **During merges with upstream**
 - To verify customizations weren't lost
 
 **Usage**:
+
 ```bash
 ./scripts/validate_customizations.sh
 ```
@@ -105,6 +113,7 @@ Git installation: ✅ Installed (version 2.x)
 **Purpose**: Validate that the genesis.json structure is correct according to Cosmos SDK specifications.
 
 **What it validates**:
+
 - ✅ **ModuleAccount structure**: All required fields (@type, base_account, name, permissions)
 - ✅ **ContinuousVestingAccount structure**: All required fields (base_vesting_account, start_time, end_time)
 - ✅ **Account-balance consistency**: All accounts have corresponding bank balances
@@ -113,21 +122,25 @@ Git installation: ✅ Installed (version 2.x)
 - ✅ **Required fields**: All accounts have address, account_number, sequence
 
 **When to use**:
+
 - **After creating genesis file** to ensure structure is correct
 - **Before launching network** to catch structural issues early
 - **When troubleshooting** genesis-related errors
 
 **Usage**:
+
 ```bash
 ./scripts/validate_genesis_structure.sh ~/.infinited/config/genesis.json
 ```
 
 **Output**:
+
 - Detailed validation report with pass/fail for each check
 - Summary with total validations, passed, and failed counts
 - Exit code: 0 = all validations passed, 1 = errors found
 
 **This validation ensures**:
+
 - Structure matches Cosmos SDK specifications exactly
 - No missing required fields
 - Data types are correct
@@ -143,6 +156,7 @@ Git installation: ✅ Installed (version 2.x)
 **Purpose**: Validate that the Improbability (42) token configuration is correct in the running node.
 
 **What it validates**:
+
 - ✅ Token metadata (name, symbol, URI)
 - ✅ Denominations (base: "drop", display: "Improbability")
 - ✅ Correct Chain ID (421018)
@@ -150,12 +164,14 @@ Git installation: ✅ Installed (version 2.x)
 - ✅ Configuration in running node (REST API)
 
 **When to use**:
+
 - **After starting a node**
 - **After token configuration changes**
 - **After updating genesis**
 - To verify changes were applied correctly
 
 **Usage**:
+
 ```bash
 # Node must be running
 ./scripts/validate_token_config.sh
@@ -172,6 +188,7 @@ Git installation: ✅ Installed (version 2.x)
 **Purpose**: Verify that the node is functioning correctly and all services are available.
 
 **What it validates**:
+
 - ✅ JSON-RPC connectivity (port 8545)
 - ✅ REST API connectivity (port 1317)
 - ✅ Tendermint connectivity (port 26657)
@@ -180,12 +197,14 @@ Git installation: ✅ Installed (version 2.x)
 - ✅ System status
 
 **When to use**:
+
 - **After starting a node**
 - **To verify the node is still functioning**
 - **Before important operations**
 - For debugging connectivity issues
 
 **Usage**:
+
 ```bash
 # Node must be running
 ./scripts/infinite_health_check.sh
@@ -204,18 +223,21 @@ Git installation: ✅ Installed (version 2.x)
 **Purpose**: List all differences between your repository and the upstream repository.
 
 **What it does**:
+
 - Compares added files (A)
 - Compares modified files (M)
 - Compares deleted files (D)
 - Shows change statistics
 
 **When to use**:
+
 - **During merges with upstream**
 - **To document customizations**
 - **To verify what has been modified**
 - To generate change reports
 
 **Usage**:
+
 ```bash
 # Compare with upstream/main (default)
 ./scripts/list_all_customizations.sh
@@ -238,17 +260,20 @@ Git installation: ✅ Installed (version 2.x)
 **Purpose**: Search for all references to the command name that need to be changed (for rebranding).
 
 **What it searches for**:
+
 - References to `evmd` in Cobra commands
 - Examples with the command name
 - Build messages in Makefile
 - Home directory that uses the command name
 
 **When to use**:
+
 - **During rebranding process**
 - **For command name change audit**
 - To identify all references that need changing
 
 **Usage**:
+
 ```bash
 ./scripts/audit_command_name.sh
 ```
@@ -262,16 +287,19 @@ Git installation: ✅ Installed (version 2.x)
 **Purpose**: Verify that command name changes work correctly.
 
 **What it verifies**:
+
 - ✅ `infinited --help` shows `infinited` as command
 - ✅ `evmd` does NOT appear as executable command
 - ✅ `infinited version` works
 - ✅ Examples use `infinited`
 
 **When to use**:
+
 - **AFTER making command name changes**
 - To verify rebranding was successful
 
 **Usage**:
+
 ```bash
 # First compile
 make install
@@ -289,15 +317,18 @@ make install
 **Purpose**: Capture current outputs BEFORE making changes to compare later.
 
 **What it captures**:
+
 - `--help` of current command
 - `version`
 - `--help` of subcommands (keys, query, tx, testnet)
 
 **When to use**:
+
 - **BEFORE making any code changes**
 - To have a reference point for comparison
 
 **Usage**:
+
 ```bash
 ./scripts/test_outputs_before.sh
 ```
@@ -311,16 +342,19 @@ make install
 **Purpose**: Compare outputs before and after changes.
 
 **What it compares**:
+
 - Help before and after
 - Version before and after
 - Searches if any `evmd` remains in new outputs
 - Verifies that `infinited` appears in new outputs
 
 **When to use**:
+
 - **AFTER making changes and compiling**
 - To verify changes work correctly
 
 **Usage**:
+
 ```bash
 # Requirement: You must have run test_outputs_before.sh first
 ./scripts/compare_outputs.sh
@@ -337,6 +371,7 @@ make install
 **Purpose**: Apply all Infinite Drive personalizations to a generated `genesis.json` file for mainnet, testnet, or creative networks.
 
 **What it does**:
+
 - Sets all module denominations to network-specific denom (drop/tdrop/cdrop)
 - Adds complete token metadata for network-specific token (Improbability/TestImprobability/CreativeImprobability)
 - Enables all EVM static precompiles
@@ -351,20 +386,24 @@ make install
 - Creates automatic backup before modifications
 
 **When to use**:
+
 - **Network genesis creation**: When preparing a genesis file for mainnet, testnet, or creative (one-time setup process)
 - As part of the network deployment pipeline
 - When you need to ensure all Infinite Drive customizations are applied to a genesis file
 
 **When NOT to use**:
+
 - **For joining an existing network**: Download the official genesis file from `https://assets.infinitedrive.xyz/<network>/genesis.json` instead
 - **For running a node**: Use Drive (see [README.md](../../README.md)) or direct installation with the official genesis file
 
 **Usage**:
+
 ```bash
 ./scripts/customize_genesis.sh <genesis_file_path> --network <mainnet|testnet|creative>
 ```
 
 **Example**:
+
 ```bash
 # After initializing a node
 infinited init my-moniker --chain-id infinite_421018-1
@@ -383,6 +422,7 @@ infinited genesis validate-genesis
 ```
 
 **Expected output** (mainnet example):
+
 ```
 ℹ Customizing Genesis file: ~/.infinited/config/genesis.json
 ℹ Network: mainnet
@@ -417,6 +457,7 @@ infinited genesis validate-genesis
 
 **Configuration Files**:
 The script reads all network-specific values from JSON configuration files located in `scripts/genesis-configs/`:
+
 - `mainnet.json` - Production network configuration
 - `testnet.json` - Testing network configuration (similar to mainnet)
 - `creative.json` - Experimental playground network configuration (minimal fees, no inflation)
@@ -424,11 +465,13 @@ The script reads all network-specific values from JSON configuration files locat
 These files contain all parameters for each network, making it easy to modify values without editing the script code. The structure is consistent across all three files, with different values for each network.
 
 **Prerequisites**:
+
 - `jq` must be installed
 - Valid `genesis.json` file must exist
 - Configuration file for the specified network must exist in `scripts/genesis-configs/`
 
 **Notes**:
+
 - The script creates a timestamped backup automatically
 - All modifications are applied safely with error handling
 - The script validates the genesis file before making changes
@@ -445,6 +488,7 @@ These files contain all parameters for each network, making it easy to modify va
 **Important**: This script creates ModuleAccounts as pure accounts (BaseAccount + name + permissions) according to Cosmos SDK specifications. ModuleAccounts are managed by modules and have a name and optional permissions.
 
 **What it does**:
+
 - Reads network-specific module configuration from `*-module-accounts.json` files
 - Calculates deterministic module addresses using `calc_module_addr.go`
 - Converts token amounts from full units to atomic units (multiplies by 10^18)
@@ -457,20 +501,24 @@ These files contain all parameters for each network, making it easy to modify va
 - Idempotent: skips ModuleAccounts that already exist
 
 **When to use**:
+
 - **Network genesis creation**: When setting up ModuleAccounts for mainnet, testnet, or creative networks (one-time setup process)
 - As part of the network deployment pipeline after running `customize_genesis.sh`
 - When you need to configure treasury, development, or community pools as ModuleAccounts
 
 **When NOT to use**:
+
 - **Regular local development**: Not needed for local testing chains
 - For quick local testing: This is only for production network setup
 
 **Usage**:
+
 ```bash
 ./scripts/setup_module_accounts.sh --network <mainnet|testnet|creative> [--genesis-dir <path>]
 ```
 
 **Example**:
+
 ```bash
 # Generate commands for mainnet ModuleAccounts
 ./scripts/setup_module_accounts.sh --network mainnet
@@ -483,6 +531,7 @@ These files contain all parameters for each network, making it easy to modify va
 ```
 
 **Expected output** (mainnet example):
+
 ```
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 ModuleAccounts Setup for MAINNET
@@ -545,17 +594,20 @@ Summary
 
 **Configuration Files**:
 The script reads module configuration from JSON files located in `scripts/genesis-configs/`:
+
 - `mainnet-module-accounts.json` - Mainnet ModuleAccounts configuration
 - `testnet-module-accounts.json` - Testnet ModuleAccounts configuration
 - `creative-module-accounts.json` - Creative network ModuleAccounts configuration
 
 Each configuration file is a JSON array of ModuleAccount configurations. Each ModuleAccount object contains:
+
 - `name`: Module account name (required) - used to calculate deterministic address
 - `amount_tokens`: Initial balance in full token units (will be converted to atomic units × 10^18)
 
 **Important**: Custom ModuleAccounts created by this script always have an empty permissions array (`permissions: []`). Permissions are only effective when registered in `infinited/config/permissions.go`, which requires code changes. Since custom ModuleAccounts are not registered there, they will not have minting or burning capabilities.
 
 **Example configuration file** (mainnet/testnet):
+
 ```json
 [
   {
@@ -588,6 +640,7 @@ Each configuration file is a JSON array of ModuleAccount configurations. Each Mo
 **For complete ModuleAccounts documentation**, including all configured ModuleAccounts, their purposes, and tokenomics details, see **[configuration/MODULE_ACCOUNTS.md](../configuration/MODULE_ACCOUNTS.md)**.
 
 **Prerequisites**:
+
 - `jq` must be installed
 - `bc` is recommended for precise calculations (optional, has fallback)
 - Module configuration file for the specified network must exist in `scripts/genesis-configs/`
@@ -595,6 +648,7 @@ Each configuration file is a JSON array of ModuleAccount configurations. Each Mo
 - Go must be installed (for `calc_module_addr.go` to calculate deterministic module addresses)
 
 **Notes**:
+
 - **This script EXECUTES commands directly** and modifies the genesis file automatically
 - ModuleAccounts are created according to Cosmos SDK specification: `@type: "/cosmos.auth.v1beta1.ModuleAccount"` with `base_account`, `name`, and `permissions` fields
 - Token amounts are automatically converted from full units to atomic units (× 10^18)
@@ -606,6 +660,7 @@ Each configuration file is a JSON array of ModuleAccount configurations. Each Mo
 
 **Integration with Genesis Creation Process**:
 This script is typically used **after** running `customize_genesis.sh`:
+
 1. Run `infinited init` to generate base genesis
 2. Run `customize_genesis.sh` to apply all module customizations
 3. Run `setup_module_accounts.sh` to create ModuleAccounts automatically
@@ -621,6 +676,7 @@ This script is typically used **after** running `customize_genesis.sh`:
 **Important**: This script creates vesting accounts (regular accounts with vesting schedules) that can be added using only the public address - no keyring or private keys required. This is perfect for multisig wallets.
 
 **What it does**:
+
 - Reads network-specific vesting configuration from `*-vesting-accounts.json` files
 - Validates address format (bech32)
 - Converts token amounts from full units to atomic units (multiplies by 10^18)
@@ -633,21 +689,25 @@ This script is typically used **after** running `customize_genesis.sh`:
 - Idempotent: skips accounts that already exist
 
 **When to use**:
+
 - **Network genesis creation**: When setting up vesting accounts for multisig wallets or accounts that need locked tokens
 - As part of the network deployment pipeline after running `setup_module_accounts.sh`
 - When you need to configure accounts with gradual token unlock schedules
 
 **When NOT to use**:
+
 - **Regular local development**: Not needed for local testing chains
 - For ModuleAccounts: Use `setup_module_accounts.sh` instead (ModuleAccounts cannot have vesting)
 - For regular accounts without vesting: Use `infinited genesis add-genesis-account` directly
 
 **Usage**:
+
 ```bash
 ./scripts/setup_vesting_accounts.sh --network <mainnet|testnet|creative> [--genesis-dir <path>]
 ```
 
 **Example**:
+
 ```bash
 # Create vesting accounts for mainnet
 ./scripts/setup_vesting_accounts.sh --network mainnet
@@ -660,6 +720,7 @@ This script is typically used **after** running `customize_genesis.sh`:
 ```
 
 **Expected output** (mainnet example):
+
 ```
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 Vesting Accounts Setup for MAINNET
@@ -707,6 +768,7 @@ Summary
 ```
 
 **Configuration file format** (`*-vesting-accounts.json`):
+
 ```json
 [
   {
@@ -720,6 +782,7 @@ Summary
 ```
 
 **Fields**:
+
 - `address`: Public address (bech32 format) - no keyring required
 - `amount_tokens`: Total amount in full token units (converted to atomic automatically)
 - `vesting_type`: `"continuous"` (linear unlock) or `"delayed"` (all at end time)
@@ -729,12 +792,14 @@ Summary
 **For complete vesting accounts documentation**, including examples, timestamp calculation, and troubleshooting, see **[configuration/VESTING_ACCOUNTS.md](../configuration/VESTING_ACCOUNTS.md)**.
 
 **Prerequisites**:
+
 - `jq` must be installed
 - `bc` is recommended for precise calculations (optional, has fallback)
 - Vesting configuration file for the specified network must exist in `scripts/genesis-configs/`
 - Network configuration file (e.g., `mainnet.json`) must exist to read base denom
 
 **Notes**:
+
 - **This script EXECUTES commands directly** and modifies the genesis file automatically
 - Vesting accounts are created according to Cosmos SDK specification: `@type: "/cosmos.vesting.v1beta1.ContinuousVestingAccount"` or `"/cosmos.vesting.v1beta1.DelayedVestingAccount"`
 - Token amounts are automatically converted from full units to atomic units (× 10^18)
@@ -746,6 +811,7 @@ Summary
 
 **Integration with Genesis Creation Process**:
 This script is typically used **after** running `setup_module_accounts.sh`:
+
 1. Run `infinited init` to generate base genesis
 2. Run `customize_genesis.sh` to apply all module customizations
 3. Run `setup_module_accounts.sh` to create ModuleAccounts
@@ -869,6 +935,7 @@ head -10 scripts/*.sh | grep -B 5 "Deep Thought Labs"
 ```
 
 **Identified Deep Thought Labs scripts**:
+
 - `check_build_prerequisites.sh`
 - `validate_customizations.sh`
 - `validate_token_config.sh`

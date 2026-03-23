@@ -10,6 +10,7 @@
 👉 **[guides/development/SCRIPTS.md](../guides/development/SCRIPTS.md)** - Complete scripts guide
 
 This guide includes:
+
 - All available scripts
 - When to use each script
 - What each script does
@@ -47,4 +48,3 @@ grep -l "Deep Thought Labs" scripts/*.sh
 | `list_all_customizations.sh` | List all customizations | [SCRIPTS.md](../guides/development/SCRIPTS.md#5-list_all_customizationssh) |
 
 **For complete documentation, see [guides/development/SCRIPTS.md](../guides/development/SCRIPTS.md)**
-

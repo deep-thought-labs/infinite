@@ -18,9 +18,10 @@ In Genesis, tokens are created **ex nihilo** (from nothing). There is no previou
 
 ## Context: Project Tokenomics
 
-**Important**: This document explains the **technical mechanism** of how tokens are created in Genesis. 
+**Important**: This document explains the **technical mechanism** of how tokens are created in Genesis.
 
 For information about:
+
 - **Actual tokenomics structure** (6 pools: strategic_delegation, security_rewards, etc.)
 - **ModuleAccounts configuration** and their purposes
 - **Token distribution** according to the project's economic model
@@ -29,7 +30,7 @@ See **[MODULE_ACCOUNTS.md](MODULE_ACCOUNTS.md)**.
 
 **Note**: In Infinite Drive, all tokens are **locked at genesis** and released gradually over **42 years**, controlled by the DAO. The ModuleAccounts represent the total allocation pools, but actual liquid supply is managed separately through the release mechanism.
 
-### How it works:
+### How it works
 
 1. **`infinited init`** creates an **empty** Genesis (no supply, no balances)
 2. **`infinited genesis add-genesis-account`** adds accounts with tokens
@@ -40,6 +41,7 @@ See **[MODULE_ACCOUNTS.md](MODULE_ACCOUNTS.md)**.
 ## Practical Example
 
 ### Step 1: Initial Genesis (empty)
+
 ```json
 {
   "app_state": {
@@ -52,11 +54,13 @@ See **[MODULE_ACCOUNTS.md](MODULE_ACCOUNTS.md)**.
 ```
 
 ### Step 2: Add account with tokens
+
 ```bash
 infinited genesis add-genesis-account validator-1 1000000000000000000000drop
 ```
 
 ### Step 3: Genesis automatically updated
+
 ```json
 {
   "app_state": {
@@ -87,13 +91,13 @@ infinited genesis add-genesis-account validator-1 1000000000000000000000drop
 
 ## How Does It Work Internally?
 
-### 1. `add-genesis-account` does three things:
+### 1. `add-genesis-account` does three things
 
 1. **Adds the account** to `app_state.auth.accounts`
 2. **Adds the balance** to `app_state.bank.balances`
 3. **Updates the supply** in `app_state.bank.supply`
 
-### 2. Supply is calculated automatically:
+### 2. Supply is calculated automatically
 
 ```go
 // Pseudocode of what add-genesis-account does
@@ -132,6 +136,7 @@ func addGenesisAccount(address, amount) {
 ```
 
 ### ❌ **Common error**: Supply ≠ sum of balances
+
 If this occurs, `infinited genesis validate-genesis` will fail.
 
 ---
@@ -139,17 +144,20 @@ If this occurs, `infinited genesis validate-genesis` will fail.
 ## Complete Process for Validators
 
 ### 1. Create validator account
+
 ```bash
 infinited keys add validator-1 --keyring-backend file
 ```
 
 ### 2. Add account with funds (creates tokens from nothing)
+
 ```bash
 infinited genesis add-genesis-account validator-1 1000000000000000000000drop
 # ↑ This creates 1000 42 from nothing and assigns them to validator-1
 ```
 
 ### 3. Create gentx (uses existing tokens)
+
 ```bash
 infinited genesis gentx validator-1 1000000000000000000000drop \
   --chain-id infinite_421018-1
@@ -157,6 +165,7 @@ infinited genesis gentx validator-1 1000000000000000000000drop \
 ```
 
 ### 4. Collect gentxs
+
 ```bash
 infinited genesis collect-gentxs
 # ↑ This adds the validator to Genesis using already assigned tokens
@@ -180,6 +189,7 @@ For mainnet and testnet, ModuleAccounts are configured according to the project'
 ```
 
 **ModuleAccounts configured** (see [MODULE_ACCOUNTS.md](MODULE_ACCOUNTS.md) for details):
+
 - `strategic_delegation` (40%) - Never spent, only delegated
 - `security_rewards` (25%) - Validator + staker rewards
 - `perpetual_rd` (15%) - Institutional funding
@@ -201,7 +211,8 @@ infinited genesis add-genesis-account validator-1 1000000000000000000000000drop 
 infinited genesis add-genesis-account team-wallet 10000000000000000000000000drop  # 10M tokens
 ```
 
-**Important**: 
+**Important**:
+
 - Decide token amounts carefully based on your network's needs
 - Validators need tokens to create `gentx` for staking
 - Total supply will be automatically calculated from all balances
@@ -211,27 +222,32 @@ infinited genesis add-genesis-account team-wallet 10000000000000000000000000drop
 ## Important Considerations
 
 ### 1. **No initial inflation**
+
 - Tokens are created once in Genesis
 - After that, there's only inflation if configured in the `mint` module
 - In Infinite Drive, tokens are locked at genesis and released gradually over 42 years
 
 ### 2. **Initial distribution**
+
 - Carefully decide who receives how many tokens
 - Genesis tokens are the only ones that will exist initially
 - ModuleAccounts represent tokenomics pools (see [MODULE_ACCOUNTS.md](MODULE_ACCOUNTS.md))
 - Regular accounts (validators, team) are added separately
 
 ### 3. **Validators need tokens for staking**
+
 - A validator must have tokens to make `gentx`
 - Tokens are "burned" (go to staking module) during `gentx`
 - Validators receive tokens through inflation rewards over time
 
 ### 4. **Total supply must be realistic**
+
 - Don't create too many tokens (future inflation)
 - Don't create too few (insufficient liquidity)
 - In Infinite Drive, ModuleAccounts hold the total allocation (100M tokens), but most are locked initially
 
 ### 5. **ModuleAccounts vs Regular Accounts**
+
 - **ModuleAccounts**: Created via `setup_module_accounts.sh`, represent tokenomics pools
 - **Regular Accounts**: Created via `add-genesis-account`, for validators, team, etc.
 - Both contribute to total supply: `supply = sum of all balances`
@@ -240,17 +256,20 @@ infinited genesis add-genesis-account team-wallet 10000000000000000000000000drop
 
 ## Useful Commands
 
-### View current supply:
+### View current supply
+
 ```bash
 jq '.app_state.bank.supply' genesis.json
 ```
 
-### View balances:
+### View balances
+
 ```bash
 jq '.app_state.bank.balances' genesis.json
 ```
 
-### Verify that supply = sum of balances:
+### Verify that supply = sum of balances
+
 ```bash
 # Sum all balances
 jq '[.app_state.bank.balances[].coins[] | select(.denom=="drop") | .amount | tonumber] | add' genesis.json
@@ -259,7 +278,8 @@ jq '[.app_state.bank.balances[].coins[] | select(.denom=="drop") | .amount | ton
 jq '.app_state.bank.supply[] | select(.denom=="drop") | .amount | tonumber' genesis.json
 ```
 
-### Count accounts:
+### Count accounts
+
 ```bash
 jq '.app_state.bank.balances | length' genesis.json
 ```

@@ -9,6 +9,7 @@
 Vesting accounts are regular accounts (not ModuleAccounts) with a vesting schedule that controls when tokens can be transferred. Tokens unlock gradually over time according to the configured schedule.
 
 **Key Features**:
+
 - ✅ Can be added using **only the public address** (no keyring required)
 - ✅ Perfect for **multisig wallets** where you only have the public address
 - ✅ Supports **continuous vesting** (linear unlock) and **delayed vesting** (all at end time)
@@ -237,6 +238,7 @@ date -d "+5 years" +%s
 ### Online Tools
 
 You can also use online Unix timestamp converters:
+
 - https://www.epochconverter.com/
 - https://unixtimestamp.com/
 
@@ -259,6 +261,7 @@ You can also use online Unix timestamp converters:
 ```
 
 **Details**:
+
 - **Address**: Multisig wallet public address
 - **Amount**: 100 million tokens
 - **Type**: Continuous (linear unlock)
@@ -266,6 +269,7 @@ You can also use online Unix timestamp converters:
 - **End**: 2030-01-01 00:00:00 UTC (5 years)
 
 **Unlock Schedule**:
+
 - At start: 0% unlocked
 - After 1 year: ~20% unlocked
 - After 2.5 years: ~50% unlocked
@@ -293,37 +297,44 @@ Vesting accounts are typically created as part of the genesis setup process:
 ### Complete Workflow
 
 1. **Initialize genesis**:
+
    ```bash
    infinited init my-moniker --chain-id infinite_421018-1
    ```
 
 2. **Customize genesis**:
+
    ```bash
    ./scripts/customize_genesis.sh --network mainnet
    ```
 
 3. **Create ModuleAccounts**:
+
    ```bash
    ./scripts/setup_module_accounts.sh --network mainnet
    ```
 
 4. **Create Vesting Accounts** (this step):
+
    ```bash
    ./scripts/setup_vesting_accounts.sh --network mainnet
    ```
 
 5. **Add regular accounts** (validators, team, etc.):
+
    ```bash
    infinited genesis add-genesis-account validator-1 1000000000000000000000000drop
    ```
 
 6. **Create validators**:
+
    ```bash
    infinited genesis gentx validator-1 1000000000000000000000000drop --chain-id infinite_421018-1
    infinited genesis collect-gentxs
    ```
 
 7. **Validate genesis**:
+
    ```bash
    infinited genesis validate-genesis
    ```
@@ -331,6 +342,7 @@ Vesting accounts are typically created as part of the genesis setup process:
 ### Order Matters
 
 Vesting accounts should be created:
+
 - **After** `customize_genesis.sh` and `setup_module_accounts.sh`
 - **Before** adding regular accounts and validators
 - This ensures proper account numbering
@@ -355,12 +367,14 @@ Vesting accounts should be created:
 ### Unlock Process
 
 For **continuous vesting**:
+
 - Tokens unlock linearly over time
 - At any point, the percentage unlocked = `(current_time - start_time) / (end_time - start_time)`
 - Example: If 50% of time has passed, 50% of tokens are unlocked
 - **Important**: The calculation uses **block time** (current chain time), not genesis time
 
 For **delayed vesting**:
+
 - 0% unlocked until `end_time`
 - 100% unlocked at `end_time` (all at once)
 
@@ -369,22 +383,26 @@ For **delayed vesting**:
 **⚠️ IMPORTANT**: If `vesting_start_time` is set to a date **before the chain launch**, the vesting calculation **automatically adjusts**:
 
 **Behavior**:
+
 - ✅ **Vesting begins calculating from the start_time**, even if it's in the past
 - ✅ **Distribution is NOT uniform** - it uses the **remaining time** in the vesting period
 - ✅ The formula adjusts: `unlocked_percentage = (current_block_time - start_time) / (end_time - start_time)`
 
 **Example Scenario**:
+
 - Chain launches: 2025-06-01 (timestamp: 1751328000)
 - Vesting start: 2025-01-01 (timestamp: 1735689600) - **5 months before launch**
 - Vesting end: 2030-01-01 (timestamp: 2208988800) - 5 years from start
 
 **What happens**:
+
 - At chain launch (2025-06-01): ~8.3% of tokens are already unlocked (5 months / 60 months)
 - Tokens continue unlocking linearly from launch date
 - The remaining ~91.7% unlock over the remaining ~54.5 months
 - **The vesting period is NOT extended** - it still ends at 2030-01-01
 
 **Recommendation**:
+
 - ✅ **Best practice**: Set `vesting_start_time` to the **chain launch date** or later
 - ✅ This ensures vesting begins at launch and distributes uniformly over the full period
 - ⚠️ If you set it before launch, tokens will be partially unlocked at launch
@@ -398,6 +416,7 @@ For **delayed vesting**:
 **Error**: "Invalid address format"
 
 **Solution**:
+
 - Ensure address is in bech32 format: `infinite1...`
 - Address must start with `infinite1` (mainnet/testnet) or `infinite1` (creative)
 - Check address length (should be 38-59 characters after prefix)
@@ -407,6 +426,7 @@ For **delayed vesting**:
 **Error**: "End time must be after start time"
 
 **Solution**:
+
 - Verify `vesting_end_time` > `vesting_start_time`
 - Check that timestamps are Unix epoch seconds (not milliseconds)
 
@@ -415,6 +435,7 @@ For **delayed vesting**:
 **Warning**: "Account already exists, skipping..."
 
 **Solution**:
+
 - This is normal if running the script multiple times
 - The script is idempotent and skips existing accounts
 - To recreate, remove the account from genesis.json first
@@ -424,6 +445,7 @@ For **delayed vesting**:
 **Error**: "Invalid timestamp format"
 
 **Solution**:
+
 - Ensure timestamps are integers (Unix epoch seconds)
 - Do not use date strings - convert to Unix timestamp first
 - Use the calculation methods shown above

@@ -29,6 +29,7 @@ Choose the workflow based on your objective:
 **Purpose**: Compile and install the binary for daily development use.
 
 **What you get**:
+
 - ✅ Compiled `infinited` binary
 - ✅ Installed in `$HOME/go/bin/infinited`
 - ✅ Available in PATH (if configured)
@@ -51,6 +52,7 @@ Choose the workflow based on your objective:
 ```
 
 This script verifies:
+
 - ✅ Docker installed and running
 - ✅ Go installed (correct version according to go.mod)
 - ✅ Make, Git installed
@@ -64,11 +66,13 @@ This script verifies:
 #### 1. Verify Go
 
 **Option A: Automatic Verification** (Recommended)
+
 ```bash
 ./scripts/check_build_prerequisites.sh
 ```
 
 **Option B: Manual Verification**
+
 ```bash
 go version
 # Debe coincidir con la directiva `go` de go.mod
@@ -82,11 +86,13 @@ make install
 ```
 
 **What this command does**:
+
 1. Downloads all Go dependencies (first time)
 2. Compiles the `infinited` binary
 3. Installs it to `$HOME/go/bin/infinited`
 
-**Estimated time**: 
+**Estimated time**:
+
 - First time: 5-10 minutes (downloads dependencies)
 - Subsequent times: 2-5 minutes
 
@@ -135,6 +141,7 @@ make install
 **Purpose**: Complete automated setup: compile, configure, and start a local testnet node.
 
 **What you get**:
+
 - ✅ Compiled `infinited` binary (if not already compiled)
 - ✅ Local blockchain configuration initialized
 - ✅ Genesis file customized for Infinite Drive
@@ -148,6 +155,7 @@ make install
 After compiling, you can run a node using one of these methods:
 
 **Option 1: Using Drive (Recommended)**
+
 ```bash
 # Navigate to Drive service directory
 cd drive/services/node0-infinite  # or node1-infinite-testnet
@@ -161,6 +169,7 @@ cd drive/services/node0-infinite  # or node1-infinite-testnet
 ```
 
 **Option 2: Direct Installation**
+
 ```bash
 # Initialize the node
 infinited init my-node --chain-id infinite_421018-1 --home ~/.infinited
@@ -326,6 +335,7 @@ After the node starts, you can verify the configuration:
 ```
 
 **Expected results**:
+
 - ✅ All denominations should be `"drop"`
 - ✅ Token metadata should show Improbability (42)
 - ✅ Chain ID should be `infinite_421018-1`
@@ -339,6 +349,7 @@ After the node starts, you can verify the configuration:
 4. **Code vs. Script**: The code (`infinited/genesis.go`) sets defaults, but the official genesis file from `assets.infinitedrive.xyz` includes all Infinite Drive customizations
 
 **More information**:
+
 - Genesis configuration: [configuration/GENESIS.md](../configuration/GENESIS.md)
 - Validation scripts: [testing/VALIDATION.md](../testing/VALIDATION.md)
 
@@ -349,6 +360,7 @@ After the node starts, you can verify the configuration:
 **Purpose**: Only compile the binary without installing it, useful for verifying it compiles correctly.
 
 **What you get**:
+
 - ✅ Compiled binary in `./build/infinited`
 - ✅ Doesn't modify your PATH
 - ✅ Useful for CI/CD and testing
@@ -369,6 +381,7 @@ make build
 ```
 
 **What it does**:
+
 1. Compiles the binary
 2. Places it in `./build/infinited`
 3. **Does NOT** install it to the system
@@ -406,6 +419,7 @@ make build-cross-windows-amd64
 **Purpose**: Test the release build process locally before creating an official release.
 
 **What you get**:
+
 - ✅ Binaries compiled for multiple platforms
 - ✅ Files in `./dist/` ready for distribution
 - ✅ **Does NOT** publish anything to GitHub
@@ -431,6 +445,7 @@ docker ps  # Should work without errors
 **Command**: `make release-dry-run-linux`
 
 **What it does**:
+
 - Compiles for Linux AMD64 and ARM64
 - Creates files in `./dist/`
 - **Does NOT** publish to GitHub
@@ -446,6 +461,7 @@ make release-dry-run-linux
 **Command**: `make release-dry-run`
 
 **What it does**:
+
 - Compiles for Linux, macOS, Windows
 - Creates files in `./dist/`
 - **Does NOT** publish to GitHub
@@ -497,6 +513,7 @@ ls -lh dist/
 **Result location**: `$HOME/go/bin/infinited`
 
 **Usage**:
+
 ```bash
 make install
 infinited version
@@ -509,6 +526,7 @@ infinited version
 **Result location**: `./build/infinited`
 
 **Usage**:
+
 ```bash
 make build
 ./build/infinited version
@@ -521,6 +539,7 @@ make build
 **Result location**: `./build/infinited`
 
 **Usage**:
+
 ```bash
 make build-linux
 ```
@@ -555,6 +574,7 @@ make build-cross-windows-amd64
 **Problem**: The binary is not in your PATH.
 
 **Solution**:
+
 ```bash
 # Verify it was installed
 ls -la $HOME/go/bin/infinited
@@ -571,6 +591,7 @@ source ~/.bashrc  # or source ~/.zshrc
 **Problem**: You're not in the correct directory.
 
 **Solution**:
+
 ```bash
 # Make sure you're in the project root
 cd /path/to/project/infinite
@@ -584,6 +605,7 @@ ls go.mod
 **Problem**: Missing compilation tools.
 
 **Solution**:
+
 ```bash
 # macOS
 xcode-select --install
@@ -598,11 +620,13 @@ sudo yum groupinstall "Development Tools"
 ### Build Very Slow
 
 **Common causes**:
+
 - First compilation (downloads dependencies) - Normal
 - Low RAM available
 - Slow CPU
 
 **Solutions**:
+
 - First time: It's normal, may take 5-10 minutes
 - Close other applications consuming resources
 - Consider using `make build` instead of `make install` if you only need to verify compilation
@@ -612,6 +636,7 @@ sudo yum groupinstall "Development Tools"
 **Problem**: Docker is not running or you don't have permissions.
 
 **Solution**:
+
 ```bash
 # Verify Docker
 docker ps

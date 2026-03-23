@@ -13,6 +13,7 @@ Guide for configuring GitHub Actions and CI/CD workflow for Infinite Drive.
 ## 🎯 What is CI/CD?
 
 **CI/CD** (Continuous Integration / Continuous Deployment) automates:
+
 - ✅ Binary compilation
 - ✅ Test execution
 - ✅ Release creation
@@ -46,6 +47,7 @@ Guide for configuring GitHub Actions and CI/CD workflow for Infinite Drive.
 The release workflow is at: `.github/workflows/release.yml`
 
 **Verify**:
+
 ```bash
 # From project root
 ls -la .github/workflows/release.yml
@@ -74,6 +76,7 @@ If you use GoReleaser Pro (paid version), you need:
 - **`GORELEASER_KEY`**: GoReleaser Pro API key
 
 **How to get it**:
+
 1. Go to [GoReleaser Pro](https://goreleaser.com/pro)
 2. Create an account or sign in
 3. Generate an API key
@@ -106,6 +109,7 @@ If you use GoReleaser Pro (paid version), you need:
 ### Workflow Trigger
 
 The workflow activates when:
+
 - You push a tag that matches the pattern `v*.*.*` (e.g., `v1.0.0`, `v2.3.1`)
 - Or manually from GitHub Actions UI
 
@@ -151,6 +155,7 @@ When you push a tag:
 ### Real-Time Logs
 
 Logs update in real time while the workflow runs. You can see:
+
 - Compilation progress
 - Errors if any
 - Time for each step
@@ -164,13 +169,16 @@ Logs update in real time while the workflow runs. You can see:
 **Problem**: You push the tag but the workflow doesn't run
 
 **Solutions**:
+
 1. **Verify tag format**:
+
    ```bash
    # Must be: vX.Y.Z (e.g., v1.0.0)
    git tag -l
    ```
 
 2. **Verify the workflow exists**:
+
    ```bash
    ls -la .github/workflows/release.yml
    ```
@@ -180,6 +188,7 @@ Logs update in real time while the workflow runs. You can see:
    - "Workflow permissions" must be "Read and write"
 
 4. **Verify the tag was pushed**:
+
    ```bash
    git ls-remote --tags origin
    ```
@@ -189,16 +198,19 @@ Logs update in real time while the workflow runs. You can see:
 **Problem**: The workflow runs but fails to compile
 
 **Solutions**:
+
 1. **View detailed logs**:
    - Go to Actions → Click on the failed workflow
    - Click on the failed job
    - Review logs to see the specific error
 
 2. **Test locally first**:
+
    ```bash
    # Test build locally
    make release-dry-run-linux
    ```
+
    If this fails, the problem is in your local configuration
 
 3. **Verify Docker**:
@@ -210,6 +222,7 @@ Logs update in real time while the workflow runs. You can see:
 **Problem**: The release is created but has no binaries
 
 **Solutions**:
+
 1. **Verify workflow logs**:
    - Look for errors in the "Upload artifacts" step
    - Verify that builds completed successfully
@@ -227,6 +240,7 @@ Logs update in real time while the workflow runs. You can see:
 **Problem**: The workflow fails because it can't find a secret
 
 **Solutions**:
+
 1. **Verify the secret exists**:
    - Settings → Secrets and variables → Actions
    - Verify the secret is listed
