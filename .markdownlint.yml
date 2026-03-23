@@ -20,7 +20,7 @@
   "line_length": 999
   "code_blocks": true
   "tables": true
-  "code_block_line_length": 120
+  "code_block_line_length": 200
   "table_line_length": 120
 "MD047": true
 "no-hard-tabs": false

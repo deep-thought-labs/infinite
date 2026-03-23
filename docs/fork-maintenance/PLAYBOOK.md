@@ -98,8 +98,9 @@ Objetivo: que la **estructura lógica** de los workflows coincida con **`upstrea
 | 3b.3 | Aplicar **deltas del fork**: rutas `evmd` → `infinited`, pasos que llamen al binario correcto, reaplicar jobs acordados (p. ej. **fuzz** en `test.yml`, **CodeQL** si aplica). Revisar **`runs-on`**: sin Depot, usar **`ubuntu-latest`** (ver [MERGE_STRATEGIES §4.3](MERGE_STRATEGIES.md#43-deltas-obligatorios-en-el-fork-tras-copiarfusionar-yaml)). |
 | 3b.4 | Revisar **secretos** del repositorio (Codecov, Buf, docs dispatch, etc.): o bien configurados, o jobs deshabilitados/documentados en la bitácora. |
 | 3b.5 | Abrir o actualizar **PR** y comprobar que la **CI en GitHub** refleja los mismos gates que el equipo espera; completar la sección **GitHub Actions** de la bitácora. |
+| 3b.6 | Si el merge tocó la raíz del repo o añadió/cambió [`.markdownlint.yml`](../../.markdownlint.yml) / [Makefile](../../Makefile) upstream: conservar **MD013** `code_block_line_length: 200` y **`markdownlint_cli2_version`** alineada con **`markdownlint-cli2-action@v16`** en [lint.yml](../../.github/workflows/lint.yml) (política del fork). Detalle: [MERGE_STRATEGIES.md — §4.6](MERGE_STRATEGIES.md#46-markdownlint). |
 
-Checklist extendida: [MERGE_STRATEGIES.md — §4.5](MERGE_STRATEGIES.md#45-checklist-antes-de-dar-por-buena-la-alineación).
+Checklist extendida: [MERGE_STRATEGIES.md — §4.5 y §4.6](MERGE_STRATEGIES.md#45-checklist-antes-de-dar-por-buena-la-alineación).
 
 ## Fase 4 — Cierre
 

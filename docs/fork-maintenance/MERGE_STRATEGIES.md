@@ -109,8 +109,22 @@ git show upstream/main:.github/workflows/test.yml | head
 - [ ] Reaplicados jobs **fork-only** acordados (fuzz, CodeQL, etc.).
 - [ ] **Runners:** confirmado si se usan labels `depot-ubuntu-*` o **`ubuntu-latest`** según contratación real (ver §4.3).
 - [ ] PR de CI **verde** o fallos documentados como aceptados temporalmente.
+- [ ] [`.markdownlint.yml`](../../.markdownlint.yml) del fork: **MD013** con `code_block_line_length: 200` (ver [§4.6](#46-markdownlint)).
+- [ ] [Makefile](../../Makefile): **`markdownlint_cli2_version`** coherente con **`markdownlint-cli2-action@v16`** en [lint.yml](../../.github/workflows/lint.yml); si bump de la acción, bump de la variable (ver [§4.6](#46-markdownlint)).
 
 Procedimiento en el playbook: [Fase 3b](PLAYBOOK.md#fase-3b--alineación-de-github-actions-con-upstream).
+
+### 4.6 Markdownlint
+
+El lint de Markdown en CI usa [`.markdownlint.yml`](../../.markdownlint.yml) en la **raíz del repositorio** (no solo `.github/`).
+
+**Política de este fork:** regla **MD013** — el texto corrido puede usar `line_length` alto; en **bloques de código** (`code_blocks: true`) se aplica **`code_block_line_length: 200`** para admitir ejemplos shell, `curl` y tuberías largas sin forzar reformateos innecesarios, y aun así detectar líneas claramente anómalas.
+
+**Tras integrar upstream:** si el merge trae un `.markdownlint.yml` distinto, **no** sustituir ciegamente el del fork: fusionar y **conservar** `code_block_line_length: 200` salvo decisión explícita del equipo (anótala en la bitácora). Si upstream no tiene el archivo, mantener el del fork.
+
+**Makefile (paridad local ↔ CI):** en la raíz, el [Makefile](../../Makefile) declara **`markdownlint_cli2_version`** (p. ej. `0.13.0`), alineada con la dependencia **`markdownlint-cli2`** empaquetada en **`DavidAnson/markdownlint-cli2-action@v16`** usada en [`.github/workflows/lint.yml`](../../.github/workflows/lint.yml). **`make lint-md`** ejecuta esa versión vía `npx`; **`make lint`** incluye **`lint-md`** (requiere **Node.js** con `npx`). El objetivo `lint-md` también pasa el glob de exclusión `!tests/systemtests/Counter/**` (subárbol Foundry), coherente con [`.markdownlintignore`](../../.markdownlintignore).
+
+**Tras subir la acción** `markdownlint-cli2-action` a otra etiqueta mayor: revisar el `package.json` de esa etiqueta y **actualizar `markdownlint_cli2_version` en el Makefile** en el mismo PR o de inmediato después, para no divergir de CI.
 
 ## 5. Documentación obligatoria por merge (proceso único)
 

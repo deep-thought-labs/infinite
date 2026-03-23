@@ -254,7 +254,10 @@ benchmark:
 golangci_lint_cmd=golangci-lint
 golangci_version=v2.10.1
 
-lint: lint-go lint-python lint-contracts
+# Pin matches dependency of DavidAnson/markdownlint-cli2-action@v16 (.github/workflows/lint.yml).
+markdownlint_cli2_version=0.13.0
+
+lint: lint-go lint-python lint-contracts lint-md
 
 lint-go:
 	@echo "--> Running linter"
@@ -289,6 +292,14 @@ lint-contracts:
 		echo "     Note: Not required to build the binary, only for contract development"; \
 	fi
 
+lint-md:
+	@echo "--> Running markdownlint (markdownlint-cli2 $(markdownlint_cli2_version), same pin as GitHub Actions markdownlint-cli2-action@v16)..."
+	@if ! command -v npx >/dev/null 2>&1; then \
+		echo "  npx not found; install Node.js to run markdownlint (https://nodejs.org/)"; \
+		exit 1; \
+	fi
+	npx --yes markdownlint-cli2@$(markdownlint_cli2_version) --config .markdownlint.yml "**/*.md" "!tests/systemtests/Counter/**"
+
 lint-fix:
 	@go install github.com/golangci/golangci-lint/v2/cmd/golangci-lint@$(golangci_version)
 	@$(shell go env GOPATH)/bin/golangci-lint run --timeout=15m --fix
@@ -296,7 +307,7 @@ lint-fix:
 lint-fix-contracts:
 	solhint --fix contracts/**/*.sol
 
-.PHONY: lint lint-fix lint-contracts lint-go lint-python
+.PHONY: lint lint-fix lint-contracts lint-go lint-md lint-python
 
 format: format-go format-python format-shell
 
