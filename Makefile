@@ -26,6 +26,11 @@ DOCKER := $(shell which docker)
 # Baseline release tag for chain-upgrade system tests (tests/systemtests/chainupgrade).
 # The tag MUST exist on this repository (CI and contributors); do not fetch from other remotes in automation.
 SYSTEMTEST_LEGACY_TAG ?= v0.1.10
+SYSTEMTEST_LEGACY_REPO ?= deep-thought-labs/infinite
+SYSTEMTEST_LEGACY_DOWNLOAD ?= auto
+SYSTEMTEST_LEGACY_ASSET_LINUX_AMD64 ?= infinite_Linux_x86_64.tar.gz
+SYSTEMTEST_LEGACY_ASSET_LINUX_ARM64 ?= infinite_Linux_ARM64.tar.gz
+SYSTEMTEST_LEGACY_CHECKSUM_FILE ?= checksums.txt
 
 export GO111MODULE = on
 
@@ -489,13 +494,35 @@ test-rpc-compat:
 test-rpc-compat-stop:
 	cd tests/jsonrpc && docker compose down
 
-.PHONY: localnet-start localnet-stop localnet-build-env localnet-build-nodes test-rpc-compat test-rpc-compat-stop mocks
+.PHONY: localnet-start localnet-stop localnet-build-env localnet-build-nodes test-rpc-compat test-rpc-compat-stop test-system test-system-docker build-v05 mocks
 
 test-system: build-v05 build
 	mkdir -p ./tests/systemtests/binaries/
 	cp "$(BUILDDIR)/$(EXAMPLE_BINARY)" ./tests/systemtests/binaries/evmd
 	cd tests/systemtests/Counter && forge build
 	$(MAKE) -C tests/systemtests test
+
+# Run system tests in Linux container (recommended on macOS when legacy artifacts are Linux-only)
+test-system-docker:
+	@echo "🐳 Running system tests in Linux container..."
+	@$(DOCKER) run --rm --platform linux/amd64 \
+		-v "$(CURDIR):/workspace" \
+		-w /workspace \
+		-e SYSTEMTEST_LEGACY_TAG="$(SYSTEMTEST_LEGACY_TAG)" \
+		-e SYSTEMTEST_LEGACY_REPO="$(SYSTEMTEST_LEGACY_REPO)" \
+		-e SYSTEMTEST_LEGACY_DOWNLOAD="$(SYSTEMTEST_LEGACY_DOWNLOAD)" \
+		-e SYSTEMTEST_LEGACY_ASSET_LINUX_AMD64="$(SYSTEMTEST_LEGACY_ASSET_LINUX_AMD64)" \
+		-e SYSTEMTEST_LEGACY_ASSET_LINUX_ARM64="$(SYSTEMTEST_LEGACY_ASSET_LINUX_ARM64)" \
+		-e SYSTEMTEST_LEGACY_CHECKSUM_FILE="$(SYSTEMTEST_LEGACY_CHECKSUM_FILE)" \
+		golang:1.25-bookworm bash -lc '\
+			set -euo pipefail; \
+			apt-get update; \
+			apt-get install -y --no-install-recommends build-essential git make curl ca-certificates jq tar xz-utils; \
+			curl -fsSL https://foundry.paradigm.xyz | bash; \
+			/root/.foundry/bin/foundryup; \
+			export PATH="/root/.foundry/bin:$$PATH"; \
+			make test-system \
+		'
 
 build-v05:
 	mkdir -p ./tests/systemtests/binaries/v0.5
@@ -508,21 +535,55 @@ build-v05:
 		echo ""; \
 		exit 1; \
 	)
-# Older release Makefiles may not quote BUILDDIR in go build -o; a path with spaces
-# in the repo root breaks the legacy step. Use a temp dir without spaces for output.
-	@LEGACY_BUILDDIR=$$(mktemp -d); \
+	@set -e; \
+		target="./tests/systemtests/binaries/v0.5/evmd"; \
+		download_ok=0; \
+		if [ "$(SYSTEMTEST_LEGACY_DOWNLOAD)" != "never" ] && [ "$$(uname -s)" = "Linux" ]; then \
+			asset=""; \
+			case "$$(uname -m)" in \
+				x86_64|amd64) asset="$(SYSTEMTEST_LEGACY_ASSET_LINUX_AMD64)" ;; \
+				aarch64|arm64) asset="$(SYSTEMTEST_LEGACY_ASSET_LINUX_ARM64)" ;; \
+				*) ;; \
+			esac; \
+			if [ -n "$$asset" ]; then \
+				tmpdir=$$(mktemp -d); \
+				base_url="https://github.com/$(SYSTEMTEST_LEGACY_REPO)/releases/download/$(SYSTEMTEST_LEGACY_TAG)"; \
+				if curl -fsSL "$$base_url/$(SYSTEMTEST_LEGACY_CHECKSUM_FILE)" -o "$$tmpdir/checksums.txt" && \
+				   curl -fsSL "$$base_url/$$asset" -o "$$tmpdir/asset.tar.gz"; then \
+					expected=$$(awk -v asset="$$asset" '$$2 == asset {print $$1}' "$$tmpdir/checksums.txt" | head -n1); \
+					actual=$$(shasum -a 256 "$$tmpdir/asset.tar.gz" | awk '{print $$1}'); \
+					if [ -n "$$expected" ] && [ "$$expected" = "$$actual" ]; then \
+						tar -xzf "$$tmpdir/asset.tar.gz" -C "$$tmpdir"; \
+						if [ -f "$$tmpdir/infinited" ]; then cp "$$tmpdir/infinited" "$$target"; chmod +x "$$target"; download_ok=1; fi; \
+						if [ -f "$$tmpdir/evmd" ] && [ $$download_ok -ne 1 ]; then cp "$$tmpdir/evmd" "$$target"; chmod +x "$$target"; download_ok=1; fi; \
+					fi; \
+				fi; \
+				rm -rf "$$tmpdir"; \
+			fi; \
+		fi; \
+		if [ $$download_ok -eq 1 ]; then \
+			echo "✅ Legacy baseline downloaded from releases: $(SYSTEMTEST_LEGACY_TAG)"; \
+			exit 0; \
+		fi; \
+		if [ "$(SYSTEMTEST_LEGACY_DOWNLOAD)" = "always" ]; then \
+			echo "ERROR: Legacy binary download required (SYSTEMTEST_LEGACY_DOWNLOAD=always) but failed."; \
+			exit 1; \
+		fi; \
+		echo "ℹ️  Falling back to building legacy tag locally..."; \
+		LEGACY_BUILDDIR=$$(mktemp -d); \
 		git checkout "$(SYSTEMTEST_LEGACY_TAG)" || { rm -rf "$$LEGACY_BUILDDIR"; exit 1; }; \
 		$(MAKE) build BUILDDIR="$$LEGACY_BUILDDIR"; \
 		_ret=$$?; \
 		if [ $$_ret -ne 0 ]; then git checkout -; rm -rf "$$LEGACY_BUILDDIR"; exit $$_ret; fi; \
 		if [ -f "$$LEGACY_BUILDDIR/$(EXAMPLE_BINARY)" ]; then \
-		 cp "$$LEGACY_BUILDDIR/$(EXAMPLE_BINARY)" ./tests/systemtests/binaries/v0.5/evmd; \
+		 cp "$$LEGACY_BUILDDIR/$(EXAMPLE_BINARY)" "$$target"; \
 		elif [ -f "$$LEGACY_BUILDDIR/evmd" ]; then \
-		 cp "$$LEGACY_BUILDDIR/evmd" ./tests/systemtests/binaries/v0.5/evmd; \
+		 cp "$$LEGACY_BUILDDIR/evmd" "$$target"; \
 		else \
 		 echo "No baseline binary in $$LEGACY_BUILDDIR (expected $(EXAMPLE_BINARY) or evmd)"; \
 		 git checkout -; rm -rf "$$LEGACY_BUILDDIR"; exit 1; \
 		fi; \
+		chmod +x "$$target"; \
 		git checkout -; \
 		rm -rf "$$LEGACY_BUILDDIR"
 

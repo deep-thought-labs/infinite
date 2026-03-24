@@ -21,6 +21,7 @@ Choose the workflow based on your objective:
 |-----------|----------|---------|------|
 | **Daily development** | Development Build | `make install` | 2-5 min |
 | **Verify it compiles** | Testing Build | `make build` | 2-5 min |
+| **Run system upgrade tests on macOS** | Linux Container Build/Test | `make test-system-docker` | 15-30 min |
 | **Release test (local)** | Release Build (Local) | `make release-dry-run-linux` | 10-15 min |
 | **Published binaries** | GitHub Actions (remote) | Push tag `v*.*.*` (maintainers) | CI-managed |
 
@@ -315,6 +316,46 @@ make build-cross-darwin-amd64
 make build-cross-darwin-arm64
 make build-cross-windows-amd64
 ```
+
+---
+
+## 🧪 Workflow 2.5: System Upgrade Tests (Docker on macOS)
+
+**Purpose**: Run `make test-system` in a Linux environment from macOS hosts, using legacy baseline artifacts from releases when available.
+
+**Why this exists**:
+
+- System upgrade tests use a legacy baseline binary from `SYSTEMTEST_LEGACY_TAG` (default `v0.1.10`).
+- Official release artifacts for this project are Linux-only (`linux_amd64`, `linux_arm64`).
+- Running inside Linux container avoids host OS mismatches and keeps behavior close to GitHub Actions.
+
+### Command
+
+```bash
+make test-system-docker
+```
+
+### Variables you can override
+
+```bash
+# Use a different baseline tag from this fork's releases
+make SYSTEMTEST_LEGACY_TAG=v0.1.10 test-system-docker
+
+# Force behavior for legacy baseline retrieval:
+# auto   -> download on Linux, fallback to local compile
+# always -> download only; fail if unavailable
+# never  -> always compile baseline from tag locally
+make SYSTEMTEST_LEGACY_DOWNLOAD=always test-system-docker
+```
+
+### Notes
+
+- The container target installs Foundry and runs `make test-system` inside Linux.
+- Legacy download expects release assets/checksums under:
+  - `SYSTEMTEST_LEGACY_ASSET_LINUX_AMD64` (default `infinite_Linux_x86_64.tar.gz`)
+  - `SYSTEMTEST_LEGACY_ASSET_LINUX_ARM64` (default `infinite_Linux_ARM64.tar.gz`)
+  - `SYSTEMTEST_LEGACY_CHECKSUM_FILE` (default `checksums.txt`)
+- If download fails and mode is `auto`, the Makefile falls back to local baseline compile.
 
 ---
 

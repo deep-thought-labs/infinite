@@ -259,6 +259,42 @@ curl -s http://localhost:1317/cosmos/bank/v1beta1/denoms_metadata | jq '.metadat
 cat ~/.infinited/config/genesis.json | jq '.app_state.bank.denom_metadata'
 ```
 
+### 11. `make test-system` fails while building legacy baseline
+
+**What this means**: The system-upgrade test could not prepare the legacy binary from `SYSTEMTEST_LEGACY_TAG`.
+
+**Common causes**:
+
+- The release artifact for the legacy tag is Linux-only and you're running directly on macOS.
+- Dependency/toolchain mismatch when trying to compile old tag locally.
+- Missing release asset/checksum for the selected tag.
+
+**Recommended solution (macOS host)**:
+
+```bash
+# Run system tests in Linux container
+make test-system-docker
+```
+
+**Optional controls**:
+
+```bash
+# Require release download only (no local compile fallback)
+make SYSTEMTEST_LEGACY_DOWNLOAD=always test-system-docker
+
+# Force local compile fallback behavior
+make SYSTEMTEST_LEGACY_DOWNLOAD=never test-system
+```
+
+**Project defaults**:
+
+- `SYSTEMTEST_LEGACY_TAG=v0.1.10`
+- Release repo: `deep-thought-labs/infinite`
+- Expected Linux assets:
+  - `infinite_Linux_x86_64.tar.gz`
+  - `infinite_Linux_ARM64.tar.gz`
+  - `checksums.txt`
+
 ## Getting Help
 
 If you encounter issues not covered in this guide:

@@ -149,6 +149,8 @@ Algunos scripts de **system test** / `test-system` pueden esperar el binario con
 
 El `Makefile` define **`SYSTEMTEST_LEGACY_TAG`**: commit etiquetado desde el que se construye ese binario “viejo” para el escenario de upgrade on-chain. **En el fork Infinite Drive** el valor por defecto apunta al **último release del propio repositorio** (p. ej. **`v0.1.10`**), no al tag que documente cosmos/evm (`v0.5.1`, etc.), que puede **no existir** en el fork. El tag debe estar **creado y empujado** en este repo; no se debe asumir un fetch automático desde upstream. Detalle y tabla de verificación: bitácora [2026-03-merge-upstream-main.md](logs/2026-03-merge-upstream-main.md#system-tests-y-upgrades-on-chain-fork).
 
+Cuando los artefactos del baseline sean Linux-only, `build-v05` puede descargarlos del release del fork (`SYSTEMTEST_LEGACY_REPO`) y verificar `checksums.txt` antes de copiarlos a `tests/systemtests/binaries/v0.5/evmd`. Para hosts macOS, usar `make test-system-docker` (ejecución Linux en contenedor) reduce diferencias con CI y evita incompatibilidades de toolchain en tags legacy.
+
 ### A.5 CI y jobs preservados del fork
 
 Si upstream simplifica **`.github/workflows`**, revisar jobs que el fork **debe conservar** (p. ej. **`test-fuzz`** u otros acordados) y fusionar YAML en lugar de sustituir ciegamente por la versión upstream.

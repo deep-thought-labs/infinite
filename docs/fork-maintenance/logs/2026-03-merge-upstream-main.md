@@ -111,9 +111,11 @@ Upstream asume un **git tag** en el mismo repositorio para compilar el binario �
 |---------|---------------------------|
 | Tag baseline | **`SYSTEMTEST_LEGACY_TAG`** en el `Makefile` (por defecto **`v0.1.10`** — último release publicado aquí y alineado con producción). Sobreescribible: `make SYSTEMTEST_LEGACY_TAG=… test-system`. |
 | Existencia del tag | `build-v05` falla con mensaje explícito si el tag no está en el clon. **Debe** existir en `origin` para que GitHub Actions pueda hacer `git checkout` tras `fetch-tags`. **No** se automatiza descargar el tag desde cosmos/evm u otro remoto. |
-| Binarios | Tras checkout del tag: `make build` → copia a `tests/systemtests/binaries/v0.5/evmd`. Tras volver a la rama actual: `make build` → copia a `tests/systemtests/binaries/evmd`. `EXAMPLE_BINARY` en el tag antiguo puede ser `infinited` o `evmd`; la receta contempla ambos. |
+| Binarios (legacy baseline) | `build-v05` prioriza descarga desde release del fork (**`SYSTEMTEST_LEGACY_REPO`**, default `deep-thought-labs/infinite`) con verificación SHA256 (`checksums.txt`) y assets Linux (`infinite_Linux_x86_64.tar.gz`, `infinite_Linux_ARM64.tar.gz`). Si `SYSTEMTEST_LEGACY_DOWNLOAD=auto` y la descarga no aplica/falla, hace fallback a compilación local del tag. Modo `always` obliga descarga; `never` obliga compilación. |
+| Binarios (rama actual) | `test-system` sigue compilando la rama actual y copia `build/infinited` (o `EXAMPLE_BINARY`) a `tests/systemtests/binaries/evmd` para la suite. |
 | Test de upgrade | `tests/systemtests/chainupgrade/v4_v5.go`: nombre del plan on-chain **`v0.4.0-to-v0.5.0`** — debe coincidir con **`UpgradeName`** en `infinited/upgrades.go` (handler de referencia tipo upstream; no implica que mainnet use el mismo nombre). |
 | CI | `.github/workflows/system-test.yml`: `fetch-depth: 0`, `fetch-tags: true`; el paso `make test-system` solo corre si **`GIT_DIFF`** matchea rutas relevantes (`.go`, `go.mod`, `*.toml`, workflow, etc.), igual que en upstream. |
+| Ejecución local macOS | Nuevo target `make test-system-docker` ejecuta la prueba en contenedor Linux (`golang:1.25-bookworm` + Foundry), recomendado cuando los artefactos legacy son Linux-only o el host presenta incompatibilidades de toolchain. |
 
 **Verificación:** tras cambiar el tag o el flujo, ejecutar localmente `make test-system` o forzar un PR que toque rutas disparadoras del workflow y revisar el job *System Test*.
 
