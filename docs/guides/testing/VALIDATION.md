@@ -1,6 +1,6 @@
 # Validation workflows
 
-Use this document for **multi-step validation flows** (what to run together and when). It does not duplicate per-script documentation.
+Use this document for **multi-step validation flows** (what to run together and when). Per-script behavior lives in **[development/SCRIPTS.md](../development/SCRIPTS.md)**.
 
 | Topic | Canonical doc |
 |-------|----------------|

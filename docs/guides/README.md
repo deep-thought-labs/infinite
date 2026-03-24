@@ -51,7 +51,7 @@ Guides for configuring specific aspects of the system.
 
 | Guide | Description | When to Use |
 |-------|-------------|-------------|
-| **[configuration/GENESIS.md](configuration/GENESIS.md)** | Genesis configuration | Configure genesis for mainnet |
+| **[configuration/GENESIS.md](configuration/GENESIS.md)** | Creating or transforming genesis for a network (advanced) | New chain genesis, module accounts, vesting; deeper than BUILDING/README run-a-node flows |
 | **[configuration/MODULE_ACCOUNTS.md](configuration/MODULE_ACCOUNTS.md)** | ModuleAccounts structure and configuration | Understand and configure tokenomics pools |
 | **[configuration/VESTING_ACCOUNTS.md](configuration/VESTING_ACCOUNTS.md)** | Vesting accounts configuration | Configure accounts with locked tokens and gradual unlock |
 | **[configuration/TOKEN_SUPPLY.md](configuration/TOKEN_SUPPLY.md)** | Understanding token creation in Genesis | Learn how tokens are created and supply/balance relationship |
@@ -62,8 +62,8 @@ Guides about infrastructure, CI/CD, and tools.
 
 | Guide | Description | When to Use |
 |-------|-------------|-------------|
-| **[infrastructure/RELEASES.md](infrastructure/RELEASES.md)** | **Only** place for tag → release **procedure** (prepare, tag, push, verify) | Publish a new version |
-| **[infrastructure/CI_CD.md](infrastructure/CI_CD.md)** | Repo Actions **settings** (permissions, secrets), monitoring, troubleshooting | First-time CI setup, debug failing workflows |
+| **[infrastructure/RELEASES.md](infrastructure/RELEASES.md)** | **Ship a version**: git steps, `v*.*.*` tag, push, verify GitHub Release + binaries | Publish a new version |
+| **[infrastructure/CI_CD.md](infrastructure/CI_CD.md)** | **Wire and debug Actions**: Settings → permissions, Secrets, workflow logs, runner errors | First-time repo CI setup; any workflow failing for config/permissions |
 | **[infrastructure/DOCKER.md](infrastructure/DOCKER.md)** | Docker usage in builds | Understand Docker builds |
 
 ### 📖 Reference
@@ -87,9 +87,10 @@ Reference documentation and troubleshooting.
 - **...run a node** (Drive / binary / source): [README.md](../../README.md#run-a-node) in the repository root
 - **...validate the whole repo**: [testing/PROJECT_INTEGRITY_CHECKLIST.md](testing/PROJECT_INTEGRITY_CHECKLIST.md); **workflows**: [testing/VALIDATION.md](testing/VALIDATION.md); **per script**: [development/SCRIPTS.md](development/SCRIPTS.md)
 - **...check a running node**: [development/SCRIPTS.md](development/SCRIPTS.md#5-infinite_health_checksh) (`infinite_health_check.sh`)
-- **...create a release**: [infrastructure/RELEASES.md](infrastructure/RELEASES.md)
+- **...publish a version (tag, verify release)**: [infrastructure/RELEASES.md](infrastructure/RELEASES.md)
+- **...fix Actions permissions, secrets, or workflow errors**: [infrastructure/CI_CD.md](infrastructure/CI_CD.md)
 - **...deploy to production**: [deployment/PRODUCTION.md](deployment/PRODUCTION.md)
-- **...configure genesis**: [configuration/GENESIS.md](configuration/GENESIS.md)
+- **...author or deeply customize genesis** (new networks, module accounts): [configuration/GENESIS.md](configuration/GENESIS.md)
 - **...understand ModuleAccounts**: [configuration/MODULE_ACCOUNTS.md](configuration/MODULE_ACCOUNTS.md)
 - **...configure vesting accounts**: [configuration/VESTING_ACCOUNTS.md](configuration/VESTING_ACCOUNTS.md)
 - **...resolve a problem**: [reference/TROUBLESHOOTING.md](reference/TROUBLESHOOTING.md)
@@ -101,7 +102,7 @@ Reference documentation and troubleshooting.
 
 - **New**: Start with [QUICK_START.md](QUICK_START.md)
 - **Active developer**: [development/DEVELOPMENT.md](development/DEVELOPMENT.md); upstream sync: [fork-maintenance/README.md](../fork-maintenance/README.md)
-- **DevOps/Infrastructure**: [infrastructure/RELEASES.md](infrastructure/RELEASES.md) and [infrastructure/CI_CD.md](infrastructure/CI_CD.md)
+- **DevOps/Infrastructure**: ship a release → [infrastructure/RELEASES.md](infrastructure/RELEASES.md); Actions settings / secrets / failing workflows → [infrastructure/CI_CD.md](infrastructure/CI_CD.md)
 - **Validator**: [deployment/VALIDATORS.md](deployment/VALIDATORS.md)
 
 ---

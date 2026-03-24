@@ -283,7 +283,7 @@ The official documentation includes:
 
 ## Run a Node
 
-Choose one path. **How to install and operate** with Drive or with a downloaded binary is **not** duplicated here beyond the minimum for a standard mainnet-style layout; use the linked documentation for full detail.
+Choose one path. This section shows a **standard mainnet-style** `init` / genesis / `start` layout; **full** Drive and binary install and operations are in the linked documentation below.
 
 ### Option 1: Drive (recommended for operators)
 
@@ -292,7 +292,7 @@ Choose one path. **How to install and operate** with Drive or with a downloaded 
 - **Source code:** [github.com/deep-thought-labs/drive](https://github.com/deep-thought-labs/drive)
 - **Official documentation:** [docs.infinitedrive.xyz](https://docs.infinitedrive.xyz/en) (guides for using Drive and the network)
 
-Follow those resources for installation, `drive.sh` commands, mainnet/testnet layouts, and UI flows. Nothing in this section replaces them.
+Use those resources for installation, `drive.sh` commands, mainnet/testnet layouts, and UI flows.
 
 ### Option 2: Pre-built binary from GitHub Releases
 
@@ -301,17 +301,45 @@ Download the **latest published `infinited` binary** for your platform from the 
 - **[Latest release (download assets here)](https://github.com/deep-thought-labs/infinite/releases/latest)**
 - [All releases](https://github.com/deep-thought-labs/infinite/releases) — browse older versions if needed
 
-After you install the binary on your `PATH` (and mark it executable if required), initialize the node and use the **official genesis** for your network. Example for mainnet (same data directory pattern as Option 3):
+After you install the binary on your `PATH` (and mark it executable if required), run **`infinited init`** with the **Cosmos `chain-id`** of the network you intend to join, then **replace** `~/.infinited/config/genesis.json` with the published file for that network (the `curl` step overwrites what `init` generated). Pick one row:
+
+| Network | Purpose | Cosmos `chain-id` | EVM chain ID | Official `genesis.json` |
+|---------|---------|-------------------|--------------|-------------------------|
+| **Mainnet** | Production | `infinite_421018-1` | `421018` | `https://assets.infinitedrive.xyz/mainnet/genesis.json` |
+| **Testnet** | Public testing | `infinite_421018001-1` | `421018001` | `https://assets.infinitedrive.xyz/testnet/genesis.json` |
+| **Creative** | Experimental | `infinite_421018002-1` | `421018002` | `https://assets.infinitedrive.xyz/creative/genesis.json` |
+
+**Live metadata for each network** (genesis path, **P2P seeds**, RPC URLs, chain IDs): fetch the canonical **`network-data.json`** at any time so values stay current:
+
+| Network | `network-data.json` | Index page |
+|---------|---------------------|------------|
+| **Mainnet** | [`https://assets.infinitedrive.xyz/mainnet/network-data.json`](https://assets.infinitedrive.xyz/mainnet/network-data.json) | [assets.infinitedrive.xyz/mainnet/](https://assets.infinitedrive.xyz/mainnet/) |
+| **Testnet** | [`https://assets.infinitedrive.xyz/testnet/network-data.json`](https://assets.infinitedrive.xyz/testnet/network-data.json) | [assets.infinitedrive.xyz/testnet/](https://assets.infinitedrive.xyz/testnet/) |
+| **Creative** | [`https://assets.infinitedrive.xyz/creative/network-data.json`](https://assets.infinitedrive.xyz/creative/network-data.json) | [assets.infinitedrive.xyz/creative/](https://assets.infinitedrive.xyz/creative/) |
+
+**Example — join mainnet with P2P sync** (swap `chain-id`, `evm.evm-chain-id`, genesis URL, and `network-data.json` URL for testnet or creative using the tables above):
 
 ```bash
 infinited init my-node --chain-id infinite_421018-1 --home ~/.infinited
 
-curl -o ~/.infinited/config/genesis.json \
+curl -fsSL -o ~/.infinited/config/genesis.json \
   https://assets.infinitedrive.xyz/mainnet/genesis.json
 
 infinited genesis validate-genesis --home ~/.infinited
-infinited start --home ~/.infinited
+
+# Prefer loading the seed from network-data.json (fresh value):
+# P2P_SEED=$(curl -fsSL https://assets.infinitedrive.xyz/mainnet/network-data.json | jq -r '.endpoints.p2p[0].url')
+
+infinited start \
+  --chain-id infinite_421018-1 \
+  --evm.evm-chain-id 421018 \
+  --p2p.seeds fe304bbda1a243eb2bd30a4558923b39d04ca5eb@server-xenia88.infinitedrive.xyz:26656 \
+  --home ~/.infinited
 ```
+
+The `--p2p.seeds` value above matches **mainnet** `network-data.json` at last documentation update; **always confirm** with the live JSON or the `P2P_SEED` one-liner. Schema: [`NETWORK_DATA_JSON_SCHEMA`](https://assets.infinitedrive.xyz/references/NETWORK_DATA_JSON_SCHEMA). Additional context: [blockchain documentation](https://docs.infinitedrive.xyz/en/blockchain).
+
+**Local-only** (no public sync): use `init` → `validate-genesis` → `start` with IDs you control and **do not** overwrite `genesis.json` from `assets.infinitedrive.xyz`. See [BUILDING.md — Running a node](docs/guides/development/BUILDING.md#running-a-node).
 
 For genesis, ModuleAccounts, network parameters, and related topics, see the [blockchain documentation](https://docs.infinitedrive.xyz/en/blockchain).
 
@@ -331,22 +359,27 @@ cd infinite
 make install
 # This installs infinited to $HOME/go/bin/infinited
 
-# 4. Initialize the node (generates basic genesis)
+# 4. Initialize the node (generates a dev-oriented genesis; see BUILDING.md)
 infinited init my-node --chain-id infinite_421018-1 --home ~/.infinited
 
-# 5. Obtain the official genesis file from URL
-curl -o ~/.infinited/config/genesis.json \
+# 5. Replace genesis with the official file for your network (mainnet example — see table in Option 2)
+curl -fsSL -o ~/.infinited/config/genesis.json \
   https://assets.infinitedrive.xyz/mainnet/genesis.json
 
 # 6. Validate the genesis file
 infinited genesis validate-genesis --home ~/.infinited
 
-# 7. Start the node
-infinited start --home ~/.infinited
+# 7. Start the node (match chain-id, EVM ID, and P2P seed to the network you chose)
+infinited start \
+  --chain-id infinite_421018-1 \
+  --evm.evm-chain-id 421018 \
+  --p2p.seeds fe304bbda1a243eb2bd30a4558923b39d04ca5eb@server-xenia88.infinitedrive.xyz:26656 \
+  --home ~/.infinited
 ```
 
 **Notes:**
 
+- **Networks / P2P**: Same **mainnet / testnet / creative** tables and **`network-data.json`** sources as [Option 2](#option-2-pre-built-binary-from-github-releases) above. **Local-only** runs: [BUILDING.md — Running a node, Option A](docs/guides/development/BUILDING.md#option-a--local-only-chain-no-public-network-sync) (genesis from `init`, omit `--p2p.seeds`).
 - Resolve anything `./scripts/check_build_prerequisites.sh` reports before `make install`. Full detail: [docs/guides/development/BUILDING.md](docs/guides/development/BUILDING.md) and [docs/guides/development/SCRIPTS.md](docs/guides/development/SCRIPTS.md).
 - Ensure `$HOME/go/bin` is on your `PATH` after `make install`.
 - Broader build and test workflows: [docs in this repository](docs/guides/README.md) and [official documentation](https://docs.infinitedrive.xyz/en).

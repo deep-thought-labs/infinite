@@ -1,6 +1,14 @@
 # CI/CD and GitHub Actions Configuration
 
-**Scope:** repository settings (permissions, secrets), how to watch workflows, and troubleshooting Actions. **Creating a version, tagging, and shipping a release** are documented only in **[RELEASES.md](RELEASES.md)**.
+## How this guide relates to RELEASES.md
+
+Companion guide: **[RELEASES.md](RELEASES.md)**.
+
+| Use **this file (`CI_CD.md`)** when you need to… | Use **[`RELEASES.md`](RELEASES.md)** when you need to… |
+|--------------------------------------------------|--------------------------------------------------------|
+| Set **GitHub → Settings → Actions** (**workflow permissions**), manage **Secrets**, interpret failing **workflow** logs across the repo, or confirm `.github/workflows/` is present | Execute the **release checklist**: prepare code, **tag** the version, **push** the tag, confirm the **GitHub Release** and attached **artifacts** |
+
+**Rule of thumb**: **`CI_CD.md`** = *repository and Actions configuration + troubleshooting the automation*. **`RELEASES.md`** = *end-to-end procedure to publish a new version*.
 
 ## 📋 Table of Contents
 

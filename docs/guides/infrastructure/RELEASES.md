@@ -2,6 +2,16 @@
 
 Complete guide for creating official Infinite Drive releases using GitHub Actions.
 
+## How this guide relates to CI_CD.md
+
+Companion guide: **[CI_CD.md](CI_CD.md)**.
+
+| Use **this file (`RELEASES.md`)** when you need to… | Use **[`CI_CD.md`](CI_CD.md)** when you need to… |
+|-----------------------------------------------------|---------------------------------------------------|
+| Follow the **maintainer procedure**: prepare the branch, create and push a **version tag** (`v*.*.*`), watch the release job, **verify** binaries and notes on GitHub | Change **repository Settings** (Actions **workflow permissions**, **Secrets**), monitor the **Actions** tab in general, or fix **platform-level** workflow failures (permissions, token, runner) |
+
+**Rule of thumb**: **`RELEASES.md`** = *what to do in git and on the Releases page to ship a version*. **`CI_CD.md`** = *how the repo is wired for Actions and how to fix the machinery*.
+
 ## 📋 Table of Contents
 
 - [What is a Release?](#what-is-a-release)
@@ -46,7 +56,7 @@ docker ps  # Should work without errors
 
 ### 2. One-time GitHub setup
 
-Releases run in Actions; configure **workflow permissions** and **secrets** once. Full detail (only place it is spelled out): **[CI_CD.md](CI_CD.md)**.
+Releases run in Actions; configure **workflow permissions** and **secrets** once. Step-by-step for that (and for debugging workflow machinery): **[CI_CD.md](CI_CD.md)**. **Which doc when?** See the comparison table at the **top of this file**.
 
 ## 🚀 Complete Release Workflow
 

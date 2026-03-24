@@ -852,6 +852,46 @@ infinited start --chain-id infinite_421018002-1 --evm.evm-chain-id 421018002 --h
 
 ---
 
+## Reference: Field changes applied by `customize_genesis.sh`
+
+The following describes what the **`customize_genesis.sh`** automation applies when **creating or transforming** a genesis file for a new network. For compiling the binary and running a node against published networks, see [BUILDING.md](../development/BUILDING.md).
+
+The script modifies the genesis JSON to configure Infinite Drive correctly. Summary:
+
+### 1. Module denominations
+
+All modules use `"drop"` as the base denomination (staking, mint, governance min deposits, EVM `evm_denom`). These align with defaults in `infinited/genesis.go`; the script ensures they are applied in the JSON.
+
+### 2. Token metadata
+
+Adds Improbability (**42**) metadata (denom units, display, URI under `assets.infinitedrive.xyz`).
+
+### 3. EVM precompiles
+
+Enables the standard static precompile set for EVM compatibility.
+
+### 4. ERC20 native token pair
+
+Configures native `drop` as an ERC20 where applicable for the target network definition.
+
+### 5. Consensus parameters
+
+May adjust block gas limits (e.g. for development-oriented genesis).
+
+### 6. Governance periods (development-oriented flows)
+
+Short deposit/voting periods may be used for fast local testing; **production** values belong in a production genesis (see the rest of this guide).
+
+### 7. Config optimizations (when the script also adjusts node config)
+
+May tune `config.toml` / `app.toml` for development (APIs, metrics, timeouts).
+
+**Script-generated test accounts** (when applicable): the automation may create funded dev accounts and a validator key as documented in your runbook; verify addresses in script output.
+
+For script invocation, see [SCRIPTS.md — Genesis customization script](../development/SCRIPTS.md#genesis-customization-script).
+
+---
+
 ## Additional Resources
 
 For detailed information about genesis parameters, module configurations, and technical background:
@@ -865,11 +905,17 @@ For detailed information about genesis parameters, module configurations, and te
 
 ---
 
----
-
 ## Obtaining Genesis from URL
 
-**For users joining an existing network** (mainnet or testnet), you can download the official genesis file directly:
+**For users joining an existing network** (mainnet, testnet, or creative), download the official `genesis.json` for that network. It **replaces** the file produced by `infinited init` (same pattern as [BUILDING.md — Running a node](../development/BUILDING.md#running-a-node)).
+
+**Always prefer live data**: each environment publishes a canonical [`network-data.json`](https://assets.infinitedrive.xyz/mainnet/network-data.json) (see [schema](https://assets.infinitedrive.xyz/references/NETWORK_DATA_JSON_SCHEMA)) with the **genesis URL** (`resources.genesis`), **P2P seeds** (`endpoints.p2p`), and other endpoints. **Re-fetch these JSON files** when you need current seeds or paths. Human-readable index pages: [mainnet](https://assets.infinitedrive.xyz/mainnet/), [testnet](https://assets.infinitedrive.xyz/testnet/), [creative](https://assets.infinitedrive.xyz/creative/).
+
+| Network | Role | Cosmos `chain-id` | EVM chain ID | Official `genesis.json` | `network-data.json` |
+|---------|------|-------------------|--------------|-------------------------|---------------------|
+| **Mainnet** | Production | `infinite_421018-1` | `421018` | `https://assets.infinitedrive.xyz/mainnet/genesis.json` | [`…/mainnet/network-data.json`](https://assets.infinitedrive.xyz/mainnet/network-data.json) |
+| **Testnet** | Public testing | `infinite_421018001-1` | `421018001` | `https://assets.infinitedrive.xyz/testnet/genesis.json` | [`…/testnet/network-data.json`](https://assets.infinitedrive.xyz/testnet/network-data.json) |
+| **Creative** | Experimental | `infinite_421018002-1` | `421018002` | `https://assets.infinitedrive.xyz/creative/genesis.json` | [`…/creative/network-data.json`](https://assets.infinitedrive.xyz/creative/network-data.json) |
 
 ### Mainnet
 
@@ -878,14 +924,18 @@ For detailed information about genesis parameters, module configurations, and te
 infinited init my-node --chain-id infinite_421018-1 --home ~/.infinited
 
 # Download the official genesis file
-curl -o ~/.infinited/config/genesis.json \
+curl -fsSL -o ~/.infinited/config/genesis.json \
   https://assets.infinitedrive.xyz/mainnet/genesis.json
 
 # Validate the genesis file
 infinited genesis validate-genesis --home ~/.infinited
 
-# Start the node
-infinited start --chain-id infinite_421018-1 --evm.evm-chain-id 421018 --home ~/.infinited
+# Start the node (verify P2P seed against network-data.json — see BUILDING.md Option B)
+infinited start \
+  --chain-id infinite_421018-1 \
+  --evm.evm-chain-id 421018 \
+  --p2p.seeds fe304bbda1a243eb2bd30a4558923b39d04ca5eb@server-xenia88.infinitedrive.xyz:26656 \
+  --home ~/.infinited
 ```
 
 ### Testnet
@@ -895,14 +945,41 @@ infinited start --chain-id infinite_421018-1 --evm.evm-chain-id 421018 --home ~/
 infinited init my-node --chain-id infinite_421018001-1 --home ~/.infinited
 
 # Download the official genesis file
-curl -o ~/.infinited/config/genesis.json \
+curl -fsSL -o ~/.infinited/config/genesis.json \
   https://assets.infinitedrive.xyz/testnet/genesis.json
 
 # Validate the genesis file
 infinited genesis validate-genesis --home ~/.infinited
 
 # Start the node
-infinited start --chain-id infinite_421018001-1 --evm.evm-chain-id 421018001 --home ~/.infinited
+infinited start \
+  --chain-id infinite_421018001-1 \
+  --evm.evm-chain-id 421018001 \
+  --p2p.seeds ed3a45ee1ad114830afe6de7dc90c61f893c04da@server-xenia88.infinitedrive.xyz:26666 \
+  --home ~/.infinited
 ```
+
+### Creative
+
+```bash
+# Initialize the node
+infinited init my-node --chain-id infinite_421018002-1 --home ~/.infinited
+
+# Download the official genesis file
+curl -fsSL -o ~/.infinited/config/genesis.json \
+  https://assets.infinitedrive.xyz/creative/genesis.json
+
+# Validate the genesis file
+infinited genesis validate-genesis --home ~/.infinited
+
+# Start the node
+infinited start \
+  --chain-id infinite_421018002-1 \
+  --evm.evm-chain-id 421018002 \
+  --p2p.seeds e8e7b5f008a59e72ac624cde9607a90178e9cc14@server-xenia.infinitedrive.xyz:26676 \
+  --home ~/.infinited
+```
+
+**P2P seeds**: The `--p2p.seeds` values above match each network’s **`network-data.json`** (`endpoints.p2p[0].url`) at last documentation update. **Fetch the JSON** (or use `jq -r '.endpoints.p2p[0].url'`) before production so you use current seeds. You may also set `p2p.seeds` in `~/.infinited/config/config.toml`. See [BUILDING.md — Option B](../development/BUILDING.md#option-b--join-a-public-network-replace-genesis) and the [blockchain documentation](https://docs.infinitedrive.xyz/en/blockchain).
 
 **Note**: The genesis file downloaded from the URL is already fully configured with all Infinite Drive customizations, ModuleAccounts, and vesting accounts. No additional customization is needed.

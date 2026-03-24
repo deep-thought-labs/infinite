@@ -8,6 +8,7 @@ Complete guide for building Infinite Drive in different scenarios, with clearly 
 - [Workflow 1: Development Build](#workflow-1-development-build)
 - [Workflow 2: Testing Build](#workflow-2-testing-build)
 - [Workflow 3: Release Builds (Local)](#workflow-3-release-builds-local)
+- [Workflow 4: GitHub Actions Releases (Reference)](#workflow-4-github-actions-releases-reference)
 - [Requirements by Build Type](#requirements-by-build-type)
 - [Detailed Commands](#detailed-commands)
 - [Troubleshooting](#troubleshooting)
@@ -20,7 +21,8 @@ Choose the workflow based on your objective:
 |-----------|----------|---------|------|
 | **Daily development** | Development Build | `make install` | 2-5 min |
 | **Verify it compiles** | Testing Build | `make build` | 2-5 min |
-| **Release test** | Release Build (Local) | `make release-dry-run-linux` | 10-15 min |
+| **Release test (local)** | Release Build (Local) | `make release-dry-run-linux` | 10-15 min |
+| **Published binaries** | GitHub Actions (remote) | Push tag `v*.*.*` (maintainers) | CI-managed |
 
 ---
 
@@ -144,7 +146,7 @@ make install
 
 - ✅ Compiled `infinited` binary (if not already compiled)
 - ✅ Local blockchain configuration initialized
-- ✅ Genesis file customized for Infinite Drive
+- ✅ Default genesis from `infinited init` (or official `genesis.json` if you follow the README replace step)
 - ✅ Test accounts created and funded
 - ✅ Node started and ready to use
 
@@ -154,7 +156,7 @@ make install
 
 Three ways to get a running node are described **once** in the [repository README.md](../../README.md) (*Run a Node*):
 
-1. **Drive** — context + [Drive repo](https://github.com/deep-thought-labs/drive) + [official docs](https://docs.infinitedrive.xyz/en); no `drive.sh` steps here.
+1. **Drive** — [Drive repo](https://github.com/deep-thought-labs/drive) and [official docs](https://docs.infinitedrive.xyz/en) cover installation, `drive.sh`, and operations.
 2. **Pre-built binary** — [latest GitHub release](https://github.com/deep-thought-labs/infinite/releases/latest), then init + official genesis + start (see README Option 2).
 3. **Build from source** — `make install` from this repo, then the same init/genesis/start as the README (see README Option 3).
 
@@ -163,178 +165,94 @@ After **`make install`**, a typical mainnet-style sequence (Options 2 and 3) is:
 ```bash
 infinited init my-node --chain-id infinite_421018-1 --home ~/.infinited
 
-curl -o ~/.infinited/config/genesis.json \
+curl -fsSL -o ~/.infinited/config/genesis.json \
   https://assets.infinitedrive.xyz/mainnet/genesis.json
 
 infinited genesis validate-genesis --home ~/.infinited
-infinited start --home ~/.infinited
+
+# P2P seed: always prefer the value from network-data.json (see Option B below)
+infinited start \
+  --chain-id infinite_421018-1 \
+  --evm.evm-chain-id 421018 \
+  --p2p.seeds fe304bbda1a243eb2bd30a4558923b39d04ca5eb@server-xenia88.infinitedrive.xyz:26656 \
+  --home ~/.infinited
 ```
 
 See [README.md](../../README.md) for the authoritative breakdown.
 
-### Genesis File Customizations
+### Genesis produced by `infinited init` alone
 
-The script automatically modifies the Genesis file to configure Infinite Drive correctly. Here's what it changes:
+After `infinited init`, the generated `genesis.json` is built from **`DefaultGenesis()`** in `infinited/app.go` and helpers in **`infinited/genesis.go`**. In summary:
 
-#### 1. Module Denominations
+- **Aligned with Infinite Drive identity** for core parameters: base denom **`drop`**, staking / mint / gov min deposits use that denom, EVM module gets **default precompiles** and sensible defaults.
+- **ERC20 module**: default state suitable for local work; published network genesis files add production **token pairs** and full economics.
+- **Published `genesis.json`** files from `assets.infinitedrive.xyz` add ModuleAccounts, vesting, and production tokenomics for each environment.
 
-All modules are configured to use `"drop"` as the base denomination:
+Use this `init` genesis for **private or local** development. **Joining mainnet, testnet, or creative** requires replacing `genesis.json` with the matching published file (see below).
 
-```bash
-# Staking module
-.app_state.staking.params.bond_denom = "drop"
+### Option A — Local-only chain (no public network sync)
 
-# Mint module  
-.app_state.mint.params.mint_denom = "drop"
-
-# Governance module
-.app_state.gov.params.min_deposit[0].denom = "drop"
-.app_state.gov.params.expedited_min_deposit[0].denom = "drop"
-
-# EVM module
-.app_state.evm.params.evm_denom = "drop"
-```
-
-**Why**: Ensures all modules use the Infinite Drive base token (`drop`) instead of the Cosmos SDK default (`stake`). These values are also set in code (`infinited/genesis.go`), but the script ensures they're correctly applied in the Genesis JSON.
-
-#### 2. Token Metadata
-
-Adds complete token metadata for the Improbability (42) token:
-
-```json
-{
-  "description": "Improbability Token — Project 42: Sovereign, Perpetual, DAO-Governed",
-  "denom_units": [
-    {"denom": "drop", "exponent": 0, "aliases": []},
-    {"denom": "Improbability", "exponent": 18, "aliases": ["improbability"]}
-  ],
-  "base": "drop",
-  "display": "Improbability",
-  "name": "Improbability",
-  "symbol": "42",
-  "uri": "https://assets.infinitedrive.xyz/tokens/42/icon.png"
-}
-```
-
-**Why**: Provides complete token information for wallets, explorers, and dApps to display the token correctly.
-
-#### 3. EVM Precompiles
-
-Enables all static precompiles for EVM compatibility:
+Keep the genesis from **`infinited init`**; skip replacing `genesis.json` with a download from `assets.infinitedrive.xyz`. The commands below use **mainnet’s official identifiers**: Cosmos `chain_id` `infinite_421018-1` and EVM chain ID `421018`, as in [mainnet `network-data.json`](https://assets.infinitedrive.xyz/mainnet/network-data.json). The chain runs from that **`init`** genesis file. For a **private** devnet with its own identifiers, choose a `chain-id` / `--evm.evm-chain-id` pair and use the same values in **`init`** and **`start`**.
 
 ```bash
-.app_state.evm.params.active_static_precompiles = [
-  "0x0000000000000000000000000000000000000100",  # ECRecover
-  "0x0000000000000000000000000000000000000400",  # SHA256
-  "0x0000000000000000000000000000000000000800",  # RIPEMD160
-  "0x0000000000000000000000000000000000000801",  # Identity
-  "0x0000000000000000000000000000000000000802",  # ModExp
-  "0x0000000000000000000000000000000000000803",  # BN256Add
-  "0x0000000000000000000000000000000000000804",  # BN256Mul
-  "0x0000000000000000000000000000000000000805",  # BN256Pairing
-  "0x0000000000000000000000000000000000000806",  # Blake2F
-  "0x0000000000000000000000000000000000000807"   # PointEvaluation
-]
+infinited init my-node --chain-id infinite_421018-1 --home ~/.infinited
+infinited genesis validate-genesis --home ~/.infinited
+infinited start --chain-id infinite_421018-1 --evm.evm-chain-id 421018 --home ~/.infinited
 ```
 
-**Why**: Enables all standard Ethereum precompiles for full EVM compatibility.
+### Option B — Join a public network (replace genesis)
 
-#### 4. ERC20 Native Token Pair
+Run **`infinited init` with the Cosmos `chain-id` of the network you join**, then **download** the matching official `genesis.json` (replacing the file produced by `init`). **Purpose** of each published genesis:
 
-Configures the native token as an ERC20:
+| Network | Cosmos `chain-id` | EVM chain ID | Official `genesis.json` | `network-data.json` (canonical metadata) | Human-readable index |
+|---------|-------------------|--------------|-------------------------|------------------------------------------|------------------------|
+| **Mainnet** | `infinite_421018-1` | `421018` | `https://assets.infinitedrive.xyz/mainnet/genesis.json` | [`…/mainnet/network-data.json`](https://assets.infinitedrive.xyz/mainnet/network-data.json) | [Mainnet assets](https://assets.infinitedrive.xyz/mainnet/) |
+| **Testnet** | `infinite_421018001-1` | `421018001` | `https://assets.infinitedrive.xyz/testnet/genesis.json` | [`…/testnet/network-data.json`](https://assets.infinitedrive.xyz/testnet/network-data.json) | [Testnet assets](https://assets.infinitedrive.xyz/testnet/) |
+| **Creative** | `infinite_421018002-1` | `421018002` | `https://assets.infinitedrive.xyz/creative/genesis.json` | [`…/creative/network-data.json`](https://assets.infinitedrive.xyz/creative/network-data.json) | [Creative assets](https://assets.infinitedrive.xyz/creative/) |
+
+**Canonical source**: Each [`network-data.json`](https://assets.infinitedrive.xyz/mainnet/network-data.json) is the **live** reference for that environment. It includes the **genesis URL** (under `resources.genesis`), **P2P seed addresses** (under `endpoints.p2p`), RPC/EVM endpoints, and other identifiers. **Re-fetch this file whenever you deploy or document operational values** so you use current seeds and paths. The [JSON schema](https://assets.infinitedrive.xyz/references/NETWORK_DATA_JSON_SCHEMA) describes the structure.
+
+**Resolve P2P seed at runtime** (example with [`jq`](https://jqlang.github.io/jq/); requires `curl` and `jq`):
 
 ```bash
-.app_state.erc20.native_precompiles = ["0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE"]
-.app_state.erc20.token_pairs = [{
-  "contract_owner": 1,
-  "erc20_address": "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE",
-  "denom": "drop",
-  "enabled": true
-}]
+P2P_SEED=$(curl -fsSL https://assets.infinitedrive.xyz/mainnet/network-data.json | jq -r '.endpoints.p2p[0].url')
+# Then pass: --p2p.seeds "$P2P_SEED"
 ```
 
-**Why**: Allows the native `drop` token to be used as an ERC20 token in smart contracts.
-
-#### 5. Consensus Parameters
-
-Adjusts block gas limit for development:
+**Example (mainnet — replace + validate + start with sync)** — swap URLs and IDs for testnet or creative using the table; **seed strings below match `network-data.json` at last verification** and may change—prefer `jq` or the JSON above:
 
 ```bash
-.consensus.params.block.max_gas = "10000000"
+infinited init my-node --chain-id infinite_421018-1 --home ~/.infinited
+
+curl -fsSL -o ~/.infinited/config/genesis.json \
+  https://assets.infinitedrive.xyz/mainnet/genesis.json
+
+infinited genesis validate-genesis --home ~/.infinited
+
+infinited start \
+  --chain-id infinite_421018-1 \
+  --evm.evm-chain-id 421018 \
+  --p2p.seeds fe304bbda1a243eb2bd30a4558923b39d04ca5eb@server-xenia88.infinitedrive.xyz:26656 \
+  --home ~/.infinited
 ```
 
-**Why**: Sets a reasonable gas limit for local testing.
+| Network | Example `--p2p.seeds` (from `network-data.json`; verify live) |
+|---------|----------------------------------------------------------------|
+| **Mainnet** | `fe304bbda1a243eb2bd30a4558923b39d04ca5eb@server-xenia88.infinitedrive.xyz:26656` |
+| **Testnet** | `ed3a45ee1ad114830afe6de7dc90c61f893c04da@server-xenia88.infinitedrive.xyz:26666` |
+| **Creative** | `e8e7b5f008a59e72ac624cde9607a90178e9cc14@server-xenia.infinitedrive.xyz:26676` |
 
-#### 6. Governance Periods (Development Only)
+You can set **`p2p.seeds`** in `~/.infinited/config/config.toml` instead of the flag. For more context on the network, see the **[official blockchain documentation](https://docs.infinitedrive.xyz/en/blockchain)**.
 
-**⚠️ IMPORTANT**: These values are for **development only** and should **NOT** be used in production:
-
-```bash
-# Development: Fast periods for quick testing
-max_deposit_period: "30s"        # (Production: "172800s" = 2 days)
-voting_period: "30s"             # (Production: "172800s" = 2 days)
-expedited_voting_period: "15s"   # (Production: "86400s" = 1 day)
-```
-
-**Why**: Allows quick testing of governance proposals without waiting days. **For production, use realistic periods** (see [configuration/GENESIS.md](../configuration/GENESIS.md)).
-
-#### 7. Configuration File Optimizations
-
-The script also optimizes `config.toml` and `app.toml` for development:
-
-- **Faster block times**: Reduced consensus timeouts
-- **All APIs enabled**: REST, gRPC, JSON-RPC, Tendermint RPC
-- **Prometheus metrics**: Enabled for monitoring
-- **Indexer enabled**: For transaction indexing
-
-**Why**: Provides a complete development environment with all features accessible.
-
-### Test Accounts
-
-The script creates these accounts by default:
-
-| Account | Address (EVM) | Address (Cosmos) | Balance |
-|---------|---------------|------------------|---------|
-| `mykey` (validator) | - | `cosmos1...` | 100,000,000,000,000,000,000,000,000 drop |
-| `dev0` | `0xC6Fe5D33615a1C52c08018c47E8Bc53646A0E101` | `cosmos1cml96vmptgw99syqrrz8az79xer2pcgp84pdun` | 1,000,000,000,000,000,000,000 drop |
-| `dev1` | `0x963EBDf2e1f8DB8707D05FC75bfeFFBa1B5BaC17` | `cosmos1jcltmuhplrdcwp7stlr4hlhlhgd4htqh3a79sq` | 1,000,000,000,000,000,000,000 drop |
-| `dev2` | `0x40a0cb1C63e026A81B55EE1308586E21eec1eFa9` | `cosmos1gzsvk8rruqn2sx64acfsskrwy8hvrmafqkaze8` | 1,000,000,000,000,000,000,000 drop |
-| `dev3` | `0x498B5AeC5D439b733dC2F58AB489783A23FB26dA` | `cosmos1fx944mzagwdhx0wz7k9tfztc8g3lkfk6rrgv6l` | 1,000,000,000,000,000,000,000 drop |
-
-**Note**: The validator account (`mykey`) is automatically set up as the genesis validator.
-
-### Verifying the Setup
-
-After the node starts, you can verify the configuration:
+### Optional checks once the node is running
 
 ```bash
-# In another terminal, validate token configuration
 ./scripts/validate_token_config.sh
-
-# Check node health
 ./scripts/infinite_health_check.sh
-
-# Verify customizations
-./scripts/validate_customizations.sh
 ```
-
-**Expected results**:
-
-- ✅ All denominations should be `"drop"`
-- ✅ Token metadata should show Improbability (42)
-- ✅ Chain ID should be `infinite_421018-1`
-- ✅ EVM Chain ID should be `421018` (0x66c9a)
-
-### Important Notes
-
-1. **Data Location**: All data is stored in `$HOME/.infinited/`
-2. **Overwriting**: Use `-y` flag to overwrite existing data, or `-n` to keep it
-3. **Development Only**: The governance periods are set for quick testing. **Do not use these values in production**
-4. **Code vs. Script**: The code (`infinited/genesis.go`) sets defaults, but the official genesis file from `assets.infinitedrive.xyz` includes all Infinite Drive customizations
 
 **More information**:
 
-- Genesis configuration: [configuration/GENESIS.md](../configuration/GENESIS.md)
 - Validation workflows: [testing/VALIDATION.md](../testing/VALIDATION.md); per-script: [SCRIPTS.md](SCRIPTS.md)
 
 ---
@@ -474,6 +392,21 @@ ls -lh dist/
 **Note about Mac M1**: ARM64 builds may fail on Mac M1 with Docker emulation. This is expected. Builds work correctly in GitHub Actions.
 
 **More information**: See [RELEASES.md](../infrastructure/RELEASES.md) for official releases.
+
+---
+
+## 🏷️ Workflow 4: GitHub Actions Releases (Reference)
+
+**Purpose**: **Versioned release binaries** are produced by **automation** in this repository. **Pre-built artifacts**: [GitHub Releases](https://github.com/deep-thought-labs/infinite/releases/latest). **Local dry-runs** (`make release-dry-run*`) validate the same pipeline on your machine before tagging.
+
+**What is configured**: [`.github/workflows/release.yml`](../../../.github/workflows/release.yml) runs **GoReleaser** when a **semantic version tag** matching `v*.*.*` is pushed (for example `v1.2.3`). It builds **multi-platform binaries**, attaches them to a **GitHub Release**, and generates **checksums**. Maintainers can also trigger the workflow manually from the Actions UI (`workflow_dispatch`) for snapshot-style runs.
+
+**Where to go next** (same split as in each guide’s intro):
+
+| You want to… | Open |
+|--------------|------|
+| **Ship a version** (prepare branch, `v*.*.*` tag, push, verify release assets on GitHub) | **[infrastructure/RELEASES.md](../infrastructure/RELEASES.md)** |
+| **Configure or debug CI** (Settings → Actions permissions, secrets, workflow logs, why a job fails) | **[infrastructure/CI_CD.md](../infrastructure/CI_CD.md)** |
 
 ---
 
@@ -639,7 +572,8 @@ sudo usermod -aG docker $USER
 ## 📚 More Information
 
 - **[QUICK_START.md](../QUICK_START.md)** - Quick start
-- **[RELEASES.md](../infrastructure/RELEASES.md)** - Official releases with GitHub Actions
+- **[RELEASES.md](../infrastructure/RELEASES.md)** - Procedure to publish a version (tag, push, verify release)
+- **[CI_CD.md](../infrastructure/CI_CD.md)** - GitHub Actions settings, secrets, workflow troubleshooting
 - **[TROUBLESHOOTING.md](../reference/TROUBLESHOOTING.md)** - More problem solutions
 
 ---
