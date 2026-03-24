@@ -9,6 +9,22 @@
 
 ---
 
+## Workflow at a glance
+
+End-to-end order for **creating** a new network genesis (details and variants below in [Quick Start: Essential Steps](#quick-start-essential-steps)):
+
+1. `infinited init …` (per network chain-id).
+2. `./scripts/customize_genesis.sh --network <mainnet|testnet|creative>`.
+3. Optional: `./scripts/setup_module_accounts.sh` → [MODULE_ACCOUNTS.md](MODULE_ACCOUNTS.md).
+4. Optional: `./scripts/setup_vesting_accounts.sh` → [VESTING_ACCOUNTS.md](VESTING_ACCOUNTS.md).
+5. Add regular accounts / gentx / `collect-gentxs` as needed.
+6. `infinited genesis validate-genesis`.
+7. Distribute identical `genesis.json` to all nodes, then start the chain.
+
+Account types (ModuleAccounts, vesting, regular, validators): see the summary table in [MODULE_ACCOUNTS.md](MODULE_ACCOUNTS.md) and [VESTING_ACCOUNTS.md](VESTING_ACCOUNTS.md).
+
+---
+
 ## Quick Start: Essential Steps
 
 Follow these steps in order to create your genesis file:

@@ -203,7 +203,7 @@ infinited start --log-level debug
 
 # Reset data directory if corrupted (WARNING: This deletes all data)
 rm -rf ~/.infinited
-# Then reinitialize using Drive or direct installation (see README.md)
+# Then reinitialize using Drive (see Drive docs) or direct installation from source (see README.md Run a Node)
 ```
 
 ### 8. API Endpoints Not Responding
@@ -434,6 +434,6 @@ find /opt/backups -name "*.tar.gz" -mtime +30 -delete
 
 - **[Development Guide](../development/DEVELOPMENT.md)** - Learn more about development and testing
 - **[Production Deployment](../deployment/PRODUCTION.md)** - Deploy to production with proper monitoring
-- **[Node Health Scripts](../infrastructure/HEALTH_CHECKS.md)** - Comprehensive health monitoring and verification tools
+- **[Node health script](../development/SCRIPTS.md#5-infinite_health_checksh)** (`infinite_health_check.sh`) and [validation workflows](../testing/VALIDATION.md#running-node-validation)
 - **Community Support**: Join discussions and get help from other users
 - **Report Issues**: Help improve Infinite Drive by reporting bugs

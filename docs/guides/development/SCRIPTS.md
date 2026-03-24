@@ -104,8 +104,6 @@ Git installation: ✅ Installed (version 2.x)
 
 **Requirements**: Only needs code access (doesn't require running node)
 
-**More information**: See [VALIDATION.md](../testing/VALIDATION.md)
-
 ---
 
 ### 3. `validate_genesis_structure.sh`
@@ -179,11 +177,9 @@ Git installation: ✅ Installed (version 2.x)
 
 **Requirements**: Running node, `jq` installed, `curl` installed
 
-**More information**: See [VALIDATION.md](../testing/VALIDATION.md)
-
 ---
 
-### 4. `infinite_health_check.sh`
+### 5. `infinite_health_check.sh`
 
 **Purpose**: Verify that the node is functioning correctly and all services are available.
 
@@ -212,13 +208,24 @@ Git installation: ✅ Installed (version 2.x)
 
 **Requirements**: Running node, `jq` installed, `curl` installed
 
-**More information**: See [VALIDATION.md](../testing/VALIDATION.md)
+#### Optional manual spot-checks
+
+If the script fails, verify endpoints directly (defaults: localhost):
+
+```bash
+curl -s -X POST -H "Content-Type: application/json" \
+  --data '{"jsonrpc":"2.0","method":"eth_chainId","params":[],"id":1}' http://localhost:8545
+
+curl -s http://localhost:1317/cosmos/base/tendermint/v1beta1/node_info
+
+curl -s http://localhost:26657/status
+```
 
 ---
 
 ## 🔧 Development Scripts
 
-### 5. `list_all_customizations.sh`
+### 6. `list_all_customizations.sh`
 
 **Purpose**: List all differences between your repository and the upstream repository.
 
@@ -255,7 +262,7 @@ Git installation: ✅ Installed (version 2.x)
 
 ---
 
-### 6. `audit_command_name.sh`
+### 7. `audit_command_name.sh`
 
 **Purpose**: Search for all references to the command name that need to be changed (for rebranding).
 
@@ -282,7 +289,7 @@ Git installation: ✅ Installed (version 2.x)
 
 ---
 
-### 7. `verify_command_name.sh`
+### 8. `verify_command_name.sh`
 
 **Purpose**: Verify that command name changes work correctly.
 
@@ -312,7 +319,7 @@ make install
 
 ---
 
-### 8. `test_outputs_before.sh`
+### 9. `test_outputs_before.sh`
 
 **Purpose**: Capture current outputs BEFORE making changes to compare later.
 
@@ -337,7 +344,7 @@ make install
 
 ---
 
-### 9. `compare_outputs.sh`
+### 10. `compare_outputs.sh`
 
 **Purpose**: Compare outputs before and after changes.
 
@@ -394,7 +401,7 @@ make install
 **When NOT to use**:
 
 - **For joining an existing network**: Download the official genesis file from `https://assets.infinitedrive.xyz/<network>/genesis.json` instead
-- **For running a node**: Use Drive (see [README.md](../../README.md)) or direct installation with the official genesis file
+- **For running a node**: See [README.md](../../README.md) *Run a Node*: (1) [Drive](https://github.com/deep-thought-labs/drive) + [docs](https://docs.infinitedrive.xyz/en), (2) binary from [latest release](https://github.com/deep-thought-labs/infinite/releases/latest), or (3) build from source
 
 **Usage**:
 
@@ -669,7 +676,7 @@ This script is typically used **after** running `customize_genesis.sh`:
 
 ---
 
-### 9. `setup_vesting_accounts.sh` - Configure Vesting Accounts
+### `setup_vesting_accounts.sh` — Configure vesting accounts
 
 **Purpose**: Configure vesting accounts in genesis.json for accounts that need tokens locked with gradual unlock schedules (e.g., multisig wallets).
 
@@ -823,7 +830,7 @@ This script is typically used **after** running `setup_module_accounts.sh`:
 
 ## 🧪 Testing Scripts
 
-### 10. Compatibility Scripts
+### 11. Compatibility Scripts
 
 These scripts test compatibility with different EVM tools:
 
@@ -839,70 +846,12 @@ These scripts test compatibility with different EVM tools:
 
 ---
 
-## 📊 When to Use Each Script
+## Multi-step flows
 
-### Workflow: First Time / Verify Environment
+Do not maintain separate workflow copies here. Use:
 
-```bash
-# 1. Verify prerequisites
-./scripts/check_build_prerequisites.sh
-
-# 2. If everything is OK, compile
-make install
-```
-
-### Workflow: Active Development
-
-```bash
-# 1. Make code changes
-
-# 2. Validate customizations
-./scripts/validate_customizations.sh
-
-# 3. Compile
-make install
-
-# 4. If you have a running node, validate
-./scripts/infinite_health_check.sh
-./scripts/validate_token_config.sh
-```
-
-### Workflow: Before Commit
-
-```bash
-# 1. Validate code
-./scripts/validate_customizations.sh
-
-# 2. Compile
-make install
-
-# 3. Tests
-make test-unit
-```
-
-### Workflow: During Merge with Upstream
-
-```bash
-# 1. See what changed
-./scripts/list_all_customizations.sh upstream/main
-
-# 2. Validate that customizations were maintained
-./scripts/validate_customizations.sh
-
-# 3. Compile and test
-make install
-make test-all
-```
-
-### Workflow: Verify Running Node
-
-```bash
-# 1. Complete health check
-./scripts/infinite_health_check.sh
-
-# 2. Validate token configuration
-./scripts/validate_token_config.sh
-```
+- **[PROJECT_INTEGRITY_CHECKLIST.md](../testing/PROJECT_INTEGRITY_CHECKLIST.md)** — full-repo order (lint, build, tests, scripts).
+- **[VALIDATION.md](../testing/VALIDATION.md)** — validation-focused sequences (quick / pre-commit / node / pre-release).
 
 ---
 
@@ -922,47 +871,8 @@ make test-all
 
 ---
 
-## 🔍 Identify Deep Thought Labs Scripts
-
-**Command to list all Deep Thought Labs scripts**:
-
-```bash
-# Find scripts with Deep Thought Labs copyright
-grep -l "Deep Thought Labs" scripts/*.sh
-
-# Or see header of each script
-head -10 scripts/*.sh | grep -B 5 "Deep Thought Labs"
-```
-
-**Identified Deep Thought Labs scripts**:
-
-- `check_build_prerequisites.sh`
-- `validate_customizations.sh`
-- `validate_token_config.sh`
-- `infinite_health_check.sh`
-- `list_all_customizations.sh`
-- `audit_command_name.sh`
-- `verify_command_name.sh`
-- `test_outputs_before.sh`
-- `compare_outputs.sh`
-- `customize_genesis.sh`
-- `setup_module_accounts.sh`
-
----
-
 ## 📚 More Information
 
-- **[VALIDATION.md](../testing/VALIDATION.md)** - Complete validation guide
-- **[BUILDING.md](BUILDING.md)** - Compilation guide
-- **[fork-maintenance/UPSTREAM_DIVERGENCE_RECORD.md](../../fork-maintenance/UPSTREAM_DIVERGENCE_RECORD.md)** - Upstream divergence record
-
----
-
-## 🔗 Quick Links
-
-| Need | Script | When |
-|------|--------|------|
-| Verify prerequisites | `check_build_prerequisites.sh` | Before compiling |
-| Validate code | `validate_customizations.sh` | After changes |
-| Validate node | `infinite_health_check.sh` | Node running |
-| See changes | `list_all_customizations.sh` | During merges |
+- **[VALIDATION.md](../testing/VALIDATION.md)** — Multi-step validation workflows (not per-script detail)
+- **[BUILDING.md](BUILDING.md)** — Compilation guide
+- **[fork-maintenance/UPSTREAM_DIVERGENCE_RECORD.md](../../fork-maintenance/UPSTREAM_DIVERGENCE_RECORD.md)** — Upstream divergence record

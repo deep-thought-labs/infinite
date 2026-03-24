@@ -11,43 +11,9 @@ Guide for developers working on Infinite Drive code.
 - [Testing During Development](#testing-during-development)
 - [Customization Validation](#customization-validation)
 
-## ⚙️ Environment Setup
+## ⚙️ Environment setup
 
-### Requirements
-
-- **Go**: versión en `go.mod` en la raíz del repo (actualmente **1.25.8**; actualizar esta guía si cambia la directiva `go`)
-- **Git**: For version control
-- **jq**: For configuration scripts
-- **Make**: For build commands
-
-### Verify Installation
-
-```bash
-# Verify Go
-go version
-# Debe coincidir (major.minor.patch) con la línea `go` de go.mod
-
-# Verify Git
-git --version
-
-# Verify jq
-jq --version
-
-# Verify Make
-make --version
-```
-
-### Configure PATH
-
-Make sure `$HOME/go/bin` is in your PATH:
-
-```bash
-# Add to ~/.bashrc or ~/.zshrc
-export PATH=$PATH:$HOME/go/bin
-
-# Reload
-source ~/.bashrc  # or source ~/.zshrc
-```
+Toolchain versions, prerequisite checks, PATH, and install location are documented once in **[BUILDING.md](BUILDING.md)** (requirements and Workflow 1).
 
 ---
 
@@ -168,7 +134,7 @@ If you make changes to customizations (tokens, chain IDs, bech32):
 4. **Test** (if possible):
 
    ```bash
-   # Start node using Drive or direct installation, then:
+   # Start a node (Drive, release binary, or source — see README *Run a Node*), then:
    ./scripts/validate_token_config.sh
    ```
 
@@ -224,43 +190,9 @@ make test-unit-cover
 
 ---
 
-## ✅ Customization Validation
+## ✅ Customization validation
 
-### Validation Script
-
-```bash
-# Validate that customizations are correct
-./scripts/validate_customizations.sh
-```
-
-**What it validates**:
-
-- ✅ Token configuration
-- ✅ Chain IDs
-- ✅ Bech32 prefixes
-- ✅ Genesis functions
-- ✅ Upstream compliance
-
-**When to use**:
-
-- After making changes
-- Before committing
-- During merges
-
-### Manual Validation
-
-You can also verify manually:
-
-```bash
-# Verify denom
-grep -r "DefaultEVMDenom" x/vm/types/params.go
-
-# Verify chain ID
-grep -r "421018" testutil/constants/constants.go
-
-# Verify bech32
-grep -r "Bech32Prefix" infinited/config/bech32.go
-```
+Script behavior and checks: **[SCRIPTS.md](SCRIPTS.md#2-validate_customizationssh)**. When to run it with other steps: **[VALIDATION.md](../testing/VALIDATION.md)**.
 
 ---
 
@@ -304,7 +236,8 @@ cat ~/.infinited/config/genesis.json
 - **[QUICK_START.md](../QUICK_START.md)** - Quick start
 - **[BUILDING.md](BUILDING.md)** - Compilation guide
 - **[TESTING.md](TESTING.md)** - Testing guide
-- **[VALIDATION.md](../testing/VALIDATION.md)** - Validation scripts
+- **[SCRIPTS.md](SCRIPTS.md)** — Per-script reference
+- **[VALIDATION.md](../testing/VALIDATION.md)** — Validation workflows
 - **[fork-maintenance/UPSTREAM_DIVERGENCE_RECORD.md](../../fork-maintenance/UPSTREAM_DIVERGENCE_RECORD.md)** - Upstream divergence record
 - **[fork-maintenance/README.md](../../fork-maintenance/README.md)** - Merge playbook, verification, templates, merge logs
 
@@ -317,4 +250,4 @@ cat ~/.infinited/config/genesis.json
 | Compile | `make install` | After changes |
 | Validate | `./scripts/validate_customizations.sh` | Before commit |
 | Tests | `make test-unit` | Verify changes |
-| Start node | Use Drive or direct installation | Test changes |
+| Start node | README *Run a Node*: [Drive](https://github.com/deep-thought-labs/drive) / [latest binary](https://github.com/deep-thought-labs/infinite/releases/latest) / source | Test changes |

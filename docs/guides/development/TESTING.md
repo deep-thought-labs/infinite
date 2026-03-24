@@ -2,6 +2,8 @@
 
 Guide for running tests and validating Infinite Drive code.
 
+For an **ordered checklist** that includes lint, build, tests, and fork scripts, see **[../testing/PROJECT_INTEGRITY_CHECKLIST.md](../testing/PROJECT_INTEGRITY_CHECKLIST.md)**.
+
 ## 📋 Table of Contents
 
 - [Test Types](#test-types)
@@ -177,7 +179,7 @@ go tool cover -html=coverage.txt
 - Before commit
 - During merges with upstream
 
-**More information**: See [VALIDATION.md](../testing/VALIDATION.md)
+**More information**: Node/script checks live in [SCRIPTS.md](SCRIPTS.md); grouped flows in [VALIDATION.md](../testing/VALIDATION.md).
 
 ---
 
@@ -244,7 +246,8 @@ ls -la coverage.txt
 
 ## 📚 More Information
 
-- **[VALIDATION.md](../testing/VALIDATION.md)** - Node validation scripts
+- **[VALIDATION.md](../testing/VALIDATION.md)** — Validation workflows
+- **[SCRIPTS.md](SCRIPTS.md)** — Script reference (e.g. node health)
 - **[BUILDING.md](BUILDING.md)** - Compilation guide
 - **[fork-maintenance/UPSTREAM_DIVERGENCE_RECORD.md](../../fork-maintenance/UPSTREAM_DIVERGENCE_RECORD.md)** - Upstream divergence record
 

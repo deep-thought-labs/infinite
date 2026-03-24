@@ -150,43 +150,27 @@ make install
 
 **When to use**: Complete testing, development with full node, integration testing
 
-### Running a Node
+### Running a node
 
-After compiling, you can run a node using one of these methods:
+Three ways to get a running node are described **once** in the [repository README.md](../../README.md) (*Run a Node*):
 
-**Option 1: Using Drive (Recommended)**
+1. **Drive** — context + [Drive repo](https://github.com/deep-thought-labs/drive) + [official docs](https://docs.infinitedrive.xyz/en); no `drive.sh` steps here.
+2. **Pre-built binary** — [latest GitHub release](https://github.com/deep-thought-labs/infinite/releases/latest), then init + official genesis + start (see README Option 2).
+3. **Build from source** — `make install` from this repo, then the same init/genesis/start as the README (see README Option 3).
 
-```bash
-# Navigate to Drive service directory
-cd drive/services/node0-infinite  # or node1-infinite-testnet
-
-# Start the container
-./drive.sh up -d
-
-# Initialize and start the node
-./drive.sh node-init
-./drive.sh node-start
-```
-
-**Option 2: Direct Installation**
+After **`make install`**, a typical mainnet-style sequence (Options 2 and 3) is:
 
 ```bash
-# Initialize the node
 infinited init my-node --chain-id infinite_421018-1 --home ~/.infinited
 
-# Download the official genesis file
 curl -o ~/.infinited/config/genesis.json \
   https://assets.infinitedrive.xyz/mainnet/genesis.json
 
-# Validate and start
 infinited genesis validate-genesis --home ~/.infinited
 infinited start --home ~/.infinited
 ```
 
-See [README.md](../../README.md) for complete instructions.
-5. **Funds accounts** in genesis
-6. **Finalizes genesis** (gentx, collect-gentxs, validate-genesis)
-7. **Starts the node** with all APIs enabled
+See [README.md](../../README.md) for the authoritative breakdown.
 
 ### Genesis File Customizations
 
@@ -351,7 +335,7 @@ After the node starts, you can verify the configuration:
 **More information**:
 
 - Genesis configuration: [configuration/GENESIS.md](../configuration/GENESIS.md)
-- Validation scripts: [testing/VALIDATION.md](../testing/VALIDATION.md)
+- Validation workflows: [testing/VALIDATION.md](../testing/VALIDATION.md); per-script: [SCRIPTS.md](SCRIPTS.md)
 
 ---
 

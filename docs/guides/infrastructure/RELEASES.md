@@ -7,7 +7,6 @@ Complete guide for creating official Infinite Drive releases using GitHub Action
 - [What is a Release?](#what-is-a-release)
 - [Prerequisites](#prerequisites)
 - [Complete Release Workflow](#complete-release-workflow)
-- [GitHub Actions Configuration](#github-actions-configuration)
 - [Create a Version Tag](#create-a-version-tag)
 - [Release Testing (Dry Run)](#release-testing-dry-run)
 - [Monitor the Process](#monitor-the-process)
@@ -45,40 +44,9 @@ docker ps  # Should work without errors
 - **macOS**: [Docker Desktop](https://www.docker.com/products/docker-desktop/)
 - **Linux**: `curl -fsSL https://get.docker.com -o get-docker.sh && sudo sh get-docker.sh`
 
-### 2. GitHub Actions Configuration
+### 2. One-time GitHub setup
 
-**⚠️ IMPORTANT**: Official releases are created automatically via GitHub Actions. You need to configure this once.
-
-#### Required Secrets
-
-GitHub Actions needs these secrets configured in the repository:
-
-1. Go to your repository on GitHub
-2. Settings → Secrets and variables → Actions
-3. Add the following secrets:
-
-| Secret | Description | Where to Get It |
-|--------|-------------|-----------------|
-| `GITHUB_TOKEN` | GitHub token (automatic) | Created automatically |
-| `GORELEASER_KEY` | Key for GoReleaser (if using pro) | [GoReleaser](https://goreleaser.com) |
-
-**Note**: For basic releases, `GITHUB_TOKEN` is sufficient.
-
-#### Repository Permissions
-
-Make sure GitHub Actions has permissions to:
-
-- ✅ Create releases
-- ✅ Upload assets
-- ✅ Create tags
-
-**Configuration**:
-
-1. Settings → Actions → General
-2. "Workflow permissions" → "Read and write permissions"
-3. Save
-
-**More details**: See [CI_CD.md](CI_CD.md)
+Releases run in Actions; configure **workflow permissions** and **secrets** once. Full detail (only place it is spelled out): **[CI_CD.md](CI_CD.md)**.
 
 ## 🚀 Complete Release Workflow
 
@@ -416,7 +384,7 @@ git tag v1.0.0
 
 - **[QUICK_START.md](../QUICK_START.md)** - Quick start
 - **[BUILDING.md](../development/BUILDING.md)** - Compilation guide
-- **[CI_CD.md](CI_CD.md)** - Complete CI/CD configuration
+- **[CI_CD.md](CI_CD.md)** — Actions permissions, secrets, troubleshooting
 - **[Semantic Versioning](https://semver.org/)** - Versioning specification
 
 ## 🔗 Quick Reference

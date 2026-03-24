@@ -1,13 +1,14 @@
 # CI/CD and GitHub Actions Configuration
 
-Guide for configuring GitHub Actions and CI/CD workflow for Infinite Drive.
+**Scope:** repository settings (permissions, secrets), how to watch workflows, and troubleshooting Actions. **Creating a version, tagging, and shipping a release** are documented only in **[RELEASES.md](RELEASES.md)**.
 
 ## 📋 Table of Contents
 
 - [What is CI/CD?](#what-is-cicd)
 - [Initial Configuration](#initial-configuration)
 - [GitHub Secrets](#github-secrets)
-- [Release Workflow](#release-workflow)
+- [Release automation](#release-automation)
+- [Monitor GitHub Actions](#monitor-github-actions)
 - [Troubleshooting](#troubleshooting)
 
 ## 🎯 What is CI/CD?
@@ -96,45 +97,9 @@ If you use GoReleaser Pro (paid version), you need:
 
 ---
 
-## 🚀 Release Workflow
+## Release automation
 
-### How Does It Work?
-
-1. **You create a version tag** locally
-2. **You push the tag** to GitHub
-3. **GitHub Actions detects the tag** automatically
-4. **GitHub Actions compiles** binaries for all platforms
-5. **GitHub Actions creates the release** with the binaries
-
-### Workflow Trigger
-
-The workflow activates when:
-
-- You push a tag that matches the pattern `v*.*.*` (e.g., `v1.0.0`, `v2.3.1`)
-- Or manually from GitHub Actions UI
-
-**See configuration in**: `.github/workflows/release.yml`
-
-```yaml
-on:
-  push:
-    tags:
-      - 'v*.*.*'  # Pattern for version tags
-  workflow_dispatch:  # Allows manual activation
-```
-
-### Automatic Process
-
-When you push a tag:
-
-1. **Checkout**: GitHub Actions downloads the code
-2. **Setup Go**: Installs Go on the runner
-3. **Setup Docker**: Prepares Docker for builds
-4. **Build**: Compiles binaries for all platforms
-5. **Release**: Creates the release on GitHub
-6. **Upload**: Uploads binaries as assets
-
-**Total time**: ~30-45 minutes
+Pushing a semantic tag `v*.*.*` triggers `.github/workflows/release.yml` (also supports `workflow_dispatch`). Step-by-step for maintainers (prepare code, tag, push, verify assets): **[RELEASES.md](RELEASES.md)**.
 
 ---
 

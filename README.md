@@ -277,95 +277,79 @@ The official documentation includes:
 - **Tokenomics**: Complete token supply and distribution details
 - **Network Parameters**: All network configurations for mainnet, testnet, and creative
 - **Genesis Configuration**: How to work with genesis files
-- **Running a Node**: Complete guides for using Drive or direct installation
+- **Running a Node**: Three paths—Drive, pre-built binary, or build from source—see *Run a Node* below
 
 ---
 
 ## Run a Node
 
-### Option 1: Using Drive (Recommended)
+Choose one path. **How to install and operate** with Drive or with a downloaded binary is **not** duplicated here beyond the minimum for a standard mainnet-style layout; use the linked documentation for full detail.
 
-The easiest way to run a node is using **[Drive](https://github.com/deep-thought-labs/drive)**, the infrastructure management client for **Infinite Improbability Drive**:
+### Option 1: Drive (recommended for operators)
 
-**For Mainnet:**
+**[Drive](https://github.com/deep-thought-labs/drive)** is a **node management and operations tool** maintained by **Deep Thought Labs**. It packages **official, pre-built `infinited` binaries** and service definitions so you can run a node **without building this repository**.
 
-```bash
-# 1. Clone Drive repository
-git clone https://github.com/deep-thought-labs/drive.git
-cd drive
+- **Source code:** [github.com/deep-thought-labs/drive](https://github.com/deep-thought-labs/drive)
+- **Official documentation:** [docs.infinitedrive.xyz](https://docs.infinitedrive.xyz/en) (guides for using Drive and the network)
 
-# 2. Navigate to mainnet service directory
-cd services/node0-infinite
+Follow those resources for installation, `drive.sh` commands, mainnet/testnet layouts, and UI flows. Nothing in this section replaces them.
 
-# 3. Start the container
-./drive.sh up -d
+### Option 2: Pre-built binary from GitHub Releases
 
-# 4. Initialize the node (first time only)
-./drive.sh node-ui
-# Then in the interface: Advanced Operations → Initialize Node (Simple)
-# Or via command line (simplified syntax):
-./drive.sh node-init
+Download the **latest published `infinited` binary** for your platform from the **current release** (GitHub redirects `/releases/latest` to the newest version):
 
-# 5. Start the node
-./drive.sh node-start
-# Or via interface: Node Operations → Start Node
+- **[Latest release (download assets here)](https://github.com/deep-thought-labs/infinite/releases/latest)**
+- [All releases](https://github.com/deep-thought-labs/infinite/releases) — browse older versions if needed
 
-# 6. Open graphical interface (for management)
-./drive.sh node-ui
-```
-
-**For Testnet:**
+After you install the binary on your `PATH` (and mark it executable if required), initialize the node and use the **official genesis** for your network. Example for mainnet (same data directory pattern as Option 3):
 
 ```bash
-# Same steps, but use testnet service directory
-cd drive/services/node1-infinite-testnet
-./drive.sh up -d
-./drive.sh node-ui
-# Follow same initialization and startup steps
+infinited init my-node --chain-id infinite_421018-1 --home ~/.infinited
+
+curl -o ~/.infinited/config/genesis.json \
+  https://assets.infinitedrive.xyz/mainnet/genesis.json
+
+infinited genesis validate-genesis --home ~/.infinited
+infinited start --home ~/.infinited
 ```
 
-**Key Points:**
+For genesis, ModuleAccounts, network parameters, and related topics, see the [blockchain documentation](https://docs.infinitedrive.xyz/en/blockchain).
 
-- Use `./drive.sh` for all commands (automatically handles permissions and detects service name)
-- **Simplified syntax:** `./drive.sh node-start` (no need to specify `exec` or service name)
-- The `node-init` command automatically downloads the official genesis file from the configured URL
-- Use `node-ui` for a graphical interface that guides you through all operations
-- See [Drive Documentation](https://github.com/deep-thought-labs/drive) for complete guides
+### Option 3: Build from this repository
 
-> **Note:** The simplified syntax (`./drive.sh node-start`) is available from Drive v0.1.12+. For earlier versions, use the complete syntax: `./drive.sh exec infinite node-start`
-
-### Option 2: Direct Installation
-
-For direct installation from source (requires compiling the binary and obtaining the genesis file):
+Use this when you **develop or verify the chain from source**: clone this repo, **verify build prerequisites**, compile, then run with the official genesis.
 
 ```bash
 # 1. Clone the repository
 git clone https://github.com/deep-thought-labs/infinite.git
 cd infinite
 
-# 2. Compile the binary
+# 2. Verify prerequisites (Go, Docker, Make, Git, jq, etc.)
+./scripts/check_build_prerequisites.sh
+
+# 3. Compile the binary
 make install
 # This installs infinited to $HOME/go/bin/infinited
 
-# 3. Initialize the node (generates basic genesis)
+# 4. Initialize the node (generates basic genesis)
 infinited init my-node --chain-id infinite_421018-1 --home ~/.infinited
 
-# 4. Obtain the official genesis file from URL
+# 5. Obtain the official genesis file from URL
 curl -o ~/.infinited/config/genesis.json \
   https://assets.infinitedrive.xyz/mainnet/genesis.json
 
-# 5. Validate the genesis file
+# 6. Validate the genesis file
 infinited genesis validate-genesis --home ~/.infinited
 
-# 6. Start the node
+# 7. Start the node
 infinited start --home ~/.infinited
 ```
 
-**Important Notes:**
+**Notes:**
 
-- For mainnet/testnet, you must compile the binary and obtain the official genesis file with Infinite Drive's complete configuration
-- See the [official documentation](https://docs.infinitedrive.xyz/en/blockchain/genesis) for complete guides on genesis files, ModuleAccounts, and vesting accounts
-- See the [official documentation](https://docs.infinitedrive.xyz/en) for detailed compilation instructions and development workflows
+- Resolve anything `./scripts/check_build_prerequisites.sh` reports before `make install`. Full detail: [docs/guides/development/BUILDING.md](docs/guides/development/BUILDING.md) and [docs/guides/development/SCRIPTS.md](docs/guides/development/SCRIPTS.md).
+- Ensure `$HOME/go/bin` is on your `PATH` after `make install`.
+- Broader build and test workflows: [docs in this repository](docs/guides/README.md) and [official documentation](https://docs.infinitedrive.xyz/en).
 
 ---
 
@@ -399,8 +383,10 @@ infinited start --home ~/.infinited
 - **Lab**: [Deep Thought Labs](https://deep-thought.computer) - Research laboratory
 - **X**: [@DeepThought_Lab](https://x.com/DeepThought_Lab)
 - **Telegram**: [Deep Thought Labs](https://t.me/+nt8ysid_-8VlMDVh)
-- **Docs**: [Official Documentation](https://docs.infinitedrive.xyz/en)
-- **Client**: [Drive](https://github.com/deep-thought-labs/drive) - Infrastructure management client
+- **Docs**: [Official documentation](https://docs.infinitedrive.xyz/en)
+- **Drive**: [github.com/deep-thought-labs/drive](https://github.com/deep-thought-labs/drive) — Node operations tool for running managed networks.
+- **Binaries**: [Latest release](https://github.com/deep-thought-labs/infinite/releases/latest) — pre-built `infinited` artifacts for download.
+- **This repository**: [github.com/deep-thought-labs/infinite](https://github.com/deep-thought-labs/infinite) — source code; build from source under [*Run a Node*](#run-a-node) (Option 3) above.
 - **License**: [Apache 2.0](./LICENSE)
 - [NOTICE & Attributions](./NOTICE)
 

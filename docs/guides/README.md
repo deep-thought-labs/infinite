@@ -8,7 +8,7 @@ Complete index of all Infinite Drive documentation, organized by category.
 
 👉 **[QUICK_START.md](QUICK_START.md)** - Quick start for developers
 
-This guide shows you the different available workflows and when to use each one.
+This file is the **index**; each topic is explained once in the linked guide.
 
 ---
 
@@ -24,7 +24,7 @@ Guides for developers working on the code.
 | **[development/BUILDING.md](development/BUILDING.md)** | Detailed compilation with differentiated workflows | Need to compile for different scenarios |
 | **[development/DEVELOPMENT.md](development/DEVELOPMENT.md)** | Development guide | Active code development |
 | **[development/TESTING.md](development/TESTING.md)** | Unit and integration tests | Run tests, validate code |
-| **[development/SCRIPTS.md](development/SCRIPTS.md)** | Complete guide of useful scripts | Use validation and development scripts |
+| **[development/SCRIPTS.md](development/SCRIPTS.md)** | **Canonical** reference for each `scripts/*.sh` | Look up what a script does |
 | **[fork-maintenance/README.md](../fork-maintenance/README.md)** | Fork maintenance: divergence record, merge playbook, logs | Sync with cosmos/evm safely |
 
 ### 🧪 Testing and Validation
@@ -33,7 +33,8 @@ Guides for validating and testing the system.
 
 | Guide | Description | When to Use |
 |-------|-------------|-------------|
-| **[testing/VALIDATION.md](testing/VALIDATION.md)** | Validation scripts and health checks | Validate node, configuration, code |
+| **[testing/PROJECT_INTEGRITY_CHECKLIST.md](testing/PROJECT_INTEGRITY_CHECKLIST.md)** | **Canonical checklist** — all commands to validate the repo end-to-end | Before PR, after big changes, before release |
+| **[testing/VALIDATION.md](testing/VALIDATION.md)** | Multi-step validation **workflows** (grouped commands) | Know what to run together and when |
 
 ### 🚀 Deployment
 
@@ -61,10 +62,9 @@ Guides about infrastructure, CI/CD, and tools.
 
 | Guide | Description | When to Use |
 |-------|-------------|-------------|
-| **[infrastructure/RELEASES.md](infrastructure/RELEASES.md)** | Create releases with GitHub Actions | Publish new version |
-| **[infrastructure/CI_CD.md](infrastructure/CI_CD.md)** | CI/CD and GitHub Actions configuration | Configure workflows |
+| **[infrastructure/RELEASES.md](infrastructure/RELEASES.md)** | **Only** place for tag → release **procedure** (prepare, tag, push, verify) | Publish a new version |
+| **[infrastructure/CI_CD.md](infrastructure/CI_CD.md)** | Repo Actions **settings** (permissions, secrets), monitoring, troubleshooting | First-time CI setup, debug failing workflows |
 | **[infrastructure/DOCKER.md](infrastructure/DOCKER.md)** | Docker usage in builds | Understand Docker builds |
-| **[infrastructure/HEALTH_CHECKS.md](infrastructure/HEALTH_CHECKS.md)** | Health check scripts | Monitor nodes |
 
 ### 📖 Reference
 
@@ -82,9 +82,11 @@ Reference documentation and troubleshooting.
 
 **I want to...**
 
-- **...compile and test quickly**: [QUICK_START.md](QUICK_START.md) → All-in-One Workflow
-- **...just compile the binary**: [QUICK_START.md](QUICK_START.md) → Simple Compilation Workflow
-- **...validate everything works**: [testing/VALIDATION.md](testing/VALIDATION.md)
+- **...orient myself**: [QUICK_START.md](QUICK_START.md) → links to the right guide
+- **...compile**: [development/BUILDING.md](development/BUILDING.md)
+- **...run a node** (Drive / binary / source): [README.md](../../README.md#run-a-node) in the repository root
+- **...validate the whole repo**: [testing/PROJECT_INTEGRITY_CHECKLIST.md](testing/PROJECT_INTEGRITY_CHECKLIST.md); **workflows**: [testing/VALIDATION.md](testing/VALIDATION.md); **per script**: [development/SCRIPTS.md](development/SCRIPTS.md)
+- **...check a running node**: [development/SCRIPTS.md](development/SCRIPTS.md#5-infinite_health_checksh) (`infinite_health_check.sh`)
 - **...create a release**: [infrastructure/RELEASES.md](infrastructure/RELEASES.md)
 - **...deploy to production**: [deployment/PRODUCTION.md](deployment/PRODUCTION.md)
 - **...configure genesis**: [configuration/GENESIS.md](configuration/GENESIS.md)
@@ -108,10 +110,8 @@ Reference documentation and troubleshooting.
 
 ### Structure
 
-- **Main guides** are in the root of `docs/guides/` (this folder)
-- **Specialized guides** are in subfolders by category
-- **Each guide** is focused on a specific objective
-- **Differentiated workflows** - each guide clearly explains different scenarios
+- **Single source of truth**: avoid duplicating the same commands in multiple files; prefer links (e.g. scripts → [SCRIPTS.md](development/SCRIPTS.md), validation sequences → [VALIDATION.md](testing/VALIDATION.md), releases → [RELEASES.md](infrastructure/RELEASES.md)).
+- **Main entry** at repo root: [QUICK_START.md](QUICK_START.md); **index**: this file.
 
 ### Conventions
 
@@ -139,7 +139,8 @@ If you find outdated information, please open an issue or PR.
 | Start | [QUICK_START.md](QUICK_START.md) |
 | Compile | [development/BUILDING.md](development/BUILDING.md) |
 | Useful scripts | [development/SCRIPTS.md](development/SCRIPTS.md) |
-| Validate | [testing/VALIDATION.md](testing/VALIDATION.md) |
+| Full integrity checklist | [testing/PROJECT_INTEGRITY_CHECKLIST.md](testing/PROJECT_INTEGRITY_CHECKLIST.md) |
+| Validation workflows | [testing/VALIDATION.md](testing/VALIDATION.md) |
 | Release | [infrastructure/RELEASES.md](infrastructure/RELEASES.md) |
 | Problems | [reference/TROUBLESHOOTING.md](reference/TROUBLESHOOTING.md) |
 | Upstream merge | [fork-maintenance/README.md](../fork-maintenance/README.md) |
