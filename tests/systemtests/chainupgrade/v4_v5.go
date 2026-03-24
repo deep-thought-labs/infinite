@@ -19,7 +19,7 @@ import (
 
 const (
 	upgradeHeight int64 = 22
-	upgradeName         = "v0.5.0-to-v0.6.0" // must match UpgradeName in evmd/upgrades.go
+	upgradeName         = "v0.4.0-to-v0.5.0" // must match UpgradeName in infinited/upgrades.go
 )
 
 // RunChainUpgrade exercises an on-chain software upgrade using the injected shared suite.

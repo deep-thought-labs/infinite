@@ -23,6 +23,11 @@ EXAMPLE_BINARY := infinited
 HTTPS_GIT := git@github.com:deep-thought-labs/infinite.git
 DOCKER := $(shell which docker)
 
+# Baseline commit for chain-upgrade system tests (tests/systemtests/chainupgrade).
+# This tag may be missing on forks; `build-v05` fetches it from upstream when needed.
+SYSTEMTEST_LEGACY_TAG ?= v0.5.1
+SYSTEMTEST_LEGACY_REMOTE ?= https://github.com/cosmos/evm.git
+
 export GO111MODULE = on
 
 ###############################################################################
@@ -495,9 +500,21 @@ test-system: build-v05 build
 
 build-v05:
 	mkdir -p ./tests/systemtests/binaries/v0.5
-	git checkout v0.5.1
-	make build
-	cp "$(BUILDDIR)/$(EXAMPLE_BINARY)" ./tests/systemtests/binaries/v0.5/evmd
+	@if git rev-parse -q --verify "refs/tags/$(SYSTEMTEST_LEGACY_TAG)^{}" >/dev/null 2>&1; then \
+		echo "Using existing tag $(SYSTEMTEST_LEGACY_TAG)"; \
+	else \
+		echo "Fetching tag $(SYSTEMTEST_LEGACY_TAG) from $(SYSTEMTEST_LEGACY_REMOTE) (not found on this clone)..."; \
+		git fetch "$(SYSTEMTEST_LEGACY_REMOTE)" "refs/tags/$(SYSTEMTEST_LEGACY_TAG):refs/tags/$(SYSTEMTEST_LEGACY_TAG)"; \
+	fi
+	git checkout "$(SYSTEMTEST_LEGACY_TAG)"
+	$(MAKE) build
+	@if [ -f "$(BUILDDIR)/$(EXAMPLE_BINARY)" ]; then \
+		cp "$(BUILDDIR)/$(EXAMPLE_BINARY)" ./tests/systemtests/binaries/v0.5/evmd; \
+	elif [ -f "$(BUILDDIR)/evmd" ]; then \
+		cp "$(BUILDDIR)/evmd" ./tests/systemtests/binaries/v0.5/evmd; \
+	else \
+		echo "No baseline binary in $(BUILDDIR) (expected $(EXAMPLE_BINARY) or evmd)"; exit 1; \
+	fi
 	git checkout -
 
 mocks:
