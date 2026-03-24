@@ -68,23 +68,18 @@ CGO_ENABLED=0 GOOS=darwin GOARCH=arm64 go build -ldflags="-w -s" -o infinited-da
 
 **When to use**: When you want to deploy quickly without compiling from source.
 
-### Available Platforms
+### Available platforms (GitHub Release artifacts)
 
-**What platforms are supported**: Precompiled binaries are available for the most common platforms.
+**What the release pipeline publishes today** (GoReleaser **`.goreleaser.yml`**): **Linux amd64** and **Linux arm64** binaries on each GitHub Release. Names may include archive wrappers; confirm the exact asset names on the [Releases](https://github.com/deep-thought-labs/infinite/releases) page for your tag.
 
-- **Linux AMD64**: `infinited-linux-amd64`
-- **macOS Intel**: `infinited-darwin-amd64`
-- **macOS Apple Silicon**: `infinited-darwin-arm64`
-- **Windows AMD64**: `infinited-windows-amd64.exe`
+**Other operating systems**: build from this repository (for example `make build-cross-darwin-amd64`, `make build-cross-darwin-arm64`, or `make build-cross-windows-amd64`) or run a Linux binary under WSL2 / a container. See [development/BUILDING.md](../development/BUILDING.md).
 
-### Download Commands
-
-**What these commands do**: Download the appropriate binary for your platform.
+### Download commands (Linux)
 
 #### Linux AMD64
 
 ```bash
-# Download Linux binary
+# Download Linux binary (verify exact filename on the release page)
 wget https://github.com/deep-thought-labs/infinite/releases/latest/download/infinited-linux-amd64
 
 # Make executable
@@ -95,43 +90,12 @@ file infinited-linux-amd64
 # Should show: infinited-linux-amd64: ELF 64-bit LSB executable, x86-64, version 1 (SYSV), statically linked, Go BuildID=...
 ```
 
-#### macOS Intel
+#### Linux ARM64
 
 ```bash
-# Download macOS Intel binary
-wget https://github.com/deep-thought-labs/infinite/releases/latest/download/infinited-darwin-amd64
-
-# Make executable
-chmod +x infinited-darwin-amd64
-
-# Verify download
-file infinited-darwin-amd64
-# Should show: infinited-darwin-amd64: Mach-O 64-bit executable x86_64
-```
-
-#### macOS Apple Silicon
-
-```bash
-# Download macOS Apple Silicon binary
-wget https://github.com/deep-thought-labs/infinite/releases/latest/download/infinited-darwin-arm64
-
-# Make executable
-chmod +x infinited-darwin-arm64
-
-# Verify download
-file infinited-darwin-arm64
-# Should show: infinited-darwin-arm64: Mach-O 64-bit executable arm64
-```
-
-#### Windows AMD64
-
-```bash
-# Download Windows binary (in WSL2 or PowerShell)
-wget https://github.com/deep-thought-labs/infinite/releases/latest/download/infinited-windows-amd64.exe
-
-# Verify download
-file infinited-windows-amd64.exe
-# Should show: infinited-windows-amd64.exe: PE32+ executable (console) x86-64 (stripped to external PDB), for MS Windows
+wget https://github.com/deep-thought-labs/infinite/releases/latest/download/infinited-linux-arm64
+chmod +x infinited-linux-arm64
+file infinited-linux-arm64
 ```
 
 ### Verification and Installation

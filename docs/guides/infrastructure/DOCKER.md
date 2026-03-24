@@ -111,7 +111,7 @@ When you run `make release-dry-run`:
 
 1. **Docker pull**: Downloads `goreleaser/goreleaser-cross` image (if it doesn't exist)
 2. **Docker run**: Runs GoReleaser inside the container
-3. **Build**: Compiles binaries for all platforms
+3. **Build**: Compiles **Linux amd64 and arm64** binaries (GoReleaser config in `.goreleaser.yml`)
 4. **Copy**: Copies binaries from container to `./dist/`
 
 **You don't need to understand this** - just run the command and it works.

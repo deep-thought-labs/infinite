@@ -27,15 +27,15 @@ Companion guide: **[CI_CD.md](CI_CD.md)**.
 
 A **release** is an official version of the software that includes:
 
-- ✅ Compiled binaries for multiple platforms (Linux, macOS, Windows)
+- ✅ Compiled **Linux** binaries (**amd64** and **arm64**) attached to the GitHub Release (per **`.goreleaser.yml`**)
 - ✅ Release notes with changes
 - ✅ Downloadable files for users
 - ✅ Git tags for versioning
 
 **Difference with local compilation**:
 
-- **Local compilation** (`make install`): Only for your machine
-- **Release**: Binaries for all platforms, publicly published
+- **Local compilation** (`make install`): Builds **one** binary for your host via Go install
+- **Release**: GoReleaser publishes **Linux** artifacts for operators; other hosts build from source (for example `make build-cross-darwin-amd64`) or use containerized Linux
 
 ## ⚙️ Prerequisites
 
@@ -157,9 +157,6 @@ git push --tags
 
 - Build for Linux AMD64
 - Build for Linux ARM64
-- Build for macOS AMD64
-- Build for macOS ARM64
-- Build for Windows AMD64
 - Release creation
 - Asset upload
 
@@ -198,24 +195,23 @@ make release-dry-run-linux
 
 **When to use**: To verify the process works before creating a real release
 
-### Complete Dry Run
+### Full GoReleaser dry-run (CI parity)
 
-**Purpose**: Test compilation for all platforms.
+**Purpose**: Run the **same GoReleaser config** GitHub Actions uses (`.goreleaser.yml`), still **Linux amd64 + arm64** only.
 
 ```bash
-# Complete test build (all platforms)
 make release-dry-run
 ```
 
 **What it does**:
 
-- Compiles binaries for all platforms
+- Compiles **Linux amd64** and **Linux arm64** binaries
 - Creates files in `./dist/`
 - **Does NOT** publish anything to GitHub
 
 **Time**: 20-30 minutes
 
-**When to use**: Before an important release, to verify all platforms
+**When to use**: Before an important release, to mirror the CI release job locally
 
 ### Verify Dry Run Results
 
@@ -223,13 +219,10 @@ make release-dry-run
 # See what was created
 ls -la dist/
 
-# You should see:
+# Expect Linux binaries (and archives / checksums), e.g.:
 # - infinited-linux-amd64
 # - infinited-linux-arm64
-# - infinited-darwin-amd64
-# - infinited-darwin-arm64
-# - infinited-windows-amd64.exe
-# etc.
+# - checksums.txt
 ```
 
 ## 📊 Monitor the Process

@@ -142,7 +142,9 @@ make install
 
 **Purpose**: Complete automated setup: compile, configure, and start a local testnet node.
 
-**What you get**:
+**Scripted path**: the repository root script **`./local_node.sh`** runs `make install` (unless `--no-install`), initializes chain data under `~/.infinited`, provisions dev keys/accounts, adjusts genesis (via `jq`), and starts the node. Use **`./local_node.sh --help`** for flags.
+
+**What you get** (same goals if you follow the manual README flow instead of the script):
 
 - ✅ Compiled `infinited` binary (if not already compiled)
 - ✅ Local blockchain configuration initialized
@@ -322,7 +324,7 @@ make build-cross-windows-amd64
 
 **What you get**:
 
-- ✅ Binaries compiled for multiple platforms
+- ✅ GoReleaser **Linux** binaries (**amd64** and **arm64**) in `./dist/` (see `.goreleaser.yml`)
 - ✅ Files in `./dist/` ready for distribution
 - ✅ **Does NOT** publish anything to GitHub
 
@@ -348,7 +350,7 @@ docker ps  # Should work without errors
 
 **What it does**:
 
-- Compiles for Linux AMD64 and ARM64
+- Uses **`.goreleaser.linux-only.yml`** (same **Linux amd64 / arm64** targets as the default config, tuned for quicker local iteration)
 - Creates files in `./dist/`
 - **Does NOT** publish to GitHub
 
@@ -358,17 +360,18 @@ docker ps  # Should work without errors
 make release-dry-run-linux
 ```
 
-### Complete Build (All Platforms)
+### Full GoReleaser dry-run (same targets as CI)
 
 **Command**: `make release-dry-run`
 
 **What it does**:
 
-- Compiles for Linux, macOS, Windows
-- Creates files in `./dist/`
+- Uses **`.goreleaser.yml`** (the same config **GitHub Actions** uses on version tags)
+- Compiles **Linux amd64** and **Linux arm64** only (`infinited-linux-amd64`, `infinited-linux-arm64`)
+- Creates archives / `checksums.txt` under `./dist/`
 - **Does NOT** publish to GitHub
 
-**Time**: 20-30 minutes
+**Time**: ~20-30 minutes (varies by machine; ARM64 cross-build may fail on some Mac hosts—see note below)
 
 ```bash
 make release-dry-run
@@ -380,12 +383,9 @@ make release-dry-run
 # See what was created
 ls -lh dist/
 
-# You should see:
+# You should see Linux binaries (names depend on archive templates), e.g.:
 # - infinited-linux-amd64
 # - infinited-linux-arm64
-# - infinited-darwin-amd64
-# - infinited-darwin-arm64
-# - infinited-windows-amd64.exe
 # - checksums.txt
 ```
 
@@ -399,7 +399,7 @@ ls -lh dist/
 
 **Purpose**: **Versioned release binaries** are produced by **automation** in this repository. **Pre-built artifacts**: [GitHub Releases](https://github.com/deep-thought-labs/infinite/releases/latest). **Local dry-runs** (`make release-dry-run*`) validate the same pipeline on your machine before tagging.
 
-**What is configured**: [`.github/workflows/release.yml`](../../../.github/workflows/release.yml) runs **GoReleaser** when a **semantic version tag** matching `v*.*.*` is pushed (for example `v1.2.3`). It builds **multi-platform binaries**, attaches them to a **GitHub Release**, and generates **checksums**. Maintainers can also trigger the workflow manually from the Actions UI (`workflow_dispatch`) for snapshot-style runs.
+**What is configured**: [`.github/workflows/release.yml`](../../../.github/workflows/release.yml) runs **GoReleaser** when a **semantic version tag** matching `v*.*.*` is pushed (for example `v1.2.3`). Per **`.goreleaser.yml`**, it builds **Linux amd64 and arm64** artifacts, attaches them to a **GitHub Release**, and generates **checksums**. Maintainers can also trigger the workflow manually from the Actions UI (`workflow_dispatch`) for snapshot-style runs.
 
 **Where to go next** (same split as in each guide’s intro):
 
