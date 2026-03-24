@@ -116,6 +116,7 @@ Upstream asume un **git tag** en el mismo repositorio para compilar el binario �
 | Test de upgrade | `tests/systemtests/chainupgrade/v4_v5.go`: nombre del plan on-chain **`v0.4.0-to-v0.5.0`** — debe coincidir con **`UpgradeName`** en `infinited/upgrades.go` (handler de referencia tipo upstream; no implica que mainnet use el mismo nombre). |
 | CI | `.github/workflows/system-test.yml`: `fetch-depth: 0`, `fetch-tags: true`; el paso `make test-system` solo corre si **`GIT_DIFF`** matchea rutas relevantes (`.go`, `go.mod`, `*.toml`, workflow, etc.), igual que en upstream. |
 | Ejecución local macOS | Nuevo target `make test-system-docker` ejecuta la prueba en contenedor Linux (`golang:1.25-bookworm` + Foundry), recomendado cuando los artefactos legacy son Linux-only o el host presenta incompatibilidades de toolchain. |
+| Correcciones posteriores | Se corrigió resolución de `docker` en `Makefile` para evitar `run: command not found` / `docker: command not found` por PATH incompleto en shells locales. También se eliminó `tests/systemtests/mempool/interface.go` (residuo conflictivo) que redeclaraba `TestSuite` y rompía compilación de system tests. |
 
 **Verificación:** tras cambiar el tag o el flujo, ejecutar localmente `make test-system` o forzar un PR que toque rutas disparadoras del workflow y revisar el job *System Test*.
 

@@ -134,7 +134,6 @@ Renombres representativos: `evmd/app.go` → `infinited/app.go`, `evmd/cmd/evmd/
 - `infinited/tests/integration/create_app.go` (identidad)
 - `infinited/tests/integration/*` (renombrados desde `evmd/`)
 - `tests/integration/ante/test_evm_fee_market.go`, `tests/integration/ante/test_evm_unit_10_gas_wanted.go`
-- `tests/systemtests/mempool/interface.go`
 
 ### Otros
 
