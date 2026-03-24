@@ -508,16 +508,23 @@ build-v05:
 		echo ""; \
 		exit 1; \
 	)
-	git checkout "$(SYSTEMTEST_LEGACY_TAG)"
-	$(MAKE) build
-	@if [ -f "$(BUILDDIR)/$(EXAMPLE_BINARY)" ]; then \
-		cp "$(BUILDDIR)/$(EXAMPLE_BINARY)" ./tests/systemtests/binaries/v0.5/evmd; \
-	elif [ -f "$(BUILDDIR)/evmd" ]; then \
-		cp "$(BUILDDIR)/evmd" ./tests/systemtests/binaries/v0.5/evmd; \
-	else \
-		echo "No baseline binary in $(BUILDDIR) (expected $(EXAMPLE_BINARY) or evmd)"; exit 1; \
-	fi
-	git checkout -
+# Older release Makefiles may not quote BUILDDIR in go build -o; a path with spaces
+# in the repo root breaks the legacy step. Use a temp dir without spaces for output.
+	@LEGACY_BUILDDIR=$$(mktemp -d); \
+		git checkout "$(SYSTEMTEST_LEGACY_TAG)" || { rm -rf "$$LEGACY_BUILDDIR"; exit 1; }; \
+		$(MAKE) build BUILDDIR="$$LEGACY_BUILDDIR"; \
+		_ret=$$?; \
+		if [ $$_ret -ne 0 ]; then git checkout -; rm -rf "$$LEGACY_BUILDDIR"; exit $$_ret; fi; \
+		if [ -f "$$LEGACY_BUILDDIR/$(EXAMPLE_BINARY)" ]; then \
+		 cp "$$LEGACY_BUILDDIR/$(EXAMPLE_BINARY)" ./tests/systemtests/binaries/v0.5/evmd; \
+		elif [ -f "$$LEGACY_BUILDDIR/evmd" ]; then \
+		 cp "$$LEGACY_BUILDDIR/evmd" ./tests/systemtests/binaries/v0.5/evmd; \
+		else \
+		 echo "No baseline binary in $$LEGACY_BUILDDIR (expected $(EXAMPLE_BINARY) or evmd)"; \
+		 git checkout -; rm -rf "$$LEGACY_BUILDDIR"; exit 1; \
+		fi; \
+		git checkout -; \
+		rm -rf "$$LEGACY_BUILDDIR"
 
 mocks:
 	@echo "--> generating mocks"
