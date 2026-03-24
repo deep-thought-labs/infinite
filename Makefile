@@ -23,10 +23,9 @@ EXAMPLE_BINARY := infinited
 HTTPS_GIT := git@github.com:deep-thought-labs/infinite.git
 DOCKER := $(shell which docker)
 
-# Baseline commit for chain-upgrade system tests (tests/systemtests/chainupgrade).
-# This tag may be missing on forks; `build-v05` fetches it from upstream when needed.
+# Baseline release tag for chain-upgrade system tests (tests/systemtests/chainupgrade).
+# The tag MUST exist on this repository (CI and contributors); do not fetch from other remotes in automation.
 SYSTEMTEST_LEGACY_TAG ?= v0.5.1
-SYSTEMTEST_LEGACY_REMOTE ?= https://github.com/cosmos/evm.git
 
 export GO111MODULE = on
 
@@ -500,12 +499,15 @@ test-system: build-v05 build
 
 build-v05:
 	mkdir -p ./tests/systemtests/binaries/v0.5
-	@if git rev-parse -q --verify "refs/tags/$(SYSTEMTEST_LEGACY_TAG)^{}" >/dev/null 2>&1; then \
-		echo "Using existing tag $(SYSTEMTEST_LEGACY_TAG)"; \
-	else \
-		echo "Fetching tag $(SYSTEMTEST_LEGACY_TAG) from $(SYSTEMTEST_LEGACY_REMOTE) (not found on this clone)..."; \
-		git fetch "$(SYSTEMTEST_LEGACY_REMOTE)" "refs/tags/$(SYSTEMTEST_LEGACY_TAG):refs/tags/$(SYSTEMTEST_LEGACY_TAG)"; \
-	fi
+	@git rev-parse -q --verify "refs/tags/$(SYSTEMTEST_LEGACY_TAG)^{}" >/dev/null 2>&1 || ( \
+		echo ""; \
+		echo "ERROR: Missing git tag $(SYSTEMTEST_LEGACY_TAG) (required for chain-upgrade system tests)."; \
+		echo "Create and push this tag on **this** repository, e.g.:"; \
+		echo "  git tag $(SYSTEMTEST_LEGACY_TAG) <commit-for-baseline-binary>"; \
+		echo "  git push origin $(SYSTEMTEST_LEGACY_TAG)"; \
+		echo ""; \
+		exit 1; \
+	)
 	git checkout "$(SYSTEMTEST_LEGACY_TAG)"
 	$(MAKE) build
 	@if [ -f "$(BUILDDIR)/$(EXAMPLE_BINARY)" ]; then \
