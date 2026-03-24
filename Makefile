@@ -21,7 +21,7 @@ EXAMPLE_BINARY := infinited
 ###############################################################################
 
 HTTPS_GIT := git@github.com:deep-thought-labs/infinite.git
-DOCKER := $(shell which docker)
+DOCKER := $(or $(shell command -v docker 2>/dev/null),docker)
 
 # Baseline release tag for chain-upgrade system tests (tests/systemtests/chainupgrade).
 # The tag MUST exist on this repository (CI and contributors); do not fetch from other remotes in automation.
@@ -518,6 +518,9 @@ test-system-docker:
 			set -euo pipefail; \
 			apt-get update; \
 			apt-get install -y --no-install-recommends build-essential git make curl ca-certificates jq tar xz-utils; \
+			export PATH="/usr/local/go/bin:$$PATH"; \
+			if ! command -v go >/dev/null 2>&1; then echo "ERROR: go not found inside container"; exit 1; fi; \
+			go version; \
 			curl -fsSL https://foundry.paradigm.xyz | bash; \
 			/root/.foundry/bin/foundryup; \
 			export PATH="/root/.foundry/bin:$$PATH"; \
