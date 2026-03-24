@@ -143,9 +143,11 @@ Incluir también `=======` y `>>>>>>>` si se usaron herramientas que dejaron sol
 
 Si el clone vive bajo un directorio con espacios en el nombre, las reglas de `make` que usen `mkdir`, `cd`, `-o` o `cp` con `BUILDDIR` / rutas al binario deben ir **entrecomilladas** en la receta shell. Tras un merge que sobrescriba el `Makefile`, volver a probar **`make build`** en esa ruta. Mitigación alternativa: clonar el repo en una ruta sin espacios.
 
-### A.4 Binario nombre `evmd` en pruebas de sistema
+### A.4 Binario nombre `evmd` y tag legacy en pruebas de sistema
 
-Algunos scripts de **system test** / `test-system` pueden esperar el binario con nombre **`evmd`** aunque el proyecto use **`infinited`** como nombre lógico. Tras resolver conflictos en playbooks o scripts de test, verificar que la copia o el symlink al ejecutable coincida con lo que documenta la guía de tests del momento (p. ej. referencia a playbook **v0.5** si aplica).
+Algunos scripts de **system test** / `test-system` pueden esperar el binario con nombre **`evmd`** aunque el proyecto use **`infinited`** como nombre lógico. Tras resolver conflictos en playbooks o scripts de test, verificar que la copia o el symlink al ejecutable coincida con lo que documenta la guía de tests del momento (p. ej. ruta `tests/systemtests/binaries/v0.5/evmd` para el baseline).
+
+El `Makefile` define **`SYSTEMTEST_LEGACY_TAG`**: commit etiquetado desde el que se construye ese binario “viejo” para el escenario de upgrade on-chain. **En el fork Infinite Drive** el valor por defecto apunta al **último release del propio repositorio** (p. ej. **`v0.1.10`**), no al tag que documente cosmos/evm (`v0.5.1`, etc.), que puede **no existir** en el fork. El tag debe estar **creado y empujado** en este repo; no se debe asumir un fetch automático desde upstream. Detalle y tabla de verificación: bitácora [2026-03-merge-upstream-main.md](logs/2026-03-merge-upstream-main.md#system-tests-y-upgrades-on-chain-fork).
 
 ### A.5 CI y jobs preservados del fork
 

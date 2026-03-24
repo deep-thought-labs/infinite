@@ -25,7 +25,7 @@ DOCKER := $(shell which docker)
 
 # Baseline release tag for chain-upgrade system tests (tests/systemtests/chainupgrade).
 # The tag MUST exist on this repository (CI and contributors); do not fetch from other remotes in automation.
-SYSTEMTEST_LEGACY_TAG ?= v0.5.1
+SYSTEMTEST_LEGACY_TAG ?= v0.1.10
 
 export GO111MODULE = on
 
