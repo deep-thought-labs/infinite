@@ -10,6 +10,7 @@ import (
 	"github.com/stretchr/testify/require"
 	"github.com/tidwall/gjson"
 
+	"github.com/cosmos/evm/tests/systemtests/clients"
 	"github.com/cosmos/evm/tests/systemtests/suite"
 
 	systest "github.com/cosmos/cosmos-sdk/testutil/systemtests"
@@ -46,11 +47,12 @@ func RunChainUpgrade(t *testing.T, base *suite.BaseTestSuite) {
 	votingPeriod := 5 * time.Second // enough time to vote
 	sut.ModifyGenesisJSON(t, systest.SetGovVotingPeriod(t, votingPeriod))
 
-	sut.StartChain(t, fmt.Sprintf("--halt-height=%d", upgradeHeight+1), "--chain-id=local-4221", "--minimum-gas-prices=0.00atest")
+	sut.StartChain(t, fmt.Sprintf("--halt-height=%d", upgradeHeight+1), "--chain-id=local-4221", "--minimum-gas-prices=0.00"+clients.NativeBaseDenom)
 
 	cli := systest.NewCLIWrapper(t, sut, systest.Verbose)
 	govAddr := sdk.AccAddress(address.Module("gov")).String()
 	// submit upgrade proposal
+	depositCoin := "100000000" + clients.NativeBaseDenom
 	proposal := fmt.Sprintf(`
 {
  "messages": [
@@ -64,11 +66,12 @@ func RunChainUpgrade(t *testing.T, base *suite.BaseTestSuite) {
   }
  ],
  "metadata": "ipfs://CID",
- "deposit": "100000000stake",
+ "deposit": %q,
  "title": "my upgrade",
  "summary": "testing"
-}`, govAddr, upgradeName, upgradeHeight)
-	rsp := cli.SubmitGovProposal(proposal, "--fees=10000000000000000000atest", "--from=node0")
+}`, govAddr, upgradeName, upgradeHeight, depositCoin)
+	feeCoin := "10000000000000000000" + clients.NativeBaseDenom
+	rsp := cli.SubmitGovProposal(proposal, "--fees="+feeCoin, "--from=node0")
 	systest.RequireTxSuccess(t, rsp)
 	raw := cli.CustomQuery("q", "gov", "proposals", "--depositor", cli.GetKeyAddr("node0"))
 	proposals := gjson.Get(raw, "proposals.#.id").Array()
@@ -78,7 +81,7 @@ func RunChainUpgrade(t *testing.T, base *suite.BaseTestSuite) {
 	for i := range sut.NodesCount() {
 		go func(i int) { // do parallel
 			sut.Logf("Voting: validator %d\n", i)
-			rsp := cli.Run("tx", "gov", "vote", proposalID, "yes", "--fees=10000000000000000000atest", "--from", cli.GetKeyAddr(fmt.Sprintf("node%d", i)))
+			rsp := cli.Run("tx", "gov", "vote", proposalID, "yes", "--fees="+feeCoin, "--from", cli.GetKeyAddr(fmt.Sprintf("node%d", i)))
 			systest.RequireTxSuccess(t, rsp)
 		}(i)
 	}
@@ -104,6 +107,6 @@ func RunChainUpgrade(t *testing.T, base *suite.BaseTestSuite) {
 	cli = systest.NewCLIWrapper(t, sut, systest.Verbose)
 	to := cli.GetKeyAddr("node1")
 	from := cli.GetKeyAddr("node0")
-	got := cli.Run("tx", "bank", "send", from, to, "1atest", "--from=node0", "--fees=10000000000000000000atest", "--chain-id=local-4221")
+	got := cli.Run("tx", "bank", "send", from, to, "1"+clients.NativeBaseDenom, "--from=node0", "--fees="+feeCoin, "--chain-id=local-4221")
 	systest.RequireTxSuccess(t, got)
 }
