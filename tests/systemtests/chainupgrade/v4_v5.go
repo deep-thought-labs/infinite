@@ -9,6 +9,7 @@ import (
 
 	"github.com/stretchr/testify/require"
 	"github.com/tidwall/gjson"
+	"github.com/tidwall/sjson"
 
 	"github.com/cosmos/evm/tests/systemtests/clients"
 	"github.com/cosmos/evm/tests/systemtests/suite"
@@ -45,7 +46,12 @@ func RunChainUpgrade(t *testing.T, base *suite.BaseTestSuite) {
 	systest.Sut.SetupChain()
 
 	votingPeriod := 5 * time.Second // enough time to vote
-	sut.ModifyGenesisJSON(t, systest.SetGovVotingPeriod(t, votingPeriod))
+	// Legacy `testnet init-files` genesis may leave gov min_deposit as `stake` while this fork uses
+	// `drop` everywhere; align gov deposit denoms before submitting proposals in `drop`.
+	sut.ModifyGenesisJSON(t,
+		systest.SetGovVotingPeriod(t, votingPeriod),
+		setGovDepositDenoms(t, clients.NativeBaseDenom),
+	)
 
 	sut.StartChain(t, fmt.Sprintf("--halt-height=%d", upgradeHeight+1), "--chain-id=local-4221", "--minimum-gas-prices=0.00"+clients.NativeBaseDenom)
 
@@ -109,4 +115,16 @@ func RunChainUpgrade(t *testing.T, base *suite.BaseTestSuite) {
 	from := cli.GetKeyAddr("node0")
 	got := cli.Run("tx", "bank", "send", from, to, "1"+clients.NativeBaseDenom, "--from=node0", "--fees="+feeCoin, "--chain-id=local-4221")
 	systest.RequireTxSuccess(t, got)
+}
+
+// setGovDepositDenoms sets gov v1 min_deposit / expedited_min_deposit denoms to match the chain native denom.
+func setGovDepositDenoms(t *testing.T, denom string) systest.GenesisMutator {
+	t.Helper()
+	return func(genesis []byte) []byte {
+		state, err := sjson.SetRawBytes(genesis, "app_state.gov.params.min_deposit.0.denom", []byte(fmt.Sprintf("%q", denom)))
+		require.NoError(t, err)
+		state, err = sjson.SetRawBytes(state, "app_state.gov.params.expedited_min_deposit.0.denom", []byte(fmt.Sprintf("%q", denom)))
+		require.NoError(t, err)
+		return state
+	}
 }
