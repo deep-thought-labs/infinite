@@ -24,8 +24,9 @@ HTTPS_GIT := git@github.com:deep-thought-labs/infinite.git
 DOCKER := $(or $(shell command -v docker 2>/dev/null),docker)
 
 # Baseline release tag for chain-upgrade system tests (tests/systemtests/chainupgrade).
+# Default v0.1.11 = release/v0.1.10-testnet-evm-denom-align (testnet EVM denom aligned with bank metadata).
 # The tag MUST exist on this repository (CI and contributors); do not fetch from other remotes in automation.
-SYSTEMTEST_LEGACY_TAG ?= v0.1.10
+SYSTEMTEST_LEGACY_TAG ?= v0.1.11
 SYSTEMTEST_LEGACY_REPO ?= deep-thought-labs/infinite
 SYSTEMTEST_LEGACY_DOWNLOAD ?= auto
 SYSTEMTEST_LEGACY_ASSET_LINUX_AMD64 ?= infinite_Linux_x86_64.tar.gz

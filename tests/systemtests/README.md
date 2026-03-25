@@ -16,10 +16,13 @@ Or via manual steps
 
 ```shell
 make build
-mkdir -= ./tests/systemtests/binaries
-cp ./build/evmd ./tests/systemtests/binaries
-cp ./build/evmd ./tests/systemtests/binaries/v0.4
+mkdir -p ./tests/systemtests/binaries ./tests/systemtests/binaries/v0.5
+cp ./build/infinited ./tests/systemtests/binaries/evmd
+# Legacy binary for chain-upgrade tests (default tag v0.1.11 = release/v0.1.10-testnet-evm-denom-align):
+git checkout v0.1.11 && make build && cp ./build/infinited ./tests/systemtests/binaries/v0.5/evmd && git checkout -
 ```
+
+Override the legacy tag when building: `make SYSTEMTEST_LEGACY_TAG=v0.1.11 test-system`.
 
 ## Run Individual test
 

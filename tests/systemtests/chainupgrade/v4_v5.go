@@ -51,8 +51,9 @@ func RunChainUpgrade(t *testing.T, base *suite.BaseTestSuite) {
 
 	cli := systest.NewCLIWrapper(t, sut, systest.Verbose)
 	govAddr := sdk.AccAddress(address.Module("gov")).String()
-	// submit upgrade proposal
 	depositCoin := "100000000" + clients.NativeBaseDenom
+	feeCoin := "10000000000000000000" + clients.NativeBaseDenom
+	// submit upgrade proposal
 	proposal := fmt.Sprintf(`
 {
  "messages": [
@@ -70,7 +71,6 @@ func RunChainUpgrade(t *testing.T, base *suite.BaseTestSuite) {
  "title": "my upgrade",
  "summary": "testing"
 }`, govAddr, upgradeName, upgradeHeight, depositCoin)
-	feeCoin := "10000000000000000000" + clients.NativeBaseDenom
 	rsp := cli.SubmitGovProposal(proposal, "--fees="+feeCoin, "--from=node0")
 	systest.RequireTxSuccess(t, rsp)
 	raw := cli.CustomQuery("q", "gov", "proposals", "--depositor", cli.GetKeyAddr("node0"))
