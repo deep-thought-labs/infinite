@@ -325,7 +325,7 @@ make build-cross-windows-amd64
 
 **Why this exists**:
 
-- System upgrade tests use a legacy baseline binary from `SYSTEMTEST_LEGACY_TAG` (default `v0.1.10`).
+- System upgrade tests use a legacy baseline binary from `SYSTEMTEST_LEGACY_TAG` (default `v0.1.11`; see root `Makefile`).
 - Official release artifacts for this project are Linux-only (`linux_amd64`, `linux_arm64`).
 - Running inside Linux container avoids host OS mismatches and keeps behavior close to GitHub Actions.
 
@@ -338,24 +338,18 @@ make test-system-docker
 ### Variables you can override
 
 ```bash
-# Use a different baseline tag from this fork's releases
-make SYSTEMTEST_LEGACY_TAG=v0.1.10 test-system-docker
-
-# Force behavior for legacy baseline retrieval:
-# auto   -> download on Linux, fallback to local compile
-# always -> download only; fail if unavailable
-# never  -> always compile baseline from tag locally
-make SYSTEMTEST_LEGACY_DOWNLOAD=always test-system-docker
+# Use a different baseline tag from this fork's GitHub Releases
+make SYSTEMTEST_LEGACY_TAG=v0.1.11 test-system-docker
 ```
 
 ### Notes
 
 - The container target installs Foundry and runs `make test-system` inside Linux.
+- The legacy baseline binary is **always** downloaded from GitHub Releases (verified against `checksums.txt`); there is no `git checkout` / compile of the old tag.
 - Legacy download expects release assets/checksums under:
   - `SYSTEMTEST_LEGACY_ASSET_LINUX_AMD64` (default `infinite_Linux_x86_64.tar.gz`)
   - `SYSTEMTEST_LEGACY_ASSET_LINUX_ARM64` (default `infinite_Linux_ARM64.tar.gz`)
   - `SYSTEMTEST_LEGACY_CHECKSUM_FILE` (default `checksums.txt`)
-- If download fails and mode is `auto`, the Makefile falls back to local baseline compile.
 
 ---
 

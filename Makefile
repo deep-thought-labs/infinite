@@ -23,12 +23,11 @@ EXAMPLE_BINARY := infinited
 HTTPS_GIT := git@github.com:deep-thought-labs/infinite.git
 DOCKER := $(or $(shell command -v docker 2>/dev/null),docker)
 
-# Baseline release tag for chain-upgrade system tests (tests/systemtests/chainupgrade).
-# Default v0.1.11 = release/v0.1.10-testnet-evm-denom-align (testnet EVM denom aligned with bank metadata).
-# The tag MUST exist on this repository (CI and contributors); do not fetch from other remotes in automation.
+# Chain-upgrade system tests (tests/systemtests/chainupgrade): legacy binary is always taken from
+# GitHub Releases for SYSTEMTEST_LEGACY_TAG (build-v05). No git checkout / local compile of the tag.
+# Release assets are Linux-only; on macOS use `make test-system-docker`.
 SYSTEMTEST_LEGACY_TAG ?= v0.1.11
 SYSTEMTEST_LEGACY_REPO ?= deep-thought-labs/infinite
-SYSTEMTEST_LEGACY_DOWNLOAD ?= auto
 SYSTEMTEST_LEGACY_ASSET_LINUX_AMD64 ?= infinite_Linux_x86_64.tar.gz
 SYSTEMTEST_LEGACY_ASSET_LINUX_ARM64 ?= infinite_Linux_ARM64.tar.gz
 SYSTEMTEST_LEGACY_CHECKSUM_FILE ?= checksums.txt
@@ -511,7 +510,6 @@ test-system-docker:
 		-w /workspace \
 		-e SYSTEMTEST_LEGACY_TAG="$(SYSTEMTEST_LEGACY_TAG)" \
 		-e SYSTEMTEST_LEGACY_REPO="$(SYSTEMTEST_LEGACY_REPO)" \
-		-e SYSTEMTEST_LEGACY_DOWNLOAD="$(SYSTEMTEST_LEGACY_DOWNLOAD)" \
 		-e SYSTEMTEST_LEGACY_ASSET_LINUX_AMD64="$(SYSTEMTEST_LEGACY_ASSET_LINUX_AMD64)" \
 		-e SYSTEMTEST_LEGACY_ASSET_LINUX_ARM64="$(SYSTEMTEST_LEGACY_ASSET_LINUX_ARM64)" \
 		-e SYSTEMTEST_LEGACY_CHECKSUM_FILE="$(SYSTEMTEST_LEGACY_CHECKSUM_FILE)" \
@@ -528,68 +526,54 @@ test-system-docker:
 			make test-system \
 		'
 
+# Download legacy chain-upgrade binary from GitHub Releases only (matches .goreleaser archive names).
 build-v05:
-	mkdir -p ./tests/systemtests/binaries/v0.5
-	@git rev-parse -q --verify "refs/tags/$(SYSTEMTEST_LEGACY_TAG)^{}" >/dev/null 2>&1 || ( \
-		echo ""; \
-		echo "ERROR: Missing git tag $(SYSTEMTEST_LEGACY_TAG) (required for chain-upgrade system tests)."; \
-		echo "Create and push this tag on **this** repository, e.g.:"; \
-		echo "  git tag $(SYSTEMTEST_LEGACY_TAG) <commit-for-baseline-binary>"; \
-		echo "  git push origin $(SYSTEMTEST_LEGACY_TAG)"; \
-		echo ""; \
-		exit 1; \
-	)
 	@set -e; \
-		target="./tests/systemtests/binaries/v0.5/evmd"; \
-		download_ok=0; \
-		if [ "$(SYSTEMTEST_LEGACY_DOWNLOAD)" != "never" ] && [ "$$(uname -s)" = "Linux" ]; then \
-			asset=""; \
-			case "$$(uname -m)" in \
-				x86_64|amd64) asset="$(SYSTEMTEST_LEGACY_ASSET_LINUX_AMD64)" ;; \
-				aarch64|arm64) asset="$(SYSTEMTEST_LEGACY_ASSET_LINUX_ARM64)" ;; \
-				*) ;; \
-			esac; \
-			if [ -n "$$asset" ]; then \
-				tmpdir=$$(mktemp -d); \
-				base_url="https://github.com/$(SYSTEMTEST_LEGACY_REPO)/releases/download/$(SYSTEMTEST_LEGACY_TAG)"; \
-				if curl -fsSL "$$base_url/$(SYSTEMTEST_LEGACY_CHECKSUM_FILE)" -o "$$tmpdir/checksums.txt" && \
-				   curl -fsSL "$$base_url/$$asset" -o "$$tmpdir/asset.tar.gz"; then \
-					expected=$$(awk -v asset="$$asset" '$$2 == asset {print $$1}' "$$tmpdir/checksums.txt" | head -n1); \
-					actual=$$(shasum -a 256 "$$tmpdir/asset.tar.gz" | awk '{print $$1}'); \
-					if [ -n "$$expected" ] && [ "$$expected" = "$$actual" ]; then \
-						tar -xzf "$$tmpdir/asset.tar.gz" -C "$$tmpdir"; \
-						if [ -f "$$tmpdir/infinited" ]; then cp "$$tmpdir/infinited" "$$target"; chmod +x "$$target"; download_ok=1; fi; \
-						if [ -f "$$tmpdir/evmd" ] && [ $$download_ok -ne 1 ]; then cp "$$tmpdir/evmd" "$$target"; chmod +x "$$target"; download_ok=1; fi; \
-					fi; \
-				fi; \
-				rm -rf "$$tmpdir"; \
-			fi; \
-		fi; \
-		if [ $$download_ok -eq 1 ]; then \
-			echo "✅ Legacy baseline downloaded from releases: $(SYSTEMTEST_LEGACY_TAG)"; \
-			exit 0; \
-		fi; \
-		if [ "$(SYSTEMTEST_LEGACY_DOWNLOAD)" = "always" ]; then \
-			echo "ERROR: Legacy binary download required (SYSTEMTEST_LEGACY_DOWNLOAD=always) but failed."; \
-			exit 1; \
-		fi; \
-		echo "ℹ️  Falling back to building legacy tag locally..."; \
-		LEGACY_BUILDDIR=$$(mktemp -d); \
-		git checkout "$(SYSTEMTEST_LEGACY_TAG)" || { rm -rf "$$LEGACY_BUILDDIR"; exit 1; }; \
-		$(MAKE) build BUILDDIR="$$LEGACY_BUILDDIR"; \
-		_ret=$$?; \
-		if [ $$_ret -ne 0 ]; then git checkout -; rm -rf "$$LEGACY_BUILDDIR"; exit $$_ret; fi; \
-		if [ -f "$$LEGACY_BUILDDIR/$(EXAMPLE_BINARY)" ]; then \
-		 cp "$$LEGACY_BUILDDIR/$(EXAMPLE_BINARY)" "$$target"; \
-		elif [ -f "$$LEGACY_BUILDDIR/evmd" ]; then \
-		 cp "$$LEGACY_BUILDDIR/evmd" "$$target"; \
-		else \
-		 echo "No baseline binary in $$LEGACY_BUILDDIR (expected $(EXAMPLE_BINARY) or evmd)"; \
-		 git checkout -; rm -rf "$$LEGACY_BUILDDIR"; exit 1; \
-		fi; \
-		chmod +x "$$target"; \
-		git checkout -; \
-		rm -rf "$$LEGACY_BUILDDIR"
+	case "$$(uname -s)" in \
+		Darwin) \
+			echo ""; \
+			echo "ERROR: Legacy release artifacts are Linux-only. On macOS run:"; \
+			echo "  make test-system-docker"; \
+			echo "(or run system tests on a Linux host)."; \
+			echo ""; \
+			exit 1 ;; \
+	esac; \
+	mkdir -p ./tests/systemtests/binaries/v0.5; \
+	target="./tests/systemtests/binaries/v0.5/evmd"; \
+	asset=""; \
+	case "$$(uname -m)" in \
+		x86_64|amd64) asset="$(SYSTEMTEST_LEGACY_ASSET_LINUX_AMD64)" ;; \
+		aarch64|arm64) asset="$(SYSTEMTEST_LEGACY_ASSET_LINUX_ARM64)" ;; \
+		*) echo "ERROR: Unsupported machine for legacy download: $$(uname -m)"; exit 1 ;; \
+	esac; \
+	base_url="https://github.com/$(SYSTEMTEST_LEGACY_REPO)/releases/download/$(SYSTEMTEST_LEGACY_TAG)"; \
+	tmpdir=$$(mktemp -d); \
+	trap 'rm -rf "$$tmpdir"' EXIT; \
+	echo "⬇️  Downloading legacy $$asset ($(SYSTEMTEST_LEGACY_TAG))..."; \
+	curl -fsSL "$$base_url/$(SYSTEMTEST_LEGACY_CHECKSUM_FILE)" -o "$$tmpdir/checksums.txt"; \
+	curl -fsSL "$$base_url/$$asset" -o "$$tmpdir/archive.tar.gz"; \
+	expected=$$(awk -v a="$$asset" '{ \
+		name=$$2; sub(/^\*/, "", name); \
+		if (name == a) { print $$1; exit } \
+	}' "$$tmpdir/checksums.txt"); \
+	if [ -z "$$expected" ]; then \
+		echo "ERROR: No checksum line for $$asset in $(SYSTEMTEST_LEGACY_CHECKSUM_FILE)."; \
+		exit 1; \
+	fi; \
+	actual=$$(shasum -a 256 "$$tmpdir/archive.tar.gz" | awk '{print $$1}'); \
+	if [ "$$expected" != "$$actual" ]; then \
+		echo "ERROR: SHA256 mismatch for $$asset (expected $$expected, got $$actual)."; \
+		exit 1; \
+	fi; \
+	tar -xzf "$$tmpdir/archive.tar.gz" -C "$$tmpdir"; \
+	if [ -f "$$tmpdir/infinited" ]; then cp "$$tmpdir/infinited" "$$target"; \
+	elif [ -f "$$tmpdir/evmd" ]; then cp "$$tmpdir/evmd" "$$target"; \
+	else \
+		echo "ERROR: Archive $$asset did not contain infinited or evmd at top level."; \
+		exit 1; \
+	fi; \
+	chmod +x "$$target"; \
+	echo "✅ Legacy binary ready at $$target"
 
 mocks:
 	@echo "--> generating mocks"

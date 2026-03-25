@@ -266,8 +266,7 @@ cat ~/.infinited/config/genesis.json | jq '.app_state.bank.denom_metadata'
 **Common causes**:
 
 - The release artifact for the legacy tag is Linux-only and you're running directly on macOS.
-- Dependency/toolchain mismatch when trying to compile old tag locally.
-- Missing release asset/checksum for the selected tag.
+- Missing release asset/checksum for the selected tag (legacy is **only** fetched from GitHub Releases).
 
 **Recommended solution (macOS host)**:
 
@@ -276,19 +275,15 @@ cat ~/.infinited/config/genesis.json | jq '.app_state.bank.denom_metadata'
 make test-system-docker
 ```
 
-**Optional controls**:
+**Optional overrides** (same release download path; no local compile of the legacy tag):
 
 ```bash
-# Require release download only (no local compile fallback)
-make SYSTEMTEST_LEGACY_DOWNLOAD=always test-system-docker
-
-# Force local compile fallback behavior
-make SYSTEMTEST_LEGACY_DOWNLOAD=never test-system
+make SYSTEMTEST_LEGACY_TAG=v0.1.11 test-system-docker
 ```
 
 **Project defaults**:
 
-- `SYSTEMTEST_LEGACY_TAG=v0.1.10`
+- `SYSTEMTEST_LEGACY_TAG` (see root `Makefile`; typically matches the published upgrade baseline release)
 - Release repo: `deep-thought-labs/infinite`
 - Expected Linux assets:
   - `infinite_Linux_x86_64.tar.gz`

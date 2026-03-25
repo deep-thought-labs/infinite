@@ -33,7 +33,7 @@ Integrar `upstream/main` en el fork Infinite Drive, resolver conflictos y estabi
 | `go.mod` | manual | Contenido de dependencias indirectas y versiones `golang.org/*` acorde a upstream; se mantiene `replace github.com/cosmos/evm => ./` del fork. | Ejecutar `go mod tidy` localmente si el entorno tiene Go. |
 | `go.sum` | manual | Entradas nuevas upstream (p. ej. jhump/protoreflect, mockery, wlynxg/anet, golang.org/x/mod). | Verificar con `go mod tidy` + build. |
 | `README.md` | ours + limpieza | README de marca Infinite Drive; se descarta el bloque promocional de “What is Cosmos EVM?” del upstream. | — |
-| `Makefile` | manual | Build sigue siendo `infinited` (`INFINITED_DIR`); `test-system` usa target upstream `build-v05` con **`SYSTEMTEST_LEGACY_TAG`** apuntando al último release del **fork** (por defecto **`v0.1.10`**, no `v0.5.1` de cosmos/evm). El binario legacy se copia como `evmd` bajo `tests/systemtests/binaries/v0.5/`; el binario de la rama actual como `binaries/evmd`. El tag debe existir en **este** repo; no se hace fetch de tags desde otros remotos en automatización. | Requiere tag publicado en GitHub para CI; ver sección *System tests y upgrades* más abajo. |
+| `Makefile` | manual | Build sigue siendo `infinited` (`INFINITED_DIR`); `test-system` usa `build-v05` con **`SYSTEMTEST_LEGACY_TAG`** apuntando al release del **fork** en GitHub (no `v0.5.1` de cosmos/evm). El binario legacy se obtiene **solo** por descarga verificada desde ese release; el binario de la rama actual se copia como `binaries/evmd`. | Requiere release con artefactos Linux + `checksums.txt` en GitHub; ver *System tests y upgrades*. |
 | `infinited/cmd/.../root.go` | manual | Imports sin duplicar; sin bloque conflictivo. | — |
 | `infinited/cmd/.../testnet.go` | manual | Rutas `evmd` → `infinited` / `infinited/config` / `infinited/tests/network`. | — |
 | `infinited/cmd/.../creator.go` | manual | Import `github.com/cosmos/evm/infinited` (no `evmd`). | — |
@@ -48,7 +48,7 @@ Integrar `upstream/main` en el fork Infinite Drive, resolver conflictos y estabi
 ## Decisiones de fork (no triviales)
 
 - **README**: prioridad identidad Infinite Drive frente al texto genérico de Cosmos EVM.
-- **Makefile / systemtests**: binario real `infinited` en `build/`; copia con nombre `evmd` solo para la suite que aún espera ese nombre. Baseline de upgrade: variable **`SYSTEMTEST_LEGACY_TAG`** (defecto **`v0.1.10`**) — ver sección *System tests y upgrades on-chain (fork)*.
+- **Makefile / systemtests**: binario real `infinited` en `build/`; copia con nombre `evmd` solo para la suite que aún espera ese nombre. Baseline de upgrade: **`SYSTEMTEST_LEGACY_TAG`** + descarga desde **GitHub Releases** (defecto **`v0.1.11`**) — ver *System tests y upgrades on-chain (fork)*.
 - **CI**: conservar fuzz tests del fork en `test.yml` hasta la **alineación dedicada** de workflows con upstream.
 
 ## Actualización de la misma sesión de merge (2026-03-19)
@@ -84,7 +84,7 @@ Estado final (sesión de estabilización): **OK** (suite `infinited` completa en
 | `make build` | OK | Genera `build/infinited`. |
 | `make install` | N/A en entorno de cierre | Verificar en máquina con `GOPATH`/`GOBIN` escribible (p. ej. CI o laptop del equipo). |
 | `make test-unit` | pendiente | Recomendado antes de fusionar PR a `main`; no ejecutado en esta sesión de cierre. |
-| `make test-system` | pendiente / validar | Requiere Foundry, tag `$(SYSTEMTEST_LEGACY_TAG)` presente y compatibilidad runtime del binario legacy; ver *System tests y upgrades on-chain (fork)*. |
+| `make test-system` | pendiente / validar | Requiere Foundry, **release en GitHub** para `$(SYSTEMTEST_LEGACY_TAG)` (artefactos + `checksums.txt`) y compatibilidad runtime del binario legacy; ver *System tests y upgrades on-chain (fork)*. |
 | `make test-infinited` | OK | Ejecutado al cierre (~10 min); todos los paquetes listados OK. |
 | `cd infinited && go test ./tests/integration/...` (focalizado) | OK | Cubierto por `make test-infinited`. |
 | Otros (p. ej. `make test-all`) | pendiente | Fuera del alcance de este cierre. |
@@ -105,13 +105,13 @@ Rama de trabajo: `red/ci-align-upstream-2026-03` (PR sugerido → `red/merge-cos
 
 ## System tests y upgrades on-chain (fork)
 
-Upstream asume un **git tag** en el mismo repositorio para compilar el binario “viejo” del escenario de upgrade (`build-v05`). En **cosmos/evm** suele documentarse **`v0.5.1`**; en **este fork** ese tag puede no existir. La adaptación acordada:
+Upstream asume a menudo un **git tag** en el mismo repositorio para compilar el binario “viejo” del escenario de upgrade (`build-v05`). En **cosmos/evm** suele documentarse **`v0.5.1`**; en **este fork** ese tag puede no existir. La adaptación acordada: baseline **solo** desde **GitHub Releases** (sin `git checkout` del tag).
 
 | Aspecto | Implementación en el fork |
 |---------|---------------------------|
-| Tag baseline | **`SYSTEMTEST_LEGACY_TAG`** en el `Makefile` (por defecto **`v0.1.10`** — último release publicado aquí y alineado con producción). Sobreescribible: `make SYSTEMTEST_LEGACY_TAG=… test-system`. |
-| Existencia del tag | `build-v05` falla con mensaje explícito si el tag no está en el clon. **Debe** existir en `origin` para que GitHub Actions pueda hacer `git checkout` tras `fetch-tags`. **No** se automatiza descargar el tag desde cosmos/evm u otro remoto. |
-| Binarios (legacy baseline) | `build-v05` prioriza descarga desde release del fork (**`SYSTEMTEST_LEGACY_REPO`**, default `deep-thought-labs/infinite`) con verificación SHA256 (`checksums.txt`) y assets Linux (`infinite_Linux_x86_64.tar.gz`, `infinite_Linux_ARM64.tar.gz`). Si `SYSTEMTEST_LEGACY_DOWNLOAD=auto` y la descarga no aplica/falla, hace fallback a compilación local del tag. Modo `always` obliga descarga; `never` obliga compilación. |
+| Tag baseline | **`SYSTEMTEST_LEGACY_TAG`** en el `Makefile` (por defecto **`v0.1.11`**, release publicado en este repo). Sobreescribible: `make SYSTEMTEST_LEGACY_TAG=… test-system`. |
+| Existencia del release | Debe existir en GitHub un **release** para ese tag con artefactos Linux (`infinite_Linux_*.tar.gz`) y `checksums.txt`. No hace falta tener el tag en el clon local para `build-v05`; CI descarga por HTTPS como en Linux. |
+| Binarios (legacy baseline) | `build-v05` obtiene el binario **solo** desde el release del fork (**`SYSTEMTEST_LEGACY_REPO`**, default `deep-thought-labs/infinite`) con verificación SHA256 (`checksums.txt`) y assets Linux (`infinite_Linux_x86_64.tar.gz`, `infinite_Linux_ARM64.tar.gz`). No hay fallback a `git checkout` ni compilación local del tag. |
 | Binarios (rama actual) | `test-system` sigue compilando la rama actual y copia `build/infinited` (o `EXAMPLE_BINARY`) a `tests/systemtests/binaries/evmd` para la suite. |
 | Test de upgrade | `tests/systemtests/chainupgrade/v4_v5.go`: nombre del plan on-chain **`v0.4.0-to-v0.5.0`** — debe coincidir con **`UpgradeName`** en `infinited/upgrades.go` (handler de referencia tipo upstream; no implica que mainnet use el mismo nombre). |
 | CI | `.github/workflows/system-test.yml`: `fetch-depth: 0`, `fetch-tags: true`; el paso `make test-system` solo corre si **`GIT_DIFF`** matchea rutas relevantes (`.go`, `go.mod`, `*.toml`, workflow, etc.), igual que en upstream. |

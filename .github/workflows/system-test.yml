@@ -41,8 +41,8 @@ jobs:
             go.mod
             go.sum
             *.toml
-      # When GIT_DIFF is empty, this step is skipped (no matching paths). So missing-tag failures
-      # only appear on PRs that touch e.g. *.go, go.mod, or this workflow file.
+      # When GIT_DIFF is empty, this step is skipped (no matching paths). Failures from
+      # make test-system (e.g. missing release assets) only appear on PRs that touch e.g. *.go, go.mod, or this workflow file.
       - name: run system tests
         run: |
           make test-system

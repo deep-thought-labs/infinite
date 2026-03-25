@@ -6,23 +6,12 @@ The systemtests suite is an end-to-end test suite that runs the evmd process and
 
 ## Preparation
 
-Build a new binary from current branch and copy it to the `tests/systemtests/binaries` folder by running system tests.
+`make test-system` builds the **current branch** as `tests/systemtests/binaries/evmd` and downloads the **legacy** chain-upgrade binary from **GitHub Releases** (default tag `v0.1.11`, repo `deep-thought-labs/infinite`) into `tests/systemtests/binaries/v0.5/evmd`. There is **no** `git checkout` of the old tag; the baseline always comes from release artifacts + `checksums.txt`.
 
-```shell
-make test-system
-```
+- **Linux:** `make test-system` (needs `curl`, `shasum` / SHA-256 tooling as provided by the Makefile on Linux).
+- **macOS:** release archives are Linux-only; use `make test-system-docker`.
 
-Or via manual steps
-
-```shell
-make build
-mkdir -p ./tests/systemtests/binaries ./tests/systemtests/binaries/v0.5
-cp ./build/infinited ./tests/systemtests/binaries/evmd
-# Legacy binary for chain-upgrade tests (default tag v0.1.11 = release/v0.1.10-testnet-evm-denom-align):
-git checkout v0.1.11 && make build && cp ./build/infinited ./tests/systemtests/binaries/v0.5/evmd && git checkout -
-```
-
-Override the legacy tag when building: `make SYSTEMTEST_LEGACY_TAG=v0.1.11 test-system`.
+Override the release tag if needed: `make SYSTEMTEST_LEGACY_TAG=v0.1.11 test-system`.
 
 ## Run Individual test
 
