@@ -503,6 +503,8 @@ test-system: build-v05 build
 	$(MAKE) -C tests/systemtests test
 
 # Run system tests in Linux container (recommended on macOS when legacy artifacts are Linux-only).
+# Base image must ship glibc >= the release legacy binary (e.g. v0.1.11 may require GLIBC_2.38+);
+# bookworm (2.36) is too old — use trixie (Debian 13) or newer.
 # Do not pin --platform linux/amd64 on Apple Silicon: QEMU user-mode breaks CometBFT P2P SecretConnection
 # (chacha20poly1305: message authentication failed), numPeers=0, timeout waiting for node start.
 test-system-docker:
@@ -515,7 +517,7 @@ test-system-docker:
 		-e SYSTEMTEST_LEGACY_ASSET_LINUX_AMD64="$(SYSTEMTEST_LEGACY_ASSET_LINUX_AMD64)" \
 		-e SYSTEMTEST_LEGACY_ASSET_LINUX_ARM64="$(SYSTEMTEST_LEGACY_ASSET_LINUX_ARM64)" \
 		-e SYSTEMTEST_LEGACY_CHECKSUM_FILE="$(SYSTEMTEST_LEGACY_CHECKSUM_FILE)" \
-		golang:1.25-bookworm bash -lc '\
+		golang:1.25-trixie bash -lc '\
 			set -euo pipefail; \
 			apt-get update -qq; \
 			apt-get install -y --no-install-recommends build-essential git make curl ca-certificates jq tar xz-utils; \
