@@ -345,6 +345,7 @@ make SYSTEMTEST_LEGACY_TAG=v0.1.11 test-system-docker
 ### Notes
 
 - The container target installs Foundry and runs `make test-system` inside Linux.
+- On **Apple Silicon**, the Makefile does **not** force `docker run --platform linux/amd64`. Pinning amd64 runs the node under QEMU and commonly breaks CometBFT P2P (`chacha20poly1305` / `numPeers=0` / `timeout waiting for node start`). The default Linux platform matches the host (e.g. `linux/arm64`).
 - The legacy baseline binary is **always** downloaded from GitHub Releases (verified against `checksums.txt`); there is no `git checkout` / compile of the old tag.
 - Legacy download expects release assets/checksums under:
   - `SYSTEMTEST_LEGACY_ASSET_LINUX_AMD64` (default `infinite_Linux_x86_64.tar.gz`)

@@ -502,10 +502,12 @@ test-system: build-v05 build
 	cd tests/systemtests/Counter && forge build
 	$(MAKE) -C tests/systemtests test
 
-# Run system tests in Linux container (recommended on macOS when legacy artifacts are Linux-only)
+# Run system tests in Linux container (recommended on macOS when legacy artifacts are Linux-only).
+# Do not pin --platform linux/amd64 on Apple Silicon: QEMU user-mode breaks CometBFT P2P SecretConnection
+# (chacha20poly1305: message authentication failed), numPeers=0, timeout waiting for node start.
 test-system-docker:
 	@echo "🐳 Running system tests in Linux container..."
-	@$(DOCKER) run --rm --platform linux/amd64 \
+	@$(DOCKER) run --rm \
 		-v "$(CURDIR):/workspace" \
 		-w /workspace \
 		-e SYSTEMTEST_LEGACY_TAG="$(SYSTEMTEST_LEGACY_TAG)" \
@@ -515,7 +517,7 @@ test-system-docker:
 		-e SYSTEMTEST_LEGACY_CHECKSUM_FILE="$(SYSTEMTEST_LEGACY_CHECKSUM_FILE)" \
 		golang:1.25-bookworm bash -lc '\
 			set -euo pipefail; \
-			apt-get update; \
+			apt-get update -qq; \
 			apt-get install -y --no-install-recommends build-essential git make curl ca-certificates jq tar xz-utils; \
 			export PATH="/usr/local/go/bin:$$PATH"; \
 			if ! command -v go >/dev/null 2>&1; then echo "ERROR: go not found inside container"; exit 1; fi; \

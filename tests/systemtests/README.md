@@ -11,6 +11,8 @@ The systemtests suite is an end-to-end test suite that runs the evmd process and
 - **Linux:** `make test-system` (needs `curl`, `shasum` / SHA-256 tooling as provided by the Makefile on Linux).
 - **macOS:** release archives are Linux-only; use `make test-system-docker`.
 
+`make test-system-docker` uses Docker’s **default Linux platform for your machine** (e.g. `linux/arm64` on Apple Silicon). **Do not** add `--platform linux/amd64` in the Makefile for that target on ARM Macs: running the node binary under QEMU breaks CometBFT P2P handshakes (`chacha20poly1305: message authentication failed`), leaves `numPeers=0`, and tests fail with `timeout waiting for node start`.
+
 Override the release tag if needed: `make SYSTEMTEST_LEGACY_TAG=v0.1.11 test-system`.
 
 ## Run Individual test
@@ -20,8 +22,10 @@ Each scenario now has its own `Test…` wrapper in `main_test.go`, so you can ta
 ```shell
 cd tests/systemtests
 go test -failfast -mod=readonly -tags=system_test ./... -run TestMempoolTxsOrdering \
-  --verbose --binary evmd --block-time 3s --chain-id local-4221
+  --verbose --binary evmd --block-time 3s --chain-id local-4221 --bech32=infinite
 ```
+
+Use `--bech32=infinite` so address encoding matches this chain (default in `cosmossdk.io/systemtests` is `cosmos`).
 
 Mempool scenarios:
 
