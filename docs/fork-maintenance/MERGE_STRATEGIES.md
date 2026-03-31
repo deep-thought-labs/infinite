@@ -10,7 +10,7 @@ Antes de elegir estrategia, conviene tener claro qué el merge **no debe destrui
 |------|----------------|----------------------|
 | Identidad | Denoms, chain IDs, bech32, genesis y tests que los fijan | `UPSTREAM_DIVERGENCE_RECORD.md`, bitácora |
 | Binario y módulo | Árbol `infinited/`, imports `github.com/cosmos/evm/infinited`, sin `evmd/` residual no acordado | Mismo + conflictos en bitácora |
-| Release y despliegue | `.goreleaser.yml`, `release.yml`, `guides/` de build, secretos y tokens de CI del org | Bitácora + sección “Decisiones de fork” |
+| Release y despliegue | `.goreleaser.yml`, `release.yml`, `docs/guides/` de build, secretos y tokens de CI del org | Bitácora + sección “Decisiones de fork” |
 | CI propio | Jobs que el fork debe conservar (p. ej. fuzz, CodeQL, runners alternativos) | Bitácora + [PLAYBOOK — A.5](PLAYBOOK.md#a5-ci-y-jobs-preservados-del-fork) |
 | Documentación de proceso | `docs/fork-maintenance/`, plantillas, bitácoras | Siempre versión del fork; fusionar contenido si upstream añade equivalente |
 
@@ -86,6 +86,8 @@ Lista de verificación rápida: [VERIFICATION.md](VERIFICATION.md), `make build`
 | Nombre del binario en pasos descriptivos | Alinear con **`make build` / `make install`** del `Makefile` del fork (`infinited`). |
 | Jobs que upstream no tiene y el fork sí quiere | **Reaplicar** encima del snapshot: p. ej. `test-fuzz` en `test.yml`, **CodeQL** si se mantiene política de escaneo en PR. |
 | Secretos (`BUF_TOKEN`, `DOCS_REPO_TOKEN`, Codecov, etc.) | Comprobar en ajustes del repo GitHub; jobs sin secreto pueden fallar o deben deshabilitarse con criterio documentado en la bitácora. |
+| Integraciones **solo upstream** (`trigger-docs-update.yml`, `bsr-push.yml`) | En este fork quedan **conservadas pero inactivas**: solo `workflow_dispatch` y `if: false` en el job hasta que haya token y política clara; instrucciones de reactivación en cabecera de cada YAML. |
+| Runners **`depot-ubuntu-*`** (upstream) | [Depot](https://depot.dev) es un servicio aparte. Si la **org del fork no** tiene Depot contratado e integrado en GitHub, los jobs **no encontrarán runner** → sustituir por **`ubuntu-latest`** (o el hosted estándar acordado) en los YAML afectados. Si más adelante se contrata Depot, se puede volver a alinear con upstream. |
 
 ### 4.4 Cómo incorporarlo al proceso (mismo ciclo o PR dedicado)
 
@@ -105,9 +107,24 @@ git show upstream/main:.github/workflows/test.yml | head
 - [ ] `release.yml` y `.goreleaser.yml` del fork **intactos** o cambiados solo con acuerdo explícito.
 - [ ] Sin referencias rotas a `evmd/` donde el árbol sea solo `infinited/`.
 - [ ] Reaplicados jobs **fork-only** acordados (fuzz, CodeQL, etc.).
+- [ ] **Runners:** confirmado si se usan labels `depot-ubuntu-*` o **`ubuntu-latest`** según contratación real (ver §4.3).
 - [ ] PR de CI **verde** o fallos documentados como aceptados temporalmente.
+- [ ] [`.markdownlint.yml`](../../.markdownlint.yml) del fork: **MD013** con `code_block_line_length: 200` (ver [§4.6](#46-markdownlint)).
+- [ ] [Makefile](../../Makefile): **`markdownlint_cli2_version`** coherente con **`markdownlint-cli2-action@v16`** en [lint.yml](../../.github/workflows/lint.yml); si bump de la acción, bump de la variable (ver [§4.6](#46-markdownlint)).
 
 Procedimiento en el playbook: [Fase 3b](PLAYBOOK.md#fase-3b--alineación-de-github-actions-con-upstream).
+
+### 4.6 Markdownlint
+
+El lint de Markdown en CI usa [`.markdownlint.yml`](../../.markdownlint.yml) en la **raíz del repositorio** (no solo `.github/`).
+
+**Política de este fork:** regla **MD013** — el texto corrido puede usar `line_length` alto; en **bloques de código** (`code_blocks: true`) se aplica **`code_block_line_length: 200`** para admitir ejemplos shell, `curl` y tuberías largas sin forzar reformateos innecesarios, y aun así detectar líneas claramente anómalas.
+
+**Tras integrar upstream:** si el merge trae un `.markdownlint.yml` distinto, **no** sustituir ciegamente el del fork: fusionar y **conservar** `code_block_line_length: 200` salvo decisión explícita del equipo (anótala en la bitácora). Si upstream no tiene el archivo, mantener el del fork.
+
+**Makefile (paridad local ↔ CI):** en la raíz, el [Makefile](../../Makefile) declara **`markdownlint_cli2_version`** (p. ej. `0.13.0`), alineada con la dependencia **`markdownlint-cli2`** empaquetada en **`DavidAnson/markdownlint-cli2-action@v16`** usada en [`.github/workflows/lint.yml`](../../.github/workflows/lint.yml). **`make lint-md`** ejecuta esa versión vía `npx`; **`make lint`** incluye **`lint-md`** (requiere **Node.js** con `npx`). Las exclusiones de Markdown **vendidos** (Foundry/OpenZeppelin bajo pruebas de compatibilidad) están en [`.markdownlint-cli2.jsonc`](../../.markdownlint-cli2.jsonc) (`ignores`) y se reflejan en [`.markdownlintignore`](../../.markdownlintignore); así CI y `make lint-md` omiten esos árboles sin duplicar globs en el `Makefile`.
+
+**Tras subir la acción** `markdownlint-cli2-action` a otra etiqueta mayor: revisar el `package.json` de esa etiqueta y **actualizar `markdownlint_cli2_version` en el Makefile** en el mismo PR o de inmediato después, para no divergir de CI.
 
 ## 5. Documentación obligatoria por merge (proceso único)
 

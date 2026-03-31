@@ -33,7 +33,7 @@ Integrar `upstream/main` en el fork Infinite Drive, resolver conflictos y estabi
 | `go.mod` | manual | Contenido de dependencias indirectas y versiones `golang.org/*` acorde a upstream; se mantiene `replace github.com/cosmos/evm => ./` del fork. | Ejecutar `go mod tidy` localmente si el entorno tiene Go. |
 | `go.sum` | manual | Entradas nuevas upstream (p. ej. jhump/protoreflect, mockery, wlynxg/anet, golang.org/x/mod). | Verificar con `go mod tidy` + build. |
 | `README.md` | ours + limpieza | README de marca Infinite Drive; se descarta el bloque promocional de “What is Cosmos EVM?” del upstream. | — |
-| `Makefile` | manual | Build sigue siendo `infinited` (`INFINITED_DIR`); `test-system` alinea con upstream `build-v05` / `v0.5.1` pero copia el binario como `evmd` donde `tests/systemtests` lo espera. | Los systemtests siguen usando flag `--binary evmd`. |
+| `Makefile` | manual | Build sigue siendo `infinited` (`INFINITED_DIR`); `test-system` usa `build-v05` con **`SYSTEMTEST_LEGACY_TAG`** apuntando al release del **fork** en GitHub (no `v0.5.1` de cosmos/evm). El binario legacy se obtiene **solo** por descarga verificada desde ese release; el binario de la rama actual se copia como `binaries/evmd`. | Requiere release con artefactos Linux + `checksums.txt` en GitHub; ver *System tests y upgrades*. |
 | `infinited/cmd/.../root.go` | manual | Imports sin duplicar; sin bloque conflictivo. | — |
 | `infinited/cmd/.../testnet.go` | manual | Rutas `evmd` → `infinited` / `infinited/config` / `infinited/tests/network`. | — |
 | `infinited/cmd/.../creator.go` | manual | Import `github.com/cosmos/evm/infinited` (no `evmd`). | — |
@@ -48,7 +48,7 @@ Integrar `upstream/main` en el fork Infinite Drive, resolver conflictos y estabi
 ## Decisiones de fork (no triviales)
 
 - **README**: prioridad identidad Infinite Drive frente al texto genérico de Cosmos EVM.
-- **Makefile / systemtests**: binario real `infinited` en `build/`; copia con nombre `evmd` solo para la suite que aún espera ese nombre.
+- **Makefile / systemtests**: binario real `infinited` en `build/`; copia con nombre `evmd` solo para la suite que aún espera ese nombre. Baseline de upgrade: **`SYSTEMTEST_LEGACY_TAG`** + descarga desde **GitHub Releases** (defecto **`v0.1.11`**) — ver *System tests y upgrades on-chain (fork)*.
 - **CI**: conservar fuzz tests del fork en `test.yml` hasta la **alineación dedicada** de workflows con upstream.
 
 ## Actualización de la misma sesión de merge (2026-03-19)
@@ -84,9 +84,41 @@ Estado final (sesión de estabilización): **OK** (suite `infinited` completa en
 | `make build` | OK | Genera `build/infinited`. |
 | `make install` | N/A en entorno de cierre | Verificar en máquina con `GOPATH`/`GOBIN` escribible (p. ej. CI o laptop del equipo). |
 | `make test-unit` | pendiente | Recomendado antes de fusionar PR a `main`; no ejecutado en esta sesión de cierre. |
+| `make test-system` | pendiente / validar | Requiere Foundry, **release en GitHub** para `$(SYSTEMTEST_LEGACY_TAG)` (artefactos + `checksums.txt`) y compatibilidad runtime del binario legacy; ver *System tests y upgrades on-chain (fork)*. |
 | `make test-infinited` | OK | Ejecutado al cierre (~10 min); todos los paquetes listados OK. |
 | `cd infinited && go test ./tests/integration/...` (focalizado) | OK | Cubierto por `make test-infinited`. |
 | Otros (p. ej. `make test-all`) | pendiente | Fuera del alcance de este cierre. |
+
+## GitHub Actions (alineación con upstream)
+
+Rama de trabajo: `red/ci-align-upstream-2026-03` (PR sugerido → `red/merge-cosmos-evm` o `main` según política del equipo).
+
+| Campo | Valor |
+|--------|--------|
+| SHA `upstream/main` usado como fuente de workflows | `50b4817017187cbda2a0af767fda39a895b9989a` (misma punta que el merge `8bc0bd33`) |
+| ¿`release.yml` conservado del fork sin cambios? | **Sí** |
+| Jobs fork-only | **CodeQL** (`codeql-analysis.yml`); patrones ampliados con `infinited/go.mod`, `infinited/go.sum` |
+| Ajustes `evmd` → `infinited` | `build.yml`, `test.yml` (patrones diff), `jsonrpc-compatibility.yml`, nombres de paso en `tests-compatibility-*.yml` |
+| Novedades tomadas de upstream | `dependencies.yml`, `stale.yml`. Tras copiar upstream, runners **`depot-ubuntu-*`** sustituidos por **`ubuntu-latest`** (fork sin Depot) en `lint`, `test`, `system-test`, `jsonrpc`, `build`. |
+| `make test-fuzz` | **No** reañadido: upstream no incluye job y el `Makefile` actual no define `test-fuzz` (reintroducir job + target si el equipo lo retoma). |
+| Secretos / jobs | `trigger-docs-update` / `bsr-push` siguen requiriendo secretos del org; sin secretos, fallarán hasta configurarlos o deshabilitar. |
+
+## System tests y upgrades on-chain (fork)
+
+Upstream asume a menudo un **git tag** en el mismo repositorio para compilar el binario “viejo” del escenario de upgrade (`build-v05`). En **cosmos/evm** suele documentarse **`v0.5.1`**; en **este fork** ese tag puede no existir. La adaptación acordada: baseline **solo** desde **GitHub Releases** (sin `git checkout` del tag).
+
+| Aspecto | Implementación en el fork |
+|---------|---------------------------|
+| Tag baseline | **`SYSTEMTEST_LEGACY_TAG`** en el `Makefile` (por defecto **`v0.1.11`**, release publicado en este repo). Sobreescribible: `make SYSTEMTEST_LEGACY_TAG=… test-system`. |
+| Existencia del release | Debe existir en GitHub un **release** para ese tag con artefactos Linux (`infinite_Linux_*.tar.gz`) y `checksums.txt`. No hace falta tener el tag en el clon local para `build-v05`; CI descarga por HTTPS como en Linux. |
+| Binarios (legacy baseline) | `build-v05` obtiene el binario **solo** desde el release del fork (**`SYSTEMTEST_LEGACY_REPO`**, default `deep-thought-labs/infinite`) con verificación SHA256 (`checksums.txt`) y assets Linux (`infinite_Linux_x86_64.tar.gz`, `infinite_Linux_ARM64.tar.gz`). No hay fallback a `git checkout` ni compilación local del tag. |
+| Binarios (rama actual) | `test-system` sigue compilando la rama actual y copia `build/infinited` (o `EXAMPLE_BINARY`) a `tests/systemtests/binaries/evmd` para la suite. |
+| Test de upgrade | `tests/systemtests/chainupgrade/v0_1_10_to_v0_1_12.go`: nombre del plan on-chain **`v0.1.10-to-v0.1.12`** — debe coincidir con **`UpgradeNameSystemTest`** en `infinited/upgrades.go` (este plan name es específico del system test). |
+| CI | `.github/workflows/system-test.yml`: `fetch-depth: 0`, `fetch-tags: true`; el paso `make test-system` solo corre si **`GIT_DIFF`** matchea rutas relevantes (`.go`, `go.mod`, `*.toml`, workflow, etc.), igual que en upstream. |
+| Ejecución local macOS | Nuevo target `make test-system-docker` ejecuta la prueba en contenedor Linux (`golang:1.25-trixie` + Foundry; glibc suficiente para binarios legacy que exijan p. ej. GLIBC_2.38+), recomendado cuando los artefactos legacy son Linux-only o el host presenta incompatibilidades de toolchain. |
+| Correcciones posteriores | Se corrigió resolución de `docker` en `Makefile` para evitar `run: command not found` / `docker: command not found` por PATH incompleto en shells locales. También se eliminó `tests/systemtests/mempool/interface.go` (residuo conflictivo) que redeclaraba `TestSuite` y rompía compilación de system tests. |
+
+**Verificación:** tras cambiar el tag o el flujo, ejecutar localmente `make test-system` o forzar un PR que toque rutas disparadoras del workflow y revisar el job *System Test*.
 
 ## Aprendizajes y puntos a recordar
 
@@ -95,13 +127,14 @@ Documentación canónica: [PLAYBOOK.md — A.7](../PLAYBOOK.md#a7-tests-y-apis-t
 - **`BlockGasLimit`**: en `ante/types/block.go` el límite sale de **`ConsensusParams().Block.MaxGas`**, no del `BlockGasMeter`; tests que simulen “tx gas > límite de bloque” deben usar **`WithConsensusParams`** y **clonar `BlockParams`** antes de mutar `MaxGas` (evita contaminar el `UnitTestNetwork` para subtests posteriores).
 - **Identidad**: expectativas de denom (**`drop`**) y bech32 **`infinite`** en tests (`fee_checker`, EIP-712, mempool); orden de init de prefijos vs `MakeConfig`.
 - **APIs**: keepers pueden perder métodos usados solo en integración (p. ej. **`GetTransientGasWanted`**); actualizar `tests/integration/ante` hasta que **`go build`** del paquete pase.
+- **CI / runners:** al traer workflows de upstream, revisar **`runs-on`**: `depot-ubuntu-*` solo si hay Depot; si no, **`ubuntu-latest`**. Ver [MERGE_STRATEGIES §4.3](../MERGE_STRATEGIES.md#43-deltas-obligatorios-en-el-fork-tras-copiarfusionar-yaml).
 
 ## Seguimiento post-merge
 
 - [ ] CHANGELOG actualizado (opcional hasta publicar versión; completar si el PR lo exige).
 - [ ] [UPSTREAM_DIVERGENCE_RECORD.md](../UPSTREAM_DIVERGENCE_RECORD.md) actualizado — *omitir si no cambió inventario ni política en esta sesión*.
 - [ ] Guía de migración consultada o actualizada (`docs/migrations/`) si aplica salto mayor.
-- [ ] **PR dedicado**: alinear `.github/workflows/` con snapshot de `upstream/main`, conservar `release.yml` y deltas mínimos (`infinited`, fuzz, CodeQL) — ver [MERGE_STRATEGIES.md](../MERGE_STRATEGIES.md).
+- [x] **PR dedicado CI**: rama `red/ci-align-upstream-2026-03` — alineación con `upstream/main` @ `50b48170`, `release.yml` preservado, deltas `infinited` + CodeQL — ver [MERGE_STRATEGIES.md](../MERGE_STRATEGIES.md).
 - [x] `make test-infinited` en verde al cierre de bitácora.
 - [ ] CI en PR verde (tras abrir PR y completar `make test-unit` / jobs acordados).
 

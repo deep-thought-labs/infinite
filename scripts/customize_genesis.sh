@@ -10,7 +10,11 @@
 #          for mainnet, testnet, or creative networks.
 #          Also automatically executes ModuleAccounts and Vesting Accounts setup scripts.
 #
-# Usage: ./scripts/customize_genesis.sh <genesis_file_path> --network <mainnet|testnet|creative> [--skip-accounts]
+# Usage: ./scripts/customize_genesis.sh <genesis_file_path> --network <mainnet|testnet|creative|upgrade-test> [--skip-accounts]
+#
+# Environment:
+#   INFINITED_BIN  Binary used for SDK genesis validation (default: infinited). System tests set this
+#                  to the built evmd path (same binary name as production).
 #
 # Example:
 #   ./scripts/customize_genesis.sh ~/.infinited/config/genesis.json --network mainnet
@@ -23,7 +27,7 @@
 #
 # Exit codes:
 #   0 - Success
-#   1 - Error (invalid arguments, file not found, jq not available, etc.)
+#   1 - Error (invalid arguments, file not found, jq/python3 not available, etc.)
 
 set -euo pipefail
 
@@ -45,6 +49,7 @@ COSMOS_CHAIN_ID=""
 NETWORK_MODE=""
 CONFIG_FILE=""
 SKIP_ACCOUNTS_SETUP=false
+INFINITED_BIN="${INFINITED_BIN:-infinited}"
 
 # Print colored messages
 print_info() {
@@ -76,10 +81,10 @@ parse_arguments() {
                 shift
                 ;;
             -h|--help)
-                echo "Usage: $0 <genesis_file_path> --network <mainnet|testnet|creative> [--skip-accounts]"
+                echo "Usage: $0 <genesis_file_path> --network <mainnet|testnet|creative|upgrade-test> [--skip-accounts]"
                 echo ""
                 echo "Options:"
-                echo "  --network <mainnet|testnet|creative>  Network to configure (REQUIRED)"
+                echo "  --network <mainnet|testnet|creative|upgrade-test>  Network to configure (REQUIRED)"
                 echo "  --skip-accounts                        Skip automatic ModuleAccounts and Vesting Accounts setup"
                 echo ""
                 echo "By default, this script automatically executes:"
@@ -95,7 +100,7 @@ parse_arguments() {
                 else
                     print_error "Unknown argument: $1"
                     echo ""
-                    echo "Usage: $0 <genesis_file_path> --network <mainnet|testnet|creative> [--skip-accounts]"
+                    echo "Usage: $0 <genesis_file_path> --network <mainnet|testnet|creative|upgrade-test> [--skip-accounts]"
                     exit 1
                 fi
                 shift
@@ -107,20 +112,21 @@ parse_arguments() {
     if [[ -z "$network" ]]; then
         print_error "Error: --network flag is required"
         echo ""
-        echo "Usage: $0 <genesis_file_path> --network <mainnet|testnet|creative>"
+        echo "Usage: $0 <genesis_file_path> --network <mainnet|testnet|creative|upgrade-test>"
         echo ""
         echo "Valid networks:"
-        echo "  mainnet   - Production network"
-        echo "  testnet   - Testing network (similar to mainnet)"
-        echo "  creative  - Creative/playground network (low fees, experimental)"
+        echo "  mainnet       - Production network"
+        echo "  testnet       - Testing network (similar to mainnet)"
+        echo "  creative      - Creative/playground network (low fees, experimental)"
+        echo "  upgrade-test  - Local chain-upgrade system test (mainnet-like token/params, harness chain IDs)"
         exit 1
     fi
     
     # Validate network value
-    if [[ "$network" != "mainnet" && "$network" != "testnet" && "$network" != "creative" ]]; then
+    if [[ "$network" != "mainnet" && "$network" != "testnet" && "$network" != "creative" && "$network" != "upgrade-test" ]]; then
         print_error "Error: Invalid network '$network'"
         echo ""
-        echo "Valid networks: mainnet, testnet, creative"
+        echo "Valid networks: mainnet, testnet, creative, upgrade-test"
         exit 1
     fi
     
@@ -128,7 +134,7 @@ parse_arguments() {
     if [[ -z "$genesis_file" ]]; then
         print_error "Error: Genesis file path is required"
         echo ""
-        echo "Usage: $0 <genesis_file_path> --network <mainnet|testnet|creative>"
+        echo "Usage: $0 <genesis_file_path> --network <mainnet|testnet|creative|upgrade-test>"
         exit 1
     fi
     
@@ -183,6 +189,10 @@ check_prerequisites() {
         print_error "jq is required but not installed. Please install jq first."
         exit 1
     fi
+    if ! command -v python3 &> /dev/null; then
+        print_error "python3 is required (sync bank.supply with balances). Please install python3."
+        exit 1
+    fi
 }
 
 # Validate genesis file (basic checks)
@@ -233,12 +243,12 @@ validate_genesis_sdk() {
     local genesis_dir="$1"
     
     print_info "Running SDK genesis validation..."
-    if infinited genesis validate-genesis --home "$genesis_dir" > /dev/null 2>&1; then
+    if "$INFINITED_BIN" genesis validate-genesis --home "$genesis_dir" > /dev/null 2>&1; then
         print_success "Genesis file is valid (SDK validation passed)"
         return 0
     else
         print_error "Genesis validation failed (SDK validation)"
-        print_info "Run 'infinited genesis validate-genesis --home $genesis_dir' for details"
+        print_info "Run '$INFINITED_BIN genesis validate-genesis --home $genesis_dir' for details"
         return 1
     fi
 }
@@ -342,6 +352,82 @@ customize_denominations() {
     apply_jq_modification "$genesis_file" \
         ".app_state[\"evm\"][\"params\"][\"evm_denom\"]=\"$BASE_DENOM\"" \
         "EVM evm_denom → $BASE_DENOM"
+}
+
+# Never edit existing genutil.gen_txs JSON bodies by hand: MsgCreateValidator is signed; mutating fields breaks verification.
+# For flows that need a new denom (e.g. chain-upgrade system test), clear gen_txs and regenerate gentx + collect-gentxs instead.
+#
+# Bank balances from testnet init-files use "stake" alongside the EVM extended denom (often the same as BASE_DENOM, e.g. drop).
+# Renaming stake → BASE_DENOM without merging would leave two "drop" coins per account and genesis validation fails
+# ("duplicate denomination"). We rename, merge duplicate denoms per account (arbitrary-precision sums), then recompute supply.
+align_stake_bank_and_sync_supply() {
+    local genesis_file="$1"
+
+    if ! command -v python3 &> /dev/null; then
+        print_error "python3 is required to merge bank balances and sync supply (install python3)"
+        return 1
+    fi
+
+    print_info "Renaming stake → '$BASE_DENOM', merging duplicate denoms per account, syncing bank.supply..."
+
+    if python3 - "$genesis_file" "$BASE_DENOM" <<'PY'
+import json
+import sys
+from collections import defaultdict
+from decimal import Decimal
+
+path, base_denom = sys.argv[1], sys.argv[2]
+
+with open(path, encoding="utf-8") as f:
+    g = json.load(f)
+
+bank = g.get("app_state", {}).get("bank")
+if bank is None:
+    sys.exit(0)
+
+balances = bank.get("balances") or []
+
+def merge_account_coins(coins):
+    totals: defaultdict[str, Decimal] = defaultdict(Decimal)
+    for c in coins or []:
+        d = c.get("denom")
+        if not d:
+            continue
+        if d == "stake":
+            d = base_denom
+        totals[d] += Decimal(str(c.get("amount", "0")))
+    out = []
+    for k in sorted(totals.keys()):
+        v = totals[k]
+        if v != v.to_integral_value():
+            raise SystemExit(f"non-integer coin sum for denom {k}: {v}")
+        out.append({"denom": k, "amount": str(int(v))})
+    return out
+
+for b in balances:
+    b["coins"] = merge_account_coins(b.get("coins"))
+
+supply: defaultdict[str, Decimal] = defaultdict(Decimal)
+for b in balances:
+    for c in b.get("coins") or []:
+        d = c.get("denom")
+        if not d:
+            continue
+        supply[d] += Decimal(str(c.get("amount", "0")))
+
+bank["supply"] = [{"denom": k, "amount": str(int(supply[k]))} for k in sorted(supply.keys())]
+
+with open(path, "w", encoding="utf-8") as f:
+    json.dump(g, f, ensure_ascii=False, indent=2)
+    f.write("\n")
+PY
+    then
+        print_info "Bank balances aligned (stake → $BASE_DENOM, per-account merge, supply)"
+        return 0
+    fi
+
+    print_error "Failed to align bank balances / supply"
+    return 1
 }
 
 # Add token metadata
@@ -807,6 +893,7 @@ main() {
     configure_cosmos_chain_id "$GENESIS_FILE"
     configure_auth_module "$GENESIS_FILE"
     customize_denominations "$GENESIS_FILE"
+    align_stake_bank_and_sync_supply "$GENESIS_FILE"
     add_token_metadata "$GENESIS_FILE"
     configure_evm_precompiles "$GENESIS_FILE"
     configure_erc20_native_pair "$GENESIS_FILE"
@@ -849,7 +936,7 @@ main() {
     print_info "Next steps:"
     echo "  1. Create and fund regular accounts (if needed)"
     echo "  2. Create validators and collect gentx"
-    echo "  3. Validate the genesis file: infinited genesis validate-genesis --home $(dirname "$(dirname "$GENESIS_FILE")")"
+    echo "  3. Validate the genesis file: $INFINITED_BIN genesis validate-genesis --home $(dirname "$(dirname "$GENESIS_FILE")")"
     echo "  4. Review the changes if needed"
     echo "  5. Remove the backup file when satisfied: rm $backup_file"
     echo ""

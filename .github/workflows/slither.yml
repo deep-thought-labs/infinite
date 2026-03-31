@@ -20,6 +20,7 @@ jobs:
           PATTERNS: |
             **/*.sol
       - name: Node dependencies Install
+        if: env.GIT_DIFF
         run: |
           cd contracts && npm i
           cp -r node_modules/@openzeppelin .
@@ -29,4 +30,4 @@ jobs:
         id: slither
         with:
           target: contracts/
-        if: "env.GIT_DIFF"
+        if: env.GIT_DIFF

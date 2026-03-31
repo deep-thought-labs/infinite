@@ -5,18 +5,18 @@ on:
     branches: [main, develop]
     paths:
       - 'tests/evm-tools-compatibility/viem/**'
-      - 'scripts/tests_compatibility_setup.sh'
-      - 'scripts/tests_compatibility_viem.sh'
+      - '../../scripts/tests_compatibility_setup.sh'
+      - '../../scripts/tests_compatibility_viem.sh'
       - 'local_node.sh'
-      - '.github/workflows/tests-compatibility-viem.yml'
+      - 'tests-compatibility-viem.yml'
   pull_request:
     branches: [main, develop]
     paths:
       - 'tests/evm-tools-compatibility/viem/**'
-      - 'scripts/tests_compatibility_setup.sh'
-      - 'scripts/tests_compatibility_viem.sh'
+      - '../../scripts/tests_compatibility_setup.sh'
+      - '../../scripts/tests_compatibility_viem.sh'
       - 'local_node.sh'
-      - '.github/workflows/tests-compatibility-viem.yml'
+      - 'tests-compatibility-viem.yml'
 
 permissions:
   contents: read
@@ -68,7 +68,7 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-node-
       
-      - name: Build and install evmd
+      - name: Build and install infinited
         run: |
           make install
       

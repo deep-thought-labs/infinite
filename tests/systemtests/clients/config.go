@@ -20,6 +20,9 @@ import (
 */
 
 const (
+	// NativeBaseDenom must match infinited testnet genesis (EVM denom + bank metadata for chain 421018).
+	NativeBaseDenom = "drop"
+
 	ChainID    = "local-4221"
 	EVMChainID = 4221
 

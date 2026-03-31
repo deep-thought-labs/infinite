@@ -5,18 +5,18 @@ on:
     branches: [main, develop]
     paths:
       - 'tests/evm-tools-compatibility/hardhat/**'
-      - 'scripts/tests_compatibility_setup.sh'
-      - 'scripts/tests_compatibility_hardhat.sh'
+      - '../../scripts/tests_compatibility_setup.sh'
+      - '../../scripts/tests_compatibility_hardhat.sh'
       - 'local_node.sh'
-      - '.github/workflows/tests-compatibility-hardhat.yml'
+      - 'tests-compatibility-hardhat.yml'
   pull_request:
     branches: [main, develop]
     paths:
       - 'tests/evm-tools-compatibility/hardhat/**'
-      - 'scripts/tests_compatibility_setup.sh'
-      - 'scripts/tests_compatibility_hardhat.sh'
+      - '../../scripts/tests_compatibility_setup.sh'
+      - '../../scripts/tests_compatibility_hardhat.sh'
       - 'local_node.sh'
-      - '.github/workflows/tests-compatibility-hardhat.yml'
+      - 'tests-compatibility-hardhat.yml'
 
 permissions:
   contents: read
@@ -68,7 +68,7 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-node-
       
-      - name: Build and install evmd
+      - name: Build and install infinited
         run: |
           make install
       

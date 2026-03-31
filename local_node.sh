@@ -1,5 +1,10 @@
 #!/bin/bash
 
+# Ensure the installed binary (make install) is reachable.
+# GitHub Actions runners usually include this, but local shells may not.
+export GOPATH="${GOPATH:-$HOME/go}"
+export PATH="$PATH:$GOPATH/bin"
+
 # CHAINID is the Cosmos Chain ID (e.g., infinite_421018-1)
 # EVM_CHAIN_ID is the EVM Chain ID (e.g., 421018)
 CHAINID="${CHAIN_ID:-infinite_421018-1}"

@@ -5,18 +5,18 @@ on:
     branches: [main, develop]
     paths:
       - 'tests/evm-tools-compatibility/foundry/**'
-      - 'scripts/tests_compatibility_setup.sh'
-      - 'scripts/tests_compatibility_foundry.sh'
+      - '../../scripts/tests_compatibility_setup.sh'
+      - '../../scripts/tests_compatibility_foundry.sh'
       - 'local_node.sh'
-      - '.github/workflows/tests-compatibility-foundry.yml'
+      - 'tests-compatibility-foundry.yml'
   pull_request:
     branches: [main, develop]
     paths:
       - 'tests/evm-tools-compatibility/foundry/**'
-      - 'scripts/tests_compatibility_setup.sh'
-      - 'scripts/tests_compatibility_foundry.sh'
+      - '../../scripts/tests_compatibility_setup.sh'
+      - '../../scripts/tests_compatibility_foundry.sh'
       - 'local_node.sh'
-      - '.github/workflows/tests-compatibility-foundry.yml'
+      - 'tests-compatibility-foundry.yml'
 
 permissions:
   contents: read
@@ -60,7 +60,7 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-go-
       
-      - name: Build and install evmd
+      - name: Build and install infinited
         run: |
           make install
       

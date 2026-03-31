@@ -7,7 +7,7 @@
 ### IDENTITY & NETWORK CONFIGURATION
 
 - **Native Token**: "Improbability" (42) with base denomination `drop` (1 Improbability [42] = 10¹⁸ drop)
-- **Chain IDs**: 
+- **Chain IDs**:
   - Mainnet: Cosmos `infinite_421018-1`, EVM `421018`
   - Testnet: Cosmos `infinite_421018001-1`, EVM `421018001`
   - Creative: Cosmos `infinite_421018002-1`, EVM `421018002`
@@ -65,6 +65,7 @@
 ### BUG FIXES
 
  [\#965](https://github.com/cosmos/evm/pull/965) Fix gas double charging on EVM calls in IBCOnTimeoutPacketCallback.
+
 - [\#869](https://github.com/cosmos/evm/pull/869) Fix erc20 IBC callbacks to check for native token transfer before parsing recipient.
 - [\#860](https://github.com/cosmos/evm/pull/860) Fix EIP-712 signature verification to use configured EVM chain ID instead of parsing cosmos chain ID string and replace legacytx.StdSignBytes with the aminojson sign mode handler.
 - [\#794](https://github.com/cosmos/evm/pull/794) Fix mempool.max-txs flag not using desired default of 0
@@ -92,6 +93,7 @@
 Follow the [migration document](docs/migrations/v0.5.x_to_v0.6.0.md) for upgrade instructions.
 
 ### BREAKING CHANGES
+
 - Removed IBC Transfer wrapper. Users are now required to use the precompile to transfer ERC20 tokens.
 - Added StateDB as a parameter to internal EVM calls.
 

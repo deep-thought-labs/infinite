@@ -4,12 +4,13 @@ import (
 	"crypto/sha256"
 	"fmt"
 	"os"
+
 	"github.com/cosmos/cosmos-sdk/types/bech32"
 )
 
 func main() {
 	if len(os.Args) < 2 {
-		fmt.Fprintf(os.Stderr, "Usage: %s <module_name>\n", os.Args[0])
+		fmt.Fprintf(os.Stderr, "Usage: %s <module_name>\n", os.Args[0]) //nolint:gosec // G705: argv[0] is process name for CLI usage only
 		os.Exit(1)
 	}
 	name := os.Args[1]

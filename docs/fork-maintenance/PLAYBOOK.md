@@ -95,11 +95,12 @@ Objetivo: que la **estructura lógica** de los workflows coincida con **`upstrea
 |------|--------|
 | 3b.1 | `git fetch upstream`. Tomar como referencia el **SHA** de `upstream/main` que documentarás en la bitácora (misma integración de código o la más reciente si el PR de CI es posterior). |
 | 3b.2 | Sustituir o fusionar ficheros bajo `.github/workflows/` con los de upstream **excepto** [`.github/workflows/release.yml`](../../.github/workflows/release.yml) (versión del fork). Revisar también [`.github/labeler.yml`](../../.github/labeler.yml) u otros si upstream los cambió. |
-| 3b.3 | Aplicar **deltas del fork**: rutas `evmd` → `infinited`, pasos que llamen al binario correcto, reaplicar jobs acordados (p. ej. **fuzz** en `test.yml`, **CodeQL** si aplica). |
+| 3b.3 | Aplicar **deltas del fork**: rutas `evmd` → `infinited`, pasos que llamen al binario correcto, reaplicar jobs acordados (p. ej. **fuzz** en `test.yml`, **CodeQL** si aplica). Revisar **`runs-on`**: sin Depot, usar **`ubuntu-latest`** (ver [MERGE_STRATEGIES §4.3](MERGE_STRATEGIES.md#43-deltas-obligatorios-en-el-fork-tras-copiarfusionar-yaml)). |
 | 3b.4 | Revisar **secretos** del repositorio (Codecov, Buf, docs dispatch, etc.): o bien configurados, o jobs deshabilitados/documentados en la bitácora. |
 | 3b.5 | Abrir o actualizar **PR** y comprobar que la **CI en GitHub** refleja los mismos gates que el equipo espera; completar la sección **GitHub Actions** de la bitácora. |
+| 3b.6 | Si el merge tocó la raíz del repo o añadió/cambió [`.markdownlint.yml`](../../.markdownlint.yml) / [Makefile](../../Makefile) upstream: conservar **MD013** `code_block_line_length: 200` y **`markdownlint_cli2_version`** alineada con **`markdownlint-cli2-action@v16`** en [lint.yml](../../.github/workflows/lint.yml) (política del fork). Detalle: [MERGE_STRATEGIES.md — §4.6](MERGE_STRATEGIES.md#46-markdownlint). |
 
-Checklist extendida: [MERGE_STRATEGIES.md — §4.5](MERGE_STRATEGIES.md#45-checklist-antes-de-dar-por-buena-la-alineación).
+Checklist extendida: [MERGE_STRATEGIES.md — §4.5 y §4.6](MERGE_STRATEGIES.md#45-checklist-antes-de-dar-por-buena-la-alineación).
 
 ## Fase 4 — Cierre
 
@@ -142,15 +143,21 @@ Incluir también `=======` y `>>>>>>>` si se usaron herramientas que dejaron sol
 
 Si el clone vive bajo un directorio con espacios en el nombre, las reglas de `make` que usen `mkdir`, `cd`, `-o` o `cp` con `BUILDDIR` / rutas al binario deben ir **entrecomilladas** en la receta shell. Tras un merge que sobrescriba el `Makefile`, volver a probar **`make build`** en esa ruta. Mitigación alternativa: clonar el repo en una ruta sin espacios.
 
-### A.4 Binario nombre `evmd` en pruebas de sistema
+### A.4 Binario nombre `evmd` y tag legacy en pruebas de sistema
 
-Algunos scripts de **system test** / `test-system` pueden esperar el binario con nombre **`evmd`** aunque el proyecto use **`infinited`** como nombre lógico. Tras resolver conflictos en playbooks o scripts de test, verificar que la copia o el symlink al ejecutable coincida con lo que documenta la guía de tests del momento (p. ej. referencia a playbook **v0.5** si aplica).
+Algunos scripts de **system test** / `test-system` pueden esperar el binario con nombre **`evmd`** aunque el proyecto use **`infinited`** como nombre lógico. Tras resolver conflictos en playbooks o scripts de test, verificar que la copia o el symlink al ejecutable coincida con lo que documenta la guía de tests del momento (p. ej. ruta `tests/systemtests/binaries/v0.5/evmd` para el baseline).
+
+El `Makefile` define **`SYSTEMTEST_LEGACY_TAG`**: release de GitHub desde el que se obtiene el binario “viejo” para el escenario de upgrade on-chain (descarga verificada; no hay `git checkout` ni compilación local de ese tag). **En el fork Infinite Drive** el valor por defecto apunta al **release publicado en este repositorio** (p. ej. **`v0.1.11`**), no al tag que documente cosmos/evm (`v0.5.1`, etc.), que puede **no existir** en el fork. Debe existir el **release** (artefactos + `checksums.txt`) en GitHub para ese tag. Detalle y tabla de verificación: bitácora [2026-03-merge-upstream-main.md](logs/2026-03-merge-upstream-main.md#system-tests-y-upgrades-on-chain-fork).
+
+Cuando los artefactos del baseline sean Linux-only, `build-v05` los descarga del release del fork (`SYSTEMTEST_LEGACY_REPO`) y verifica `checksums.txt` antes de copiarlos a `tests/systemtests/binaries/v0.5/evmd`. Para hosts macOS, usar `make test-system-docker` (ejecución Linux en contenedor) alinea el entorno con CI.
 
 ### A.5 CI y jobs preservados del fork
 
 Si upstream simplifica **`.github/workflows`**, revisar jobs que el fork **debe conservar** (p. ej. **`test-fuzz`** u otros acordados) y fusionar YAML en lugar de sustituir ciegamente por la versión upstream.
 
 Política completa (snapshot upstream + `release.yml` + deltas `infinited`): [MERGE_STRATEGIES.md — §4](MERGE_STRATEGIES.md#4-github-actions-alinear-con-upstream-en-el-plan-de-merge) y [Fase 3b](#fase-3b--alineación-de-github-actions-con-upstream).
+
+**Runners:** upstream puede usar **`depot-ubuntu-*`**; en el fork, sin Depot contratado, usar **`ubuntu-latest`** (detalle en [MERGE_STRATEGIES — §4.3](MERGE_STRATEGIES.md#43-deltas-obligatorios-en-el-fork-tras-copiarfusionar-yaml)).
 
 ### A.6 Imports muertos tras resolver conflictos
 
@@ -189,4 +196,4 @@ Lecciones cuando **`make test-unit`** o integración fallan tras sincronizar con
 
 - [VERIFICATION.md](VERIFICATION.md)
 - [REFERENCE.md](REFERENCE.md)
-- [guides/development/DEVELOPMENT.md](../../guides/development/DEVELOPMENT.md)
+- [docs/guides/development/DEVELOPMENT.md](../guides/development/DEVELOPMENT.md)

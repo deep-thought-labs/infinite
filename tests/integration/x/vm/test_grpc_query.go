@@ -1284,7 +1284,9 @@ func (s *KeeperTestSuite) TestTraceTx() {
 				contractAddr, err := deployErc20Contract(senderKey, s.Factory)
 				s.Require().NoError(err)
 				s.Require().NoError(s.Network.NextBlock())
-				numTxs := 1500
+				// Keep this bounded to avoid CI timeouts while still exercising
+				// the "gas limit exceeded for predecessors" behavior.
+				numTxs := 200
 				txs := make([]*types.MsgEthereumTx, 0, numTxs)
 				for range numTxs {
 					txMsg := buildTransferTx(

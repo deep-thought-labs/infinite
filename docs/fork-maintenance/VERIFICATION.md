@@ -64,6 +64,6 @@ Ajustar `upstream/main` si la integración usa otra rama.
 
 ## Más contexto
 
-- Guía de desarrollo: [guides/development/DEVELOPMENT.md](../../guides/development/DEVELOPMENT.md)
-- Scripts: [guides/development/SCRIPTS.md](../../guides/development/SCRIPTS.md)
-- Validación general: [guides/testing/VALIDATION.md](../../guides/testing/VALIDATION.md)
+- Guía de desarrollo: [docs/guides/development/DEVELOPMENT.md](../guides/development/DEVELOPMENT.md)
+- Scripts: [docs/guides/development/SCRIPTS.md](../guides/development/SCRIPTS.md)
+- Flujos de validación: [docs/guides/testing/VALIDATION.md](../guides/testing/VALIDATION.md) (scripts: [docs/guides/development/SCRIPTS.md](../guides/development/SCRIPTS.md))

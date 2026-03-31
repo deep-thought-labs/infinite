@@ -63,7 +63,7 @@ No duplicar aquí el procedimiento detallado: seguir [PLAYBOOK.md](PLAYBOOK.md).
 - `infinited/genesis.go`: funciones de genesis que fijan denom `drop` (mint, staking, gov)
 - `infinited/app.go`: `DefaultGenesis()` aplica los estados anteriores
 - `infinited/tests/integration/create_app.go`: tests con configuración de identidad
-- `scripts/customize_genesis.sh`: personalización de `genesis.json` por red (mainnet / testnet / creative); parámetros en JSON bajo `scripts/genesis-configs/`. Detalle operativo: [guides/configuration/GENESIS.md](../../guides/configuration/GENESIS.md)
+- `scripts/customize_genesis.sh`: personalización de `genesis.json` por red (mainnet / testnet / creative); parámetros en JSON bajo `scripts/genesis-configs/`. Detalle operativo: [docs/guides/configuration/GENESIS.md](../guides/configuration/GENESIS.md)
 - `scripts/genesis-configs/mainnet.json`, `testnet.json`, `creative.json`
 - `scripts/setup_module_accounts.sh` y `scripts/genesis-configs/*-module-accounts.json`
 - `local_node.sh`: desarrollo local con genesis ya ajustada
@@ -116,8 +116,9 @@ Renombres representativos: `evmd/app.go` → `infinited/app.go`, `evmd/cmd/evmd/
 
 ### Documentación
 
-- `guides/*.md` y resto de guías bajo `guides/`
+- `docs/guides/*.md` y resto de guías bajo `docs/guides/`
 - `docs/fork-maintenance/` (este registro y documentos de mantenimiento del fork)
+- `tests/solidity/README.md` — guía específica del harness Solidity (`make test-solidity`) y convenciones del fork (prefijos Bech32, denom `drop`, estabilidad)
 
 ### Scripts
 
@@ -126,13 +127,19 @@ Renombres representativos: `evmd/app.go` → `infinited/app.go`, `evmd/cmd/evmd/
 ### Configuración / tooling
 
 - `assets/pre-mainet-genesis.json`, `.goreleaser.yml`, `.goreleaser.linux-only.yml`, `.github/workflows/release.yml`, `local_node.sh`
+- [`.markdownlint.yml`](../../.markdownlint.yml) — calidad de documentación: **MD013** con `code_block_line_length: 200` en bloques de código (política del fork frente a líneas largas en ejemplos shell). Al fusionar con upstream, conservar este valor salvo acuerdo explícito; ver [MERGE_STRATEGIES.md — §4.6](MERGE_STRATEGIES.md#46-markdownlint).
+- [Makefile](../../Makefile) — **`markdownlint_cli2_version`**: misma versión de `markdownlint-cli2` que empaqueta **`markdownlint-cli2-action@v16`** en CI ([`lint.yml`](../../.github/workflows/lint.yml)); **`make lint-md`** / **`make lint`** para reproducir localmente (Node `npx`). Exclusiones de `.md` bajo `tests/systemtests/Counter`, `tests/evm-tools-compatibility` y `**/node_modules/**` (deps vendorizadas por los harnesses JS): [`.markdownlint-cli2.jsonc`](../../.markdownlint-cli2.jsonc). Si se actualiza la etiqueta de la acción en GitHub, actualizar la variable en el mismo ciclo; ver [MERGE_STRATEGIES.md — §4.6](MERGE_STRATEGIES.md#46-markdownlint). **`SYSTEMTEST_LEGACY_TAG`** y `build-v05`: baseline de `make test-system` con descarga verificada (checksums) desde artefactos Linux del release en GitHub del fork; sin compilación local del tag; `test-system-docker` para hosts macOS; ver [bitácora — System tests y upgrades](logs/2026-03-merge-upstream-main.md#system-tests-y-upgrades-on-chain-fork).
+
+### Estabilidad CI (harnesses JS)
+
+- `scripts/compile_smart_contracts/compile_smart_contracts.py`: compila Solidity con Hardhat; se añadieron **reintentos** para evitar fallos transitorios de red al descargar `solc` en CI.
+- `local_node.sh`: exporta `GOPATH`/`PATH` para asegurar que el binario instalado (`make install`) sea resoluble en shells locales.
 
 ### Tests
 
 - `infinited/tests/integration/create_app.go` (identidad)
 - `infinited/tests/integration/*` (renombrados desde `evmd/`)
 - `tests/integration/ante/test_evm_fee_market.go`, `tests/integration/ante/test_evm_unit_10_gas_wanted.go`
-- `tests/systemtests/mempool/interface.go`
 
 ### Otros
 

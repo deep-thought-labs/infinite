@@ -1,21 +1,24 @@
 const { expect } = require('chai')
 const { ethers } = require('hardhat')
-const { findEvent, waitWithTimeout, RETRY_DELAY_FUNC} = require('../common')
+const { findEvent, waitWithTimeout, RETRY_DELAY_FUNC, INFINITE_VALOPER_BECH32_PREFIX} = require('../common')
 
 describe('Distribution – withdraw validator commission', function () {
     const DIST_ADDRESS = '0x0000000000000000000000000000000000000801'
+    const BECH32_ADDRESS = '0x0000000000000000000000000000000000000400'
     const GAS_LIMIT    = 1_000_000
 
-    let distribution, validator
+    let distribution, bech32, validator
 
     before(async () => {
         const signers   = await ethers.getSigners()
         validator       = signers[signers.length - 1]
         distribution    = await ethers.getContractAt('DistributionI', DIST_ADDRESS)
+        bech32          = await ethers.getContractAt('Bech32I', BECH32_ADDRESS)
     })
 
     it('withdraws validator commission and emits proper event', async function () {
-        const valBech32     = 'infinitevaloper10jmp6sgh4cc6zt3e8gw05wavvejgr5pw4xyrql'
+        const valHex        = '0x7cB61D4117AE31a12E393a1Cfa3BaC666481D02E'
+        const valBech32     = await bech32.getFunction('hexToBech32').staticCall(valHex, INFINITE_VALOPER_BECH32_PREFIX)
 
         // 1) query commission before withdrawal
         const beforeRes = await distribution.validatorCommission(valBech32)

@@ -174,13 +174,13 @@ if [ $FAILED -eq 0 ]; then
     echo -e "${GREEN}✅ All critical prerequisites are met!${NC}"
     echo ""
     echo "You can now proceed with compilation."
-    echo "For build instructions, see: guides/development/BUILDING.md"
+    echo "For build instructions, see: docs/guides/development/BUILDING.md"
     exit 0
 else
     echo -e "${RED}❌ Some prerequisites are missing or misconfigured${NC}"
     echo ""
     echo "Please install the missing components before proceeding."
-    echo "See: guides/development/BUILDING.md for detailed installation instructions"
+    echo "See: docs/guides/development/BUILDING.md for detailed installation instructions"
     exit 1
 fi
 

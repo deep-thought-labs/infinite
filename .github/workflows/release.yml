@@ -6,7 +6,7 @@
 # This file is part of the Infinite Drive blockchain tooling.
 #
 # Purpose: Automatically build and release binaries when version tags are pushed
-#          Supports: Linux (amd64, arm64), macOS (amd64, arm64), Windows (amd64)
+#          GoReleaser (.goreleaser.yml): Linux amd64 + Linux arm64 only
 #
 # Triggers:
 #   - Automatic: Push of version tags matching v*.*.* (e.g., v1.0.0, v2.3.1)
@@ -15,14 +15,14 @@
 # Environment:
 #   - Runs on Ubuntu latest (native Linux environment)
 #   - Installs CGO cross-compilation tools: gcc-aarch64-linux-gnu, gcc-x86-64-linux-gnu
-#   - Uses GoReleaser for multi-platform builds
+#   - Uses GoReleaser (Linux amd64 + arm64 per .goreleaser.yml)
 #
 # Output:
-#   - Creates GitHub Release with binaries for all platforms
+#   - Creates GitHub Release with Linux binaries + checksums
 #   - Generates checksums for verification
 #   - Includes changelog from git commits
 #
-# See: guides/BUILDING_AND_RELEASES.md for detailed documentation
+# See: docs/guides/development/BUILDING.md and docs/guides/infrastructure/RELEASES.md
 #
 name: Release
 

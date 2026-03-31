@@ -1,24 +1,26 @@
 const { expect } = require('chai');
 const hre = require('hardhat');
-const { findEvent, waitWithTimeout, RETRY_DELAY_FUNC} = require('../common');
+const { findEvent, waitWithTimeout, RETRY_DELAY_FUNC, INFINITE_VALOPER_BECH32_PREFIX } = require('../common');
 
 describe('Distribution – withdraw delegator reward', function () {
     const STAKING_ADDRESS = '0x0000000000000000000000000000000000000800'
     const DIST_ADDRESS = '0x0000000000000000000000000000000000000801';
+    const BECH32_ADDRESS = '0x0000000000000000000000000000000000000400'
     const GAS_LIMIT = 1_000_000;
 
-    let staking, distribution, signer;
+    let staking, distribution, bech32, signer;
 
     before(async () => {
         [signer] = await hre.ethers.getSigners();
 
         staking = await hre.ethers.getContractAt('StakingI', STAKING_ADDRESS)
         distribution = await hre.ethers.getContractAt('DistributionI', DIST_ADDRESS);
+        bech32 = await hre.ethers.getContractAt('Bech32I', BECH32_ADDRESS)
     });
 
     it('should withdraw rewards and emit WithdrawDelegatorReward event', async function () {
-        const valBech32 = 'infinitevaloper10jmp6sgh4cc6zt3e8gw05wavvejgr5pw4xyrql';
         const valHex = '0x7cB61D4117AE31a12E393a1Cfa3BaC666481D02E';
+        const valBech32 = await bech32.getFunction('hexToBech32').staticCall(valHex, INFINITE_VALOPER_BECH32_PREFIX)
         const stakeAmountBn = hre.ethers.parseEther('0.001')   // BigNumber
         const stakeAmount = BigInt(stakeAmountBn.toString())
         // This address is a current withdraw address for the signer. Check 1_set_withdraw_address.js test for more details.

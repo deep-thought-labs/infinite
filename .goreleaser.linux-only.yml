@@ -20,7 +20,7 @@
 #   - This configuration is primarily for faster local development testing
 #   - Main .goreleaser.yml is used by GitHub Actions for production releases
 #
-# See: guides/BUILDING_AND_RELEASES.md for detailed documentation
+# See: docs/guides/development/BUILDING.md and docs/guides/infrastructure/RELEASES.md
 #
 version: 1
 project_name: infinite

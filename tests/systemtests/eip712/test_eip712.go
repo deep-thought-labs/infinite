@@ -6,6 +6,7 @@ import (
 	"math/big"
 	"testing"
 
+	"github.com/cosmos/evm/tests/systemtests/clients"
 	"github.com/cosmos/evm/tests/systemtests/suite"
 	"github.com/stretchr/testify/require"
 )
@@ -56,7 +57,7 @@ func RunEIP712BankSendWithBalanceCheck(t *testing.T, base *suite.BaseTestSuite) 
 
 	signer := s.Acc(0)
 
-	denom := "atest"
+	denom := clients.NativeBaseDenom
 
 	// Get accounts
 	fromAddr := signer.Cosmos.AccAddress
@@ -129,7 +130,7 @@ func RunEIP712MultipleBankSends(t *testing.T, base *suite.BaseTestSuite) {
 
 	signer := s.Acc(0)
 
-	denom := "atest"
+	denom := clients.NativeBaseDenom
 	toAddr := s.Acc(1).Cosmos.AccAddress
 
 	// Get initial balance

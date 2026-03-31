@@ -1,5 +1,7 @@
 package suite
 
+import "github.com/cosmos/evm/tests/systemtests/clients"
+
 const (
 	TxTypeEVM    = "EVMTx"
 	TxTypeCosmos = "CosmosTx"
@@ -9,7 +11,7 @@ const (
 	NodeArgsApiEnable                  = "--api.enable=true"
 	NodeArgsJsonrpcApi                 = "--json-rpc.api=eth,txpool,personal,net,debug,web3"
 	NodeArgsJsonrpcAllowUnprotectedTxs = "--json-rpc.allow-unprotected-txs=true"
-	NodeArgsMinimumGasPrice            = "--minimum-gas-prices=0.000001atest"
+	NodeArgsMinimumGasPrice            = "--minimum-gas-prices=0.000001" + clients.NativeBaseDenom
 	NodeArgsMaxTxs                     = "--mempool.max-txs=0"
 
 	NodeArgOperateExclusively       = "--evm.mempool.operate-exclusively=true"
@@ -64,7 +66,7 @@ func MinimumGasPriceZeroArgs() []string {
 		}
 	}
 	// Add the zero minimum gas price argument
-	return append(DefaultNodeArgs(), "--minimum-gas-prices=0atest")
+	return append(DefaultNodeArgs(), "--minimum-gas-prices=0"+clients.NativeBaseDenom)
 }
 
 // ExlcusiveMempoolArgs returns the node arguments to run with an exclusive app
@@ -80,5 +82,5 @@ func ExlcusiveMempoolArgs() []string {
 // ExlcusiveMempoolArgs returns the node arguments to run with an exclusive app
 // mempool and no min gas price.
 func ExlcusiveMempoolMinGasPriceZeroArgs() []string {
-	return append(ExlcusiveMempoolArgs(), "--minimum-gas-prices=0atest")
+	return append(ExlcusiveMempoolArgs(), "--minimum-gas-prices=0"+clients.NativeBaseDenom)
 }
