@@ -32,6 +32,12 @@ SYSTEMTEST_LEGACY_ASSET_LINUX_AMD64 ?= infinite_Linux_x86_64.tar.gz
 SYSTEMTEST_LEGACY_ASSET_LINUX_ARM64 ?= infinite_Linux_ARM64.tar.gz
 SYSTEMTEST_LEGACY_CHECKSUM_FILE ?= checksums.txt
 
+# Prebuilt image for faster local Docker system tests (see tests/systemtests/docker/Dockerfile).
+SYSTEMTEST_DOCKER_IMAGE ?= infinite-systemtest-env:local
+# Named volumes: persist Go module + build cache between `test-system-docker-reuse` runs.
+SYSTEMTEST_DOCKER_GOMOD_VOLUME ?= infinite-systemtest-gomod
+SYSTEMTEST_DOCKER_GOCACHE_VOLUME ?= infinite-systemtest-gocache
+
 export GO111MODULE = on
 
 ###############################################################################
@@ -494,7 +500,7 @@ test-rpc-compat:
 test-rpc-compat-stop:
 	cd tests/jsonrpc && docker compose down
 
-.PHONY: localnet-start localnet-stop localnet-build-env localnet-build-nodes test-rpc-compat test-rpc-compat-stop test-system test-system-docker build-v05 mocks
+.PHONY: localnet-start localnet-stop localnet-build-env localnet-build-nodes test-rpc-compat test-rpc-compat-stop test-system test-system-docker test-system-docker-build test-system-docker-reuse build-v05 mocks
 
 test-system: build-v05 build
 	mkdir -p ./tests/systemtests/binaries/
@@ -507,8 +513,12 @@ test-system: build-v05 build
 # bookworm (2.36) is too old — use trixie (Debian 13) or newer.
 # Do not pin --platform linux/amd64 on Apple Silicon: QEMU user-mode breaks CometBFT P2P SecretConnection
 # (chacha20poly1305: message authentication failed), numPeers=0, timeout waiting for node start.
+#
+# Ephemeral run: installs apt + Foundry on every invocation (slow). For local iteration, prefer:
+#   make test-system-docker-build   # once (or when Dockerfile / toolchain changes)
+#   make test-system-docker-reuse   # fast: same image + persisted Go mod/build caches
 test-system-docker:
-	@echo "🐳 Running system tests in Linux container..."
+	@echo "🐳 Running system tests in Linux container (ephemeral; apt + Foundry each run)..."
 	@$(DOCKER) run --rm \
 		-v "$(CURDIR):/workspace" \
 		-w /workspace \
@@ -529,6 +539,30 @@ test-system-docker:
 			export PATH="/root/.foundry/bin:$$PATH"; \
 			make test-system \
 		'
+
+# Build reusable system-test image (apt + Foundry baked in). Rebuild when tests/systemtests/docker/Dockerfile changes.
+test-system-docker-build:
+	@echo "🐳 Building $(SYSTEMTEST_DOCKER_IMAGE) ..."
+	@$(DOCKER) build -t "$(SYSTEMTEST_DOCKER_IMAGE)" -f tests/systemtests/docker/Dockerfile tests/systemtests/docker
+
+# Run system tests using prebuilt image + named volumes for Go module and build caches.
+test-system-docker-reuse:
+	@echo "🐳 Running system tests with $(SYSTEMTEST_DOCKER_IMAGE) (cached toolchain + Go caches)..."
+	@$(DOCKER) run --rm \
+		-v "$(CURDIR):/workspace" \
+		-v "$(SYSTEMTEST_DOCKER_GOMOD_VOLUME):/go/pkg/mod" \
+		-v "$(SYSTEMTEST_DOCKER_GOCACHE_VOLUME):/root/.cache/go-build" \
+		-w /workspace \
+		-e GOMODCACHE=/go/pkg/mod \
+		-e GOCACHE=/root/.cache/go-build \
+		-e SYSTEMTEST_LEGACY_TAG="$(SYSTEMTEST_LEGACY_TAG)" \
+		-e SYSTEMTEST_LEGACY_REPO="$(SYSTEMTEST_LEGACY_REPO)" \
+		-e SYSTEMTEST_LEGACY_ASSET_LINUX_AMD64="$(SYSTEMTEST_LEGACY_ASSET_LINUX_AMD64)" \
+		-e SYSTEMTEST_LEGACY_ASSET_LINUX_ARM64="$(SYSTEMTEST_LEGACY_ASSET_LINUX_ARM64)" \
+		-e SYSTEMTEST_LEGACY_CHECKSUM_FILE="$(SYSTEMTEST_LEGACY_CHECKSUM_FILE)" \
+		-e TEST_ARGS="$(TEST_ARGS)" \
+		"$(SYSTEMTEST_DOCKER_IMAGE)" \
+		bash -lc 'set -euo pipefail; export PATH="/usr/local/go/bin:$$PATH"; go version; forge --version; make test-system TEST_ARGS="$$TEST_ARGS"'
 
 # Download legacy chain-upgrade binary from GitHub Releases only (matches .goreleaser archive names).
 build-v05:

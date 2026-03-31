@@ -5,9 +5,11 @@ package chainupgrade
 import (
 	"fmt"
 	"io"
+	"net/http"
 	"os"
 	"os/exec"
 	"path/filepath"
+	"strings"
 	"testing"
 	"time"
 
@@ -23,12 +25,27 @@ import (
 )
 
 const (
-	upgradeHeight int64 = 22
-	upgradeName         = "v0.4.0-to-v0.5.0" // must match UpgradeName in infinited/upgrades.go
+	// Must be high enough that gov voting_period can elapse (tally) before this height: the upgrade
+	// module halts block production at upgradeHeight, so if height is reached while still in
+	// VOTING_PERIOD, awaitGovProposalStatus never sees PASSED ("no block within …").
+	// Keep this modest (not ~100): after PASSED the chain is often ~height 15–25; needing 80+ more
+	// blocks stresses Docker/CI and makes failures hard to distinguish from a stalled validator set.
+	upgradeHeight int64 = 45
+	upgradeName         = "v0.4.0-to-v0.5.0-systemtest" // must match UpgradeNameSystemTest in infinited/upgrades.go
+
+	// legacyHaltHeight caps the legacy node; must stay well above upgradeHeight (safety net only;
+	// the real stop for the legacy binary is upgradeHeight via x/upgrade).
+	legacyHaltHeight = upgradeHeight + 200
 
 	chainUpgradeChainID = "local-4221"
 	// Matches infinited testnet --single-host when generating init-files (memo nodeID@127.0.0.1:port).
 	testnetP2PBasePort = 16656
+
+	// Node0 RPC for the default systemtests testnet (matches systemtests.SystemUnderTest).
+	defaultSutRPCAddr = "tcp://localhost:26657"
+	// Wall time to reach upgradeHeight-1: many blocks × timeout_commit; avoid sut.AwaitBlockHeight
+	// (inner AwaitNextBlock uses blockTime×6 ≈ 18s and can flake under Docker/CI).
+	awaitPreUpgradeHeightDeadline = 15 * time.Minute
 )
 
 // RunChainUpgrade exercises an on-chain software upgrade using the injected shared suite.
@@ -88,7 +105,7 @@ func RunChainUpgrade(t *testing.T, base *suite.BaseTestSuite) {
 	mergeAllValidatorKeyringsForCLI(t, sut)
 	sut.MarkDirty()
 
-	sut.StartChain(t, fmt.Sprintf("--halt-height=%d", upgradeHeight+1), "--chain-id=local-4221", "--minimum-gas-prices=0.00"+clients.NativeBaseDenom)
+	sut.StartChain(t, fmt.Sprintf("--halt-height=%d", legacyHaltHeight), "--chain-id=local-4221", "--minimum-gas-prices=0.00"+clients.NativeBaseDenom)
 
 	cli := systest.NewCLIWrapper(t, sut, systest.Verbose)
 	govAddr := sdk.AccAddress(address.Module("gov")).String()
@@ -127,10 +144,10 @@ func RunChainUpgrade(t *testing.T, base *suite.BaseTestSuite) {
 
 	// Tally runs after voting_end (not when the last vote lands). Wait explicitly so we do not assert PASSED
 	// at upgradeHeight-1 while the proposal is still PROPOSAL_STATUS_VOTING_PERIOD.
-	awaitGovProposalStatus(t, sut, cli, proposalID, "PROPOSAL_STATUS_PASSED", 2*time.Minute)
+	awaitGovProposalStatus(t, cli, proposalID, "PROPOSAL_STATUS_PASSED", 2*time.Minute)
 
-	sut.AwaitBlockHeight(t, upgradeHeight-1, 60*time.Second)
-	t.Logf("current_height: %d\n", sut.CurrentHeight())
+	awaitCometBlockHeightHTTP(t, defaultSutRPCAddr, upgradeHeight-1, awaitPreUpgradeHeightDeadline)
+	t.Logf("current_height (suite): %d\n", sut.CurrentHeight())
 	raw = cli.CustomQuery("q", "gov", "proposal", proposalID)
 	proposalStatus := gjson.Get(raw, "proposal.status").String()
 	require.Equal(t, "PROPOSAL_STATUS_PASSED", proposalStatus, raw)
@@ -230,7 +247,46 @@ func regenerateGentxsWithBaseDenom(t *testing.T, sut *systest.SystemUnderTest, l
 	require.NoError(t, collectErr, "genesis collect-gentxs: %s", string(collectOut))
 }
 
-func awaitGovProposalStatus(t *testing.T, sut *systest.SystemUnderTest, cli *systest.CLIWrapper, proposalID, want string, timeout time.Duration) {
+// cometStatusHTTPURL maps the systemtests RPC address (tcp://host:port) to a plain HTTP /status URL.
+func cometStatusHTTPURL(rpcTCP string) string {
+	s := strings.TrimPrefix(rpcTCP, "tcp://")
+	s = strings.ReplaceAll(s, "localhost", "127.0.0.1")
+	return "http://" + s + "/status"
+}
+
+// awaitCometBlockHeightHTTP polls GET /status over HTTP until LatestBlockHeight >= target.
+// We avoid a second Comet RPC websocket client here: the shared suite already holds a websocket
+// subscription to node0; an extra client has been observed to correlate with stalled height in CI.
+// Plain HTTP polling does not contend with that subscription path.
+func awaitCometBlockHeightHTTP(t *testing.T, rpcTCP string, target int64, deadline time.Duration) {
+	t.Helper()
+	url := cometStatusHTTPURL(rpcTCP)
+	httpClient := &http.Client{Timeout: 12 * time.Second}
+	until := time.Now().Add(deadline)
+	var lastH int64
+	lastProgressLog := time.Now()
+	for time.Now().Before(until) {
+		resp, err := httpClient.Get(url)
+		require.NoError(t, err)
+		body, rerr := io.ReadAll(resp.Body)
+		require.NoError(t, rerr)
+		require.NoError(t, resp.Body.Close())
+		require.Equal(t, http.StatusOK, resp.StatusCode, "GET %s: %s", url, string(body))
+		lastH = gjson.GetBytes(body, "result.sync_info.latest_block_height").Int()
+		if lastH >= target {
+			t.Logf("comet height reached %d (target >= %d)", lastH, target)
+			return
+		}
+		if time.Since(lastProgressLog) >= 30*time.Second {
+			t.Logf("still awaiting comet height: %d (need >= %d)", lastH, target)
+			lastProgressLog = time.Now()
+		}
+		time.Sleep(400 * time.Millisecond)
+	}
+	t.Fatalf("timeout waiting for comet height >= %d (last %d)", target, lastH)
+}
+
+func awaitGovProposalStatus(t *testing.T, cli *systest.CLIWrapper, proposalID, want string, timeout time.Duration) {
 	t.Helper()
 	deadline := time.Now().Add(timeout)
 	for time.Now().Before(deadline) {
@@ -240,7 +296,9 @@ func awaitGovProposalStatus(t *testing.T, sut *systest.SystemUnderTest, cli *sys
 			return
 		}
 		require.NotEqual(t, "PROPOSAL_STATUS_REJECTED", st, "proposal rejected: %s", raw)
-		sut.AwaitNextBlock(t, 10*time.Second)
+		// Avoid sut.AwaitNextBlock: it enforces the global --wait-time (e.g. ~18s) and fails if the
+		// next block is slow; the chain keeps producing blocks while we poll.
+		time.Sleep(3 * time.Second)
 	}
 	raw := cli.CustomQuery("q", "gov", "proposal", proposalID)
 	require.Equal(t, want, gjson.Get(raw, "proposal.status").String(), "timeout waiting for gov proposal %s: %s", want, raw)

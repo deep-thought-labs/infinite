@@ -31,7 +31,7 @@ The **system test** `TestChainUpgrade` applies Infinite genesis customizations t
 ./scripts/customize_genesis.sh <path-to-node0/config/genesis.json> --network upgrade-test --skip-accounts
 ```
 
-**Full pipeline, version-specific notes, gov timing, keyring merge, and maintenance checklist:** see **[CHAIN_UPGRADE_SYSTEM_TEST.md](../testing/CHAIN_UPGRADE_SYSTEM_TEST.md)** (canonical). Script reference: [SCRIPTS.md](../development/SCRIPTS.md#genesis-customization-script).
+**Full pipeline, version-specific notes, gov timing, keyring merge, maintenance checklist, and app-side upgrade plan naming/handlers used by the system test:** see **[CHAIN_UPGRADE_SYSTEM_TEST.md](../testing/CHAIN_UPGRADE_SYSTEM_TEST.md)** (canonical). Script reference: [SCRIPTS.md](../development/SCRIPTS.md#genesis-customization-script).
 
 ---
 

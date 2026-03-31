@@ -9,11 +9,34 @@ The systemtests suite is an end-to-end test suite that runs the evmd process and
 `make test-system` builds the **current branch** as `tests/systemtests/binaries/evmd` and downloads the **legacy** chain-upgrade binary from **GitHub Releases** (default tag `v0.1.11`, repo `deep-thought-labs/infinite`) into `tests/systemtests/binaries/v0.5/evmd`. There is **no** `git checkout` of the old tag; the baseline always comes from release artifacts + `checksums.txt`.
 
 - **Linux:** `make test-system` (needs `curl`, `shasum` / SHA-256 tooling as provided by the Makefile on Linux).
-- **macOS:** release archives are Linux-only; use `make test-system-docker`.
+- **macOS:** release archives are Linux-only; use Docker (see below).
 
 `make test-system-docker` uses Docker’s **default Linux platform for your machine** (e.g. `linux/arm64` on Apple Silicon). **Do not** add `--platform linux/amd64` in the Makefile for that target on ARM Macs: running the node binary under QEMU breaks CometBFT P2P handshakes (`chacha20poly1305: message authentication failed`), leaves `numPeers=0`, and tests fail with `timeout waiting for node start`.
 
-Override the release tag if needed: `make SYSTEMTEST_LEGACY_TAG=v0.1.11 test-system`.
+Override the release tag if needed: `make SYSTEMTEST_LEGACY_TAG=v0.1.11 test-system-docker`.
+
+### Faster local Docker loop (recommended)
+
+`make test-system-docker` starts a **fresh** container every time and reinstalls Debian packages plus Foundry, which is slow.
+
+For day-to-day work on macOS:
+
+1. **Once** (or when `tests/systemtests/docker/Dockerfile` changes):  
+   `make test-system-docker-build`
+2. **Each test run:**  
+   `make test-system-docker-reuse`
+
+`test-system-docker-reuse` uses image `infinite-systemtest-env:local` and Docker **named volumes** for Go module and build caches (`infinite-systemtest-gomod`, `infinite-systemtest-gocache`), so dependency downloads are mostly one-time per machine.
+
+Optional overrides: `SYSTEMTEST_DOCKER_IMAGE`, `SYSTEMTEST_DOCKER_GOMOD_VOLUME`, `SYSTEMTEST_DOCKER_GOCACHE_VOLUME` (see root `Makefile`).
+
+### Run a single system test in Docker
+
+The root Docker targets now accept `TEST_ARGS`, which is passed through to the `go test` invocation inside the container. For example:
+
+```shell
+make test-system-docker-reuse TEST_ARGS='-run TestChainUpgrade -count=1'
+```
 
 ## Run Individual test
 
@@ -58,7 +81,11 @@ Chain lifecycle:
 |-----------|-------------|
 | `TestChainUpgrade` | End-to-end upgrade handling; after legacy `SetupChain`, runs `scripts/customize_genesis.sh --network upgrade-test --skip-accounts`, then regenerates gentx in **`drop`** and runs gov until `PASSED` before the upgrade height. **Canonical doc:** [CHAIN_UPGRADE_SYSTEM_TEST.md](../../docs/guides/testing/CHAIN_UPGRADE_SYSTEM_TEST.md) (summary in [GENESIS.md](../../docs/guides/configuration/GENESIS.md#chain-upgrade-system-test-upgrade-test)) |
 
+> ℹ️ `TestChainUpgrade` uses a dedicated **upgrade plan name** (`v0.4.0-to-v0.5.0-systemtest`) so the legacy release artifact does not need to match the current branch’s compiled-in upgrade handler name.
+
 > ℹ️ The shared system test suite keeps a single chain alive across multiple tests when the node arguments are identical. Running several tests back-to-back therefore re-uses the same process unless a scenario explicitly changes the node configuration.
+
+**Mempool broadcast scenarios** (`mempool/test_broadcast.go`): gossip deadlines and height assertions are tuned for **P2P latency under Docker/CI** (longer waits than the SDK default; height may drift slightly within a bound). That is **test harness** stability, not a change to node mempool logic.
 
 ## Run all tests
 
