@@ -14,6 +14,7 @@ Punto único en el repositorio para **divergencia frente a upstream**, **procedi
 | [**templates/MERGE_LOG_TEMPLATE.md**](templates/MERGE_LOG_TEMPLATE.md) | Plantilla para bitácoras de merge. |
 | [**logs/**](logs/) | Bitácoras cerradas por integración. |
 | [**../migrations/**](../migrations/) | Guías por salto de versión (fuera de esta carpeta, enlazadas desde el playbook). |
+| [**../guides/testing/CHAIN_UPGRADE_SYSTEM_TEST.md**](../guides/testing/CHAIN_UPGRADE_SYSTEM_TEST.md) | Prueba de sistema **on-chain upgrade** (`TestChainUpgrade`): binario legacy, génesis `upgrade-test`, regeneración de gentx, gobernanza y lista de mantenimiento; específica de versión frente a futuros saltos donde el binario “viejo” ya no sea el release actual. |
 
 ## Relación entre documentos
 

@@ -520,7 +520,7 @@ test-system-docker:
 		golang:1.25-trixie bash -lc '\
 			set -euo pipefail; \
 			apt-get update -qq; \
-			apt-get install -y --no-install-recommends build-essential git make curl ca-certificates jq tar xz-utils; \
+			apt-get install -y --no-install-recommends build-essential git make curl ca-certificates jq tar xz-utils python3; \
 			export PATH="/usr/local/go/bin:$$PATH"; \
 			if ! command -v go >/dev/null 2>&1; then echo "ERROR: go not found inside container"; exit 1; fi; \
 			go version; \

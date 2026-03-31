@@ -10,6 +10,7 @@ For an **ordered checklist** that includes lint, build, tests, and fork scripts,
 - [Unit Tests](#unit-tests)
 - [Integration Tests](#integration-tests)
 - [Complete Tests](#complete-tests)
+- [End-to-end system tests](#end-to-end-system-tests)
 - [Tests with Coverage](#tests-with-coverage)
 - [Code Validation](#code-validation)
 
@@ -91,6 +92,14 @@ make test-infinited
 - Validates configuration and initialization
 
 **Estimated time**: 10-20 minutes
+
+---
+
+## End-to-end system tests
+
+The repo includes **`tests/systemtests`** (cosmos/evm-style harness): mempool, EIP-712, account abstraction, and **on-chain upgrade** coverage. See [tests/systemtests/README.md](../../../tests/systemtests/README.md) for how to run them (`make test-system` on Linux, `make test-system-docker` on macOS).
+
+The **software-upgrade** path (legacy release binary → customized genesis → governance → current binary) is documented in **[CHAIN_UPGRADE_SYSTEM_TEST.md](../testing/CHAIN_UPGRADE_SYSTEM_TEST.md)**. That guide is version-specific maintenance material: when the “from” binary or upgrade name changes, update the test and that document together.
 
 ---
 

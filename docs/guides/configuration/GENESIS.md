@@ -23,6 +23,16 @@ End-to-end order for **creating** a new network genesis (details and variants be
 
 Account types (ModuleAccounts, vesting, regular, validators): see the summary table in [MODULE_ACCOUNTS.md](MODULE_ACCOUNTS.md) and [VESTING_ACCOUNTS.md](VESTING_ACCOUNTS.md).
 
+### Chain upgrade system test (`upgrade-test`)
+
+The **system test** `TestChainUpgrade` applies Infinite genesis customizations to a **legacy** `testnet init-files` genesis, then regenerates gentx for **`drop`**, runs governance, and swaps to the **current-branch** binary. Entry command:
+
+```bash
+./scripts/customize_genesis.sh <path-to-node0/config/genesis.json> --network upgrade-test --skip-accounts
+```
+
+**Full pipeline, version-specific notes, gov timing, keyring merge, and maintenance checklist:** see **[CHAIN_UPGRADE_SYSTEM_TEST.md](../testing/CHAIN_UPGRADE_SYSTEM_TEST.md)** (canonical). Script reference: [SCRIPTS.md](../development/SCRIPTS.md#genesis-customization-script).
+
 ---
 
 ## Quick Start: Essential Steps

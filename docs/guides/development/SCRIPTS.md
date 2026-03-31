@@ -375,7 +375,7 @@ make install
 
 ### `scripts/customize_genesis.sh`
 
-**Purpose**: Apply all Infinite Drive personalizations to a generated `genesis.json` file for mainnet, testnet, or creative networks.
+**Purpose**: Apply all Infinite Drive personalizations to a generated `genesis.json` file for mainnet, testnet, creative, or **`upgrade-test`** (chain-upgrade system test harness) networks.
 
 **What it does**:
 
@@ -386,6 +386,7 @@ make install
 - Configures complete Staking Module (unbonding_time, max_validators, historical_entries, etc.)
 - Configures complete Mint Module (inflation rates, goal_bonded, blocks_per_year)
 - Configures complete Governance Module (voting periods, thresholds, min_deposits)
+- Rewrites **`stake` → configured base denom** in `bank.balances` when present (**never** mutates embedded `genutil.gen_txs` by hand: gentx bodies are signed); **merges duplicate denoms per account** (e.g. EVM `drop` + renamed staking `drop`); then **recomputes `bank.supply`** from balances. Staking/mint denoms are set to the profile base denom like other networks. The **chain-upgrade system test** clears and **regenerates** gentx after this script so `bond_denom` and self-delegation coins both use **`drop`** (see [CHAIN_UPGRADE_SYSTEM_TEST.md](../testing/CHAIN_UPGRADE_SYSTEM_TEST.md)).
 - Configures complete Slashing Module (penalties, windows, jail duration)
 - Configures complete Fee Market Module (base_fee, no_base_fee, multipliers)
 - Configures complete Distribution Module (community_tax, proposer rewards)
@@ -395,6 +396,7 @@ make install
 **When to use**:
 
 - **Network genesis creation**: When preparing a genesis file for mainnet, testnet, or creative (one-time setup process)
+- **Chain upgrade system test**: After a legacy `testnet init-files` genesis exists, use `--network upgrade-test --skip-accounts` (see [CHAIN_UPGRADE_SYSTEM_TEST.md](../testing/CHAIN_UPGRADE_SYSTEM_TEST.md))
 - As part of the network deployment pipeline
 - When you need to ensure all Infinite Drive customizations are applied to a genesis file
 
@@ -406,8 +408,14 @@ make install
 **Usage**:
 
 ```bash
-./scripts/customize_genesis.sh <genesis_file_path> --network <mainnet|testnet|creative>
+./scripts/customize_genesis.sh <genesis_file_path> --network <mainnet|testnet|creative|upgrade-test> [--skip-accounts]
 ```
+
+**Environment** (optional):
+
+| Variable | Meaning |
+|----------|---------|
+| `INFINITED_BIN` | Binary used when the script runs `genesis validate-genesis` (default: `infinited`). System tests set this to the built `evmd` path. |
 
 **Example**:
 
@@ -423,6 +431,10 @@ infinited init my-moniker --chain-id infinite_421018-1
 
 # Or for creative network
 ./scripts/customize_genesis.sh ~/.infinited/config/genesis.json --network creative
+
+# Chain-upgrade system test (from repo root; genesis path is usually under tests/systemtests/testnet/node0/.../config/genesis.json)
+INFINITED_BIN="$(pwd)/tests/systemtests/binaries/evmd" \
+  ./scripts/customize_genesis.sh /path/to/genesis.json --network upgrade-test --skip-accounts
 
 # Validate the customized genesis
 infinited genesis validate-genesis
@@ -468,12 +480,14 @@ The script reads all network-specific values from JSON configuration files locat
 - `mainnet.json` - Production network configuration
 - `testnet.json` - Testing network configuration (similar to mainnet)
 - `creative.json` - Experimental playground network configuration (minimal fees, no inflation)
+- `upgrade-test.json` - **System test only**: mainnet-like economics with local harness chain IDs (`local-4221` / EVM `4221`) and short governance parameters; always used with `--skip-accounts` in CI
 
-These files contain all parameters for each network, making it easy to modify values without editing the script code. The structure is consistent across all three files, with different values for each network.
+These files contain all parameters for each network, making it easy to modify values without editing the script code. The structure is consistent across these files, with different values for each network or test profile.
 
 **Prerequisites**:
 
 - `jq` must be installed
+- `python3` must be installed (used to merge `bank.supply` after stake→base denom alignment)
 - Valid `genesis.json` file must exist
 - Configuration file for the specified network must exist in `scripts/genesis-configs/`
 

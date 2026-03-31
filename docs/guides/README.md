@@ -35,6 +35,7 @@ Guides for validating and testing the system.
 |-------|-------------|-------------|
 | **[testing/PROJECT_INTEGRITY_CHECKLIST.md](testing/PROJECT_INTEGRITY_CHECKLIST.md)** | **Canonical checklist** — all commands to validate the repo end-to-end | Before PR, after big changes, before release |
 | **[testing/VALIDATION.md](testing/VALIDATION.md)** | Multi-step validation **workflows** (grouped commands) | Know what to run together and when |
+| **[testing/CHAIN_UPGRADE_SYSTEM_TEST.md](testing/CHAIN_UPGRADE_SYSTEM_TEST.md)** | **Chain-upgrade system test** (`TestChainUpgrade`): legacy binary, `upgrade-test` genesis, gentx regen, gov, maintenance when the upgrade path changes | Own or debug `tests/systemtests/chainupgrade`, CI upgrade failures, post-merge verification |
 
 ### 🚀 Deployment
 
