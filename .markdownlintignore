@@ -1,3 +1,5 @@
 # Vendored / submodule Markdown (not maintained in this repo)
 tests/systemtests/Counter/**
 tests/evm-tools-compatibility/**
+node_modules/**
+**/node_modules/**

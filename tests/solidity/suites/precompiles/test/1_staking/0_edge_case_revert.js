@@ -2,6 +2,8 @@ const { expect } = require('chai');
 const hre = require('hardhat');
 const {
     STAKING_PRECOMPILE_ADDRESS,
+    BECH32_PRECOMPILE_ADDRESS,
+    INFINITE_VALOPER_BECH32_PREFIX,
     LARGE_GAS_LIMIT,
     waitWithTimeout, RETRY_DELAY_FUNC
 } = require('../common');
@@ -9,7 +11,7 @@ const {
 describe('Staking – edge case revert test', function () {
     const GAS_LIMIT = LARGE_GAS_LIMIT;
 
-    let stakingReverter, staking, signer;
+    let stakingReverter, staking, bech32, signer;
     let validatorAddress;
 
     before(async function () {
@@ -17,6 +19,7 @@ describe('Staking – edge case revert test', function () {
         
         // Get staking precompile interface
         staking = await hre.ethers.getContractAt('StakingI', STAKING_PRECOMPILE_ADDRESS);
+        bech32 = await hre.ethers.getContractAt('Bech32I', BECH32_PRECOMPILE_ADDRESS);
         
         // Deploy StakingReverter contract with some native balance
         const StakingReverterFactory = await hre.ethers.getContractFactory('StakingReverter');
@@ -26,7 +29,8 @@ describe('Staking – edge case revert test', function () {
         });
         await waitWithTimeout(stakingReverter.deploymentTransaction(), 20000, RETRY_DELAY_FUNC)
 
-        validatorAddress = 'infinitevaloper10jmp6sgh4cc6zt3e8gw05wavvejgr5pw4xyrql';
+        const hexValAddr = '0x7cB61D4117AE31a12E393a1Cfa3BaC666481D02E'
+        validatorAddress = await bech32.getFunction('hexToBech32').staticCall(hexValAddr, INFINITE_VALOPER_BECH32_PREFIX);
         
         console.log('StakingReverter deployed at:', await stakingReverter.getAddress());
         console.log('Using validator address:', validatorAddress);

@@ -860,6 +860,15 @@ These scripts test compatibility with different EVM tools:
 
 ---
 
+### 12. Solidity harness scripts
+
+- **`scripts/run-solidity-tests.sh`**: entrypoint for `make test-solidity`. Builds the node binary, installs JS deps under `tests/solidity/`, and runs `yarn test --network cosmos`.
+- **`scripts/compile_smart_contracts/compile_smart_contracts.py`**: repo utility used by `make test-scripts` (pytest) to compile Solidity contracts via Hardhat. The compile step may require downloading a solc build on first run; CI may need retries for transient network timeouts.
+
+See also: `tests/solidity/README.md`.
+
+---
+
 ## Multi-step flows
 
 Do not maintain separate workflow copies here. Use:
@@ -882,6 +891,8 @@ Do not maintain separate workflow copies here. Use:
 | `verify_command_name.sh` | Verify rebranding | ❌ No | <1 min |
 | `test_outputs_before.sh` | Capture state | ❌ No | <1 min |
 | `compare_outputs.sh` | Compare changes | ❌ No | <1 min |
+| `run-solidity-tests.sh` | Run Solidity harness | ✅ Yes (spawns node) | 5–20 min |
+| `compile_smart_contracts.py` | Compile Solidity contracts (Hardhat) | ❌ No | 1–5 min |
 
 ---
 

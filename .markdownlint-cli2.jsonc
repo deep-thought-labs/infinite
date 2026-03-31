@@ -2,6 +2,7 @@
   "config": ".markdownlint.yml",
   "ignores": [
     "tests/systemtests/Counter/**",
-    "tests/evm-tools-compatibility/**"
+    "tests/evm-tools-compatibility/**",
+    "**/node_modules/**"
   ]
 }

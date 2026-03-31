@@ -103,6 +103,31 @@ The **software-upgrade** path (legacy release binary → customized genesis → 
 
 ---
 
+## 🧱 Solidity harness (`make test-solidity`)
+
+The repo includes Solidity-based tests under **`tests/solidity/`** that exercise the JSON-RPC stack and EVM precompiles against a locally spawned node (`local_node.sh`).
+
+Run:
+
+```bash
+make test-solidity
+```
+
+**Important (Bech32 / Infinite prefixes)**:
+
+- Infinite Drive uses Bech32 prefixes like **`infinite`**, **`infinitevaloper`**, **`infinitevalcons`**.
+- **Do not** hardcode “looks-right” Bech32 strings by swapping the prefix (e.g. taking a valid `cosmosvaloper...` and replacing the prefix with `infinitevaloper...`). Bech32 includes a checksum, so changing the HRP without recomputing it produces an **invalid string** and errors like **`unknown address format`**.
+- In Solidity tests, prefer deriving Bech32 strings from **canonical hex addresses** using the `Bech32I` precompile (`hexToBech32(...)`). This guarantees a valid checksum for the requested prefix.
+
+**Important (denoms / governance / flakiness)**:
+
+- This fork’s base denom is **`drop`**. Tests that include `Coin{denom, amount}` should use `drop` (or query params) to avoid CheckTx rejections.
+- The gov precompile tx-flow suite may be **skipped** in environments where proposal submission doesn’t get mined (rather than making `make test-solidity` flaky).
+
+For details and repo-specific conventions, see `tests/solidity/README.md`.
+
+---
+
 ## ✅ Complete Tests
 
 **Purpose**: Run all tests (unit + integration).

@@ -15,6 +15,11 @@ const LARGE_GAS_LIMIT = 10_000_000
 
 const RETRY_DELAY_FUNC = (attempt) => 500 * Math.pow(2, attempt)
 
+// Infinite Drive bech32 prefixes used by the chain.
+const INFINITE_BECH32_PREFIX = 'infinite'
+const INFINITE_VALOPER_BECH32_PREFIX = 'infinitevaloper'
+const INFINITE_VALCONS_BECH32_PREFIX = 'infinitevalcons'
+
 
 function waitWithTimeout(txn, timeoutMs, retryDelayFn = (attempt) => 1000) {
     return new Promise((resolve, reject) => {
@@ -92,6 +97,9 @@ module.exports = {
     DEFAULT_GAS_LIMIT,
     LARGE_GAS_LIMIT,
     RETRY_DELAY_FUNC,
+    INFINITE_BECH32_PREFIX,
+    INFINITE_VALOPER_BECH32_PREFIX,
+    INFINITE_VALCONS_BECH32_PREFIX,
     parseValidator,
     findEvent,
     waitWithTimeout

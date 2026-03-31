@@ -1,6 +1,6 @@
 const {expect} = require('chai')
 const hre = require('hardhat')
-const { findEvent, waitWithTimeout, RETRY_DELAY_FUNC} = require('../common')
+const { findEvent, waitWithTimeout, RETRY_DELAY_FUNC, BECH32_PRECOMPILE_ADDRESS, INFINITE_VALOPER_BECH32_PREFIX } = require('../common')
 
 describe('Staking – delegate with event assertion', function () {
     const STAKING_ADDRESS = '0x0000000000000000000000000000000000000800'
@@ -19,7 +19,6 @@ describe('Staking – delegate with event assertion', function () {
     })
 
     it('should stake native coin and emit Delegate event (using precision-adjusted shares)', async function () {
-        const valBech32 = 'infinitevaloper10jmp6sgh4cc6zt3e8gw05wavvejgr5pw4xyrql'
         const stakeAmountBn = hre.ethers.parseEther('0.001')   // BigNumber
         const stakeAmount = BigInt(stakeAmountBn.toString())
 
@@ -28,6 +27,7 @@ describe('Staking – delegate with event assertion', function () {
         const stakeShares = stakeAmount * precision
 
         const hexValAddr = '0x7cB61D4117AE31a12E393a1Cfa3BaC666481D02E'
+        const valBech32 = await bech32.getFunction('hexToBech32').staticCall(hexValAddr, INFINITE_VALOPER_BECH32_PREFIX)
 
         // Query delegation before staking
         const beforeDelegation = await staking.delegation(signer.address, valBech32)
