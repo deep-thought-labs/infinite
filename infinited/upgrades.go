@@ -25,7 +25,7 @@ const UpgradeName = "v0.4.0-to-v0.5.0"
 // Rationale: some legacy artifacts may already register a handler for UpgradeName
 // at process start, which can conflict with SDK `x/upgrade` PreBlock semantics
 // when an on-chain plan is scheduled but not yet due.
-const UpgradeNameSystemTest = "v0.4.0-to-v0.5.0-systemtest"
+const UpgradeNameSystemTest = "v0.1.10-to-v0.1.12"
 
 func (app EVMD) RegisterUpgradeHandlers() {
 	register := func(name string) {
