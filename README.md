@@ -21,6 +21,7 @@ It is designed with **no single point of failure** and runs on infinite nodes, d
 ### The Heart of the Drive: Improbability [42]
 
 **Network Identity**  
+
 - **Chain Name**: `infinite`
 - **Cosmos Chain ID**: `infinite_421018-1`
 - **EVM Chain ID**: `421018`
@@ -56,7 +57,7 @@ The drive is created by connecting a Bambleweeny 57 Sub-Meson Brain to an atomic
 
 > *The drive runs on tea. Properly prepared.*  
 
-**Improbability is the counterforce to entropy.** 
+**Improbability is the counterforce to entropy.**
 
 While entropy pushes the universe toward disorder, improbability introduces the chance for order to emerge from chaos. In our blockchain, this manifests through decentralized consensus: each validator adds to the improbability field, each transaction becomes a certain event through cryptographic proof, and each block collapses infinite possibilities into a single, verifiable truth.
 
@@ -65,8 +66,6 @@ While entropy pushes the universe toward disorder, improbability introduces the 
 ---
 
 ## 🚀 Run a Node
-
-
 
 Choose one path. This section shows a **standard mainnet-style** `init` / genesis / `start` layout; **full** Drive and binary install and operations are in the linked documentation below.
 

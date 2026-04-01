@@ -135,6 +135,14 @@ Renombres representativos: `evmd/app.go` → `infinited/app.go`, `evmd/cmd/evmd/
 - `scripts/compile_smart_contracts/compile_smart_contracts.py`: compila Solidity con Hardhat; se añadieron **reintentos** para evitar fallos transitorios de red al descargar `solc` en CI.
 - `local_node.sh`: exporta `GOPATH`/`PATH` para asegurar que el binario instalado (`make install`) sea resoluble en shells locales.
 
+### Alineación CI con upstream (Buf / protos)
+
+- `.github/workflows/proto.yml`: el job `buf-breaking-action` compara `proto/` contra **`cosmos/evm` `main`** (upstream) en lugar de comparar contra el `main` del fork. Esto evita falsos “breaking changes” causados por protos que existían históricamente solo en el fork (p.ej. `precisebank`).
+
+### Estabilidad CI (tests Go)
+
+- `mempool/krakatoa_mempool_test.go`: el test `TestKrakatoaMempool_ReapPromoteDemotePromote` usa `require.Eventually` tras `Sync()` para evitar flakes bajo `-race`/CI (timing/concurrencia), sin cambiar la lógica funcional del mempool.
+
 ### Tests
 
 - `infinited/tests/integration/create_app.go` (identidad)

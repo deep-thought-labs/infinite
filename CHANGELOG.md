@@ -14,6 +14,7 @@
 ### Release set (in progress)
 
 #### Identity & network configuration
+
 - **Native token**: "Improbability" (42) with base denomination `drop` (1 Improbability [42] = 10¹⁸ drop)
 - **Chain IDs**:
   - Mainnet: Cosmos `infinite_421018-1`, EVM `421018`
@@ -23,12 +24,14 @@
 - **Binary**: `infinited` (Infinite Drive blockchain node)
 
 #### Genesis configuration
+
 - **Multi-network genesis support**: `customize_genesis.sh` supporting mainnet, testnet, and creative networks with distinct parameters (denominations, inflation, governance, slashing, fee market, distribution, consensus)
 - **ModuleAccounts automation**: `setup_module_accounts.sh` for automated ModuleAccount creation with permissions and initial balances
 - **External configuration**: JSON configuration files (`genesis-configs/*.json`) for all network-specific parameters
 - **Genesis state defaults**: `DefaultGenesis()` ensures all modules use the `drop` denomination
 
 #### Documentation & developer tools
+
 - **Structured documentation**: clear entry points (`QUICK_START.md`, `BUILDING.md`) and categorized guides
 - **Maintenance docs (`docs/fork-maintenance/`)**: divergence record (`UPSTREAM_DIVERGENCE_RECORD.md`), merge playbook, diff reference, verification checklist, merge-log templates and archives
 - **Validation suite**: scripts such as `validate_customizations.sh`, `validate_token_config.sh`, `check_build_prerequisites.sh`
@@ -36,37 +39,45 @@
 - **Genesis creation guides**: step-by-step instructions for mainnet/testnet/creative genesis creation
 
 #### Technical notes
+
 - **Power reduction configuration**: 1 Improbability [42] = 10^18 drop
 - **Genesis module defaults**: staking, mint, and governance configured for the `drop` denomination
 - **Local development tools**: `local_node.sh` with automatic genesis customization
 
 #### Merge
+
 - [\#3](https://github.com/deep-thought-labs/infinite/pull/3) Synchronize `cosmos/evm` changes (through `50b4817017187cbda2a0af767fda39a895b9989a`) and align CI/test gating for `infinite`.
 
 #### Engineering quality
+
 - **CI and test gating improvements**: workflow alignment and reliability improvements for builds, linting, system tests, and compatibility tests.
 - **System test hardening**: improved chain-upgrade harness and a Docker-based path to run system tests in a Linux environment when needed.
 - **Solidity harness stability**: improvements to reduce transient failures when compiling contracts in CI.
 
 #### Continuous integration
+
 - [\#2](https://github.com/deep-thought-labs/infinite/pull/2) Align CI workflows with upstream structure and improve test reliability.
 
 ## v0.1.11
 
 ### Notes
+
 - Released as a tag with no material functional changes.
 
 ## v0.1.10
 
 ### Overview
+
 - **First published production release** of Infinite Improbability Drive (`infinite`).
 - This release line uses **Infinite Drive** versioning (`v0.1.x`) and is independent from the `cosmos/evm` track versioning (e.g. `v0.6.0`).
 - At the time `v0.1.10` was released, the `cosmos/evm` track was at `v0.6.0`.
 
 ### Merge
+
 - [\#1](https://github.com/deep-thought-labs/infinite/pull/1) feat(precompiles): add BalanceHandler to handle native balance change.
 
 ### Operational notes
+
 - When running chain upgrade system tests, `v0.1.10` is used as the legacy baseline for the upgrade scenario (see `Makefile` system test variables and `docs/guides/testing/CHAIN_UPGRADE_SYSTEM_TEST.md`).
 
 ---
