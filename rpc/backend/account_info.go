@@ -209,7 +209,11 @@ func (b *Backend) GetTransactionCount(ctx context.Context, address common.Addres
 	}
 	height := blockNum.Int64()
 
-	currentHeight := int64(bn) //#nosec G115 -- checked for int overflow already
+	bnU64 := uint64(bn)
+	if bnU64 > uint64(math.MaxInt64) {
+		return &n, errorsmod.Wrapf(sdkerrors.ErrInvalidHeight, "cannot query height beyond int64 range (current: %d)", bnU64)
+	}
+	currentHeight := int64(bnU64)
 	if height > currentHeight {
 		return &n, errorsmod.Wrapf(
 			sdkerrors.ErrInvalidHeight,

@@ -533,8 +533,8 @@ func (api *pubSubAPI) subscribeLogs(wsConn *wsConn, subID rpc.ID, extra any) (co
 		if params["topics"] != nil {
 			topics, ok := params["topics"].([]any)
 			if !ok {
-				err := errors.Errorf("invalid topics: %s", topics)
-				api.logger.Error("invalid topics", "type", fmt.Sprintf("%T", topics))
+				err := errors.Errorf("invalid topics type: %T", params["topics"])
+				api.logger.Error("invalid topics type", "type", fmt.Sprintf("%T", params["topics"]))
 				return nil, err
 			}
 
@@ -543,8 +543,8 @@ func (api *pubSubAPI) subscribeLogs(wsConn *wsConn, subID rpc.ID, extra any) (co
 			addCritTopic := func(topicIdx int, topic any) error {
 				tstr, ok := topic.(string)
 				if !ok {
-					err := errors.Errorf("invalid topic: %s", topic)
-					api.logger.Error("invalid topic", "type", fmt.Sprintf("%T", topic))
+					err := errors.Errorf("invalid topic type: %T", topic)
+					api.logger.Error("invalid topic type", "type", fmt.Sprintf("%T", topic))
 					return err
 				}
 
@@ -578,8 +578,8 @@ func (api *pubSubAPI) subscribeLogs(wsConn *wsConn, subID rpc.ID, extra any) (co
 				for idx, subtopic := range subtopicsList {
 					tstr, ok := subtopic.(string)
 					if !ok {
-						err := errors.Errorf("invalid subtopic: %s", subtopic)
-						api.logger.Error("invalid subtopic", "type", fmt.Sprintf("%T", subtopic))
+						err := errors.Errorf("invalid subtopic type: %T", subtopic)
+						api.logger.Error("invalid subtopic type", "type", fmt.Sprintf("%T", subtopic))
 						return nil, err
 					}
 

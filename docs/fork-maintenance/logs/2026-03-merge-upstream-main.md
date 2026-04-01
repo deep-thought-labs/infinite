@@ -161,6 +161,11 @@ Este addendum recoge ajustes realizados **después** del cierre original (2026-0
   - `crypto-com/cosmos-sdk-codeql` (pack)
 - Output SARIF generado en `/tmp/` (ver sesión local del responsable).
 
+### CodeQL (PR): mitigaciones seguras aplicadas
+
+- **Log injection (high)** en `rpc/websockets.go`: ya no se interpolan valores user-controlled en mensajes de error/log; se reporta solo el tipo (`%T`).
+- **Incorrect integer conversion (high)** en `rpc/backend/account_info.go` y `rpc/backend/chain_info.go`: se añade guard de rango antes de convertir alturas a `int64`.
+
 ### Registro documental del addendum
 
 Estas decisiones se registraron en el inventario del fork:
