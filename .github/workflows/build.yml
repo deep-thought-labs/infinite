@@ -2,6 +2,16 @@ name: Build
 
 on:
   workflow_dispatch:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - "infinited/**"
+      - "go.mod"
+      - "go.sum"
+      - "infinited/go.mod"
+      - "infinited/go.sum"
+      - ".github/workflows/build.yml"
   push:
     branches:
       - main
@@ -39,6 +49,12 @@ jobs:
             go.sum
             infinited/go.sum
 
+      - name: Install CGO cross-compilers
+        shell: bash
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y gcc-aarch64-linux-gnu gcc-x86-64-linux-gnu
+
       - name: Get version info
         id: version
         shell: bash
@@ -64,6 +80,13 @@ jobs:
         shell: bash
         run: |
           BINARY_NAME="infinited-${{ steps.version.outputs.branch }}-${{ steps.version.outputs.commit_short }}-linux-${{ matrix.goarch }}"
+
+          # Ensure a matching C compiler is available for CGO cross builds.
+          case "${{ matrix.goarch }}" in
+            arm64) export CC="aarch64-linux-gnu-gcc" ;;
+            amd64) export CC="x86_64-linux-gnu-gcc" ;;
+            *) echo "Unsupported GOARCH: ${{ matrix.goarch }}"; exit 1 ;;
+          esac
 
           go build \
             -trimpath \
