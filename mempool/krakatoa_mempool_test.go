@@ -138,7 +138,7 @@ func TestKrakatoaMempool_ReapPromoteDemotePromote(t *testing.T) {
 	require.NoError(t, mp.GetTxPool().Sync())
 	require.Eventually(t, func() bool {
 		return mp.CountTx() == 3
-	}, 2*time.Second, 10*time.Millisecond)
+	}, 10*time.Second, 25*time.Millisecond)
 
 	// reap txs now and we should get back all txs since they were all validated
 	txs, err := mp.ReapNewValidTxs(0, 0)

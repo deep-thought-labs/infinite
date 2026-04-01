@@ -508,7 +508,8 @@ func (api *pubSubAPI) subscribeLogs(wsConn *wsConn, subID rpc.ID, extra any) (co
 		params, ok := extra.(map[string]any)
 		if !ok {
 			err := errors.New("invalid criteria")
-			api.logger.Debug("invalid criteria", "type", fmt.Sprintf("%T", extra))
+			// Avoid logging user-controlled values (even derived metadata) to prevent log forging.
+			api.logger.Debug("invalid criteria")
 			return nil, err
 		}
 
@@ -533,8 +534,8 @@ func (api *pubSubAPI) subscribeLogs(wsConn *wsConn, subID rpc.ID, extra any) (co
 		if params["topics"] != nil {
 			topics, ok := params["topics"].([]any)
 			if !ok {
-				err := errors.Errorf("invalid topics type: %T", params["topics"])
-				api.logger.Error("invalid topics type", "type", fmt.Sprintf("%T", params["topics"]))
+				err := errors.New("invalid topics type")
+				api.logger.Error("invalid topics type")
 				return nil, err
 			}
 
@@ -543,8 +544,8 @@ func (api *pubSubAPI) subscribeLogs(wsConn *wsConn, subID rpc.ID, extra any) (co
 			addCritTopic := func(topicIdx int, topic any) error {
 				tstr, ok := topic.(string)
 				if !ok {
-					err := errors.Errorf("invalid topic type: %T", topic)
-					api.logger.Error("invalid topic type", "type", fmt.Sprintf("%T", topic))
+					err := errors.New("invalid topic type")
+					api.logger.Error("invalid topic type")
 					return err
 				}
 
@@ -570,7 +571,7 @@ func (api *pubSubAPI) subscribeLogs(wsConn *wsConn, subID rpc.ID, extra any) (co
 				subtopicsList, ok := subtopics.([]any)
 				if !ok {
 					err := errors.New("invalid subtopics")
-					api.logger.Error("invalid subtopic", "type", fmt.Sprintf("%T", subtopics))
+				api.logger.Error("invalid subtopics type")
 					return nil, err
 				}
 
@@ -578,8 +579,8 @@ func (api *pubSubAPI) subscribeLogs(wsConn *wsConn, subID rpc.ID, extra any) (co
 				for idx, subtopic := range subtopicsList {
 					tstr, ok := subtopic.(string)
 					if !ok {
-						err := errors.Errorf("invalid subtopic type: %T", subtopic)
-						api.logger.Error("invalid subtopic type", "type", fmt.Sprintf("%T", subtopic))
+						err := errors.New("invalid subtopic type")
+						api.logger.Error("invalid subtopic type")
 						return nil, err
 					}
 

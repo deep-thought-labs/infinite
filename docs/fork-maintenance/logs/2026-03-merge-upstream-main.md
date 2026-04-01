@@ -163,8 +163,9 @@ Este addendum recoge ajustes realizados **después** del cierre original (2026-0
 
 ### CodeQL (PR): mitigaciones seguras aplicadas
 
-- **Log injection (high)** en `rpc/websockets.go`: ya no se interpolan valores user-controlled en mensajes de error/log; se reporta solo el tipo (`%T`).
+- **Log injection (high)** en `rpc/websockets.go`: ya no se interpolan valores user-controlled en mensajes de error/log.
 - **Incorrect integer conversion (high)** en `rpc/backend/account_info.go` y `rpc/backend/chain_info.go`: se añade guard de rango antes de convertir alturas a `int64`.
+- **Potential file system race condition (high)** en `tests/solidity/test-helper.js`: eliminar patrones TOCTOU (`existsSync`→`read/write`) en helpers del harness.
 
 ### Registro documental del addendum
 

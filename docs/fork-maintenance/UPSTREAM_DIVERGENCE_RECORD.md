@@ -145,9 +145,10 @@ Renombres representativos: `evmd/app.go` → `infinited/app.go`, `evmd/cmd/evmd/
 
 ### Code scanning (CodeQL) — mitigaciones seguras
 
-- `rpc/websockets.go`: evitar log-forging al no interpolar valores user-controlled (JSON-RPC WebSocket `topics`/`topic`/`subtopic`) en mensajes de error/log; registrar solo tipos (`%T`).
+- `rpc/websockets.go`: evitar log-forging al no interpolar valores user-controlled (JSON-RPC WebSocket `topics`/`topic`/`subtopic`) en mensajes de error/log.
 - `rpc/backend/account_info.go`, `rpc/backend/chain_info.go`: añadir guardas de rango antes de convertir alturas (u64) a `int64`.
 - `tests/integration/x/vm/test_state_transition.go`: añadir guard de `nil` en un assert para evitar dereference si `res` es nil en el camino de error esperado.
+- `tests/solidity/test-helper.js`: evitar patrones TOCTOU (`existsSync`→`read/write`) para satisfacer CodeQL (carrera potencial en filesystem).
 
 ### Tests
 
