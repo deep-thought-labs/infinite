@@ -95,6 +95,17 @@ type TestChain struct {
 	// Short-term solution to override the logic of the standard SendMsgs function.
 	// See issue https://github.com/cosmos/ibc-go/issues/3123 for more information.
 	SendMsgsOverride func(msgs ...sdk.Msg) (*abci.ExecTxResult, error)
+
+	// UseEvmFeeDenom selects drop-based fees (EVM app); false uses stake for SimApp mint/fee flow.
+	UseEvmFeeDenom bool
+
+	// CosmosSimulationChain is true for ibc-go SimApp chains (!isEVM in NewTestChainWithValSet).
+	CosmosSimulationChain bool
+
+	// SenderAccAddr holds raw account bytes for the primary sender on SimApp chains. BaseAccount
+	// stores bech32 under the "cosmos" HRP from genesis; after the global prefix is restored to
+	// the fork HRP, AccountI.GetAddress() decodes empty (AccAddressFromBech32 requires current prefix).
+	SenderAccAddr sdk.AccAddress
 }
 
 // NewTestChainWithValSet initializes a new TestChain instance with the given validator set
@@ -114,6 +125,12 @@ type TestChain struct {
 // i.e. sorted first by power and then lexicographically by address.
 func NewTestChainWithValSet(tb testing.TB, isEVM bool, coord *Coordinator, chainID string, valSet *cmttypes.ValidatorSet, signers map[string]cmttypes.PrivValidator) *TestChain {
 	tb.Helper()
+	// SimApp (non-EVM) needs "cosmos" bech32 in genesis strings; fork chains use "infinite".
+	// Apply cosmos for the whole constructor so Balance.Address and SimApp InitGenesis agree.
+	if !isEVM {
+		setCosmosBech32Prefixes(sdk.GetConfig())
+		defer setInfiniteForkBech32Prefixes(sdk.GetConfig())
+	}
 	genAccs := []authtypes.GenesisAccount{}
 	genBals := []banktypes.Balance{}
 	senderAccs := []SenderAccount{}
@@ -132,12 +149,16 @@ func NewTestChainWithValSet(tb testing.TB, isEVM bool, coord *Coordinator, chain
 		amount, ok := sdkmath.NewIntFromString(DefaultGenesisAccBalance)
 		require.True(tb, ok)
 
-		// add sender account
+		// add sender account (ibc-go SimApp uses stake + SecondaryDenom "ufoo"; avoid extra denoms on SimApp)
+		secondDenom := types.DefaultEVMExtendedDenom
+		if !isEVM {
+			secondDenom = "ufoo"
+		}
 		balance := banktypes.Balance{
 			Address: acc.GetAddress().String(),
 			Coins: sdk.NewCoins(
 				sdk.NewCoin(sdk.DefaultBondDenom, amount),
-				sdk.NewCoin(types.DefaultEVMExtendedDenom, amount),
+				sdk.NewCoin(secondDenom, amount),
 			),
 		}
 
@@ -152,27 +173,30 @@ func NewTestChainWithValSet(tb testing.TB, isEVM bool, coord *Coordinator, chain
 		senderAccs = append(senderAccs, senderAcc)
 	}
 
-	metadata := []banktypes.Metadata{{
-		Description: "",
-		DenomUnits: []*banktypes.DenomUnit{
-			{
-				Denom:    types.DefaultEVMExtendedDenom,
-				Exponent: 0,
-				Aliases:  nil,
+	metadata := make([]banktypes.Metadata, 0)
+	if isEVM {
+		metadata = []banktypes.Metadata{{
+			Description: "",
+			DenomUnits: []*banktypes.DenomUnit{
+				{
+					Denom:    types.DefaultEVMExtendedDenom,
+					Exponent: 0,
+					Aliases:  nil,
+				},
+				{
+					Denom:    types.DefaultEVMDisplayDenom,
+					Exponent: 18,
+					Aliases:  nil,
+				},
 			},
-			{
-				Denom:    types.DefaultEVMDisplayDenom,
-				Exponent: 6,
-				Aliases:  nil,
-			},
-		},
-		Base:    types.DefaultEVMExtendedDenom,
-		Display: types.DefaultEVMDisplayDenom,
-		Name:    types.DefaultEVMDenom,
-		Symbol:  types.DefaultEVMDenom,
-		URI:     types.DefaultEVMDenom,
-		URIHash: types.DefaultEVMDenom,
-	}}
+			Base:    types.DefaultEVMExtendedDenom,
+			Display: types.DefaultEVMDisplayDenom,
+			Name:    types.DefaultEVMDenom,
+			Symbol:  types.DefaultEVMDenom,
+			URI:     types.DefaultEVMDenom,
+			URIHash: types.DefaultEVMDenom,
+		}}
+	}
 
 	app := SetupWithGenesisValSet(tb, valSet, genAccs, chainID, sdk.DefaultPowerReduction, metadata, genBals...)
 	// create current header and call begin block
@@ -184,22 +208,30 @@ func NewTestChainWithValSet(tb testing.TB, isEVM bool, coord *Coordinator, chain
 
 	txConfig := app.GetTxConfig()
 
+	var senderAccAddr sdk.AccAddress
+	if !isEVM {
+		senderAccAddr = sdk.AccAddress(senderAccs[0].SenderPrivKey.PubKey().Address().Bytes())
+	}
+
 	// create an account to send transactions from
 	chain := &TestChain{
-		TB:                tb,
-		Coordinator:       coord,
-		ChainID:           chainID,
-		App:               app,
-		ProposedHeader:    header,
-		TxConfig:          txConfig,
-		Codec:             app.AppCodec(),
-		Vals:              valSet,
-		NextVals:          valSet,
-		Signers:           signers,
-		TrustedValidators: make(map[uint64]*cmttypes.ValidatorSet, 0),
-		SenderPrivKey:     senderAccs[0].SenderPrivKey,
-		SenderAccount:     senderAccs[0].SenderAccount,
-		SenderAccounts:    senderAccs,
+		TB:                    tb,
+		Coordinator:           coord,
+		ChainID:               chainID,
+		App:                   app,
+		ProposedHeader:        header,
+		TxConfig:              txConfig,
+		Codec:                 app.AppCodec(),
+		Vals:                  valSet,
+		NextVals:              valSet,
+		Signers:               signers,
+		TrustedValidators:     make(map[uint64]*cmttypes.ValidatorSet, 0),
+		SenderPrivKey:         senderAccs[0].SenderPrivKey,
+		SenderAccount:         senderAccs[0].SenderAccount,
+		SenderAccounts:        senderAccs,
+		UseEvmFeeDenom:        isEVM,
+		CosmosSimulationChain: !isEVM,
+		SenderAccAddr:         senderAccAddr,
 	}
 
 	// commit genesis block
@@ -327,6 +359,43 @@ func (chain *TestChain) QueryConsensusStateProof(clientID string) ([]byte, clien
 	return consensusProof, consensusHeight
 }
 
+// AccAddressForAccount returns raw address bytes. On SimApp test chains, BaseAccount.GetAddress()
+// can be empty when the global bech32 HRP no longer matches genesis; derive bytes from the pubkey instead.
+func (chain *TestChain) AccAddressForAccount(acc sdk.AccountI) sdk.AccAddress {
+	if chain.CosmosSimulationChain {
+		if pk := acc.GetPubKey(); pk != nil {
+			return sdk.AccAddress(pk.Address())
+		}
+		if len(chain.SenderAccAddr) > 0 && acc == chain.SenderAccount {
+			return chain.SenderAccAddr
+		}
+	}
+	return acc.GetAddress()
+}
+
+// Bech32ForAccount returns bech32 for ICS-20 / IBC packet fields and SDK messages on this chain.
+func (chain *TestChain) Bech32ForAccount(acc sdk.AccountI) string {
+	return chain.AccBech32ForMsg(chain.AccAddressForAccount(acc))
+}
+
+// SenderAddrStringForMsg returns the signer bech32 for SDK/IBC messages on this chain. SimApp
+// chains must encode with the "cosmos" HRP to match genesis and ante validation; EVM chains use
+// the fork prefix (global config is often restored to infinite between operations).
+func (chain *TestChain) SenderAddrStringForMsg() string {
+	return chain.Bech32ForAccount(chain.SenderAccount)
+}
+
+// AccBech32ForMsg encodes an account address for inclusion in Msgs executed on this chain.
+func (chain *TestChain) AccBech32ForMsg(addr sdk.AccAddress) string {
+	if chain.CosmosSimulationChain {
+		setCosmosBech32Prefixes(sdk.GetConfig())
+		s := addr.String()
+		setInfiniteForkBech32Prefixes(sdk.GetConfig())
+		return s
+	}
+	return addr.String()
+}
+
 // NextBlock sets the last header to the current header and increments the current header to be
 // at the next block height. It does not update the time as that is handled by the Coordinator.
 // It will call FinalizeBlock and Commit and apply the validator set changes to the next validators
@@ -334,6 +403,13 @@ func (chain *TestChain) QueryConsensusStateProof(clientID string) ([]byte, clien
 // returned on block `n` to the validators of block `n+2`.
 // It calls BeginBlock with the new block created before returning.
 func (chain *TestChain) NextBlock() {
+	// SimApp genesis is built under "cosmos" bech32; the constructor restores the fork prefix before
+	// returning. Re-apply cosmos for each SimApp FinalizeBlock so x/mint and bank keep consistent behavior.
+	if chain.CosmosSimulationChain {
+		setCosmosBech32Prefixes(sdk.GetConfig())
+		defer setInfiniteForkBech32Prefixes(sdk.GetConfig())
+	}
+
 	res, err := chain.App.FinalizeBlock(&abci.RequestFinalizeBlock{
 		Height:             chain.ProposedHeader.Height,
 		Time:               chain.ProposedHeader.GetTime(),
@@ -480,6 +556,11 @@ func (chain *TestChain) SendMsgsWithSender(sender SenderAccount, msgs ...sdk.Msg
 		return chain.SendMsgsOverride(msgs...)
 	}
 
+	if chain.CosmosSimulationChain {
+		setCosmosBech32Prefixes(sdk.GetConfig())
+		defer setInfiniteForkBech32Prefixes(sdk.GetConfig())
+	}
+
 	// ensure the chain has the latest time
 	chain.Coordinator.UpdateTimeForChain(chain)
 
@@ -491,12 +572,18 @@ func (chain *TestChain) SendMsgsWithSender(sender SenderAccount, msgs ...sdk.Msg
 		}
 	}()
 
+	fees := SimAppFeeCoins()
+	if chain.UseEvmFeeDenom {
+		fees = FeeCoins()
+	}
+
 	resp, err := SignAndDeliver(
 		chain.TB,
 		sdk.AccAddress(chain.ProposedHeader.ProposerAddress),
 		chain.TxConfig,
 		chain.App.GetBaseApp(),
 		msgs,
+		fees,
 		chain.ChainID,
 		[]uint64{sender.SenderAccount.GetAccountNumber()},
 		[]uint64{sender.SenderAccount.GetSequence()},

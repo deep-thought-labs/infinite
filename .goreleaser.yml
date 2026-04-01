@@ -19,7 +19,7 @@
 #   - ARM64 builds may fail on Mac M1 with Docker emulation, but work in GitHub Actions
 #   - Official releases are built in GitHub Actions on Ubuntu (native environment)
 #
-# See: guides/BUILDING_AND_RELEASES.md for detailed documentation
+# See: docs/guides/development/BUILDING.md and docs/guides/infrastructure/RELEASES.md
 #
 version: 1
 project_name: infinite

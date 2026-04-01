@@ -101,7 +101,7 @@ func (c *CosmosClient) BankSend(nodeID string, account *CosmosAccount, from, to 
 	privKey := account.PrivKey
 	accountNumber := account.AccountNumber
 
-	msg := banktypes.NewMsgSend(from, to, sdk.NewCoins(sdk.NewCoin("atest", amount)))
+	msg := banktypes.NewMsgSend(from, to, sdk.NewCoins(sdk.NewCoin(NativeBaseDenom, amount)))
 
 	txBytes, err := c.signMsgsV2(privKey, accountNumber, nonce, gasPrice, msg)
 	if err != nil {
@@ -266,7 +266,7 @@ func (c *CosmosClient) signMsgsV2(privKey cryptotypes.PrivKey, accountNumber, se
 	}
 
 	txBuilder.SetGasLimit(150_000)
-	txBuilder.SetFeeAmount(sdk.NewCoins(sdk.NewCoin("atest", sdkmath.NewIntFromBigInt(gasPrice).MulRaw(150_001))))
+	txBuilder.SetFeeAmount(sdk.NewCoins(sdk.NewCoin(NativeBaseDenom, sdkmath.NewIntFromBigInt(gasPrice).MulRaw(150_001))))
 
 	sigV2, err := clienttx.SignWithPrivKey(
 		context.Background(),

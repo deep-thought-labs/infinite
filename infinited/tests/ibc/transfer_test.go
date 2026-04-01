@@ -110,7 +110,7 @@ func (suite *TransferTestSuite) TestHandleMsgTransfer() {
 				pathAToB.EndpointA.ChannelID,
 				originalCoin,
 				senderAddr.String(),
-				suite.chainB.SenderAccount.GetAddress().String(),
+				suite.chainB.Bech32ForAccount(suite.chainB.SenderAccount),
 				timeoutHeight, 0, "",
 			)
 			fee := evmibctesting.FeeCoins().AmountOf(sourceDenomToTransfer)
@@ -166,7 +166,7 @@ func (suite *TransferTestSuite) TestHandleMsgTransfer() {
 			chainBDenom := types.NewDenom(originalCoin.Denom, traceAToB)
 			chainBBalance := chainBApp.BankKeeper.GetBalance(
 				suite.chainB.GetContext(),
-				suite.chainB.SenderAccount.GetAddress(),
+				suite.chainB.AccAddressForAccount(suite.chainB.SenderAccount),
 				chainBDenom.IBCDenom(),
 			)
 			coinSentFromAToB := sdk.NewCoin(chainBDenom.IBCDenom(), transferAmount)
@@ -185,8 +185,8 @@ func (suite *TransferTestSuite) TestHandleMsgTransfer() {
 				pathBToC.EndpointA.ChannelConfig.PortID,
 				pathBToC.EndpointA.ChannelID,
 				coinSentFromAToB,
-				suite.chainB.SenderAccount.GetAddress().String(),
-				suite.chainC.SenderAccount.GetAddress().String(),
+				suite.chainB.Bech32ForAccount(suite.chainB.SenderAccount),
+				suite.chainC.Bech32ForAccount(suite.chainC.SenderAccount),
 				timeoutHeight, 0, "",
 			)
 			res, err = suite.chainB.SendMsgs(msg)
@@ -208,7 +208,7 @@ func (suite *TransferTestSuite) TestHandleMsgTransfer() {
 			coinSentFromBToC := sdk.NewCoin(chainCDenom.IBCDenom(), transferAmount)
 			chainCBalance := chainCApp.BankKeeper.GetBalance(
 				suite.chainC.GetContext(),
-				suite.chainC.SenderAccount.GetAddress(),
+				suite.chainC.AccAddressForAccount(suite.chainC.SenderAccount),
 				coinSentFromBToC.Denom,
 			)
 			suite.Require().Equal(coinSentFromBToC, chainCBalance)
@@ -216,7 +216,7 @@ func (suite *TransferTestSuite) TestHandleMsgTransfer() {
 			// check that balance on chain B is empty
 			chainBBalance = chainBApp.BankKeeper.GetBalance(
 				suite.chainB.GetContext(),
-				suite.chainB.SenderAccount.GetAddress(),
+				suite.chainB.AccAddressForAccount(suite.chainB.SenderAccount),
 				coinSentFromBToC.Denom,
 			)
 			suite.Require().Zero(chainBBalance.Amount.Int64())
@@ -225,8 +225,8 @@ func (suite *TransferTestSuite) TestHandleMsgTransfer() {
 			msg = types.NewMsgTransfer(
 				pathBToC.EndpointB.ChannelConfig.PortID,
 				pathBToC.EndpointB.ChannelID, coinSentFromBToC,
-				suite.chainC.SenderAccount.GetAddress().String(),
-				suite.chainB.SenderAccount.GetAddress().String(),
+				suite.chainC.Bech32ForAccount(suite.chainC.SenderAccount),
+				suite.chainB.Bech32ForAccount(suite.chainB.SenderAccount),
 				timeoutHeight, 0, "",
 			)
 			res, err = suite.chainC.SendMsgs(msg)
@@ -243,7 +243,7 @@ func (suite *TransferTestSuite) TestHandleMsgTransfer() {
 				// check that balance on chain C is empty
 				chainCBalance := chainCApp.BankKeeper.GetBalance(
 					suite.chainC.GetContext(),
-					suite.chainC.SenderAccount.GetAddress(),
+					suite.chainC.AccAddressForAccount(suite.chainC.SenderAccount),
 					coin.Denom,
 				)
 				suite.Require().Zero(chainCBalance.Amount.Int64())
@@ -253,7 +253,7 @@ func (suite *TransferTestSuite) TestHandleMsgTransfer() {
 			// check that balance on chain B has the transferred amount
 			chainBBalance = chainBApp.BankKeeper.GetBalance(
 				suite.chainB.GetContext(),
-				suite.chainB.SenderAccount.GetAddress(),
+				suite.chainB.AccAddressForAccount(suite.chainB.SenderAccount),
 				coinSentFromAToB.Denom,
 			)
 			suite.Require().Equal(coinSentFromAToB, chainBBalance)

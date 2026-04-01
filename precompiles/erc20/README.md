@@ -60,9 +60,9 @@ The precompile address is determined by the token pair configuration.
 
 - **Direct transfers** (`transfer`): Execute a bank send message from the caller to the recipient
 - **Delegated transfers** (`transferFrom`):
-    - Check and update the spender's allowance
-    - Execute a bank send message from the token owner to the recipient
-    - Emit both Transfer and Approval events
+  - Check and update the spender's allowance
+  - Execute a bank send message from the token owner to the recipient
+  - Emit both Transfer and Approval events
 
 ### Metadata Handling
 

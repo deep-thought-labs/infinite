@@ -27,7 +27,7 @@ import (
 	"github.com/cosmos/evm/rpc/stream"
 	"github.com/cosmos/evm/server/config"
 
-	"cosmossdk.io/log"
+	"cosmossdk.io/log/v2"
 
 	"github.com/cosmos/cosmos-sdk/client"
 )
@@ -389,6 +389,7 @@ func (s *websocketsServer) tcpGetAndSendResponse(wsConn *wsConn, mb []byte) erro
 
 	req.Header.Set("Content-Type", "application/json")
 	client := &http.Client{}
+	// #nosec G704 -- URL is node's own rpcAddr from config, not user-controlled
 	resp, err := client.Do(req)
 	if err != nil {
 		return errors.Wrap(err, "Could not perform request")
@@ -507,7 +508,8 @@ func (api *pubSubAPI) subscribeLogs(wsConn *wsConn, subID rpc.ID, extra any) (co
 		params, ok := extra.(map[string]any)
 		if !ok {
 			err := errors.New("invalid criteria")
-			api.logger.Debug("invalid criteria", "type", fmt.Sprintf("%T", extra))
+			// Avoid logging user-controlled values (even derived metadata) to prevent log forging.
+			api.logger.Debug("invalid criteria")
 			return nil, err
 		}
 
@@ -532,8 +534,8 @@ func (api *pubSubAPI) subscribeLogs(wsConn *wsConn, subID rpc.ID, extra any) (co
 		if params["topics"] != nil {
 			topics, ok := params["topics"].([]any)
 			if !ok {
-				err := errors.Errorf("invalid topics: %s", topics)
-				api.logger.Error("invalid topics", "type", fmt.Sprintf("%T", topics))
+				err := errors.New("invalid topics type")
+				api.logger.Error("invalid topics type")
 				return nil, err
 			}
 
@@ -542,8 +544,8 @@ func (api *pubSubAPI) subscribeLogs(wsConn *wsConn, subID rpc.ID, extra any) (co
 			addCritTopic := func(topicIdx int, topic any) error {
 				tstr, ok := topic.(string)
 				if !ok {
-					err := errors.Errorf("invalid topic: %s", topic)
-					api.logger.Error("invalid topic", "type", fmt.Sprintf("%T", topic))
+					err := errors.New("invalid topic type")
+					api.logger.Error("invalid topic type")
 					return err
 				}
 
@@ -569,7 +571,7 @@ func (api *pubSubAPI) subscribeLogs(wsConn *wsConn, subID rpc.ID, extra any) (co
 				subtopicsList, ok := subtopics.([]any)
 				if !ok {
 					err := errors.New("invalid subtopics")
-					api.logger.Error("invalid subtopic", "type", fmt.Sprintf("%T", subtopics))
+					api.logger.Error("invalid subtopics type")
 					return nil, err
 				}
 
@@ -577,8 +579,8 @@ func (api *pubSubAPI) subscribeLogs(wsConn *wsConn, subID rpc.ID, extra any) (co
 				for idx, subtopic := range subtopicsList {
 					tstr, ok := subtopic.(string)
 					if !ok {
-						err := errors.Errorf("invalid subtopic: %s", subtopic)
-						api.logger.Error("invalid subtopic", "type", fmt.Sprintf("%T", subtopic))
+						err := errors.New("invalid subtopic type")
+						api.logger.Error("invalid subtopic type")
 						return nil, err
 					}
 

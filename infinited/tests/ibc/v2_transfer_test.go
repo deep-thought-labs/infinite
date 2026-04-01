@@ -170,7 +170,7 @@ func (suite *TransferTestSuiteV2) TestOnSendPacket() {
 				token.Denom.Path(),
 				token.Amount,
 				suite.evmChainA.SenderAccount.GetAddress().String(),
-				suite.chainB.SenderAccount.GetAddress().String(),
+				suite.chainB.Bech32ForAccount(suite.chainB.SenderAccount),
 				"",
 			)
 			bz := suite.evmChainA.Codec.MustMarshal(&transferData)
@@ -276,7 +276,7 @@ func (suite *TransferTestSuiteV2) TestOnRecvPacket() {
 			simAppB := suite.chainB.GetSimApp()
 			originalBalance := simAppB.BankKeeper.GetBalance(
 				suite.chainB.GetContext(),
-				suite.chainB.SenderAccount.GetAddress(),
+				suite.chainB.AccAddressForAccount(suite.chainB.SenderAccount),
 				tc.sourceDenomToTransfer,
 			)
 
@@ -288,7 +288,7 @@ func (suite *TransferTestSuiteV2) TestOnRecvPacket() {
 
 			msg := types.NewMsgTransferWithEncoding(
 				types.PortID, suite.pathBToA.EndpointB.ClientID,
-				originalCoin, suite.chainB.SenderAccount.GetAddress().String(),
+				originalCoin, suite.chainB.Bech32ForAccount(suite.chainB.SenderAccount),
 				suite.evmChainA.SenderAccount.GetAddress().String(), clienttypes.Height{},
 				timeoutTimestamp, "", types.EncodingProtobuf,
 				false,
@@ -302,7 +302,7 @@ func (suite *TransferTestSuiteV2) TestOnRecvPacket() {
 			transferData := types.NewFungibleTokenPacketData(
 				token.Denom.Path(),
 				token.Amount,
-				suite.chainB.SenderAccount.GetAddress().String(),
+				suite.chainB.Bech32ForAccount(suite.chainB.SenderAccount),
 				suite.evmChainA.SenderAccount.GetAddress().String(),
 				"",
 			)
@@ -333,7 +333,7 @@ func (suite *TransferTestSuiteV2) TestOnRecvPacket() {
 				// check that the balance for evmChainA is updated
 				chainBBalance := simAppB.BankKeeper.GetBalance(
 					suite.chainB.GetContext(),
-					suite.chainB.SenderAccount.GetAddress(),
+					suite.chainB.AccAddressForAccount(suite.chainB.SenderAccount),
 					originalCoin.Denom,
 				)
 				suite.Require().Equal(originalBalance.Amount.Sub(amount).Int64(), chainBBalance.Amount.Int64())
@@ -392,7 +392,7 @@ func (suite *TransferTestSuiteV2) TestOnAckPacket() {
 			msg := types.NewMsgTransferWithEncoding(
 				types.PortID, suite.pathAToB.EndpointA.ClientID,
 				originalCoin, suite.evmChainA.SenderAccount.GetAddress().String(),
-				suite.chainB.SenderAccount.GetAddress().String(), clienttypes.Height{},
+				suite.chainB.Bech32ForAccount(suite.chainB.SenderAccount), clienttypes.Height{},
 				timeoutTimestamp, "", types.EncodingProtobuf,
 				false,
 			)
@@ -406,7 +406,7 @@ func (suite *TransferTestSuiteV2) TestOnAckPacket() {
 				token.Denom.Path(),
 				token.Amount,
 				suite.evmChainA.SenderAccount.GetAddress().String(),
-				suite.chainB.SenderAccount.GetAddress().String(),
+				suite.chainB.Bech32ForAccount(suite.chainB.SenderAccount),
 				"",
 			)
 			bz := suite.evmChainA.Codec.MustMarshal(&transferData)
@@ -500,7 +500,7 @@ func (suite *TransferTestSuiteV2) TestOnTimeoutPacket() {
 			msg := types.NewMsgTransferWithEncoding(
 				types.PortID, suite.pathAToB.EndpointA.ClientID,
 				originalCoin, suite.evmChainA.SenderAccount.GetAddress().String(),
-				suite.chainB.SenderAccount.GetAddress().String(), clienttypes.Height{},
+				suite.chainB.Bech32ForAccount(suite.chainB.SenderAccount), clienttypes.Height{},
 				timeoutTimestamp, "", types.EncodingProtobuf,
 				false,
 			)
@@ -514,7 +514,7 @@ func (suite *TransferTestSuiteV2) TestOnTimeoutPacket() {
 				token.Denom.Path(),
 				token.Amount,
 				suite.evmChainA.SenderAccount.GetAddress().String(),
-				suite.chainB.SenderAccount.GetAddress().String(),
+				suite.chainB.Bech32ForAccount(suite.chainB.SenderAccount),
 				"",
 			)
 			bz := suite.evmChainA.Codec.MustMarshal(&transferData)

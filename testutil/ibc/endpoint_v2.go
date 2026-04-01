@@ -17,7 +17,7 @@ import (
 
 // RegisterCounterparty will construct and execute a MsgRegisterCounterparty on the associated endpoint.
 func (endpoint *Endpoint) RegisterCounterparty() (err error) {
-	msg := clientv2types.NewMsgRegisterCounterparty(endpoint.ClientID, endpoint.Counterparty.MerklePathPrefix.KeyPath, endpoint.Counterparty.ClientID, endpoint.Chain.SenderAccount.GetAddress().String())
+	msg := clientv2types.NewMsgRegisterCounterparty(endpoint.ClientID, endpoint.Counterparty.MerklePathPrefix.KeyPath, endpoint.Counterparty.ClientID, endpoint.Chain.SenderAddrStringForMsg())
 
 	// setup counterparty
 	_, err = endpoint.Chain.SendMsgs(msg)
@@ -37,7 +37,8 @@ func (endpoint *Endpoint) MsgSendPacket(timeoutTimestamp uint64, payload channel
 
 // MsgSendPacketWithSender sends a packet on the associated endpoint using the provided sender. The constructed packet is returned.
 func (endpoint *Endpoint) MsgSendPacketWithSender(timeoutTimestamp uint64, payload channeltypesv2.Payload, sender SenderAccount) (channeltypesv2.Packet, error) {
-	msgSendPacket := channeltypesv2.NewMsgSendPacket(endpoint.ClientID, timeoutTimestamp, sender.SenderAccount.GetAddress().String(), payload)
+	rawAddr := sdk.AccAddress(sender.SenderPrivKey.PubKey().Address().Bytes())
+	msgSendPacket := channeltypesv2.NewMsgSendPacket(endpoint.ClientID, timeoutTimestamp, endpoint.Chain.AccBech32ForMsg(rawAddr), payload)
 
 	res, err := endpoint.Chain.SendMsgsWithSender(sender, msgSendPacket)
 	if err != nil {
@@ -102,7 +103,7 @@ func (endpoint *Endpoint) MsgRecvPacketWithResult(packet channeltypesv2.Packet) 
 	packetKey := hostv2.PacketCommitmentKey(packet.SourceClient, packet.Sequence)
 	proof, proofHeight := endpoint.Counterparty.QueryProof(packetKey)
 
-	msg := channeltypesv2.NewMsgRecvPacket(packet, proof, proofHeight, endpoint.Chain.SenderAccount.GetAddress().String())
+	msg := channeltypesv2.NewMsgRecvPacket(packet, proof, proofHeight, endpoint.Chain.SenderAddrStringForMsg())
 
 	res, err := endpoint.Chain.SendMsgs(msg)
 	if err != nil {
@@ -121,7 +122,7 @@ func (endpoint *Endpoint) MsgAcknowledgePacket(packet channeltypesv2.Packet, ack
 	packetKey := hostv2.PacketAcknowledgementKey(packet.DestinationClient, packet.Sequence)
 	proof, proofHeight := endpoint.Counterparty.QueryProof(packetKey)
 
-	msg := channeltypesv2.NewMsgAcknowledgement(packet, ack, proof, proofHeight, endpoint.Chain.SenderAccount.GetAddress().String())
+	msg := channeltypesv2.NewMsgAcknowledgement(packet, ack, proof, proofHeight, endpoint.Chain.SenderAddrStringForMsg())
 
 	if err := endpoint.Chain.sendMsgs(msg); err != nil {
 		return err
@@ -135,7 +136,7 @@ func (endpoint *Endpoint) MsgTimeoutPacket(packet channeltypesv2.Packet) error {
 	packetKey := hostv2.PacketReceiptKey(packet.DestinationClient, packet.Sequence)
 	proof, proofHeight := endpoint.Counterparty.QueryProof(packetKey)
 
-	msg := channeltypesv2.NewMsgTimeout(packet, proof, proofHeight, endpoint.Chain.SenderAccount.GetAddress().String())
+	msg := channeltypesv2.NewMsgTimeout(packet, proof, proofHeight, endpoint.Chain.SenderAddrStringForMsg())
 
 	if err := endpoint.Chain.sendMsgs(msg); err != nil {
 		return err

@@ -7,9 +7,14 @@ import (
 
 	"github.com/stretchr/testify/suite"
 
+	evmnetwork "github.com/cosmos/evm/testutil/integration/evm/network"
 	"github.com/cosmos/evm/tests/integration/mempool"
 )
 
 func TestMempoolIntegrationTestSuite(t *testing.T) {
 	suite.Run(t, mempool.NewMempoolIntegrationTestSuite(integration.CreateEvmd))
+}
+
+func TestKrakatoaMempoolIntegrationTestSuite(t *testing.T) {
+	suite.Run(t, mempool.NewMempoolIntegrationTestSuite(integration.CreateEvmd, evmnetwork.WithExclusiveMempool()))
 }

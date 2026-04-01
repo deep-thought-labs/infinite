@@ -14,6 +14,7 @@ Usage:
 import os
 import re
 import sys
+import time
 from dataclasses import dataclass
 from pathlib import Path
 from shutil import copy, rmtree
@@ -233,7 +234,14 @@ def compile_contracts_in_dir(target_dir: Path):
     if install_failed:
         raise ValueError("Failed to install npm packages.")
 
-    compilation_failed = os.system("npx hardhat compile")
+    # Hardhat may need to download a solc build on first run, which can be flaky in CI.
+    # Retry a few times to avoid failing the whole pipeline on transient network timeouts.
+    compilation_failed = 1
+    for _ in range(3):
+        compilation_failed = os.system("npx hardhat compile")
+        if not compilation_failed:
+            break
+        time.sleep(2)
     if compilation_failed:
         raise ValueError("Failed to compile Solidity contracts.")
 

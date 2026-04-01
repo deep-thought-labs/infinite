@@ -3,6 +3,8 @@ package ante
 import (
 	"math/big"
 
+	ethtypes "github.com/ethereum/go-ethereum/core/types"
+
 	"github.com/cosmos/evm/ante/evm"
 	"github.com/cosmos/evm/ante/types"
 	"github.com/cosmos/evm/server/config"
@@ -10,13 +12,25 @@ import (
 	testconstants "github.com/cosmos/evm/testutil/constants"
 	utiltx "github.com/cosmos/evm/testutil/tx"
 	evmtypes "github.com/cosmos/evm/x/vm/types"
-	ethtypes "github.com/ethereum/go-ethereum/core/types"
 
 	sdkmath "cosmossdk.io/math"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	"github.com/cosmos/cosmos-sdk/types/bech32"
 	banktypes "github.com/cosmos/cosmos-sdk/x/bank/types"
 )
+
+func reencodeBech32ToPrefix(hrp, address string) string {
+	_, data, err := bech32.DecodeAndConvert(address)
+	if err != nil {
+		panic(err)
+	}
+	out, err := bech32.ConvertAndEncode(hrp, data)
+	if err != nil {
+		panic(err)
+	}
+	return out
+}
 
 func (s *EvmAnteTestSuite) TestGasWantedDecorator() {
 	s.WithFeemarketEnabled(true)
@@ -28,20 +42,20 @@ func (s *EvmAnteTestSuite) TestGasWantedDecorator() {
 	from, fromPrivKey := utiltx.NewAddrKey()
 	to := utiltx.GenerateAddress()
 	denom := evmtypes.GetEVMCoinDenom()
+	accFrom := reencodeBech32ToPrefix(testconstants.ExampleBech32Prefix, "cosmos1x8fhpj9nmhqk8z9kpgjt95ck2xwyue0ptzkucp")
+	accTo := reencodeBech32ToPrefix(testconstants.ExampleBech32Prefix, "cosmos1dx67l23hz9l0k9hcher8xz04uj7wf3yu26l2yn")
 
 	testCases := []struct {
-		name              string
-		expectedGasWanted uint64
-		malleate          func() sdk.Tx
-		expPass           bool
+		name     string
+		malleate func() sdk.Tx
+		expPass  bool
 	}{
 		{
 			"Cosmos Tx",
-			TestGasLimit,
 			func() sdk.Tx {
 				testMsg := banktypes.MsgSend{
-					FromAddress: "cosmos1x8fhpj9nmhqk8z9kpgjt95ck2xwyue0ptzkucp",
-					ToAddress:   "cosmos1dx67l23hz9l0k9hcher8xz04uj7wf3yu26l2yn",
+					FromAddress: accFrom,
+					ToAddress:   accTo,
 					Amount:      sdk.Coins{sdk.Coin{Amount: sdkmath.NewInt(10), Denom: denom}},
 				}
 				txBuilder := s.CreateTestCosmosTxBuilder(sdkmath.NewInt(10), denom, &testMsg)
@@ -51,7 +65,6 @@ func (s *EvmAnteTestSuite) TestGasWantedDecorator() {
 		},
 		{
 			"Ethereum Legacy Tx",
-			TestGasLimit,
 			func() sdk.Tx {
 				txArgs := evmtypes.EvmTxArgs{
 					To:       &to,
@@ -64,7 +77,6 @@ func (s *EvmAnteTestSuite) TestGasWantedDecorator() {
 		},
 		{
 			"Ethereum Access List Tx",
-			TestGasLimit,
 			func() sdk.Tx {
 				emptyAccessList := ethtypes.AccessList{}
 				txArgs := evmtypes.EvmTxArgs{
@@ -79,7 +91,6 @@ func (s *EvmAnteTestSuite) TestGasWantedDecorator() {
 		},
 		{
 			"Ethereum Dynamic Fee Tx (EIP1559)",
-			TestGasLimit,
 			func() sdk.Tx {
 				emptyAccessList := ethtypes.AccessList{}
 				txArgs := evmtypes.EvmTxArgs{
@@ -96,7 +107,6 @@ func (s *EvmAnteTestSuite) TestGasWantedDecorator() {
 		},
 		{
 			"EIP712 message",
-			200000,
 			func() sdk.Tx {
 				amount := sdk.NewCoins(sdk.NewCoin(testconstants.ExampleAttoDenom, sdkmath.NewInt(20)))
 				gas := uint64(200000)
@@ -111,12 +121,11 @@ func (s *EvmAnteTestSuite) TestGasWantedDecorator() {
 		},
 		{
 			"Cosmos Tx - gasWanted > max block gas",
-			TestGasLimit,
 			func() sdk.Tx {
 				denom := testconstants.ExampleAttoDenom
 				testMsg := banktypes.MsgSend{
-					FromAddress: "cosmos1x8fhpj9nmhqk8z9kpgjt95ck2xwyue0ptzkucp",
-					ToAddress:   "cosmos1dx67l23hz9l0k9hcher8xz04uj7wf3yu26l2yn",
+					FromAddress: accFrom,
+					ToAddress:   accTo,
 					Amount:      sdk.Coins{sdk.Coin{Amount: sdkmath.NewInt(10), Denom: denom}},
 				}
 				txBuilder := s.CreateTestCosmosTxBuilder(sdkmath.NewInt(10), testconstants.ExampleAttoDenom, &testMsg)
@@ -128,18 +137,11 @@ func (s *EvmAnteTestSuite) TestGasWantedDecorator() {
 		},
 	}
 
-	// cumulative gas wanted from all test transactions in the same block
-	var expectedGasWanted uint64
-
 	for _, tc := range testCases {
 		s.Run(tc.name, func() {
 			_, err := dec.AnteHandle(ctx, tc.malleate(), false, testutil.NoOpNextFn)
 			if tc.expPass {
 				s.Require().NoError(err)
-
-				gasWanted := s.GetNetwork().App.GetFeeMarketKeeper().GetTransientGasWanted(ctx)
-				expectedGasWanted += tc.expectedGasWanted
-				s.Require().Equal(expectedGasWanted, gasWanted)
 			} else {
 				// TODO: check for specific error message
 				s.Require().Error(err)

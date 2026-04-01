@@ -18,11 +18,6 @@ function panic (errMsg) {
 // Function to extract EVMChainID from Go config file
 function extractChainIDFromGo(goFilePath) {
   try {
-    if (!fs.existsSync(goFilePath)) {
-      logger.warn(`Go config file not found at ${goFilePath}, using default chain ID: 421018`)
-      return 421018
-    }
-
     const goFileContent = fs.readFileSync(goFilePath, 'utf8')
 
     // Look for DefaultEVMChainID = number
@@ -37,6 +32,10 @@ function extractChainIDFromGo(goFilePath) {
     logger.warn('DefaultEVMChainID not found in Go file, using default: 421018')
     return 421018
   } catch (error) {
+    if (error && error.code === 'ENOENT') {
+      logger.warn(`Go config file not found at ${goFilePath}, using default chain ID: 421018`)
+      return 421018
+    }
     logger.warn(`Error reading Go config file: ${error.message}, using default: 421018`)
     return 421018
   }
@@ -45,11 +44,6 @@ function extractChainIDFromGo(goFilePath) {
 // Function to update Hardhat config with the extracted chain ID
 function updateHardhatConfig(chainId, hardhatConfigPath) {
   try {
-    if (!fs.existsSync(hardhatConfigPath)) {
-      logger.warn(`Hardhat config not found at ${hardhatConfigPath}`)
-      return
-    }
-
     let configContent = fs.readFileSync(hardhatConfigPath, 'utf8')
 
     // Find the cosmos network block and update chainId within it
@@ -81,6 +75,10 @@ function updateHardhatConfig(chainId, hardhatConfigPath) {
       }
     }
   } catch (error) {
+    if (error && error.code === 'ENOENT') {
+      logger.warn(`Hardhat config not found at ${hardhatConfigPath}`)
+      return
+    }
     logger.warn(`Error updating Hardhat config: ${error.message}`)
   }
 }
@@ -89,12 +87,13 @@ function updateHardhatConfig(chainId, hardhatConfigPath) {
 function backupHardhatConfig(hardhatConfigPath) {
   const backupPath = hardhatConfigPath + '.backup'
   try {
-    if (fs.existsSync(hardhatConfigPath)) {
-      fs.copyFileSync(hardhatConfigPath, backupPath)
-      logger.info(`Created backup: ${backupPath}`)
-      return backupPath
-    }
+    fs.copyFileSync(hardhatConfigPath, backupPath)
+    logger.info(`Created backup: ${backupPath}`)
+    return backupPath
   } catch (error) {
+    if (error && error.code === 'ENOENT') {
+      return null
+    }
     logger.warn(`Error creating backup: ${error.message}`)
   }
   return null
@@ -103,12 +102,14 @@ function backupHardhatConfig(hardhatConfigPath) {
 // Function to restore Hardhat config from backup
 function restoreHardhatConfig(hardhatConfigPath, backupPath) {
   try {
-    if (backupPath && fs.existsSync(backupPath)) {
-      fs.copyFileSync(backupPath, hardhatConfigPath)
-      fs.unlinkSync(backupPath) // Remove backup file
-      logger.info('Restored original Hardhat config')
-    }
+    if (!backupPath) return
+    fs.copyFileSync(backupPath, hardhatConfigPath)
+    fs.unlinkSync(backupPath) // Remove backup file
+    logger.info('Restored original Hardhat config')
   } catch (error) {
+    if (error && error.code === 'ENOENT') {
+      return
+    }
     logger.warn(`Error restoring config: ${error.message}`)
   }
 }

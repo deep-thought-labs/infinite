@@ -1,0 +1,37 @@
+# Upstream integration: notifies cosmos/docs on release (requires DOCS_REPO_TOKEN).
+#
+# Fork policy — DISABLED by default (no automatic runs; safe if secrets are absent).
+# To re-enable:
+#   1. Remove `if: false` from the job below.
+#   2. Replace `on:` with automatic triggers, e.g.:
+#        on:
+#          release:
+#            types: [published]
+#   3. Configure repository secret DOCS_REPO_TOKEN with permission to dispatch to cosmos/docs
+#      (or change `repository:` to your own docs repo and token).
+name: Trigger Docs Changelog Update
+permissions:
+  contents: read
+
+on:
+  workflow_dispatch:
+
+jobs:
+  trigger-docs-update:
+    # Prevents any execution until the fork explicitly re-enables this workflow.
+    if: false
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger docs repository update
+        uses: peter-evans/repository-dispatch@v3
+        with:
+          token: ${{ secrets.DOCS_REPO_TOKEN }}
+          repository: cosmos/docs
+          event-type: evm-release
+          client-payload: |
+            {
+              "tag_name": "${{ github.event.release.tag_name }}",
+              "release_name": "${{ github.event.release.name }}",
+              "release_url": "${{ github.event.release.html_url }}",
+              "repository": "${{ github.repository }}"
+            }

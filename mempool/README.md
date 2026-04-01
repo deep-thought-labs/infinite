@@ -17,27 +17,27 @@ The mempool implements a two-tier architecture: a local transaction pool for que
 ## Contents
 
 - [Integration](#integration)
-    - [Quick Start](#quick-start)
-    - [Configuration Options](#configuration-options)
-    - [Prerequisites](#prerequisites)
+  - [Quick Start](#quick-start)
+  - [Configuration Options](#configuration-options)
+  - [Prerequisites](#prerequisites)
 - [Concepts](#concepts)
-    - [Problem Statement](#problem-statement)
-    - [Design Principles](#design-principles)
-    - [Dual-Pool Transaction Management](#dual-pool-transaction-management)
-    - [Transaction States](#transaction-states)
-    - [Fee Prioritization](#fee-prioritization)
+  - [Problem Statement](#problem-statement)
+  - [Design Principles](#design-principles)
+  - [Dual-Pool Transaction Management](#dual-pool-transaction-management)
+  - [Transaction States](#transaction-states)
+  - [Fee Prioritization](#fee-prioritization)
 - [Architecture](#architecture)
-    - [ExperimentalEVMMempool](#experimentalevmmempool)
-    - [TxPool](#txpool)
-    - [PriorityNonceMempool](#prioritynoncemempool)
-    - [Miner](#miner)
-    - [Iterator](#iterator)
-    - [CheckTx Handler](#checktx-handler)
-    - [Blockchain Interface](#blockchain-interface)
+  - [ExperimentalEVMMempool](#experimentalevmmempool)
+  - [TxPool](#txpool)
+  - [PriorityNonceMempool](#prioritynoncemempool)
+  - [Miner](#miner)
+  - [Iterator](#iterator)
+  - [CheckTx Handler](#checktx-handler)
+  - [Blockchain Interface](#blockchain-interface)
 - [Transaction Flow](#transaction-flow)
 - [State](#state)
 - [Client](#client)
-    - [JSON-RPC](#json-rpc)
+  - [JSON-RPC](#json-rpc)
 
 ## Integration
 
@@ -241,9 +241,9 @@ The mempool manages both Cosmos and Ethereum transactions through a unified two-
 **Ethereum Transactions** (`MsgEthereumTx`):
 
 - **Tier 1 (Local)**: EVM TxPool handles nonce gaps and promotion logic
-    - Queued state for nonce-gapped transactions (stored locally, not broadcast)
-    - Pending state for immediately executable transactions
-    - Background promotion when gaps are filled
+  - Queued state for nonce-gapped transactions (stored locally, not broadcast)
+  - Pending state for immediately executable transactions
+  - Background promotion when gaps are filled
 - **Tier 2 (Network)**: CometBFT mempool broadcasts executable transactions
 
 **Cosmos Transactions** (Bank, Staking, Gov, etc.):

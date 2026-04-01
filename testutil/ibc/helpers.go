@@ -23,9 +23,16 @@ const FeeAmt = 10000000000
 
 func FeeCoins() sdk.Coins {
 	// Note: evmChain requires for gas price higher than base fee (see fee_checker.go).
-	// Other Cosmos chains using simapp don’t rely on gas prices, so this works even if simapp isn’t aware of evmChain’s TestExtendedDenom.
 	sdkExp := new(big.Int).Exp(big.NewInt(10), big.NewInt(6), nil)
 	return sdk.Coins{sdk.NewInt64Coin(types.DefaultEVMExtendedDenom, new(big.Int).Mul(big.NewInt(FeeAmt), sdkExp).Int64())}
+}
+
+// SimAppFeeCoins returns fees for ibc-go SimApp chains. SimApp mint BeginBlock moves
+// collected fees in sdk.DefaultBondDenom; paying fees only in the EVM extended denom
+// leaves the fee collector without stake and breaks BeginBlock on counterparty NextBlock.
+func SimAppFeeCoins() sdk.Coins {
+	sdkExp := new(big.Int).Exp(big.NewInt(10), big.NewInt(6), nil)
+	return sdk.Coins{sdk.NewInt64Coin(sdk.DefaultBondDenom, new(big.Int).Mul(big.NewInt(FeeAmt), sdkExp).Int64())}
 }
 
 // SignAndDeliver signs and delivers a transaction. No simulation occurs as the
@@ -34,6 +41,7 @@ func FeeCoins() sdk.Coins {
 // CONTRACT: BeginBlock must be called before this function.
 func SignAndDeliver(
 	tb testing.TB, proposerAddress sdk.AccAddress, txCfg client.TxConfig, app *bam.BaseApp, msgs []sdk.Msg,
+	fees sdk.Coins,
 	chainID string, accNums, accSeqs []uint64, expPass bool, blockTime time.Time, nextValHash []byte, priv ...cryptotypes.PrivKey,
 ) (*abci.ResponseFinalizeBlock, error) {
 	tb.Helper()
@@ -41,9 +49,7 @@ func SignAndDeliver(
 		rand.New(rand.NewSource(time.Now().UnixNano())),
 		txCfg,
 		msgs,
-		// Note: evmChain requires for gas price higher than base fee (see fee_checker.go).
-		// Other Cosmos chains using simapp don’t rely on gas prices, so this works even if simapp isn’t aware of evmChain’s TestExtendedDenom.
-		FeeCoins(),
+		fees,
 		simtestutil.DefaultGenTxGas,
 		chainID,
 		accNums,

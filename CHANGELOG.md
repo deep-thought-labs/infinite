@@ -1,40 +1,90 @@
 # CHANGELOG
 
-## Infinite Drive Features
+> This file contains two parallel tracks:
+>
+> - **Infinite Improbability Drive** (`infinite`): releases and project-specific notes using Infinite Drive versioning (e.g. `v0.1.x`).
+> - **cosmos/evm**: the reference track, preserved in the same structure for easier synchronization.
+>
+> **Note**: All entries currently listed under the `cosmos/evm` track below are included in this repository. Newer `cosmos/evm` entries may be added in later synchronization cycles.
 
-> **Note**: This section documents the features and configurations specific to Infinite Drive. Changes from the upstream repository are documented in the sections below.
+---
 
-### IDENTITY & NETWORK CONFIGURATION
+## Infinite Drive — Changelog track
 
-- **Native Token**: "Improbability" (42) with base denomination `drop` (1 Improbability [42] = 10¹⁸ drop)
-- **Chain IDs**: 
+### Release set (in progress)
+
+#### Identity & network configuration
+
+- **Native token**: "Improbability" (42) with base denomination `drop` (1 Improbability [42] = 10¹⁸ drop)
+- **Chain IDs**:
   - Mainnet: Cosmos `infinite_421018-1`, EVM `421018`
   - Testnet: Cosmos `infinite_421018001-1`, EVM `421018001`
   - Creative: Cosmos `infinite_421018002-1`, EVM `421018002`
-- **Bech32 Prefixes**: `infinite`, `infinitevaloper`, `infinitevalcons`
-- **Binary**: `infinited` - Infinite Drive blockchain node
+- **Bech32 prefixes**: `infinite`, `infinitevaloper`, `infinitevalcons`
+- **Binary**: `infinited` (Infinite Drive blockchain node)
 
-### GENESIS CONFIGURATION
+#### Genesis configuration
 
-- **Multi-network genesis support**: `customize_genesis.sh` script supporting mainnet, testnet, and creative networks with distinct parameters (denominations, inflation, governance, slashing, fee market, distribution, consensus)
-- **ModuleAccounts automation**: `setup_module_accounts.sh` script for automated ModuleAccount creation with permissions and initial balances
-- **External configuration**: JSON configuration files (`genesis-configs/*.json`) for all network-specific parameters, enabling flexible network setup
-- **Genesis state defaults**: `DefaultGenesis()` implementation ensuring all modules use "drop" denomination
+- **Multi-network genesis support**: `customize_genesis.sh` supporting mainnet, testnet, and creative networks with distinct parameters (denominations, inflation, governance, slashing, fee market, distribution, consensus)
+- **ModuleAccounts automation**: `setup_module_accounts.sh` for automated ModuleAccount creation with permissions and initial balances
+- **External configuration**: JSON configuration files (`genesis-configs/*.json`) for all network-specific parameters
+- **Genesis state defaults**: `DefaultGenesis()` ensures all modules use the `drop` denomination
 
-### DOCUMENTATION & DEVELOPER TOOLS
+#### Documentation & developer tools
 
-- **Structured documentation**: Clear entry points (`QUICK_START.md`, `BUILDING.md`), categorized guides, and AI-friendly format
-- **Validation suite**: Comprehensive validation scripts (`validate_customizations.sh`, `validate_token_config.sh`, `check_build_prerequisites.sh`)
-- **Development utilities**: Scripts for customization tracking, health checks, and build verification
-- **Genesis creation guides**: Step-by-step instructions for network genesis creation across mainnet/testnet/creative networks
+- **Structured documentation**: clear entry points (`QUICK_START.md`, `BUILDING.md`) and categorized guides
+- **Maintenance docs (`docs/fork-maintenance/`)**: divergence record (`UPSTREAM_DIVERGENCE_RECORD.md`), merge playbook, diff reference, verification checklist, merge-log templates and archives
+- **Validation suite**: scripts such as `validate_customizations.sh`, `validate_token_config.sh`, `check_build_prerequisites.sh`
+- **Development utilities**: scripts for customization tracking, health checks, and build verification
+- **Genesis creation guides**: step-by-step instructions for mainnet/testnet/creative genesis creation
 
-### TECHNICAL FEATURES
+#### Technical notes
 
 - **Power reduction configuration**: 1 Improbability [42] = 10^18 drop
-- **Genesis module defaults**: Genesis state functions for staking, mint, and governance modules configured for "drop" denomination
-- **Local development tools**: `local_node.sh` script with automatic genesis customization for streamlined local development
+- **Genesis module defaults**: staking, mint, and governance configured for the `drop` denomination
+- **Local development tools**: `local_node.sh` with automatic genesis customization
+
+#### Merge
+
+- [\#3](https://github.com/deep-thought-labs/infinite/pull/3) Synchronize `cosmos/evm` changes (through `50b4817017187cbda2a0af767fda39a895b9989a`) and align CI/test gating for `infinite`.
+
+#### Engineering quality
+
+- **CI and test gating improvements**: workflow alignment and reliability improvements for builds, linting, system tests, and compatibility tests.
+- **System test hardening**: improved chain-upgrade harness and a Docker-based path to run system tests in a Linux environment when needed.
+- **Solidity harness stability**: improvements to reduce transient failures when compiling contracts in CI.
+
+#### Continuous integration
+
+- [\#2](https://github.com/deep-thought-labs/infinite/pull/2) Align CI workflows with upstream structure and improve test reliability.
+
+## v0.1.11
+
+### Notes
+
+- Released as a tag with no material functional changes.
+
+## v0.1.10
+
+### Overview
+
+- **First published production release** of Infinite Improbability Drive (`infinite`).
+- This release line uses **Infinite Drive** versioning (`v0.1.x`) and is independent from the `cosmos/evm` track versioning (e.g. `v0.6.0`).
+- At the time `v0.1.10` was released, the `cosmos/evm` track was at `v0.6.0`.
+
+### Merge
+
+- [\#1](https://github.com/deep-thought-labs/infinite/pull/1) feat(precompiles): add BalanceHandler to handle native balance change.
+
+### Operational notes
+
+- When running chain upgrade system tests, `v0.1.10` is used as the legacy baseline for the upgrade scenario (see `Makefile` system test variables and `docs/guides/testing/CHAIN_UPGRADE_SYSTEM_TEST.md`).
 
 ---
+
+## cosmos/evm — Changelog track
+
+> Synchronized through `cosmos/evm@50b4817017187cbda2a0af767fda39a895b9989a`.
 
 ## UNRELEASED
 
@@ -47,18 +97,24 @@
 - [\#811](https://github.com/cosmos/evm/pull/811) Use sdk's DefaultBondDenom for default evm denom in genesis.
 - [\#823](https://github.com/cosmos/evm/pull/823) Remove authz dependency from test suite and EvmApp interface
 - [\#829](https://github.com/cosmos/evm/pull/829) Seperate test app interface
+- [\#968](https://github.com/cosmos/evm/pull/968) Use normal gas config in ibc transfer to prevent potential DoS attack
+- [\#1029](https://github.com/cosmos/evm/pull/1029) Mark EvmCoinInfo.Decimals field as deprecated
 
 ### FEATURES
 
 - [\#589](https://github.com/cosmos/evm/pull/589) Remove parallelization blockers via migration from transient to object store, refactoring of gas, indexing, and bloom utilities.
 - [\#768](https://github.com/cosmos/evm/pull/768) Added ICS-02 Client Router precompile
+- [\#815](https://github.com/cosmos/evm/pull/815) Support for multi gRPC query clients serve with old binary.
 
 ### BUG FIXES
 
+ [\#965](https://github.com/cosmos/evm/pull/965) Fix gas double charging on EVM calls in IBCOnTimeoutPacketCallback.
+
+- [\#869](https://github.com/cosmos/evm/pull/869) Fix erc20 IBC callbacks to check for native token transfer before parsing recipient.
+- [\#860](https://github.com/cosmos/evm/pull/860) Fix EIP-712 signature verification to use configured EVM chain ID instead of parsing cosmos chain ID string and replace legacytx.StdSignBytes with the aminojson sign mode handler.
 - [\#794](https://github.com/cosmos/evm/pull/794) Fix mempool.max-txs flag not using desired default of 0
 - [\#748](https://github.com/cosmos/evm/pull/748) Fix DynamicFeeChecker in Cosmos ante handler to respect NoBaseFee feemarkets' parameter.
 - [\#690](https://github.com/cosmos/evm/pull/690) Fix Ledger hardware wallet support for coin type 60.
-- [\#766](https://github.com/cosmos/evm/pull/766) Align gas estimation logic with go-ethereum v1.16.3
 - [\#769](https://github.com/cosmos/evm/pull/769) Fix erc20 ibc middleware to not to validate sender address format.
 - [\#756](https://github.com/cosmos/evm/pull/756) Fix error message typo in NewMsgCancelProposal.
 - [\#772](https://github.com/cosmos/evm/pull/772) Avoid panic on close if evm mempool not used.
@@ -66,8 +122,34 @@
 - [\#790](https://github.com/cosmos/evm/pull/790) fix panic in historical query due to missing EvmCoinInfo.
 - [\#800](https://github.com/cosmos/evm/pull/800) Fix denom exponent validation in virtual fee deduct in vm module.
 - [\#817](https://github.com/cosmos/evm/pull/817) Align GetCoinbaseAddress to handle empty proposer address in contexts like CheckTx where proposer doesn't exist.
+- [\#814](https://github.com/cosmos/evm/pull/814) Fix duplicated events in post tx processor.
 - [\#816](https://github.com/cosmos/evm/pull/816) Avoid nil pointer when RPC requests execute before evmCoinInfo initialization in PreBlock with defaultEvmCoinInfo fallback.
 - [\#828](https://github.com/cosmos/evm/pull/828) Validate decimals before conversion to prevent panic when coininfo is missing in historical queries.
+- [\#905](https://github.com/cosmos/evm/pull/905) Fix EIP-6780 selfdestruct to properly delete contracts at pre-funded addresses by persisting code and account before DeleteAccount's IsContract check.
+- [\#920](https://github.com/cosmos/evm/pull/920) Fix GetCoinbaseAddress to correctly convert validator operator address from Bech32 format to Ethereum address for block.coinbase opcode.
+- [\#705](https://github.com/cosmos/evm/pull/705) Fix dynamic precompiles being disabled when EVM state overrides are used in eth_call.
+- [\#967](https://github.com/cosmos/evm/pull/967) Fix return value of erc20 ibcv2 middleware to properly reflect application success and middleware failure.
+- [\#992](https://github.com/cosmos/evm/pull/992) Respect the provided `gasCap` in `CallEVMWithData` instead of always used the default cap.
+- [\#993](https://github.com/cosmos/evm/pull/993) Enforce `src_callback` contract address to match the packet sender for IBC acknowledgement and timeout callbacks to prevent arbitrary contract execution.
+
+## v0.6.0
+
+Follow the [migration document](docs/migrations/v0.5.x_to_v0.6.0.md) for upgrade instructions.
+
+### BREAKING CHANGES
+
+- Removed IBC Transfer wrapper. Users are now required to use the precompile to transfer ERC20 tokens.
+- Added StateDB as a parameter to internal EVM calls.
+
+### DEPENDENCIES
+
+### IMPROVEMENTS
+
+### FEATURES
+
+### BUG FIXES
+
+## v0.5.1
 
 ## v0.5.0
 

@@ -80,10 +80,10 @@ func GenerateBankGenesisMetadata(evmChainID uint64) []banktypes.Metadata {
 		metas = append(metas, banktypes.Metadata{
 			Description: description,
 			Base:        evmDenom,
-			DenomUnits: denomUnits,
-			Name:       name,
-			Symbol:     symbol,
-			Display:    displayDenom,
+			DenomUnits:  denomUnits,
+			Name:        name,
+			Symbol:      symbol,
+			Display:     displayDenom,
 		})
 	}
 

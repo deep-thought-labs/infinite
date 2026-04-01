@@ -3,14 +3,11 @@ package evmd
 import (
 	"context"
 
-	banktypes "github.com/cosmos/cosmos-sdk/x/bank/types"
-	"github.com/cosmos/evm/x/vm/types"
+	storetypes "cosmossdk.io/store/types"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/module"
-
-	storetypes "cosmossdk.io/store/types"
-	upgradetypes "cosmossdk.io/x/upgrade/types"
+	upgradetypes "github.com/cosmos/cosmos-sdk/x/upgrade/types"
 )
 
 // UpgradeName defines the on-chain upgrade name for the sample EVMD upgrade
@@ -21,63 +18,39 @@ import (
 // v0.4.0 to v0.5.x
 const UpgradeName = "v0.4.0-to-v0.5.0"
 
+// UpgradeNameSystemTest is used by `TestChainUpgrade` so the legacy binary
+// downloaded from releases is not required to share the same compiled-in upgrade
+// handler name as the current branch binary.
+//
+// Rationale: some legacy artifacts may already register a handler for UpgradeName
+// at process start, which can conflict with SDK `x/upgrade` PreBlock semantics
+// when an on-chain plan is scheduled but not yet due.
+const UpgradeNameSystemTest = "v0.1.10-to-v0.1.12"
+
 func (app EVMD) RegisterUpgradeHandlers() {
-	app.UpgradeKeeper.SetUpgradeHandler(
-		UpgradeName,
-		func(ctx context.Context, _ upgradetypes.Plan, fromVM module.VersionMap) (module.VersionMap, error) {
-			sdkCtx := sdk.UnwrapSDKContext(ctx)
-			sdkCtx.Logger().Debug("this is a debug level message to test that verbose logging mode has properly been enabled during a chain upgrade")
-
-			app.BankKeeper.SetDenomMetaData(ctx, banktypes.Metadata{
-				Description: "Example description",
-				DenomUnits: []*banktypes.DenomUnit{
-					{
-						Denom:    "atest",
-						Exponent: 0,
-						Aliases:  nil,
-					},
-					{
-						Denom:    "test",
-						Exponent: 18,
-						Aliases:  nil,
-					},
-				},
-				Base:    "atest",
-				Display: "test",
-				Name:    "Test Token",
-				Symbol:  "TEST",
-				URI:     "example_uri",
-				URIHash: "example_uri_hash",
-			})
-
-			// (Required for NON-18 denom chains *only)
-			// Update EVM params to add Extended denom options
-			// Ensure that this corresponds to the EVM denom
-			// (tyically the bond denom)
-			evmParams := app.EVMKeeper.GetParams(sdkCtx)
-			evmParams.ExtendedDenomOptions = &types.ExtendedDenomOptions{ExtendedDenom: "atest"}
-			err := app.EVMKeeper.SetParams(sdkCtx, evmParams)
-			if err != nil {
-				return nil, err
-			}
-			// Initialize EvmCoinInfo in the module store
-			if err := app.EVMKeeper.InitEvmCoinInfo(sdkCtx); err != nil {
-				return nil, err
-			}
-			return app.ModuleManager.RunMigrations(ctx, app.Configurator(), fromVM)
-		},
-	)
+	register := func(name string) {
+		app.UpgradeKeeper.SetUpgradeHandler(
+			name,
+			func(ctx context.Context, _ upgradetypes.Plan, fromVM module.VersionMap) (module.VersionMap, error) {
+				sdkCtx := sdk.UnwrapSDKContext(ctx)
+				sdkCtx.Logger().Debug("this is a debug level message to test that verbose logging mode has properly been enabled during a chain upgrade")
+				return app.ModuleManager.RunMigrations(ctx, app.Configurator(), fromVM)
+			},
+		)
+	}
+	register(UpgradeName)
+	register(UpgradeNameSystemTest)
 
 	upgradeInfo, err := app.UpgradeKeeper.ReadUpgradeInfoFromDisk()
 	if err != nil {
 		panic(err)
 	}
 
-	if upgradeInfo.Name == UpgradeName && !app.UpgradeKeeper.IsSkipHeight(upgradeInfo.Height) {
+	if (upgradeInfo.Name == UpgradeName || upgradeInfo.Name == UpgradeNameSystemTest) &&
+		!app.UpgradeKeeper.IsSkipHeight(upgradeInfo.Height) {
 		storeUpgrades := storetypes.StoreUpgrades{
 			Added: []string{},
 		}
-		// configure store loader that checks if version == upgradeHeight and applies store upgrades
 		app.SetStoreLoader(upgradetypes.UpgradeStoreLoader(upgradeInfo.Height, &storeUpgrades))
 	}
 }

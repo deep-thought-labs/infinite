@@ -9,12 +9,6 @@ import (
 	"path/filepath"
 	"time"
 
-	"github.com/cosmos/evm/infinited/config"
-
-	cosmosevmhd "github.com/cosmos/evm/crypto/hd"
-	cosmosevmkeyring "github.com/cosmos/evm/crypto/keyring"
-	"github.com/cosmos/evm/infinited"
-	cosmosevmserverconfig "github.com/cosmos/evm/server/config"
 	"github.com/spf13/cobra"
 	"github.com/spf13/pflag"
 
@@ -23,8 +17,16 @@ import (
 	tmtime "github.com/cometbft/cometbft/types/time"
 
 	dbm "github.com/cosmos/cosmos-db"
+	cosmosevmhd "github.com/cosmos/evm/crypto/hd"
+	cosmosevmkeyring "github.com/cosmos/evm/crypto/keyring"
+	"github.com/cosmos/evm/infinited"
+	"github.com/cosmos/evm/infinited/config"
+	customnetwork "github.com/cosmos/evm/infinited/tests/network"
+	cosmosevmserverconfig "github.com/cosmos/evm/server/config"
+	evmnetwork "github.com/cosmos/evm/testutil/integration/evm/network"
+	evmtypes "github.com/cosmos/evm/x/vm/types"
 
-	"cosmossdk.io/log"
+	"cosmossdk.io/log/v2"
 	"cosmossdk.io/math"
 
 	"github.com/cosmos/cosmos-sdk/client"
@@ -47,10 +49,6 @@ import (
 	"github.com/cosmos/cosmos-sdk/x/genutil"
 	genutiltypes "github.com/cosmos/cosmos-sdk/x/genutil/types"
 	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
-
-	customnetwork "github.com/cosmos/evm/infinited/tests/network"
-	evmnetwork "github.com/cosmos/evm/testutil/integration/evm/network"
-	evmtypes "github.com/cosmos/evm/x/vm/types"
 )
 
 var (
@@ -71,8 +69,6 @@ var (
 	flagValidatorPowers    = "validator-powers"
 	unsafeStartValidatorFn UnsafeStartValidatorCmdCreator
 )
-
-const TEST_DENOM = "atest"
 
 var mnemonics = []string{
 	"copper push brief egg scan entry inform record adjust fossil boss egg comic alien upon aspect dry avoid interest fury window hint race symptom",
@@ -452,7 +448,7 @@ func initTestnetFiles(
 		accTokens := sdk.TokensFromConsensusPower(1000, sdk.DefaultPowerReduction)
 		accStakingTokens := sdk.TokensFromConsensusPower(500, sdk.DefaultPowerReduction)
 		coins := sdk.Coins{
-			sdk.NewCoin(TEST_DENOM, accTokens),
+			sdk.NewCoin(evmtypes.DefaultEVMExtendedDenom, accTokens),
 			sdk.NewCoin(sdk.DefaultBondDenom, accStakingTokens),
 		}
 
@@ -530,7 +526,7 @@ func addExtraAccounts(kb keyring.Keyring, algo keyring.SignatureAlgo) ([]banktyp
 	accTokens := sdk.TokensFromConsensusPower(1000, sdk.DefaultPowerReduction)
 	accStakingTokens := sdk.TokensFromConsensusPower(500, sdk.DefaultPowerReduction)
 	coins := sdk.Coins{
-		sdk.NewCoin(TEST_DENOM, accTokens),
+		sdk.NewCoin(evmtypes.DefaultEVMExtendedDenom, accTokens),
 		sdk.NewCoin(sdk.DefaultBondDenom, accStakingTokens),
 	}
 	coins = coins.Sort()
@@ -583,7 +579,6 @@ func initGenFiles(
 	var evmGenState evmtypes.GenesisState
 	clientCtx.Codec.MustUnmarshalJSON(appGenState[evmtypes.ModuleName], &evmGenState)
 
-	evmGenState.Params.EvmDenom = TEST_DENOM
 	appGenState[evmtypes.ModuleName] = clientCtx.Codec.MustMarshalJSON(&evmGenState)
 
 	appGenStateJSON, err := json.MarshalIndent(appGenState, "", "  ")

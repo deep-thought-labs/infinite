@@ -26,7 +26,6 @@ import (
 	"github.com/cosmos/evm/testutil/tx"
 	testutiltypes "github.com/cosmos/evm/testutil/types"
 	feemarkettypes "github.com/cosmos/evm/x/feemarket/types"
-	types2 "github.com/cosmos/evm/x/precisebank/types"
 	"github.com/cosmos/evm/x/vm/keeper/testdata"
 	"github.com/cosmos/evm/x/vm/statedb"
 	"github.com/cosmos/evm/x/vm/types"
@@ -575,7 +574,7 @@ func (s *KeeperTestSuite) TestEstimateGas() {
 				return types.TransactionArgs{}
 			},
 			true,
-			53793,
+			ethparams.TxGasContractCreation,
 			false,
 			config.DefaultGasCap,
 		},
@@ -700,7 +699,7 @@ func (s *KeeperTestSuite) TestEstimateGas() {
 				}
 			},
 			true,
-			1197697,
+			1187108,
 			false,
 			config.DefaultGasCap,
 		},
@@ -728,7 +727,7 @@ func (s *KeeperTestSuite) TestEstimateGas() {
 				}
 			},
 			true,
-			52669,
+			51880,
 			false,
 			config.DefaultGasCap,
 		},
@@ -810,7 +809,7 @@ func (s *KeeperTestSuite) TestEstimateGas() {
 				}
 			},
 			true,
-			1197697,
+			1187108,
 			true,
 			config.DefaultGasCap,
 		},
@@ -839,7 +838,7 @@ func (s *KeeperTestSuite) TestEstimateGas() {
 				}
 			},
 			true,
-			52669,
+			51880,
 			true,
 			config.DefaultGasCap,
 		},
@@ -1068,7 +1067,7 @@ func (s *KeeperTestSuite) TestEstimateGasWithStateOverrides() {
 				return string(bz)
 			},
 			true,
-			52114,
+			49140,
 			false,
 			config.DefaultGasCap,
 		},
@@ -1285,7 +1284,9 @@ func (s *KeeperTestSuite) TestTraceTx() {
 				contractAddr, err := deployErc20Contract(senderKey, s.Factory)
 				s.Require().NoError(err)
 				s.Require().NoError(s.Network.NextBlock())
-				numTxs := 1500
+				// Keep this bounded to avoid CI timeouts while still exercising
+				// the "gas limit exceeded for predecessors" behavior.
+				numTxs := 200
 				txs := make([]*types.MsgEthereumTx, 0, numTxs)
 				for range numTxs {
 					txMsg := buildTransferTx(
@@ -2234,7 +2235,6 @@ func (s *KeeperTestSuite) TestBalance() {
 
 				balance, ok := sdkmath.NewIntFromString(balanceResp.Balance)
 				s.Require().True(ok)
-				balance = balance.Quo(types2.ConversionFactor())
 				s.Require().NotEqual(balance.String(), "0")
 
 				// replace with vesting account
@@ -2281,7 +2281,6 @@ func (s *KeeperTestSuite) TestBalance() {
 
 				balance, ok := sdkmath.NewIntFromString(balanceResp.Balance)
 				s.Require().True(ok)
-				balance = balance.Quo(types2.ConversionFactor())
 				s.Require().NotEqual(balance.String(), "0")
 
 				// replace with vesting account

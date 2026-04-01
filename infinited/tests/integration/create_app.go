@@ -4,28 +4,27 @@ import (
 	"encoding/json"
 	"os"
 
-	"github.com/cosmos/cosmos-sdk/client/flags"
-
 	dbm "github.com/cosmos/cosmos-db"
-	ibctesting "github.com/cosmos/ibc-go/v10/testing"
-
 	"github.com/cosmos/evm"
 	"github.com/cosmos/evm/infinited"
 	srvflags "github.com/cosmos/evm/server/flags"
 	"github.com/cosmos/evm/testutil/constants"
+	erc20types "github.com/cosmos/evm/x/erc20/types"
 	feemarkettypes "github.com/cosmos/evm/x/feemarket/types"
+	ibctesting "github.com/cosmos/ibc-go/v10/testing"
 
-	"cosmossdk.io/log"
+	"cosmossdk.io/log/v2"
 
 	"github.com/cosmos/cosmos-sdk/baseapp"
+	"github.com/cosmos/cosmos-sdk/client"
+	"github.com/cosmos/cosmos-sdk/client/flags"
 	simutils "github.com/cosmos/cosmos-sdk/testutil/sims"
 	minttypes "github.com/cosmos/cosmos-sdk/x/mint/types"
 	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
 )
 
-// CreateEvmd creates an evm app for regular integration tests (non-mempool)
-// This version uses a noop mempool to avoid state issues during transaction processing
-func CreateEvmd(chainID string, evmChainID uint64, customBaseAppOptions ...func(*baseapp.BaseApp)) evm.EvmApp {
+// CreateEvmd creates an evm app for integration tests
+func CreateEvmd(chainID string, evmChainID uint64, exclusiveMempool bool, customBaseAppOptions ...func(*baseapp.BaseApp)) evm.EvmApp {
 	// A temporary home directory is created and used to prevent race conditions
 	// related to home directory locks in chains that use the WASM module.
 	defaultNodeHome, err := os.MkdirTemp("", "evmd-temp-homedir")
@@ -36,11 +35,12 @@ func CreateEvmd(chainID string, evmChainID uint64, customBaseAppOptions ...func(
 	db := dbm.NewMemDB()
 	logger := log.NewNopLogger()
 	loadLatest := true
-	appOptions := NewAppOptionsWithFlagHomeAndChainID(defaultNodeHome, evmChainID)
+	appOptions := NewAppOptionsWithFlagHomeAndChainID(defaultNodeHome, evmChainID, exclusiveMempool)
 
 	baseAppOptions := append(customBaseAppOptions, baseapp.SetChainID(chainID))
 
-	return evmd.NewExampleApp(
+	// Start the app
+	app := evmd.NewExampleApp(
 		logger,
 		db,
 		nil,
@@ -48,6 +48,18 @@ func CreateEvmd(chainID string, evmChainID uint64, customBaseAppOptions ...func(
 		appOptions,
 		baseAppOptions...,
 	)
+
+	// Prepare the client context
+	clientCtx := client.Context{}.WithChainID(constants.ExampleChainID.ChainID).
+		WithHeight(1).
+		WithTxConfig(app.GetTxConfig())
+
+	// Get the mempool and set the client context if supported
+	if m, ok := app.GetMempool().(interface{ SetClientCtx(client.Context) }); ok && m != nil {
+		m.SetClientCtx(clientCtx)
+	}
+
+	return app
 }
 
 // SetupEvmd initializes a new evmd app with default genesis state.
@@ -63,7 +75,7 @@ func SetupEvmd() (ibctesting.TestingApp, map[string]json.RawMessage) {
 		dbm.NewMemDB(),
 		nil,
 		true,
-		NewAppOptionsWithFlagHomeAndChainID(defaultNodeHome, constants.EighteenDecimalsChainID),
+		NewAppOptionsWithFlagHomeAndChainID(defaultNodeHome, constants.EighteenDecimalsChainID, false),
 	)
 	// disable base fee for testing
 	genesisState := app.DefaultGenesis()
@@ -77,12 +89,21 @@ func SetupEvmd() (ibctesting.TestingApp, map[string]json.RawMessage) {
 	mintGen.Params.MintDenom = constants.ExampleAttoDenom
 	genesisState[minttypes.ModuleName] = app.AppCodec().MustMarshalJSON(mintGen)
 
+	// IBC / ICS20 precompile tests expect the example WEVMOS pair and native precompile (bond denom).
+	erc20Gen := erc20types.DefaultGenesisState()
+	erc20Gen.TokenPairs = constants.ExampleTokenPairs
+	erc20Gen.NativePrecompiles = []string{constants.WEVMOSContractMainnet}
+	genesisState[erc20types.ModuleName] = app.AppCodec().MustMarshalJSON(erc20Gen)
+
 	return app, genesisState
 }
 
-func NewAppOptionsWithFlagHomeAndChainID(home string, evmChainID uint64) simutils.AppOptionsMap {
+func NewAppOptionsWithFlagHomeAndChainID(home string, evmChainID uint64, exlcusiveMempool bool) simutils.AppOptionsMap {
 	return simutils.AppOptionsMap{
-		flags.FlagHome:      home,
-		srvflags.EVMChainID: evmChainID,
+		flags.FlagHome:                              home,
+		srvflags.EVMChainID:                         evmChainID,
+		srvflags.EVMMempoolOperateExclusively:       exlcusiveMempool,
+		srvflags.EVMMempoolInsertQueueSize:          5000,
+		srvflags.EVMMempoolPendingTxProposalTimeout: "250ms",
 	}
 }

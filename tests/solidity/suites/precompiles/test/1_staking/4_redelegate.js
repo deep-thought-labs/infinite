@@ -1,6 +1,6 @@
 const {expect} = require('chai')
 const hre = require('hardhat')
-const { findEvent, waitWithTimeout, RETRY_DELAY_FUNC} = require('../common')
+const { findEvent, waitWithTimeout, RETRY_DELAY_FUNC, BECH32_PRECOMPILE_ADDRESS, INFINITE_BECH32_PREFIX, INFINITE_VALOPER_BECH32_PREFIX } = require('../common')
 
 // Cosmos SDK LegacyDec precision (18 decimal places)
 const PRECISION = 10n ** 18n
@@ -59,24 +59,25 @@ function formatRedelegation(res) {
 
 describe('Staking – redelegate with event and state assertions', function () {
     const STAKING_ADDRESS = '0x0000000000000000000000000000000000000800'
+    const BECH32_ADDRESS = '0x0000000000000000000000000000000000000400'
     const GAS_LIMIT = 1_000_000 // skip gas estimation for simplicity
 
-    let staking, signer
+    let staking, bech32, signer
 
     before(async () => {
         [signer] = await hre.ethers.getSigners()
         // instantiate StakingI and Bech32I precompile contracts
         staking = await hre.ethers.getContractAt('StakingI', STAKING_ADDRESS)
+        bech32 = await hre.ethers.getContractAt('Bech32I', BECH32_ADDRESS)
     })
 
     it('should redelegate tokens and emit Redelegate event', async function () {
-        const signerBech32 = 'infinite1cml96vmptgw99syqrrz8az79xer2pcgp95srxm'
-        const srcValBech32 = 'infinitevaloper10jmp6sgh4cc6zt3e8gw05wavvejgr5pw4xyrql'
-        const dstValBech32 = 'infinitevaloper1cml96vmptgw99syqrrz8az79xer2pcgpqqyk2g'
-
-        // decode bech32 → hex for event comparisons
+        // hex addresses for event comparisons / bech32 conversion
         const srcValHex = '0x7cB61D4117AE31a12E393a1Cfa3BaC666481D02E'
         const dstValHex = '0xC6Fe5D33615a1C52c08018c47E8Bc53646A0E101'
+        const signerBech32 = await bech32.getFunction('hexToBech32').staticCall(signer.address, INFINITE_BECH32_PREFIX)
+        const srcValBech32 = await bech32.getFunction('hexToBech32').staticCall(srcValHex, INFINITE_VALOPER_BECH32_PREFIX)
+        const dstValBech32 = await bech32.getFunction('hexToBech32').staticCall(dstValHex, INFINITE_VALOPER_BECH32_PREFIX)
 
         // 1) query current delegations to both validators before redelegation
         const beforeSrcDelegationRaw = await staking.delegation(signer.address, srcValBech32)

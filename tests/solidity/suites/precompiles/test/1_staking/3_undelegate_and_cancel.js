@@ -1,6 +1,6 @@
 const {expect} = require('chai')
 const hre = require('hardhat')
-const { findEvent, waitWithTimeout, RETRY_DELAY_FUNC} = require('../common')
+const { findEvent, waitWithTimeout, RETRY_DELAY_FUNC, BECH32_PRECOMPILE_ADDRESS, INFINITE_VALOPER_BECH32_PREFIX } = require('../common')
 
 function formatUnbondingDelegation(res) {
     const delegatorAddress = res[0]
@@ -36,18 +36,21 @@ function formatUnbondingDelegation(res) {
 
 describe('Staking – delegate, undelegate & cancelUnbondingDelegation with event assertions', function () {
     const STAKING_ADDRESS = '0x0000000000000000000000000000000000000800'
+    const BECH32_ADDRESS = '0x0000000000000000000000000000000000000400'
     const GAS_LIMIT = 1_000_000 // skip gas estimation for simplicity
 
-    let staking, signer
+    let staking, bech32, signer
 
     before(async () => {
         [signer] = await hre.ethers.getSigners()
         // Instantiate the StakingI precompile contract
         staking = await hre.ethers.getContractAt('StakingI', STAKING_ADDRESS)
+        bech32 = await hre.ethers.getContractAt('Bech32I', BECH32_ADDRESS)
     })
 
     it('should delegate, undelegate, then cancel unbonding and emit correct events', async function () {
-        const valBech32 = 'infinitevaloper10jmp6sgh4cc6zt3e8gw05wavvejgr5pw4xyrql'
+        const hexValAddr = '0x7cB61D4117AE31a12E393a1Cfa3BaC666481D02E'
+        const valBech32 = await bech32.getFunction('hexToBech32').staticCall(hexValAddr, INFINITE_VALOPER_BECH32_PREFIX)
         const amount = hre.ethers.parseEther('0.001')
 
         // DELEGATE
@@ -55,7 +58,6 @@ describe('Staking – delegate, undelegate & cancelUnbondingDelegation with even
         const delegateReceipt = await waitWithTimeout(delegateTx, 20000, RETRY_DELAY_FUNC)
         console.log('Delegate tx hash:', delegateTx.hash, 'gas used:', delegateReceipt.gasUsed.toString())
 
-        const hexValAddr = '0x7cB61D4117AE31a12E393a1Cfa3BaC666481D02E'
         const delegateEvt = findEvent(delegateReceipt.logs, staking.interface, 'Delegate')
         expect(delegateEvt, 'Delegate event should be emitted').to.exist
         expect(delegateEvt.args.delegatorAddress).to.equal(signer.address)

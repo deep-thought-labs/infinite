@@ -1,5 +1,10 @@
 #!/bin/bash
 
+# Ensure the installed binary (make install) is reachable.
+# GitHub Actions runners usually include this, but local shells may not.
+export GOPATH="${GOPATH:-$HOME/go}"
+export PATH="$PATH:$GOPATH/bin"
+
 # CHAINID is the Cosmos Chain ID (e.g., infinite_421018-1)
 # EVM_CHAIN_ID is the EVM Chain ID (e.g., 421018)
 CHAINID="${CHAIN_ID:-infinite_421018-1}"
@@ -269,6 +274,7 @@ if [[ $overwrite == "y" || $overwrite == "Y" ]]; then
   sed -i.bak 's/timeout_precommit_delta = "500ms"/timeout_precommit_delta = "200ms"/g' "$CONFIG_TOML"
   sed -i.bak 's/timeout_commit = "5s"/timeout_commit = "1s"/g' "$CONFIG_TOML"
   sed -i.bak 's/timeout_broadcast_tx_commit = "10s"/timeout_broadcast_tx_commit = "5s"/g' "$CONFIG_TOML"
+  sed -i.bak 's/type = "flood"/type = "app"/g' "$CONFIG_TOML"
 
   # enable prometheus metrics and all APIs for dev node
   sed -i.bak 's/prometheus = false/prometheus = true/' "$CONFIG_TOML"

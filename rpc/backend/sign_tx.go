@@ -1,6 +1,7 @@
 package backend
 
 import (
+	"context"
 	"errors"
 	"fmt"
 	"math/big"
@@ -12,8 +13,11 @@ import (
 	ethtypes "github.com/ethereum/go-ethereum/core/types"
 	"github.com/ethereum/go-ethereum/crypto"
 	"github.com/ethereum/go-ethereum/signer/core/apitypes"
+	"go.opentelemetry.io/otel/attribute"
+	"go.opentelemetry.io/otel/trace"
 
 	"github.com/cosmos/evm/mempool"
+	evmtrace "github.com/cosmos/evm/trace"
 	evmtypes "github.com/cosmos/evm/x/vm/types"
 
 	errorsmod "cosmossdk.io/errors"
@@ -24,14 +28,21 @@ import (
 )
 
 // SendTransaction sends transaction based on received args using Node's key to sign it
-func (b *Backend) SendTransaction(args evmtypes.TransactionArgs) (common.Hash, error) {
+func (b *Backend) SendTransaction(ctx context.Context, args evmtypes.TransactionArgs) (result common.Hash, err error) {
+	var toAddr string
+	if args.To != nil {
+		toAddr = args.To.Hex()
+	}
+	ctx, span := tracer.Start(ctx, "SendTransaction", trace.WithAttributes(attribute.String("from", args.GetFrom().Hex()), attribute.String("to", toAddr)))
+	defer func() { evmtrace.EndSpanErr(span, err) }()
+
 	// Look up the wallet containing the requested signer
 	if !b.Cfg.JSONRPC.AllowInsecureUnlock {
 		b.Logger.Debug("account unlock with HTTP access is forbidden")
 		return common.Hash{}, fmt.Errorf("account unlock with HTTP access is forbidden")
 	}
 
-	_, err := b.ClientCtx.Keyring.KeyByAddress(sdk.AccAddress(args.GetFrom().Bytes()))
+	_, err = b.ClientCtx.Keyring.KeyByAddress(sdk.AccAddress(args.GetFrom().Bytes()))
 	if err != nil {
 		b.Logger.Error("failed to find key in keyring", "address", args.GetFrom(), "error", err.Error())
 		return common.Hash{}, fmt.Errorf("failed to find key in the node's keyring; %s; %s", keystore.ErrNoMatch, err.Error())
@@ -41,18 +52,18 @@ func (b *Backend) SendTransaction(args evmtypes.TransactionArgs) (common.Hash, e
 		return common.Hash{}, fmt.Errorf("chainId does not match node's (have=%v, want=%v)", args.ChainID, (*hexutil.Big)(b.EvmChainID))
 	}
 
-	args, err = b.SetTxDefaults(args)
+	args, err = b.SetTxDefaults(ctx, args)
 	if err != nil {
 		return common.Hash{}, err
 	}
 
-	bn, err := b.BlockNumber()
+	bn, err := b.BlockNumber(ctx)
 	if err != nil {
 		b.Logger.Debug("failed to fetch latest block number", "error", err.Error())
 		return common.Hash{}, err
 	}
 
-	header, err := b.CurrentHeader()
+	header, err := b.CurrentHeader(ctx)
 	if err != nil {
 		return common.Hash{}, err
 	}
@@ -100,6 +111,24 @@ func (b *Backend) SendTransaction(args evmtypes.TransactionArgs) (common.Hash, e
 	}
 
 	txHash := ethTx.Hash()
+
+	// publish tx directly to app-side mempool, avoiding broadcasting to
+	// consensus layer.
+	if b.UseAppMempool {
+		// we are directly calling into the mempool rather than the ABCI
+		// handler for InsertTx, since the ABCI handler obfuscates the error's
+		// returned via codes, and we would like to have the full error to
+		// return to clients.
+		err := b.Mempool.Insert(ctx, tx)
+		if err != nil {
+			// no need for special error handling like in the broadcast tx case
+			// since this is coming directly from the evm mempool insert.
+			return common.Hash{}, err
+		}
+
+		b.TrackTxIfSupported(txHash)
+		return txHash, nil
+	}
 
 	// Broadcast transaction in sync mode (default)
 	// NOTE: If error is encountered on the node, the broadcast will not return an error

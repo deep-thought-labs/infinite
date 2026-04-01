@@ -11,12 +11,13 @@ import (
 	cmttypes "github.com/cometbft/cometbft/types"
 
 	dbm "github.com/cosmos/cosmos-db"
+	testconstants "github.com/cosmos/evm/testutil/constants"
 	evmtypes "github.com/cosmos/evm/x/vm/types"
 	"github.com/cosmos/ibc-go/v10/modules/core/keeper"
 	ibctesting "github.com/cosmos/ibc-go/v10/testing"
 	"github.com/cosmos/ibc-go/v10/testing/simapp"
 
-	"cosmossdk.io/log"
+	"cosmossdk.io/log/v2"
 	sdkmath "cosmossdk.io/math"
 	storetypes "cosmossdk.io/store/types"
 
@@ -32,6 +33,21 @@ import (
 	banktypes "github.com/cosmos/cosmos-sdk/x/bank/types"
 	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
 )
+
+// setCosmosBech32Prefixes configures the global SDK config for ibc-go's SimApp (expects "cosmos" HRP).
+func setCosmosBech32Prefixes(config *sdk.Config) {
+	config.SetBech32PrefixForAccount("cosmos", "cosmospub")
+	config.SetBech32PrefixForValidator("cosmosvaloper", "cosmosvaloperpub")
+	config.SetBech32PrefixForConsensusNode("cosmosvalcons", "cosmosvalconspub")
+}
+
+// setInfiniteForkBech32Prefixes restores Bech32 prefixes used by the Infinite / cosmos-evm test apps.
+func setInfiniteForkBech32Prefixes(config *sdk.Config) {
+	p := testconstants.ExampleBech32Prefix
+	config.SetBech32PrefixForAccount(p, p+sdk.PrefixPublic)
+	config.SetBech32PrefixForValidator(p+sdk.PrefixValidator+sdk.PrefixOperator, p+sdk.PrefixValidator+sdk.PrefixOperator+sdk.PrefixPublic)
+	config.SetBech32PrefixForConsensusNode(p+sdk.PrefixValidator+sdk.PrefixConsensus, p+sdk.PrefixValidator+sdk.PrefixConsensus+sdk.PrefixPublic)
+}
 
 type TestingApp interface {
 	servertypes.ABCI
@@ -123,10 +139,13 @@ func setupWithGenesisValSet(tb testing.TB, valSet *cmttypes.ValidatorSet, genAcc
 	bankGenesis := banktypes.NewGenesisState(banktypes.DefaultGenesisState().Params, balances, sdk.NewCoins(), metadata, []banktypes.SendEnabled{})
 	genesisState[banktypes.ModuleName] = app.AppCodec().MustMarshalJSON(bankGenesis)
 
-	evmGenesis := evmtypes.DefaultGenesisState()
-	evmGenesis.Params.EvmDenom = evmtypes.DefaultEVMExtendedDenom
-	evmGenesis.Params.ActiveStaticPrecompiles = evmtypes.AvailableStaticPrecompiles
-	genesisState[evmtypes.ModuleName] = app.AppCodec().MustMarshalJSON(evmGenesis)
+	// Only chains that register x/vm need EVM genesis; SimApp rejects unknown module keys.
+	if _, ok := genesisState[evmtypes.ModuleName]; ok {
+		evmGenesis := evmtypes.DefaultGenesisState()
+		evmGenesis.Params.EvmDenom = evmtypes.DefaultEVMExtendedDenom
+		evmGenesis.Params.ActiveStaticPrecompiles = evmtypes.AvailableStaticPrecompiles
+		genesisState[evmtypes.ModuleName] = app.AppCodec().MustMarshalJSON(evmGenesis)
+	}
 
 	stateBytes, err := json.MarshalIndent(genesisState, "", " ")
 	require.NoError(tb, err)
