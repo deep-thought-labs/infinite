@@ -1,48 +1,81 @@
 # CHANGELOG
 
-## Infinite Drive Features
+> This file contains two parallel tracks:
+>
+> - **Infinite Improbability Drive** (`infinite`): releases and project-specific notes using Infinite Drive versioning (e.g. `v0.1.x`).
+> - **cosmos/evm**: the reference track, preserved in the same structure for easier synchronization.
+>
+> **Note**: All entries currently listed under the `cosmos/evm` track below are included in this repository. Newer `cosmos/evm` entries may be added in later synchronization cycles.
 
-> **Note**: This section documents the features and configurations specific to Infinite Drive. Changes from the upstream repository are documented in the sections below.
+---
 
-### IDENTITY & NETWORK CONFIGURATION
+## Infinite Drive — Changelog track
 
-- **Native Token**: "Improbability" (42) with base denomination `drop` (1 Improbability [42] = 10¹⁸ drop)
+### Release set (in progress)
+
+#### Identity & network configuration
+- **Native token**: "Improbability" (42) with base denomination `drop` (1 Improbability [42] = 10¹⁸ drop)
 - **Chain IDs**:
   - Mainnet: Cosmos `infinite_421018-1`, EVM `421018`
   - Testnet: Cosmos `infinite_421018001-1`, EVM `421018001`
   - Creative: Cosmos `infinite_421018002-1`, EVM `421018002`
-- **Bech32 Prefixes**: `infinite`, `infinitevaloper`, `infinitevalcons`
-- **Binary**: `infinited` - Infinite Drive blockchain node
+- **Bech32 prefixes**: `infinite`, `infinitevaloper`, `infinitevalcons`
+- **Binary**: `infinited` (Infinite Drive blockchain node)
 
-### GENESIS CONFIGURATION
+#### Genesis configuration
+- **Multi-network genesis support**: `customize_genesis.sh` supporting mainnet, testnet, and creative networks with distinct parameters (denominations, inflation, governance, slashing, fee market, distribution, consensus)
+- **ModuleAccounts automation**: `setup_module_accounts.sh` for automated ModuleAccount creation with permissions and initial balances
+- **External configuration**: JSON configuration files (`genesis-configs/*.json`) for all network-specific parameters
+- **Genesis state defaults**: `DefaultGenesis()` ensures all modules use the `drop` denomination
 
-- **Multi-network genesis support**: `customize_genesis.sh` script supporting mainnet, testnet, and creative networks with distinct parameters (denominations, inflation, governance, slashing, fee market, distribution, consensus)
-- **ModuleAccounts automation**: `setup_module_accounts.sh` script for automated ModuleAccount creation with permissions and initial balances
-- **External configuration**: JSON configuration files (`genesis-configs/*.json`) for all network-specific parameters, enabling flexible network setup
-- **Genesis state defaults**: `DefaultGenesis()` implementation ensuring all modules use "drop" denomination
+#### Documentation & developer tools
+- **Structured documentation**: clear entry points (`QUICK_START.md`, `BUILDING.md`) and categorized guides
+- **Maintenance docs (`docs/fork-maintenance/`)**: divergence record (`UPSTREAM_DIVERGENCE_RECORD.md`), merge playbook, diff reference, verification checklist, merge-log templates and archives
+- **Validation suite**: scripts such as `validate_customizations.sh`, `validate_token_config.sh`, `check_build_prerequisites.sh`
+- **Development utilities**: scripts for customization tracking, health checks, and build verification
+- **Genesis creation guides**: step-by-step instructions for mainnet/testnet/creative genesis creation
 
-### DOCUMENTATION & DEVELOPER TOOLS
-
-- **Structured documentation**: Clear entry points (`QUICK_START.md`, `BUILDING.md`), categorized guides, and AI-friendly format
-- **Fork maintenance (`docs/fork-maintenance/`)**: Upstream divergence record (`UPSTREAM_DIVERGENCE_RECORD.md`), merge playbook, diff reference, verification checklist, merge-log templates and archives
-- **Validation suite**: Comprehensive validation scripts (`validate_customizations.sh`, `validate_token_config.sh`, `check_build_prerequisites.sh`)
-- **Development utilities**: Scripts for customization tracking, health checks, and build verification
-- **Genesis creation guides**: Step-by-step instructions for network genesis creation across mainnet/testnet/creative networks
-
-### TECHNICAL FEATURES
-
+#### Technical notes
 - **Power reduction configuration**: 1 Improbability [42] = 10^18 drop
-- **Genesis module defaults**: Genesis state functions for staking, mint, and governance modules configured for "drop" denomination
-- **Local development tools**: `local_node.sh` script with automatic genesis customization for streamlined local development
+- **Genesis module defaults**: staking, mint, and governance configured for the `drop` denomination
+- **Local development tools**: `local_node.sh` with automatic genesis customization
+
+#### Merge
+- [\#3](https://github.com/deep-thought-labs/infinite/pull/3) Synchronize `cosmos/evm` changes (through `50b4817017187cbda2a0af767fda39a895b9989a`) and align CI/test gating for `infinite`.
+
+#### Engineering quality
+- **CI and test gating improvements**: workflow alignment and reliability improvements for builds, linting, system tests, and compatibility tests.
+- **System test hardening**: improved chain-upgrade harness and a Docker-based path to run system tests in a Linux environment when needed.
+- **Solidity harness stability**: improvements to reduce transient failures when compiling contracts in CI.
+
+#### Continuous integration
+- [\#2](https://github.com/deep-thought-labs/infinite/pull/2) Align CI workflows with upstream structure and improve test reliability.
+
+## v0.1.11
+
+### Notes
+- Released as a tag with no material functional changes.
+
+## v0.1.10
+
+### Overview
+- **First published production release** of Infinite Improbability Drive (`infinite`).
+- This release line uses **Infinite Drive** versioning (`v0.1.x`) and is independent from the `cosmos/evm` track versioning (e.g. `v0.6.0`).
+- At the time `v0.1.10` was released, the `cosmos/evm` track was at `v0.6.0`.
+
+### Merge
+- [\#1](https://github.com/deep-thought-labs/infinite/pull/1) feat(precompiles): add BalanceHandler to handle native balance change.
+
+### Operational notes
+- When running chain upgrade system tests, `v0.1.10` is used as the legacy baseline for the upgrade scenario (see `Makefile` system test variables and `docs/guides/testing/CHAIN_UPGRADE_SYSTEM_TEST.md`).
 
 ---
 
+## cosmos/evm — Changelog track
+
+> Synchronized through `cosmos/evm@50b4817017187cbda2a0af767fda39a895b9989a`.
+
 ## UNRELEASED
-
-### DOCUMENTATION (Infinite Drive fork)
-
-- `docs/fork-maintenance/`: playbook con **Apéndice A** (cierre de merge: `grep` de marcadores, política `infinited` vs imports `.../evmd`, `go mod tidy`, rutas con espacios en `Makefile`, binario `evmd` en system tests, jobs CI del fork); ampliación de **REFERENCE**, **VERIFICATION** y plantilla de bitácora; registro de divergencia con trampa `evmd`/`infinited`.
-- Guías **DEVELOPMENT**, **BUILDING**, **QUICK_START**: requisito de Go alineado con `go.mod` (p. ej. 1.25.8).
 
 ### DEPENDENCIES
 
