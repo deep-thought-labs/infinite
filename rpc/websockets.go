@@ -571,7 +571,7 @@ func (api *pubSubAPI) subscribeLogs(wsConn *wsConn, subID rpc.ID, extra any) (co
 				subtopicsList, ok := subtopics.([]any)
 				if !ok {
 					err := errors.New("invalid subtopics")
-				api.logger.Error("invalid subtopics type")
+					api.logger.Error("invalid subtopics type")
 					return nil, err
 				}
 

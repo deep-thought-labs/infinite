@@ -202,7 +202,7 @@ func (b *Backend) FeeHistory(
 		return nil, fmt.Errorf("head block exceeds int64 range: %d", blkU64)
 	}
 	blockNumber := int64(blkU64)
-	blockEnd := int64(lastBlock)    //#nosec G115
+	blockEnd := int64(lastBlock) //#nosec G115
 
 	switch lastBlock {
 	case rpc.EarliestBlockNumber:
