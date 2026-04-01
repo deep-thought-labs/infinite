@@ -1,6 +1,6 @@
 # Bitácora de merge upstream — marzo 2026 (`upstream/main` → fork)
 
-**Estado:** cerrada (2026-03-21).  
+**Estado:** cerrada (2026-03-21) — ver *Addendum* (2026-04-01).  
 Procedimiento: [PLAYBOOK.md](../PLAYBOOK.md), [UPSTREAM_DIVERGENCE_RECORD.md](../UPSTREAM_DIVERGENCE_RECORD.md). Estrategias de integración futuras: [MERGE_STRATEGIES.md](../MERGE_STRATEGIES.md).
 
 ## Metadatos
@@ -137,6 +137,35 @@ Documentación canónica: [PLAYBOOK.md — A.7](../PLAYBOOK.md#a7-tests-y-apis-t
 - [x] **PR dedicado CI**: rama `red/ci-align-upstream-2026-03` — alineación con `upstream/main` @ `50b48170`, `release.yml` preservado, deltas `infinited` + CodeQL — ver [MERGE_STRATEGIES.md](../MERGE_STRATEGIES.md).
 - [x] `make test-infinited` en verde al cierre de bitácora.
 - [ ] CI en PR verde (tras abrir PR y completar `make test-unit` / jobs acordados).
+
+## Addendum — CI y CodeQL tras abrir PR (2026-04-01)
+
+Este addendum recoge ajustes realizados **después** del cierre original (2026-03-21), al abrir PR(s) desde `red/merge-cosmos-evm` hacia `main` y reproducir discrepancias entre validación local y CI (GitHub Actions ejecuta sobre el commit `pull/<id>/merge`).
+
+### Buf breaking: baseline alineado con upstream
+
+- **Problema observado (CI)**: `buf-breaking-action` reportó borrado de protos presentes históricamente en el fork (p.ej. `proto/cosmos/evm/precisebank/v1/{genesis,query}.proto`) como breaking change.
+- **Decisión**: dado que el objetivo del fork es estar **alineado con upstream**, el baseline de “breaking” se fija contra `cosmos/evm` `main`.
+- **Cambio**: `.github/workflows/proto.yml` actualiza `against:` a `https://github.com/cosmos/evm.git#branch=main,subdir=proto`.
+
+### Estabilización de tests bajo `-race`
+
+- **Problema observado (CI)**: flake en `TestKrakatoaMempool_ReapPromoteDemotePromote` (mempool) con `-race`/timing.
+- **Cambio**: `mempool/krakatoa_mempool_test.go` usa `require.Eventually` tras `Sync()` antes de afirmar `CountTx()==3` (sin cambiar la semántica de mempool; solo elimina suposición de sincronía inmediata).
+
+### CodeQL local: reproducción y catalogación
+
+- Se reprodujo CodeQL localmente para Go creando una DB con `go test ./... -tags=test -run TestDoesNotExist -count=0` para maximizar cobertura.
+- Se ejecutaron:
+  - `codeql/go-queries:codeql-suites/go-security-and-quality.qls`
+  - `crypto-com/cosmos-sdk-codeql` (pack)
+- Output SARIF generado en `/tmp/` (ver sesión local del responsable).
+
+### Registro documental del addendum
+
+Estas decisiones se registraron en el inventario del fork:
+
+- `docs/fork-maintenance/UPSTREAM_DIVERGENCE_RECORD.md` (entradas: baseline Buf contra upstream y estabilización del test mempool).
 
 ## Referencias
 
