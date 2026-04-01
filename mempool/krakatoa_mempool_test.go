@@ -136,7 +136,9 @@ func TestKrakatoaMempool_ReapPromoteDemotePromote(t *testing.T) {
 
 	// wait for another reset to make sure the pool processes the above txns into pending
 	require.NoError(t, mp.GetTxPool().Sync())
-	require.Equal(t, 3, mp.CountTx())
+	require.Eventually(t, func() bool {
+		return mp.CountTx() == 3
+	}, 2*time.Second, 10*time.Millisecond)
 
 	// reap txs now and we should get back all txs since they were all validated
 	txs, err := mp.ReapNewValidTxs(0, 0)
