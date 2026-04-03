@@ -112,6 +112,14 @@ Renombres representativos: `evmd/app.go` → `infinited/app.go`, `evmd/cmd/evmd/
 
 ---
 
+## Software-upgrade (nombres de plan)
+
+- **Canónico (gobernanza + `TestChainUpgrade`):** cadena **`infinite-v0.1.10-to-v0.1.12`** — `UpgradeName` en [`infinited/upgrades.go`](../../infinited/upgrades.go). Prefijo **`infinite-`** para no confundir con guías upstream `v0.*_to_v0.*`. Detalle: [migrations/infinite_v0.1.10_to_v0.1.12.md](../migrations/infinite_v0.1.10_to_v0.1.12.md).
+- **Upstream (solo documentación):** en [cosmos/evm](https://github.com/cosmos/evm) el ejemplo de plan suele documentarse como **`v0.4.0-to-v0.5.0`**; **este fork no registra** ese nombre.
+- Operativa y checklist: [guides/testing/CHAIN_UPGRADE_SYSTEM_TEST.md](../guides/testing/CHAIN_UPGRADE_SYSTEM_TEST.md).
+
+---
+
 ## Archivos añadidos (no presentes en upstream)
 
 ### Documentación

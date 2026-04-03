@@ -325,7 +325,7 @@ make build-cross-windows-amd64
 
 **Why this exists**:
 
-- System upgrade tests use a legacy baseline binary from `SYSTEMTEST_LEGACY_TAG` (default `v0.1.11`; see root `Makefile`).
+- System upgrade tests use a legacy baseline binary from `SYSTEMTEST_LEGACY_TAG` (default `v0.1.10`; see root `Makefile`).
 - Official release artifacts for this project are Linux-only (`linux_amd64`, `linux_arm64`).
 - Running inside Linux container avoids host OS mismatches and keeps behavior close to GitHub Actions.
 
@@ -339,7 +339,7 @@ make test-system-docker
 
 ```bash
 # Use a different baseline tag from this fork's GitHub Releases
-make SYSTEMTEST_LEGACY_TAG=v0.1.11 test-system-docker
+make SYSTEMTEST_LEGACY_TAG=v0.1.10 test-system-docker
 ```
 
 ### Notes
