@@ -149,7 +149,7 @@ Renombres representativos: `evmd/app.go` → `infinited/app.go`, `evmd/cmd/evmd/
 
 ### Estabilidad CI (tests Go)
 
-- `mempool/krakatoa_mempool_test.go`: el test `TestKrakatoaMempool_ReapPromoteDemotePromote` usa `require.Eventually` tras `Sync()` para evitar flakes bajo `-race`/CI (timing/concurrencia), sin cambiar la lógica funcional del mempool.
+- `mempool/krakatoa_mempool_test.go` (Krakatoa): `setupKrakatoaMempoolWithAccounts` activa **`mempool.AllowUnsafeSyncInsert`** (restaurado con `t.Cleanup`) para que `LegacyPool.Add(..., sync=true)` espere la promoción interna tras cada inserción EVM. Así `TxPool.Sync()` y `CountTx()` / `ContentFrom` quedan alineados sin `require.Eventually` con timeouts arbitrarios, que seguían fallando bajo **`make test-unit-cover`** (segunda pasada con `-race` y `-coverpkg` amplio). Afecta `TestKrakatoaMempool_ReapPromoteDemotePromote`, `TestKrakatoaMempool_ReapNewBlock` y cualquier test que reutilice ese setup (p. ej. `recheck_pool_test.go`). La bandera y su uso en tests están documentados en [`mempool/mempool.go`](../../mempool/mempool.go) (`AllowUnsafeSyncInsert`); detalle operativo: [guides/development/TESTING.md — Mempool Krakatoa tests under test-unit-cover](../guides/development/TESTING.md#mempool-krakatoa-tests-under-test-unit-cover).
 
 ### Code scanning (CodeQL) — mitigaciones seguras
 

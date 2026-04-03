@@ -11,52 +11,33 @@
 
 ## Infinite Drive — Changelog track
 
-### Release set (in progress)
+## UNRELEASED
 
-#### Identity & network configuration
+### BREAKING CHANGES
 
-- **Native token**: "Improbability" (42) with base denomination `drop` (1 Improbability [42] = 10¹⁸ drop)
-- **Chain IDs**:
-  - Mainnet: Cosmos `infinite_421018-1`, EVM `421018`
-  - Testnet: Cosmos `infinite_421018001-1`, EVM `421018001`
-  - Creative: Cosmos `infinite_421018002-1`, EVM `421018002`
-- **Bech32 prefixes**: `infinite`, `infinitevaloper`, `infinitevalcons`
-- **Binary**: `infinited` (Infinite Drive blockchain node)
+### DEPENDENCIES
 
-#### Genesis configuration
+### IMPROVEMENTS
 
-- **Multi-network genesis support**: `customize_genesis.sh` supporting mainnet, testnet, and creative networks with distinct parameters (denominations, inflation, governance, slashing, fee market, distribution, consensus)
-- **ModuleAccounts automation**: `setup_module_accounts.sh` for automated ModuleAccount creation with permissions and initial balances
-- **External configuration**: JSON configuration files (`genesis-configs/*.json`) for all network-specific parameters
-- **Genesis state defaults**: `DefaultGenesis()` ensures all modules use the `drop` denomination
+- [\#4](https://github.com/deep-thought-labs/infinite/pull/4) Build workflow on `main` / PRs (paths filter); linux/arm64 + CGO cross-compile.
+- [\#2](https://github.com/deep-thought-labs/infinite/pull/2) CI aligned with upstream; more reliable tests.
+- CI/test gating: build, lint, system tests, compat tests.
+- System tests: chain-upgrade harness; Docker path on macOS.
+- Solidity CI: fewer transient compile failures.
 
-#### Documentation & developer tools
+### FEATURES
 
-- **Structured documentation**: clear entry points (`QUICK_START.md`, `BUILDING.md`) and categorized guides
-- **Maintenance docs (`docs/fork-maintenance/`)**: divergence record (`UPSTREAM_DIVERGENCE_RECORD.md`), merge playbook, diff reference, verification checklist, merge-log templates and archives
-- **Validation suite**: scripts such as `validate_customizations.sh`, `validate_token_config.sh`, `check_build_prerequisites.sh`
-- **Development utilities**: scripts for customization tracking, health checks, and build verification
-- **Genesis creation guides**: step-by-step instructions for mainnet/testnet/creative genesis creation
+### BUG FIXES
 
-#### Technical notes
+- [\#5](https://github.com/deep-thought-labs/infinite/pull/5) Krakatoa mempool: fix `test-unit-cover` flake (`AllowUnsafeSyncInsert`, drop `Eventually`). Docs: `docs/guides/development/TESTING.md`, `docs/fork-maintenance/UPSTREAM_DIVERGENCE_RECORD.md`.
 
-- **Power reduction configuration**: 1 Improbability [42] = 10^18 drop
-- **Genesis module defaults**: staking, mint, and governance configured for the `drop` denomination
-- **Local development tools**: `local_node.sh` with automatic genesis customization
+### UPSTREAM INTEGRATION
 
-#### Merge
+- [\#3](https://github.com/deep-thought-labs/infinite/pull/3) Sync `cosmos/evm` through `50b4817017187cbda2a0af767fda39a895b9989a`; CI gating for `infinite`.
 
-- [\#3](https://github.com/deep-thought-labs/infinite/pull/3) Synchronize `cosmos/evm` changes (through `50b4817017187cbda2a0af767fda39a895b9989a`) and align CI/test gating for `infinite`.
+### MERGE
 
-#### Engineering quality
-
-- **CI and test gating improvements**: workflow alignment and reliability improvements for builds, linting, system tests, and compatibility tests.
-- **System test hardening**: improved chain-upgrade harness and a Docker-based path to run system tests in a Linux environment when needed.
-- **Solidity harness stability**: improvements to reduce transient failures when compiling contracts in CI.
-
-#### Continuous integration
-
-- [\#2](https://github.com/deep-thought-labs/infinite/pull/2) Align CI workflows with upstream structure and improve test reliability.
+- [\#5](https://github.com/deep-thought-labs/infinite/pull/5) `dev` → `main`: upgrade plan `infinite-v0.1.10-to-v0.1.12`, migration doc, `infinited/upgrades.go`, `SYSTEMTEST_LEGACY_TAG` v0.1.10.
 
 ## v0.1.11
 
@@ -70,7 +51,7 @@
 
 - **First published production release** of Infinite Improbability Drive (`infinite`).
 - This release line uses **Infinite Drive** versioning (`v0.1.x`) and is independent from the `cosmos/evm` track versioning (e.g. `v0.6.0`).
-- At the time `v0.1.10` was released, the `cosmos/evm` track was at `v0.6.0`.
+- At the time `v0.1.10` was released, the `cosmos/evm` track was at `v0.5.0`.
 
 ### Merge
 

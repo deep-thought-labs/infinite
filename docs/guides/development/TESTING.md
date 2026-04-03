@@ -12,6 +12,7 @@ For an **ordered checklist** that includes lint, build, tests, and fork scripts,
 - [Complete Tests](#complete-tests)
 - [End-to-end system tests](#end-to-end-system-tests)
 - [Tests with Coverage](#tests-with-coverage)
+- [Mempool Krakatoa tests under test-unit-cover](#mempool-krakatoa-tests-under-test-unit-cover)
 - [Code Validation](#code-validation)
 
 ## 🧪 Test Types
@@ -184,6 +185,14 @@ go tool cover -func=coverage.txt
 # View HTML report (opens in browser)
 go tool cover -html=coverage.txt
 ```
+
+### Mempool Krakatoa tests under test-unit-cover
+
+`make test-unit-cover` runs tests **twice** at the repo root: first via `run-tests` with per-package coverage, then a second `go test` over `./...` with **`-race`** and **`-coverpkg`** set to the whole module list (see `Makefile` target `test-unit-cover`). That second pass is slower and more sensitive to timing.
+
+Krakatoa mempool tests under `mempool/` use **`mempool.AllowUnsafeSyncInsert`** inside `setupKrakatoaMempoolWithAccounts` so EVM inserts wait for `LegacyPool.Add`’s synchronous promotion path (see comments on `AllowUnsafeSyncInsert` in `mempool/mempool.go` and `LegacyPool.Add` in `mempool/txpool/legacypool/legacypool.go`). This avoids flaky `CountTx()` / `ContentFrom` assertions that previously relied on `require.Eventually` and could time out in CI.
+
+Fork maintenance note: [UPSTREAM_DIVERGENCE_RECORD.md](../../fork-maintenance/UPSTREAM_DIVERGENCE_RECORD.md) — *Estabilidad CI (tests Go)*.
 
 ---
 
