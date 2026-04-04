@@ -28,6 +28,7 @@
 - Buf-breaking baseline: `cosmos/evm` `main`.
 - Markdownlint pin matches the lint action.
 - CodeQL: RPC logs, height casts, VM assert, Solidity helper.
+- CI: `paths-filter` skips heavy jobs on docs-only PRs.
 
 ### IMPROVEMENTS
 

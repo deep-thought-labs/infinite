@@ -1,5 +1,5 @@
 name: Check Markdown links
-on: 
+on:
   pull_request:
     branches:
       - main
@@ -7,18 +7,33 @@ on:
 permissions: read-all
 
 jobs:
+  changes:
+    runs-on: ubuntu-latest
+    outputs:
+      md: ${{ steps.filter.outputs.md }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          filters: |
+            md:
+              - '**/*.md'
+              - '*.md'
+              - 'mlc_config.json'
+              - '.github/workflows/markdown-links.yml'
+
   markdown-link-check:
+    needs: changes
+    if: needs.changes.outputs.md == 'true'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: technote-space/get-diff-action@v6.1.2
-        with:
-          PATTERNS: |
-            **.md
       - uses: gaurav-nelson/github-action-markdown-link-check@master
         with:
           check-modified-files-only: "yes"
           use-quiet-mode: "yes"
           base-branch: "main"
           config-file: "mlc_config.json"
-        if: env.GIT_DIFF

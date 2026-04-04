@@ -147,6 +147,10 @@ Renombres representativos: `evmd/app.go` → `infinited/app.go`, `evmd/cmd/evmd/
 
 - `.github/workflows/proto.yml`: el job `buf-breaking-action` compara `proto/` contra **`cosmos/evm` `main`** (upstream) en lugar de comparar contra el `main` del fork. Esto evita falsos “breaking changes” causados por protos que existían históricamente solo en el fork (p.ej. `precisebank`).
 
+### CI — filtrado por rutas (PRs solo documentación)
+
+- Varios workflows en `.github/workflows/` incluyen un job **`changes`** (`dorny/paths-filter`) y condicionan los jobs pesantes para no consumir runners cuando el diff solo toca Markdown u otras rutas irrelevantes para ese job. Inventario: [guides/infrastructure/CI_CD.md — Path filtering](../guides/infrastructure/CI_CD.md#path-filtering-docs-only-changes).
+
 ### Estabilidad CI (tests Go)
 
 - `mempool/krakatoa_mempool_test.go` (Krakatoa): `setupKrakatoaMempoolWithAccounts` activa **`mempool.AllowUnsafeSyncInsert`** (restaurado con `t.Cleanup`) para que `LegacyPool.Add(..., sync=true)` espere la promoción interna tras cada inserción EVM. Así `TxPool.Sync()` y `CountTx()` / `ContentFrom` quedan alineados sin `require.Eventually` con timeouts arbitrarios, que seguían fallando bajo **`make test-unit-cover`** (segunda pasada con `-race` y `-coverpkg` amplio). Afecta `TestKrakatoaMempool_ReapPromoteDemotePromote`, `TestKrakatoaMempool_ReapNewBlock` y cualquier test que reutilice ese setup (p. ej. `recheck_pool_test.go`). La bandera y su uso en tests están documentados en [`mempool/mempool.go`](../../mempool/mempool.go) (`AllowUnsafeSyncInsert`); detalle operativo: [guides/development/TESTING.md — Mempool Krakatoa tests under test-unit-cover](../guides/development/TESTING.md#mempool-krakatoa-tests-under-test-unit-cover).
