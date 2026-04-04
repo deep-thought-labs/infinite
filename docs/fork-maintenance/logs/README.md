@@ -21,6 +21,14 @@ Cada archivo debe partir de [../templates/MERGE_LOG_TEMPLATE.md](../templates/ME
 - Tabla de conflictos y cómo se resolvieron.
 - Resultado de `validate_customizations.sh` y de los tests ejecutados.
 
+## Bitácoras de integración de producto (no upstream)
+
+Para **features grandes del fork** (p. ej. Hyperlane) que **no** son un merge de [cosmos/evm](https://github.com/cosmos/evm), se puede archivar una bitácora de **cierre de fase** aquí con el mismo esquema de nombres `YYYY-MM-descripcion-corta.md`, **sin** usar la plantilla de merge upstream salvo que el equipo quiera homogeneizar.
+
+- **Ejemplo:** [2026-04-hyperlane-infinited-integration.md](2026-04-hyperlane-infinited-integration.md) — código + upgrade + enlaces a documentación operativa ([OPERATIONS.md](../../feature/hyperlane/OPERATIONS.md)).
+
+---
+
 ## Privacidad
 
 No incluir secretos, tokens ni datos internos sensibles; solo referencias técnicas y de proceso.

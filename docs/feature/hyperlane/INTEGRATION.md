@@ -13,7 +13,7 @@ Un revisor (humano o IA) debe poder:
 2. Juzgar si las desviaciones son **coherentes** con la arquitectura existente del proyecto y si mantienen **equivalencia funcional** donde aplica.
 3. Identificar **lagunas** (p. ej. CLI Hyperlane, puente ERC-20) que no equivalen a “incorrecto”, sino a **trabajo pendiente documentado**.
 
-La narrativa técnica detallada vive aquí; el índice breve está en [README.md](README.md).
+La narrativa técnica detallada vive aquí; el índice breve está en [README.md](README.md). **Operación y funcionalidad completa** (deploy Cosmos, registry, EVM): [OPERATIONS.md](OPERATIONS.md). **Bitácora de cierre de fase código:** [logs/2026-04-hyperlane-infinited-integration.md](../../fork-maintenance/logs/2026-04-hyperlane-infinited-integration.md).
 
 ---
 
@@ -117,9 +117,12 @@ La siguiente numeración reproduce la **lógica** de una guía estándar de inte
 
 - Para **`UpgradeName` = `infinite-v0.1.10-to-v0.1.12`**, `UpgradeStoreLoader` añade stores **`hyperlane`** y **`warp`** (`hyperlanetypes.ModuleName`, `warptypes.ModuleName`). Debe coincidir con el plan en gobernanza y con [migrations/infinite_v0.1.10_to_v0.1.12.md](../../migrations/infinite_v0.1.10_to_v0.1.12.md).
 
+### `infinited/tests/integration/hyperlane_test.go`
+
+- Pruebas **`TestHyperlane_*`** (paquete `integration`, mismo directorio que el resto de tests que usan `CreateEvmd`): validación del wiring sin levantar red; ver sección *Verificación local*.
+
 ### Documentación y trazabilidad
 
-- [`CHANGELOG.md`](../../../CHANGELOG.md) (pista Infinite): `DEPENDENCIES` + `FEATURES` con enlaces a este archivo y al registro de divergencia.
 - [UPSTREAM_DIVERGENCE_RECORD.md — Extensiones de producto (fork)](../../fork-maintenance/UPSTREAM_DIVERGENCE_RECORD.md#extensiones-de-producto-fork): referencia cruzada.
 
 ---
@@ -142,6 +145,7 @@ La siguiente numeración reproduce la **lógica** de una guía estándar de inte
 - [ ] `enabled_tokens` `[1,2]` coincide con el YAML de referencia del simapp (colateral + sintético).
 - [ ] Permisos de módulo para **warp** incluyen acuñación/quema según necesite el módulo.
 - [ ] `RegisterInterfaces` está antes del uso masivo del codec en registro de módulos.
+- [ ] `cd infinited && go test -race -tags=test -run TestHyperlane -count=1 ./tests/integration/` (cableado Hyperlane).
 - [ ] Compilación: `cd infinited && go build -o /dev/null ./cmd/infinited` y/o `make build-from-infinited`.
 - [ ] Para **red existente** que aún no pasó el upgrade: el plan **`infinite-v0.1.10-to-v0.1.12`** debe ejecutarse con un binario que incluya este `upgrades.go` para crear stores `hyperlane` / `warp` antes de usar los módulos en producción.
 - [ ] Tras merge de **cosmos/evm**, `infinited/app.go` sigue conteniendo los bloques Hyperlane sin pérdida accidental.
@@ -149,6 +153,16 @@ La siguiente numeración reproduce la **lógica** de una guía estándar de inte
 ---
 
 ## Verificación local
+
+**Pruebas unitarias / de cableado (Hyperlane):** construyen `NewExampleApp` en memoria y comprueban store keys (`hyperlane`, `warp`), registro en `ModuleManager`, orden `InitGenesis` (core antes que warp), `HyperlaneKeeper` no nulo y presencia de módulos en `DefaultGenesis()`.
+
+```bash
+cd infinited && go test -race -tags=test -run TestHyperlane -count=1 ./tests/integration/
+```
+
+Archivo: [`infinited/tests/integration/hyperlane_test.go`](../../../infinited/tests/integration/hyperlane_test.go).
+
+Compilación del binario:
 
 ```bash
 cd infinited && go build -o /dev/null ./cmd/infinited
@@ -160,7 +174,7 @@ Desde la raíz del repo:
 make build-from-infinited
 ```
 
-Suite del submódulo:
+Suite amplia del submódulo (incluye el paquete raíz `infinited`):
 
 ```bash
 make test-infinited

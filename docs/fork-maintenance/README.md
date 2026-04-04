@@ -12,7 +12,7 @@ Punto único en el repositorio para **divergencia frente a upstream**, **procedi
 | [**REFERENCE.md**](REFERENCE.md) | Uso de `list_all_customizations.sh`, informes de diff y notas sobre estadísticas esperadas. |
 | [**VERIFICATION.md**](VERIFICATION.md) | Comprobaciones manuales y script `validate_customizations.sh`. |
 | [**templates/MERGE_LOG_TEMPLATE.md**](templates/MERGE_LOG_TEMPLATE.md) | Plantilla para bitácoras de merge. |
-| [**logs/**](logs/) | Bitácoras de merge upstream: **crear al inicio** del ciclo, **completar al cierre** (ver [logs/README.md](logs/README.md)). |
+| [**logs/**](logs/) | Bitácoras de merge upstream (**crear al inicio**, **completar al cierre** — [logs/README.md](logs/README.md)) y, si aplica, **cierre de features del fork** (p. ej. [Hyperlane](logs/2026-04-hyperlane-infinited-integration.md)). |
 | [**../migrations/**](../migrations/) | Guías por salto de versión (fuera de esta carpeta, enlazadas desde el playbook). |
 | [**../guides/testing/CHAIN_UPGRADE_SYSTEM_TEST.md**](../guides/testing/CHAIN_UPGRADE_SYSTEM_TEST.md) | Prueba de sistema **on-chain upgrade** (`TestChainUpgrade`): binario legacy, génesis `upgrade-test`, regeneración de gentx, gobernanza y lista de mantenimiento; específica de versión frente a futuros saltos donde el binario “viejo” ya no sea el release actual. |
 
