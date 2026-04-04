@@ -52,6 +52,8 @@ Use `--bech32=infinite` so address encoding matches this chain (default in `cosm
 
 Mempool scenarios:
 
+**Txpool assertions:** `suite.CheckTxsQueuedAsync` polls `eth_txpool_content` (with an overall timeout) until expected txs are classified as **queued** rather than relying on one snapshot immediately after submit. This aligns with how pending checks retry and reduces CI flakes for exclusive-mempool / dynamic-fee cases. See root [docs/guides/development/TESTING.md](../../docs/guides/development/TESTING.md#system-tests-txpool-queued-assertions).
+
 | Test name | Description |
 |-----------|-------------|
 | `TestMempoolTxsOrdering` | Ordering of pending transactions across nodes |
