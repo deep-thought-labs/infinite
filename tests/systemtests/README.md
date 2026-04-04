@@ -6,14 +6,14 @@ The systemtests suite is an end-to-end test suite that runs the evmd process and
 
 ## Preparation
 
-`make test-system` builds the **current branch** as `tests/systemtests/binaries/evmd` and downloads the **legacy** chain-upgrade binary from **GitHub Releases** (default tag `v0.1.11`, repo `deep-thought-labs/infinite`) into `tests/systemtests/binaries/v0.5/evmd`. There is **no** `git checkout` of the old tag; the baseline always comes from release artifacts + `checksums.txt`.
+`make test-system` builds the **current branch** as `tests/systemtests/binaries/evmd` and downloads the **legacy** chain-upgrade binary from **GitHub Releases** (default tag `v0.1.10`, repo `deep-thought-labs/infinite`) into `tests/systemtests/binaries/v0.5/evmd`. There is **no** `git checkout` of the old tag; the baseline always comes from release artifacts + `checksums.txt`.
 
 - **Linux:** `make test-system` (needs `curl`, `shasum` / SHA-256 tooling as provided by the Makefile on Linux).
 - **macOS:** release archives are Linux-only; use Docker (see below).
 
 `make test-system-docker` uses Docker’s **default Linux platform for your machine** (e.g. `linux/arm64` on Apple Silicon). **Do not** add `--platform linux/amd64` in the Makefile for that target on ARM Macs: running the node binary under QEMU breaks CometBFT P2P handshakes (`chacha20poly1305: message authentication failed`), leaves `numPeers=0`, and tests fail with `timeout waiting for node start`.
 
-Override the release tag if needed: `make SYSTEMTEST_LEGACY_TAG=v0.1.11 test-system-docker`.
+Override the release tag if needed: `make SYSTEMTEST_LEGACY_TAG=v0.1.10 test-system-docker`.
 
 ### Faster local Docker loop (recommended)
 
@@ -81,7 +81,7 @@ Chain lifecycle:
 |-----------|-------------|
 | `TestChainUpgrade` | End-to-end upgrade handling; after legacy `SetupChain`, runs `scripts/customize_genesis.sh --network upgrade-test --skip-accounts`, then regenerates gentx in **`drop`** and runs gov until `PASSED` before the upgrade height. **Canonical doc:** [CHAIN_UPGRADE_SYSTEM_TEST.md](../../docs/guides/testing/CHAIN_UPGRADE_SYSTEM_TEST.md) (summary in [GENESIS.md](../../docs/guides/configuration/GENESIS.md#chain-upgrade-system-test-upgrade-test)) |
 
-> ℹ️ `TestChainUpgrade` uses a dedicated **upgrade plan name** (`v0.1.10-to-v0.1.12`) so the legacy release artifact does not need to match the current branch’s compiled-in upgrade handler name.
+> ℹ️ `TestChainUpgrade` uses **`infinite-v0.1.10-to-v0.1.12`**, the same string as **`UpgradeName`** in `infinited/upgrades.go` (production governance). Upstream’s sample `v0.4.0-to-v0.5.0` appears only in their docs; this fork does not register it.
 >
 > ℹ️ The shared system test suite keeps a single chain alive across multiple tests when the node arguments are identical. Running several tests back-to-back therefore re-uses the same process unless a scenario explicitly changes the node configuration.
 

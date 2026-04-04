@@ -30,13 +30,13 @@ The application-side upgrade wiring described [below](#application-upgrade-names
 
 Today the flow assumes:
 
-1. **Legacy binary** — downloaded from GitHub Releases (default tag `v0.1.11`, repo `deep-thought-labs/infinite`) into `tests/systemtests/binaries/v0.5/evmd`. No `git checkout` of the old tag.
+1. **Legacy binary** — downloaded from GitHub Releases (default tag `v0.1.10`, repo `deep-thought-labs/infinite`) into `tests/systemtests/binaries/v0.5/evmd`. No `git checkout` of the old tag.
 2. **Current binary** — built from the working tree and installed as `tests/systemtests/binaries/evmd` for validation and for the post-upgrade node.
 
 **Implications for maintainers:**
 
 - **Gentx regeneration** exists because `testnet init-files` embeds gentx signed for **`stake`**, while Infinite customizations align bonding and bank to **`drop`**. If a future legacy line already uses `drop` everywhere *and* gentx matches `bond_denom`, you might simplify or drop parts of the strip/regenerate pipeline — but only after proving the embedded txs remain valid.
-- **`upgradeName`** and **`upgradeHeight`** in `v0_1_10_to_v0_1_12.go` must stay aligned with the handler constants in the application (see `UpgradeNameSystemTest` in `infinited/upgrades.go`).
+- **`upgradeName`** and **`upgradeHeight`** in `v0_1_10_to_v0_1_12.go` must stay aligned with **`UpgradeName`** in `infinited/upgrades.go` (canonical fork plan; same string for production governance).
 - When the **migrated-from** version changes, update: release tag/Makefile defaults, any hard-coded paths under `binaries/v0.5/`, and this document’s “legacy” wording.
 
 ---
@@ -86,18 +86,23 @@ To tune **gov timing** or deposits for CI stability, prefer **`upgrade-test.json
 
 `TestChainUpgrade` must work with a **downloaded legacy binary** (release artifact) and a **current-branch binary** (built from this repo). We do **not** patch/rebuild the legacy artifact just to satisfy the harness.
 
-In practice, some legacy artifacts may already have a compiled-in handler name that can interact poorly with the exact SDK/version wiring used by the harness once a plan is scheduled on-chain. To keep the system test deterministic without touching the legacy binary, we use a **test-only upgrade plan name** and register a matching handler in the **current** binary.
+**Single plan name (fork policy):** governance proposals on Infinite Drive and `TestChainUpgrade` use the **same** on-chain plan string, **`infinite-v0.1.10-to-v0.1.12`**, registered as **`UpgradeName`** in `infinited/upgrades.go`. CI therefore exercises the same handler path operators would use after voting that plan.
 
-### What changed in this repository
+### Registered plan name
+
+- **`UpgradeName`** in `infinited/upgrades.go` is **`infinite-v0.1.10-to-v0.1.12`** (handler + store loader). Use this exact string in governance and in the system test.
+- Upstream [cosmos/evm](https://github.com/cosmos/evm) may document a different sample (e.g. **`v0.4.0-to-v0.5.0`** in [migrations v0.4→v0.5](../../migrations/v0.4.0_to_v0.5.0.md)); this fork does **not** register that name in code.
+
+### Files
 
 | Piece | Behavior |
 |-------|----------|
-| **`tests/systemtests/chainupgrade/v0_1_10_to_v0_1_12.go`** | Uses a dedicated plan name: **`v0.1.10-to-v0.1.12`**. |
-| **`infinited/upgrades.go`** | Defines **`UpgradeNameSystemTest`** and registers `SetUpgradeHandler` for both **`UpgradeName`** and **`UpgradeNameSystemTest`**. Also configures the upgrade store loader for either name when resuming after a halt. |
+| **`tests/systemtests/chainupgrade/v0_1_10_to_v0_1_12.go`** | Plan name **`infinite-v0.1.10-to-v0.1.12`** (must match **`UpgradeName`**). |
+| **`infinited/upgrades.go`** | Registers **`SetUpgradeHandler`** and **`UpgradeStoreLoader`** only for **`UpgradeName`**. |
 
 ### Relation to upstream `cosmos/evm`
 
-Upstream **`evmd/upgrades.go`** (as of `main`) uses a single upgrade name constant and registers a single handler. This fork keeps the same “register at startup” pattern, but additionally registers the **system-test** upgrade name so the test can be stable against a legacy release artifact.
+Upstream may document **`v0.4.0-to-v0.5.0`** as the sample upgrade plan. This fork **does not** register that string; operators and tests standardize on **`UpgradeName`** so the binary under test matches production expectations.
 
 ---
 
@@ -127,7 +132,7 @@ go test -failfast -mod=readonly -tags=system_test ./... -run TestChainUpgrade \
 ## Maintenance checklist (after upstream merge or release changes)
 
 - [ ] Legacy release tag still exists and checksums verify (`Makefile` / `SYSTEMTEST_LEGACY_TAG`).
-- [ ] `upgradeName` / `upgradeHeight` match app upgrade registration (`UpgradeNameSystemTest` in `infinited/upgrades.go` for the system test; `UpgradeName` for the example upgrade).
+- [ ] `upgradeName` / `upgradeHeight` match **`UpgradeName`** in `infinited/upgrades.go`.
 - [ ] `upgrade-test.json` gov fields satisfy SDK ordering (`expedited` &lt; `voting`).
 - [ ] `customize_genesis.sh` still merges bank denoms when EVM + staking both use `drop`.
 - [ ] `jq` available in CI and local Docker image used for system tests.

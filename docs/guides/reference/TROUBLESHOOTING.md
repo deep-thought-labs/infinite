@@ -278,7 +278,7 @@ make test-system-docker
 **Optional overrides** (same release download path; no local compile of the legacy tag):
 
 ```bash
-make SYSTEMTEST_LEGACY_TAG=v0.1.11 test-system-docker
+make SYSTEMTEST_LEGACY_TAG=v0.1.10 test-system-docker
 ```
 
 **Project defaults**:

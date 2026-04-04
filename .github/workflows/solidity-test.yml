@@ -9,7 +9,36 @@ on:
 permissions: read-all
 
 jobs:
+  changes:
+    runs-on: ubuntu-latest
+    outputs:
+      code: ${{ steps.filter.outputs.code }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          filters: |
+            code:
+              - '**/*.sol'
+              - '**/*.go'
+              - 'go.mod'
+              - 'go.sum'
+              - 'go.work'
+              - 'go.work.sum'
+              - 'infinited/go.mod'
+              - 'infinited/go.sum'
+              - '*.toml'
+              - 'Makefile'
+              - 'scripts/compile_smart_contracts/**'
+              - 'tests/solidity/**'
+              - '.github/workflows/solidity-test.yml'
+
   test-solidity:
+    needs: changes
+    if: needs.changes.outputs.code == 'true'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/setup-go@v5
@@ -17,15 +46,6 @@ jobs:
           go-version: '1.25'
           check-latest: true
       - uses: actions/checkout@v4
-      - uses: technote-space/get-diff-action@v6.1.2
-        with:
-          PATTERNS: |
-            **/**.sol
-            **/**.go
-            go.mod
-            go.sum
-            *.toml
       - name: Test Solidity
         run: |
           make test-solidity
-        if: env.GIT_DIFF

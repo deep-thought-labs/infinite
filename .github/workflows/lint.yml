@@ -14,8 +14,40 @@ concurrency:
 permissions: read-all
 
 jobs:
+  changes:
+    runs-on: ubuntu-latest
+    outputs:
+      go: ${{ steps.filter.outputs.go }}
+      markdown: ${{ steps.filter.outputs.markdown }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          filters: |
+            go:
+              - '**/*.go'
+              - 'go.mod'
+              - 'go.sum'
+              - 'go.work'
+              - 'go.work.sum'
+              - 'infinited/go.mod'
+              - 'infinited/go.sum'
+              - '*.toml'
+              - '.github/workflows/lint.yml'
+            markdown:
+              - '**/*.md'
+              - '.markdownlint.yml'
+              - '.markdownlint-cli2.jsonc'
+              - '.markdownlintignore'
+              - '.github/workflows/lint.yml'
+
   golangci:
     name: Run golangci-lint
+    needs: changes
+    if: needs.changes.outputs.go == 'true'
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
@@ -36,51 +68,29 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-go-
 
-      # Determine diff so we don't lint when no Go files are changed
-      - uses: technote-space/get-diff-action@v6.1.2
-        with:
-          PATTERNS: |
-            **/**.go
-            go.mod
-            go.sum
-            *.toml
-
       - name: Run linting
-        if: env.GIT_DIFF
         id: lint_long
         run: |
           make lint-go
 
   markdown-lint:
     name: markdownlint (cli2, minimal)
+    needs: changes
+    if: needs.changes.outputs.markdown == 'true'
     runs-on: ubuntu-latest
     timeout-minutes: 10
     permissions:
-      contents: read   # read-only permissions
+      contents: read
     steps:
-      # Standard checkout for all cases
       - name: Checkout
         uses: actions/checkout@v4
 
-      # Only run if markdown or configs changed
-      - uses: technote-space/get-diff-action@v6.1.2
-        with:
-          PATTERNS: |
-            **/*.md
-            .markdownlint.yml
-            .markdownlint-cli2.jsonc
-            .markdownlintignore
-
-      # Stable Node
       - uses: actions/setup-node@v4
-        if: env.GIT_DIFF
         with:
           node-version: "20"
 
-      # Lint: check only, fail on errors
       - name: markdownlint (check only)
         id: md_lint
-        if: env.GIT_DIFF
         uses: DavidAnson/markdownlint-cli2-action@v16
         with:
           globs: "**/*.md"

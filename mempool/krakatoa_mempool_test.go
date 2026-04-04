@@ -136,9 +136,7 @@ func TestKrakatoaMempool_ReapPromoteDemotePromote(t *testing.T) {
 
 	// wait for another reset to make sure the pool processes the above txns into pending
 	require.NoError(t, mp.GetTxPool().Sync())
-	require.Eventually(t, func() bool {
-		return mp.CountTx() == 3
-	}, 10*time.Second, 25*time.Millisecond)
+	require.Equal(t, 3, mp.CountTx(), "expected three pending EVM txs after sync")
 
 	// reap txs now and we should get back all txs since they were all validated
 	txs, err := mp.ReapNewValidTxs(0, 0)
@@ -356,10 +354,10 @@ func TestKrakatoaMempool_ReapNewBlock(t *testing.T) {
 	// txns into pending
 	require.NoError(t, mp.GetTxPool().Sync())
 	legacyPool := mp.GetTxPool().Subpools[0].(*legacypool.LegacyPool)
-	require.Eventually(t, func() bool {
-		pending, queued := legacyPool.ContentFrom(accounts[0].address)
-		return len(pending) == 3 && len(queued) == 0 && mp.CountTx() == 3
-	}, time.Second, 10*time.Millisecond)
+	pending, queued := legacyPool.ContentFrom(accounts[0].address)
+	require.Len(t, pending, 3)
+	require.Len(t, queued, 0)
+	require.Equal(t, 3, mp.CountTx())
 
 	// simulate comet calling removeTx, a new height being published, and
 	// our accounts nonce increments to 1, so tx 0 will be invalidated
@@ -381,11 +379,7 @@ func TestKrakatoaMempool_ReapNewBlock(t *testing.T) {
 	// sync the pool to make sure the above happens, tx0 should be dropped
 	// from the pool and the reap list
 	require.NoError(t, mp.GetTxPool().Sync())
-	require.Eventually(t, func() bool {
-		pending, queued := legacyPool.ContentFrom(accounts[0].address)
-		return len(pending) == 2 && len(queued) == 0
-	}, time.Second, 10*time.Millisecond)
-	pending, queued := legacyPool.ContentFrom(accounts[0].address)
+	pending, queued = legacyPool.ContentFrom(accounts[0].address)
 	require.Len(t, pending, 2)
 	require.Len(t, queued, 0)
 
@@ -584,6 +578,12 @@ func setTestBech32Prefixes(t *testing.T) {
 
 func setupKrakatoaMempoolWithAccounts(t *testing.T, numAccounts int) (*mempool.KrakatoaMempool, testMempoolDependencies) {
 	t.Helper()
+
+	// EVM txs use Add(sync=false) by default; without waiting on promotion, CountTx/Sync can race.
+	// This matches TxPool.Add / LegacyPool.Add docs: use sync inserts only in tests.
+	prevAllowUnsafeSyncInsert := mempool.AllowUnsafeSyncInsert
+	mempool.AllowUnsafeSyncInsert = true
+	t.Cleanup(func() { mempool.AllowUnsafeSyncInsert = prevAllowUnsafeSyncInsert })
 
 	// Create accounts
 	accounts := make([]testAccount, numAccounts)

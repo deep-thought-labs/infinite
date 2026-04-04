@@ -26,7 +26,7 @@ DOCKER := $(or $(shell command -v docker 2>/dev/null),docker)
 # Chain-upgrade system tests (tests/systemtests/chainupgrade): legacy binary is always taken from
 # GitHub Releases for SYSTEMTEST_LEGACY_TAG (build-v05). No git checkout / local compile of the tag.
 # Release assets are Linux-only; on macOS use `make test-system-docker`.
-SYSTEMTEST_LEGACY_TAG ?= v0.1.11
+SYSTEMTEST_LEGACY_TAG ?= v0.1.10
 SYSTEMTEST_LEGACY_REPO ?= deep-thought-labs/infinite
 SYSTEMTEST_LEGACY_ASSET_LINUX_AMD64 ?= infinite_Linux_x86_64.tar.gz
 SYSTEMTEST_LEGACY_ASSET_LINUX_ARM64 ?= infinite_Linux_ARM64.tar.gz
@@ -509,7 +509,7 @@ test-system: build-v05 build
 	$(MAKE) -C tests/systemtests test
 
 # Run system tests in Linux container (recommended on macOS when legacy artifacts are Linux-only).
-# Base image must ship glibc >= the release legacy binary (e.g. v0.1.11 may require GLIBC_2.38+);
+# Base image must ship glibc >= the release legacy binary (e.g. v0.1.10 may require GLIBC_2.38+);
 # bookworm (2.36) is too old — use trixie (Debian 13) or newer.
 # Do not pin --platform linux/amd64 on Apple Silicon: QEMU user-mode breaks CometBFT P2P SecretConnection
 # (chacha20poly1305: message authentication failed), numPeers=0, timeout waiting for node start.

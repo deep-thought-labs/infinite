@@ -48,7 +48,7 @@ Integrar `upstream/main` en el fork Infinite Drive, resolver conflictos y estabi
 ## Decisiones de fork (no triviales)
 
 - **README**: prioridad identidad Infinite Drive frente al texto genérico de Cosmos EVM.
-- **Makefile / systemtests**: binario real `infinited` en `build/`; copia con nombre `evmd` solo para la suite que aún espera ese nombre. Baseline de upgrade: **`SYSTEMTEST_LEGACY_TAG`** + descarga desde **GitHub Releases** (defecto **`v0.1.11`**) — ver *System tests y upgrades on-chain (fork)*.
+- **Makefile / systemtests**: binario real `infinited` en `build/`; copia con nombre `evmd` solo para la suite que aún espera ese nombre. Baseline de upgrade: **`SYSTEMTEST_LEGACY_TAG`** + descarga desde **GitHub Releases** (defecto **`v0.1.10`**) — ver *System tests y upgrades on-chain (fork)*.
 - **CI**: conservar fuzz tests del fork en `test.yml` hasta la **alineación dedicada** de workflows con upstream.
 
 ## Actualización de la misma sesión de merge (2026-03-19)
@@ -109,11 +109,11 @@ Upstream asume a menudo un **git tag** en el mismo repositorio para compilar el 
 
 | Aspecto | Implementación en el fork |
 |---------|---------------------------|
-| Tag baseline | **`SYSTEMTEST_LEGACY_TAG`** en el `Makefile` (por defecto **`v0.1.11`**, release publicado en este repo). Sobreescribible: `make SYSTEMTEST_LEGACY_TAG=… test-system`. |
+| Tag baseline | **`SYSTEMTEST_LEGACY_TAG`** en el `Makefile` (por defecto **`v0.1.10`**, release publicado en este repo). Sobreescribible: `make SYSTEMTEST_LEGACY_TAG=… test-system`. |
 | Existencia del release | Debe existir en GitHub un **release** para ese tag con artefactos Linux (`infinite_Linux_*.tar.gz`) y `checksums.txt`. No hace falta tener el tag en el clon local para `build-v05`; CI descarga por HTTPS como en Linux. |
 | Binarios (legacy baseline) | `build-v05` obtiene el binario **solo** desde el release del fork (**`SYSTEMTEST_LEGACY_REPO`**, default `deep-thought-labs/infinite`) con verificación SHA256 (`checksums.txt`) y assets Linux (`infinite_Linux_x86_64.tar.gz`, `infinite_Linux_ARM64.tar.gz`). No hay fallback a `git checkout` ni compilación local del tag. |
 | Binarios (rama actual) | `test-system` sigue compilando la rama actual y copia `build/infinited` (o `EXAMPLE_BINARY`) a `tests/systemtests/binaries/evmd` para la suite. |
-| Test de upgrade | `tests/systemtests/chainupgrade/v0_1_10_to_v0_1_12.go`: nombre del plan on-chain **`v0.1.10-to-v0.1.12`** — debe coincidir con **`UpgradeNameSystemTest`** en `infinited/upgrades.go` (este plan name es específico del system test). |
+| Test de upgrade | `tests/systemtests/chainupgrade/v0_1_10_to_v0_1_12.go`: el plan on-chain debe coincidir con **`UpgradeName`** en `infinited/upgrades.go` (hoy **`infinite-v0.1.10-to-v0.1.12`**; ver [migrations/infinite_v0.1.10_to_v0.1.12.md](../../migrations/infinite_v0.1.10_to_v0.1.12.md)). |
 | CI | `.github/workflows/system-test.yml`: `fetch-depth: 0`, `fetch-tags: true`; el paso `make test-system` solo corre si **`GIT_DIFF`** matchea rutas relevantes (`.go`, `go.mod`, `*.toml`, workflow, etc.), igual que en upstream. |
 | Ejecución local macOS | Nuevo target `make test-system-docker` ejecuta la prueba en contenedor Linux (`golang:1.25-trixie` + Foundry; glibc suficiente para binarios legacy que exijan p. ej. GLIBC_2.38+), recomendado cuando los artefactos legacy son Linux-only o el host presenta incompatibilidades de toolchain. |
 | Correcciones posteriores | Se corrigió resolución de `docker` en `Makefile` para evitar `run: command not found` / `docker: command not found` por PATH incompleto en shells locales. También se eliminó `tests/systemtests/mempool/interface.go` (residuo conflictivo) que redeclaraba `TestSuite` y rompía compilación de system tests. |

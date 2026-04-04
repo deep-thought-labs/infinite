@@ -1,26 +1,36 @@
 name: Solhint
-# This workflow is only run when a .sol file has been changed
+# Solidity style: runs when .sol or this workflow changes (see CI_CD.md).
+
 on:
   pull_request:
 
 permissions: read-all
 
 jobs:
-  solhint:
-    name: runner / solhint
-    runs-on: ubuntu-latest 
+  changes:
+    runs-on: ubuntu-latest
+    outputs:
+      sol: ${{ steps.filter.outputs.sol }}
     steps:
       - uses: actions/checkout@v4
-      - uses: technote-space/get-diff-action@v6.1.2
-        id: git_diff
         with:
-          PATTERNS: |
-            **/**.sol
+          fetch-depth: 0
+      - uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          filters: |
+            sol:
+              - '**/*.sol'
+              - '.github/workflows/solhint.yml'
+
+  solhint:
+    name: runner / solhint
+    needs: changes
+    if: needs.changes.outputs.sol == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
-        if: env.GIT_DIFF
       - run: npm install -g solhint@v5.0.5
-        if: env.GIT_DIFF
       - run: solhint --version
-        if: env.GIT_DIFF
       - run: solhint '**/*.sol'
-        if: env.GIT_DIFF

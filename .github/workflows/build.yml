@@ -25,7 +25,30 @@ permissions:
   contents: read
 
 jobs:
+  # Push to main has no path filter; skip heavy matrix when only non-build paths changed (CI_CD.md).
+  changes:
+    runs-on: ubuntu-latest
+    outputs:
+      code: ${{ steps.filter.outputs.code }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          filters: |
+            code:
+              - 'infinited/**'
+              - 'go.mod'
+              - 'go.sum'
+              - 'infinited/go.mod'
+              - 'infinited/go.sum'
+              - '.github/workflows/build.yml'
+
   build:
+    needs: changes
+    if: github.event_name == 'workflow_dispatch' || needs.changes.outputs.code == 'true'
     timeout-minutes: 15
     runs-on: ubuntu-latest
     strategy:
