@@ -8,10 +8,10 @@ Este directorio concentra la **documentación de la integración** con [Hyperlan
 
 | Documento | Contenido |
 |-----------|-----------|
-| [**INTEGRATION.md**](INTEGRATION.md) | **Registro canónico y documento de auditoría:** contexto del proyecto, resumen de la **guía original** frente a la **implementación real**, matriz paso a paso, inventario de código, checklist para revisores (humanos o IA) y decisiones justificadas. |
+| [**INTEGRATION.md**](INTEGRATION.md) | **Registro canónico y documento de auditoría:** contexto del proyecto, **revisión externa** (equivalencia con simapp, riesgos ERC-20/EVM), guía original vs implementación, matriz, checklist. Incluye enlace del plan **`infinite-v0.1.10-to-v0.1.12`** con stores `hyperlane`/`warp`. |
 | *(futuro)* | Operación de relayers, génesis de red, diseño IBC/mensajería según avance del producto. |
 
-Resumen ejecutivo: dependencia **`hyperlane-cosmos@v1.2.0-rc.0`** en [`infinited/go.mod`](../../../infinited/go.mod); cableado en [`infinited/app.go`](../../../infinited/app.go) y permisos en [`infinited/config/permissions.go`](../../../infinited/config/permissions.go). Detalle y justificación → **[INTEGRATION.md](INTEGRATION.md)**.
+Resumen ejecutivo: dependencia **`hyperlane-cosmos@v1.2.0-rc.0`** en [`infinited/go.mod`](../../../infinited/go.mod); cableado en [`infinited/app.go`](../../../infinited/app.go); permisos en [`infinited/config/permissions.go`](../../../infinited/config/permissions.go); **stores nuevos** en el upgrade **`infinite-v0.1.10-to-v0.1.12`** ([`infinited/upgrades.go`](../../../infinited/upgrades.go), [guía de migración](../../migrations/infinite_v0.1.10_to_v0.1.12.md)). Detalle → **[INTEGRATION.md](INTEGRATION.md)**.
 
 **Registro en mantenimiento del fork:** [UPSTREAM_DIVERGENCE_RECORD.md — Extensiones de producto (fork)](../../fork-maintenance/UPSTREAM_DIVERGENCE_RECORD.md#extensiones-de-producto-fork).
 

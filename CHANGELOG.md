@@ -25,7 +25,7 @@
 
 ### FEATURES
 
-- Hyperlane (`x/core`, `x/warp`) integrado en `infinited` (keepers, `ModuleManager`, genesis order, cuentas de módulo). Registro técnico [`docs/feature/hyperlane/INTEGRATION.md`](docs/feature/hyperlane/INTEGRATION.md); índice [`docs/feature/hyperlane/README.md`](docs/feature/hyperlane/README.md); mantenimiento del fork [`docs/fork-maintenance/UPSTREAM_DIVERGENCE_RECORD.md`](docs/fork-maintenance/UPSTREAM_DIVERGENCE_RECORD.md#extensiones-de-producto-fork).
+- Hyperlane (`x/core`, `x/warp`) integrado en `infinited` (keepers, `ModuleManager`, genesis order, cuentas de módulo). Stores `hyperlane` / `warp` en `StoreUpgrades.Added` del plan **`infinite-v0.1.10-to-v0.1.12`** ([`infinited/upgrades.go`](infinited/upgrades.go)). Registro técnico [`docs/feature/hyperlane/INTEGRATION.md`](docs/feature/hyperlane/INTEGRATION.md); guía del plan [`docs/migrations/infinite_v0.1.10_to_v0.1.12.md`](docs/migrations/infinite_v0.1.10_to_v0.1.12.md); mantenimiento del fork [`docs/fork-maintenance/UPSTREAM_DIVERGENCE_RECORD.md`](docs/fork-maintenance/UPSTREAM_DIVERGENCE_RECORD.md#extensiones-de-producto-fork).
 
 ### CONTINUOUS INTEGRATION
 
@@ -48,7 +48,6 @@
 
 - [\#3](https://github.com/deep-thought-labs/infinite/pull/3) Sync `cosmos/evm` to `50b4817…`; CI gates.
 - Retain `ante/evm/10_gas_wanted.go` (removed upstream).
-
 
 ## v0.1.11
 

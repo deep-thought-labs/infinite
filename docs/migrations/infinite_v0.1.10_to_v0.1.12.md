@@ -17,7 +17,7 @@ The `infinite-` prefix distinguishes Infinite Drive plans from upstream-style na
 ## What the handler does today
 
 - **`SetUpgradeHandler`:** runs **`ModuleManager.RunMigrations`** (no extra custom logic).
-- **`UpgradeStoreLoader`:** `StoreUpgrades.Added` is currently **empty**; extend when a migration introduces **new module stores** (e.g. future `x/group`).
+- **`UpgradeStoreLoader`:** `StoreUpgrades.Added` includes **`hyperlane`** and **`warp`** (Hyperlane `x/core` and `x/warp`); see [`infinited/upgrades.go`](../../infinited/upgrades.go). Detail: [docs/feature/hyperlane/INTEGRATION.md](../feature/hyperlane/INTEGRATION.md).
 
 ## Binaries and CI
 
@@ -37,10 +37,11 @@ The `infinite-` prefix distinguishes Infinite Drive plans from upstream-style na
 | End-to-end system test, genesis `upgrade-test`, maintenance | [CHAIN_UPGRADE_SYSTEM_TEST.md](../guides/testing/CHAIN_UPGRADE_SYSTEM_TEST.md) |
 | Fork divergence (plan naming policy) | [UPSTREAM_DIVERGENCE_RECORD.md](../fork-maintenance/UPSTREAM_DIVERGENCE_RECORD.md) |
 | Future `x/group` work | [features/x-group/IMPLEMENTATION_PLAN.md](../features/x-group/IMPLEMENTATION_PLAN.md) |
+| Hyperlane stores on upgrade | [feature/hyperlane/INTEGRATION.md](../feature/hyperlane/INTEGRATION.md) |
 
 ## Upcoming work (placeholder)
 
-When **`x/group`** (or other modules) is added with a **new store**, update:
+When **`x/group`** (or other modules beyond Hyperlane) is added with a **new store**, update:
 
 - `infinited/upgrades.go` — add the module store key to `StoreUpgrades.Added` for the upgrade that introduces it (same or a **new** `infinite-…` plan name, as decided by governance).
 - This file — record the new plan name and store list if it differs from the baseline above.

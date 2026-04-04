@@ -1,6 +1,6 @@
 # Registro de divergencia frente a upstream (Infinite Drive)
 
-**Ámbito:** inventario técnico del repositorio **infinite-b** respecto a [cosmos/evm](https://github.com/cosmos/evm). Documento interno de mantenimiento y trazabilidad; **no** constituye especificación reutilizable para otras cadenas o forks.
+**Ámbito:** inventario técnico del repositorio [**infinite**](https://github.com/deep-thought-labs/infinite) respecto a [cosmos/evm](https://github.com/cosmos/evm). Documento interno de mantenimiento y trazabilidad; **no** constituye especificación reutilizable para otras cadenas o forks.
 
 **Procedimiento de merge, diffs y verificación:** [README.md](README.md) de esta carpeta, [PLAYBOOK.md](PLAYBOOK.md), [REFERENCE.md](REFERENCE.md), [VERIFICATION.md](VERIFICATION.md).
 
