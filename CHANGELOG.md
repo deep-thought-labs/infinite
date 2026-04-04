@@ -25,7 +25,7 @@
 
 ### FEATURES
 
-- Hyperlane (`x/core`, `x/warp`) integrado en `infinited` (keepers, `ModuleManager`, genesis order, cuentas de módulo). Stores `hyperlane` / `warp` en `StoreUpgrades.Added` del plan **`infinite-v0.1.10-to-v0.1.12`** ([`infinited/upgrades.go`](infinited/upgrades.go)). Pruebas: [`infinited/tests/integration/hyperlane_test.go`](infinited/tests/integration/hyperlane_test.go). Docs: [`docs/feature/hyperlane/INTEGRATION.md`](docs/feature/hyperlane/INTEGRATION.md), [`docs/feature/hyperlane/OPERATIONS.md`](docs/feature/hyperlane/OPERATIONS.md) (deploy/registry/EVM post-código); bitácora [`docs/fork-maintenance/logs/2026-04-03-hyperlane-integration.md`](docs/fork-maintenance/logs/2026-04-03-hyperlane-integration.md). Migración plan: [`docs/migrations/infinite_v0.1.10_to_v0.1.12.md`](docs/migrations/infinite_v0.1.10_to_v0.1.12.md); divergencia fork [`docs/fork-maintenance/UPSTREAM_DIVERGENCE_RECORD.md`](docs/fork-maintenance/UPSTREAM_DIVERGENCE_RECORD.md#extensiones-de-producto-fork).
+- [\#6](https://github.com/deep-thought-labs/infinite/pull/6) Integrate Hyperlane as Cosmos SDK Module (`x/core`, `x/warp`).
 
 ### CONTINUOUS INTEGRATION
 
