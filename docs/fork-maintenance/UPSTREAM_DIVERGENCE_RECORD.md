@@ -49,7 +49,7 @@ Además de **identidad** y **rebranding**, este repositorio puede incluir funcio
 
 | Extensión | Documentación técnica | Notas para merge |
 |-----------|------------------------|------------------|
-| Hyperlane — módulos `x/core` y `x/warp` ([hyperlane-cosmos](https://github.com/bcp-innovations/hyperlane-cosmos)) | [INTEGRATION.md](../feature/hyperlane/INTEGRATION.md) (código) · [OPERATIONS.md](../feature/hyperlane/OPERATIONS.md) (despliegue/registry/EVM) · [README](../feature/hyperlane/README.md) · [bitácora logs/2026-04-hyperlane-infinited-integration.md](logs/2026-04-hyperlane-infinited-integration.md) | Zonas habituales de conflicto: [`infinited/app.go`](../../infinited/app.go), [`infinited/go.mod`](../../infinited/go.mod), [`infinited/upgrades.go`](../../infinited/upgrades.go). Preservar módulos y dependencia salvo decisión explícita; actualizar docs de feature si cambia el alcance. |
+| Hyperlane — módulos `x/core` y `x/warp` ([hyperlane-cosmos](https://github.com/bcp-innovations/hyperlane-cosmos)) | [INTEGRATION.md](../feature/hyperlane/INTEGRATION.md) (código) · [OPERATIONS.md](../feature/hyperlane/OPERATIONS.md) (despliegue/registry/EVM) · [README](../feature/hyperlane/README.md) · [bitácora logs/2026-04-03-hyperlane-integration.md](logs/2026-04-03-hyperlane-integration.md) | Zonas habituales de conflicto: [`infinited/app.go`](../../infinited/app.go), [`infinited/go.mod`](../../infinited/go.mod), [`infinited/upgrades.go`](../../infinited/upgrades.go). Preservar módulos y dependencia salvo decisión explícita; actualizar docs de feature si cambia el alcance. |
 
 ---
 
@@ -135,7 +135,7 @@ Renombres representativos: `evmd/app.go` → `infinited/app.go`, `evmd/cmd/evmd/
 ### Documentación
 
 - `docs/guides/*.md` y resto de guías bajo `docs/guides/`
-- `docs/feature/hyperlane/` — integración Hyperlane en `infinited`: [INTEGRATION.md](../feature/hyperlane/INTEGRATION.md), [OPERATIONS.md](../feature/hyperlane/OPERATIONS.md); bitácora [logs/2026-04-hyperlane-infinited-integration.md](logs/2026-04-hyperlane-infinited-integration.md); [§ Extensiones de producto (fork)](#extensiones-de-producto-fork)
+- `docs/feature/hyperlane/` — integración Hyperlane en `infinited`: [INTEGRATION.md](../feature/hyperlane/INTEGRATION.md), [OPERATIONS.md](../feature/hyperlane/OPERATIONS.md); bitácora [logs/2026-04-03-hyperlane-integration.md](logs/2026-04-03-hyperlane-integration.md); [§ Extensiones de producto (fork)](#extensiones-de-producto-fork)
 - `docs/fork-maintenance/` (este registro y documentos de mantenimiento del fork)
 - `tests/solidity/README.md` — guía específica del harness Solidity (`make test-solidity`) y convenciones del fork (prefijos Bech32, denom `drop`, estabilidad)
 
@@ -147,7 +147,7 @@ Renombres representativos: `evmd/app.go` → `infinited/app.go`, `evmd/cmd/evmd/
 
 - `assets/pre-mainet-genesis.json`, `.goreleaser.yml`, `.goreleaser.linux-only.yml`, `.github/workflows/release.yml`, `local_node.sh`
 - [`.markdownlint.yml`](../../.markdownlint.yml) — calidad de documentación: **MD013** con `code_block_line_length: 200` en bloques de código (política del fork frente a líneas largas en ejemplos shell). Al fusionar con upstream, conservar este valor salvo acuerdo explícito; ver [MERGE_STRATEGIES.md — §4.6](MERGE_STRATEGIES.md#46-markdownlint).
-- [Makefile](../../Makefile) — **`markdownlint_cli2_version`**: misma versión de `markdownlint-cli2` que empaqueta **`markdownlint-cli2-action@v16`** en CI ([`lint.yml`](../../.github/workflows/lint.yml)); **`make lint-md`** / **`make lint`** para reproducir localmente (Node `npx`). Exclusiones de `.md` bajo `tests/systemtests/Counter`, `tests/evm-tools-compatibility` y `**/node_modules/**` (deps vendorizadas por los harnesses JS): [`.markdownlint-cli2.jsonc`](../../.markdownlint-cli2.jsonc). Si se actualiza la etiqueta de la acción en GitHub, actualizar la variable en el mismo ciclo; ver [MERGE_STRATEGIES.md — §4.6](MERGE_STRATEGIES.md#46-markdownlint). **`SYSTEMTEST_LEGACY_TAG`** y `build-v05`: baseline de `make test-system` con descarga verificada (checksums) desde artefactos Linux del release en GitHub del fork; sin compilación local del tag; `test-system-docker` para hosts macOS; ver [bitácora — System tests y upgrades](logs/2026-03-merge-upstream-main.md#system-tests-y-upgrades-on-chain-fork).
+- [Makefile](../../Makefile) — **`markdownlint_cli2_version`**: misma versión de `markdownlint-cli2` que empaqueta **`markdownlint-cli2-action@v16`** en CI ([`lint.yml`](../../.github/workflows/lint.yml)); **`make lint-md`** / **`make lint`** para reproducir localmente (Node `npx`). Exclusiones de `.md` bajo `tests/systemtests/Counter`, `tests/evm-tools-compatibility` y `**/node_modules/**` (deps vendorizadas por los harnesses JS): [`.markdownlint-cli2.jsonc`](../../.markdownlint-cli2.jsonc). Si se actualiza la etiqueta de la acción en GitHub, actualizar la variable en el mismo ciclo; ver [MERGE_STRATEGIES.md — §4.6](MERGE_STRATEGIES.md#46-markdownlint). **`SYSTEMTEST_LEGACY_TAG`** y `build-v05`: baseline de `make test-system` con descarga verificada (checksums) desde artefactos Linux del release en GitHub del fork; sin compilación local del tag; `test-system-docker` para hosts macOS; ver [bitácora — System tests y upgrades](logs/2026-03-21-merge-upstream-main.md#system-tests-y-upgrades-on-chain-fork).
 
 ### Estabilidad CI (harnesses JS)
 

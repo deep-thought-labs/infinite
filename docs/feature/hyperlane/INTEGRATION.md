@@ -13,7 +13,7 @@ Un revisor (humano o IA) debe poder:
 2. Juzgar si las desviaciones son **coherentes** con la arquitectura existente del proyecto y si mantienen **equivalencia funcional** donde aplica.
 3. Identificar **lagunas** (p. ej. CLI Hyperlane, puente ERC-20) que no equivalen a “incorrecto”, sino a **trabajo pendiente documentado**.
 
-La narrativa técnica detallada vive aquí; el índice breve está en [README.md](README.md). **Operación y funcionalidad completa** (deploy Cosmos, registry, EVM): [OPERATIONS.md](OPERATIONS.md). **Bitácora de cierre de fase código:** [logs/2026-04-hyperlane-infinited-integration.md](../../fork-maintenance/logs/2026-04-hyperlane-infinited-integration.md).
+La narrativa técnica detallada vive aquí; el índice breve está en [README.md](README.md). **Operación y funcionalidad completa** (deploy Cosmos, registry, EVM): [OPERATIONS.md](OPERATIONS.md). **Bitácora de cierre de fase código:** [logs/2026-04-03-hyperlane-integration.md](../../fork-maintenance/logs/2026-04-03-hyperlane-integration.md).
 
 ---
 

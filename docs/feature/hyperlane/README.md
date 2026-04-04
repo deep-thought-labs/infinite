@@ -22,7 +22,7 @@ Este directorio enlaza la cadena **Infinite Improbability Drive** con [Hyperlane
 ## Trazabilidad y mantenimiento del fork
 
 - **Registro de divergencia / extensiones:** [UPSTREAM_DIVERGENCE_RECORD.md — Extensiones de producto (fork)](../../fork-maintenance/UPSTREAM_DIVERGENCE_RECORD.md#extensiones-de-producto-fork).
-- **Bitácora de cierre (fase código):** [logs/2026-04-hyperlane-infinited-integration.md](../../fork-maintenance/logs/2026-04-hyperlane-infinited-integration.md).
+- **Bitácora de cierre (fase código):** [logs/2026-04-03-hyperlane-integration.md](../../fork-maintenance/logs/2026-04-03-hyperlane-integration.md).
 
 ## Referencias cruzadas
 

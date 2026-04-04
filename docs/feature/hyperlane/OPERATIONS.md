@@ -40,4 +40,4 @@ En destino, un **ISM** (Interchain Security Module) es quien responde, en esenci
 - [Deploy Hyperlane — cadenas EVM](https://docs.hyperlane.xyz/docs/guides/chains/deploy-hyperlane)
 - [Hyperlane — módulo Cosmos (conceptos)](https://docs.hyperlane.xyz/docs/alt-vm-implementations/cosmos-sdk)
 - Código y checklist: [INTEGRATION.md](INTEGRATION.md)
-- Bitácora de integración en repo: [logs/2026-04-hyperlane-infinited-integration.md](../../fork-maintenance/logs/2026-04-hyperlane-infinited-integration.md)
+- Bitácora de integración en repo: [logs/2026-04-03-hyperlane-integration.md](../../fork-maintenance/logs/2026-04-03-hyperlane-integration.md)

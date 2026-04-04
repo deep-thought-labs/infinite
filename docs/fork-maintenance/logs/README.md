@@ -4,12 +4,12 @@ Aquí van las bitácoras de **cada integración con upstream**. **No esperes a t
 
 ## Convención de nombres
 
-`YYYY-MM-descripcion-corta.md`
+`YYYY-MM-DD-descripcion-corta.md` (fecha completa cuando ayude a distinguir varias bitácoras en el mismo mes). Si basta con precisión mensual, `YYYY-MM-descripcion-corta.md` también es válido.
 
 Ejemplos:
 
-- `2026-03-merge-upstream-main.md`
-- `2026-04-sync-cosmos-evm-v056.md`
+- `2026-03-21-merge-upstream-main.md`
+- `2026-04-03-hyperlane-integration.md`
 
 Usar **solo minúsculas y guiones** en la descripción para consistencia con el resto del repo.
 
@@ -23,9 +23,9 @@ Cada archivo debe partir de [../templates/MERGE_LOG_TEMPLATE.md](../templates/ME
 
 ## Bitácoras de integración de producto (no upstream)
 
-Para **features grandes del fork** (p. ej. Hyperlane) que **no** son un merge de [cosmos/evm](https://github.com/cosmos/evm), se puede archivar una bitácora de **cierre de fase** aquí con el mismo esquema de nombres `YYYY-MM-descripcion-corta.md`, **sin** usar la plantilla de merge upstream salvo que el equipo quiera homogeneizar.
+Para **features grandes del fork** (p. ej. Hyperlane) que **no** son un merge de [cosmos/evm](https://github.com/cosmos/evm), se puede archivar una bitácora de **cierre de fase** aquí con el mismo esquema de nombres (recomendado `YYYY-MM-DD-…`), **sin** usar la plantilla de merge upstream salvo que el equipo quiera homogeneizar.
 
-- **Ejemplo:** [2026-04-hyperlane-infinited-integration.md](2026-04-hyperlane-infinited-integration.md) — código + upgrade + enlaces a documentación operativa ([OPERATIONS.md](../../feature/hyperlane/OPERATIONS.md)).
+- **Ejemplo:** [2026-04-03-hyperlane-integration.md](2026-04-03-hyperlane-integration.md) — código + upgrade + enlaces a documentación operativa ([OPERATIONS.md](../../feature/hyperlane/OPERATIONS.md)).
 
 ---
 

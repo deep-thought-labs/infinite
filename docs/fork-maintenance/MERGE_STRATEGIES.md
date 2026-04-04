@@ -13,7 +13,7 @@ Antes de elegir estrategia, conviene tener claro qué el merge **no debe destrui
 | Release y despliegue | `.goreleaser.yml`, `release.yml`, `docs/guides/` de build, secretos y tokens de CI del org | Bitácora + sección “Decisiones de fork” |
 | CI propio | Jobs que el fork debe conservar (p. ej. fuzz, CodeQL, runners alternativos) | Bitácora + [PLAYBOOK — A.5](PLAYBOOK.md#a5-ci-y-jobs-preservados-del-fork) |
 | Documentación de proceso | `docs/fork-maintenance/`, plantillas, bitácoras | Siempre versión del fork; fusionar contenido si upstream añade equivalente |
-| Extensiones de producto | Funcionalidad fuera del `evmd` de ejemplo upstream (p. ej. Hyperlane en `infinited`) | [UPSTREAM_DIVERGENCE_RECORD.md — Extensiones de producto (fork)](UPSTREAM_DIVERGENCE_RECORD.md#extensiones-de-producto-fork), [INTEGRATION.md](../feature/hyperlane/INTEGRATION.md), [OPERATIONS.md](../feature/hyperlane/OPERATIONS.md), [bitácora Hyperlane](logs/2026-04-hyperlane-infinited-integration.md) |
+| Extensiones de producto | Funcionalidad fuera del `evmd` de ejemplo upstream (p. ej. Hyperlane en `infinited`) | [UPSTREAM_DIVERGENCE_RECORD.md — Extensiones de producto (fork)](UPSTREAM_DIVERGENCE_RECORD.md#extensiones-de-producto-fork), [INTEGRATION.md](../feature/hyperlane/INTEGRATION.md), [OPERATIONS.md](../feature/hyperlane/OPERATIONS.md), [bitácora Hyperlane](logs/2026-04-03-hyperlane-integration.md) |
 
 **Regla práctica:** `git checkout --theirs` masivo sobre `infinited/`, `scripts/**`, `docs/fork-maintenance/**` o archivos listados en el registro de divergencia está **prohibido** sin revisión explícita.
 

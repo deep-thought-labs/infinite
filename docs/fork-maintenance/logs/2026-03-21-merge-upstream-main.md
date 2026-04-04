@@ -15,7 +15,7 @@ Procedimiento: [PLAYBOOK.md](../PLAYBOOK.md), [UPSTREAM_DIVERGENCE_RECORD.md](..
 | SHA upstream (punta fusionada) | `50b4817017187cbda2a0af767fda39a895b9989a` — *fix: handle replacement txs in TxStore (#1074)* |
 | SHA local (antes del merge commit) | `69b445a9ca6b68c92e18ba9086c0584962a60cfb` |
 | SHA commit de merge | `8bc0bd3364a779b278b4fef6135bd78b30170c0f` — *Merge branch 'upstream-main' into red/merge-cosmos-evm* |
-| SHA commit de cierre documental | Resolver con `git log -1 --format=%H -- docs/fork-maintenance/logs/2026-03-merge-upstream-main.md` en la rama donde se fusione esta bitácora (commit que archiva este archivo). |
+| SHA commit de cierre documental | Resolver con `git log -1 --format=%H -- docs/fork-maintenance/logs/2026-03-21-merge-upstream-main.md` en la rama donde se fusione esta bitácora (commit que archiva este archivo). |
 
 ## Objetivo
 
