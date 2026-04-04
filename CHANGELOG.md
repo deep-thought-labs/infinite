@@ -17,6 +17,16 @@
 
 ### DEPENDENCIES
 
+- `infinited`: `github.com/bcp-innovations/hyperlane-cosmos` `v1.2.0-rc.0` (Hyperlane `x/core` + `x/warp`).
+
+### IMPROVEMENTS
+
+- `local_node.sh`: PATH/GOPATH for installed binary.
+
+### FEATURES
+
+- [\#6](https://github.com/deep-thought-labs/infinite/pull/6) Integrate Hyperlane as Cosmos SDK Module (`x/core`, `x/warp`).
+
 ### CONTINUOUS INTEGRATION
 
 - [\#4](https://github.com/deep-thought-labs/infinite/pull/4) Build on `main`/PRs; linux/arm64 + CGO.
@@ -28,21 +38,18 @@
 - Buf-breaking baseline: `cosmos/evm` `main`.
 - Markdownlint pin matches the lint action.
 - CodeQL: RPC logs, height casts, VM assert, Solidity helper.
-- CI: `paths-filter` skips heavy jobs on docs-only PRs.
-
-### IMPROVEMENTS
-
-- `local_node.sh`: PATH/GOPATH for installed binary.
+- [d56cb2f](https://github.com/deep-thought-labs/infinite/pull/5/changes/d56cb2fe90bab5f205c601672b217d04b12dae8e) CI: `paths-filter` skips heavy jobs on docs-only PRs.
 
 ### BUG FIXES
 
 - [\#5](https://github.com/deep-thought-labs/infinite/pull/5) Krakatoa: less `test-unit-cover` flake.
+- [ee53e7b7](https://github.com/deep-thought-labs/infinite/pull/6/changes/ee53e7b734aed000e3f48bf4aa67097d45c2a323) Improvement on [\#5](https://github.com/deep-thought-labs/infinite/pull/5) Krakatoa CI fix: `require.Eventually` again only in `TestKrakatoaMempool_ReapNewBlock` after block/nonce bump (`-race` / `test-unit-cover` second pass).
+- [3ce9a5d4](https://github.com/deep-thought-labs/infinite/pull/6/changes/3ce9a5d42ef559dbc529c0dff07d8b7e9db88710) System tests: `CheckTxsQueuedAsync` polls `txpool_content` to deflake exclusive-mempool assertions on CI.
 
 ### UPSTREAM INTEGRATION
 
 - [\#3](https://github.com/deep-thought-labs/infinite/pull/3) Sync `cosmos/evm` to `50b4817…`; CI gates.
 - Retain `ante/evm/10_gas_wanted.go` (removed upstream).
-
 
 ## v0.1.11
 

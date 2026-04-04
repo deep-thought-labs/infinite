@@ -21,6 +21,12 @@ import (
 	abci "github.com/cometbft/cometbft/abci/types"
 
 	dbm "github.com/cosmos/cosmos-db"
+	hyperlanecore "github.com/bcp-innovations/hyperlane-cosmos/x/core"
+	hyperlanekeeper "github.com/bcp-innovations/hyperlane-cosmos/x/core/keeper"
+	hyperlanetypes "github.com/bcp-innovations/hyperlane-cosmos/x/core/types"
+	hyperlanewarp "github.com/bcp-innovations/hyperlane-cosmos/x/warp"
+	warpkeeper "github.com/bcp-innovations/hyperlane-cosmos/x/warp/keeper"
+	warptypes "github.com/bcp-innovations/hyperlane-cosmos/x/warp/types"
 	evmante "github.com/cosmos/evm/ante"
 	antetypes "github.com/cosmos/evm/ante/types"
 	evmencoding "github.com/cosmos/evm/encoding"
@@ -188,6 +194,9 @@ type EVMD struct {
 	Erc20Keeper     erc20keeper.Keeper
 	EVMMempool      sdkmempool.ExtMempool
 
+	HyperlaneKeeper *hyperlanekeeper.Keeper
+	WarpKeeper      warpkeeper.Keeper
+
 	// the module manager
 	ModuleManager      *module.Manager
 	BasicModuleManager module.BasicManager
@@ -210,6 +219,8 @@ func NewExampleApp(
 ) *EVMD {
 	evmChainID := cast.ToUint64(appOpts.Get(srvflags.EVMChainID))
 	encodingConfig := evmencoding.MakeConfig(evmChainID)
+	hyperlanetypes.RegisterInterfaces(encodingConfig.InterfaceRegistry)
+	warptypes.RegisterInterfaces(encodingConfig.InterfaceRegistry)
 
 	appCodec := encodingConfig.Codec
 	legacyAmino := encodingConfig.Amino
@@ -244,6 +255,7 @@ func NewExampleApp(
 		ibcexported.StoreKey, ibctransfertypes.StoreKey,
 		// Cosmos EVM store keys
 		evmtypes.StoreKey, feemarkettypes.StoreKey, erc20types.StoreKey,
+		hyperlanetypes.ModuleName, warptypes.ModuleName,
 	)
 	oKeys := storetypes.NewObjectStoreKeys(banktypes.ObjectStoreKey, evmtypes.ObjectKey)
 
@@ -511,6 +523,25 @@ func NewExampleApp(
 		app.TransferKeeper,
 	)
 
+	hyperlaneK := hyperlanekeeper.NewKeeper(
+		appCodec,
+		app.AccountKeeper.AddressCodec(),
+		runtime.NewKVStoreService(keys[hyperlanetypes.ModuleName]),
+		authAddr,
+		app.BankKeeper,
+	)
+	app.HyperlaneKeeper = &hyperlaneK
+
+	app.WarpKeeper = warpkeeper.NewKeeper(
+		appCodec,
+		app.AccountKeeper.AddressCodec(),
+		runtime.NewKVStoreService(keys[warptypes.ModuleName]),
+		authAddr,
+		app.BankKeeper,
+		app.HyperlaneKeeper,
+		[]int32{1, 2}, // collateral + synthetic (warp token types)
+	)
+
 	/*
 		Create Transfer Stack
 
@@ -593,6 +624,8 @@ func NewExampleApp(
 		vm.NewAppModule(app.EVMKeeper, app.AccountKeeper, app.BankKeeper, app.AccountKeeper.AddressCodec()),
 		feemarket.NewAppModule(app.FeeMarketKeeper),
 		erc20.NewAppModule(app.Erc20Keeper, app.AccountKeeper),
+		hyperlanecore.NewAppModule(appCodec, app.HyperlaneKeeper),
+		hyperlanewarp.NewAppModule(appCodec, app.WarpKeeper),
 	)
 
 	// BasicModuleManager defines the module BasicManager which is in charge of setting up basic,
@@ -616,6 +649,8 @@ func NewExampleApp(
 		upgradetypes.ModuleName,
 		authtypes.ModuleName,
 		evmtypes.ModuleName,
+		hyperlanetypes.ModuleName,
+		warptypes.ModuleName,
 	)
 
 	// During begin block slashing happens after distr.BeginBlocker so that
@@ -633,6 +668,9 @@ func NewExampleApp(
 		// Cosmos EVM BeginBlockers
 		erc20types.ModuleName, feemarkettypes.ModuleName,
 		evmtypes.ModuleName, // NOTE: EVM BeginBlocker must come after FeeMarket BeginBlocker
+
+		hyperlanetypes.ModuleName,
+		warptypes.ModuleName,
 
 		// TODO: remove no-ops? check if all are no-ops before removing
 		distrtypes.ModuleName, slashingtypes.ModuleName,
@@ -653,6 +691,9 @@ func NewExampleApp(
 
 		// Cosmos EVM EndBlockers
 		evmtypes.ModuleName, erc20types.ModuleName, feemarkettypes.ModuleName,
+
+		hyperlanetypes.ModuleName,
+		warptypes.ModuleName,
 
 		// no-ops
 		ibcexported.ModuleName, ibctransfertypes.ModuleName,
@@ -679,6 +720,9 @@ func NewExampleApp(
 		evmtypes.ModuleName,
 		feemarkettypes.ModuleName,
 		erc20types.ModuleName,
+
+		hyperlanetypes.ModuleName,
+		warptypes.ModuleName,
 
 		ibctransfertypes.ModuleName,
 		genutiltypes.ModuleName, evidencetypes.ModuleName, authz.ModuleName,

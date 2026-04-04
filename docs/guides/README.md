@@ -23,7 +23,7 @@ Guides for developers working on the code.
 | **[QUICK_START.md](QUICK_START.md)** | ⭐ Entry point - Main workflows | First time, deciding what to do |
 | **[development/BUILDING.md](development/BUILDING.md)** | Detailed compilation with differentiated workflows | Need to compile for different scenarios |
 | **[development/DEVELOPMENT.md](development/DEVELOPMENT.md)** | Development guide | Active code development |
-| **[development/TESTING.md](development/TESTING.md)** | Unit and integration tests | Run tests, validate code |
+| **[development/TESTING.md](development/TESTING.md)** | Unit and integration tests; [system tests — txpool queued assertions](development/TESTING.md#system-tests-txpool-queued-assertions) (`CheckTxsQueuedAsync` polling) | Run tests, validate code |
 | **[development/SCRIPTS.md](development/SCRIPTS.md)** | **Canonical** reference for each `scripts/*.sh` | Look up what a script does |
 | **[fork-maintenance/README.md](../fork-maintenance/README.md)** | Fork maintenance: divergence record, merge playbook, logs | Sync with cosmos/evm safely |
 

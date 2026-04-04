@@ -11,6 +11,7 @@ require (
 	cosmossdk.io/math v1.5.3
 	cosmossdk.io/store v1.10.0-rc.2.0.20260311135820-ea452a1660fd
 	cosmossdk.io/tools/confix v0.1.2
+	github.com/bcp-innovations/hyperlane-cosmos v1.2.0-rc.0
 	github.com/cometbft/cometbft v0.39.0-beta.3
 	github.com/cosmos/cosmos-db v1.1.3
 	github.com/cosmos/cosmos-sdk v0.54.0-rc.1.0.20260311165803-2c527014f3ee

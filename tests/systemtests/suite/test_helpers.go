@@ -11,6 +11,16 @@ import (
 	"github.com/cosmos/evm/tests/systemtests/clients"
 )
 
+// txPoolQueuedPollRPC bounds each txpool_content call while polling in CheckTxsQueuedAsync.
+// The overall wait is still capped by defaultTxPoolContentTimeout.
+const txPoolQueuedPollRPC = 15 * time.Second
+
+type txPoolNodeSnapshot struct {
+	nodeID        string
+	pendingHashes []string
+	queuedHashes  []string
+}
+
 // BaseFee returns the most recently retrieved and stored baseFee.
 func (s *BaseTestSuite) BaseFee() *big.Int {
 	return s.baseFee
@@ -151,71 +161,62 @@ func (s *BaseTestSuite) CheckTxsPendingAsync(expPendingTxs []*TxInfo) error {
 	return nil
 }
 
-// CheckTxsQueuedAsync verifies asynchronously that the expected queued transactions are actually queued
-// (and not pending) in the mempool. It mirrors CheckTxsPendingAsync in style to better surface API
-// failures when querying txpool content.
+// CheckTxsQueuedAsync verifies that the expected queued transactions are queued (not pending)
+// in the mempool. Unlike the earlier single-snapshot implementation, it polls with the same
+// overall deadline as CheckTxsPending (defaultTxPoolContentTimeout) so Krakatoa / exclusive-mempool
+// classification can settle before asserting — reducing CI flakes on slower or amd64 runners.
+// Documented in the repo root at docs/guides/development/TESTING.md (“System tests: txpool queued assertions”).
 func (s *BaseTestSuite) CheckTxsQueuedAsync(expQueuedTxs []*TxInfo) error {
 	if len(expQueuedTxs) == 0 {
 		return nil
 	}
 
-	type nodeContent struct {
-		nodeID        string
-		pendingHashes []string
-		queuedHashes  []string
-	}
-
 	nodes := s.Nodes()
-	contents := make([]nodeContent, len(nodes))
+	ctx, cancel := context.WithTimeout(context.Background(), defaultTxPoolContentTimeout)
+	defer cancel()
 
-	var (
-		wg     sync.WaitGroup
-		mu     sync.Mutex
-		errors []error
-	)
+	ticker := time.NewTicker(100 * time.Millisecond)
+	defer ticker.Stop()
 
-	for idx, nodeID := range nodes {
-		wg.Add(1)
-		go func(i int, nID string) { //nolint:gosec // Concurrency is intentional for parallel tx checking
-			defer wg.Done()
+	var lastErr error
+	for {
+		contents, ferr := s.snapshotTxPoolContentsEVM(nodes)
+		if ferr != nil {
+			lastErr = ferr
+		} else if verr := validateExpQueuedTxs(contents, expQueuedTxs); verr != nil {
+			lastErr = verr
+		} else {
+			return nil
+		}
 
-			ctx, cancel := context.WithTimeout(context.Background(), defaultTxPoolContentTimeout)
-			defer cancel()
-
-			ticker := time.NewTicker(100 * time.Millisecond)
-			defer ticker.Stop()
-
-			var lastErr error
-			for {
-				pending, queued, err := s.TxPoolContent(nID, TxTypeEVM, defaultTxPoolContentTimeout)
-				if err == nil {
-					contents[i] = nodeContent{
-						nodeID:        nID,
-						pendingHashes: pending,
-						queuedHashes:  queued,
-					}
-					return
-				}
-				lastErr = err
-
-				select {
-				case <-ctx.Done():
-					mu.Lock()
-					errors = append(errors, fmt.Errorf("failed to call txpool_content api on %s: %w", nID, lastErr))
-					mu.Unlock()
-					return
-				case <-ticker.C:
-				}
+		select {
+		case <-ctx.Done():
+			if lastErr != nil {
+				return fmt.Errorf("timeout waiting for queued transaction mempool state: %w", lastErr)
 			}
-		}(idx, nodeID)
+			return fmt.Errorf("timeout waiting for queued transaction mempool state")
+		case <-ticker.C:
+		}
 	}
+}
 
-	wg.Wait()
-
-	if len(errors) > 0 {
-		return fmt.Errorf("failed to check queued transactions: %w", errors[0])
+func (s *BaseTestSuite) snapshotTxPoolContentsEVM(nodes []string) ([]txPoolNodeSnapshot, error) {
+	contents := make([]txPoolNodeSnapshot, len(nodes))
+	for i, nID := range nodes {
+		pending, queued, err := s.TxPoolContent(nID, TxTypeEVM, txPoolQueuedPollRPC)
+		if err != nil {
+			return nil, fmt.Errorf("failed to call txpool_content api on %s: %w", nID, err)
+		}
+		contents[i] = txPoolNodeSnapshot{
+			nodeID:        nID,
+			pendingHashes: pending,
+			queuedHashes:  queued,
+		}
 	}
+	return contents, nil
+}
 
+func validateExpQueuedTxs(contents []txPoolNodeSnapshot, expQueuedTxs []*TxInfo) error {
 	for _, txInfo := range expQueuedTxs {
 		if txInfo.TxType != TxTypeEVM {
 			panic("queued txs should be only EVM txs")

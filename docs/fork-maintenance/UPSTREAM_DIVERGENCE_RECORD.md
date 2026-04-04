@@ -1,6 +1,6 @@
 # Registro de divergencia frente a upstream (Infinite Drive)
 
-**Ámbito:** inventario técnico del repositorio **infinite-b** respecto a [cosmos/evm](https://github.com/cosmos/evm). Documento interno de mantenimiento y trazabilidad; **no** constituye especificación reutilizable para otras cadenas o forks.
+**Ámbito:** inventario técnico del repositorio [**infinite**](https://github.com/deep-thought-labs/infinite) respecto a [cosmos/evm](https://github.com/cosmos/evm). Documento interno de mantenimiento y trazabilidad; **no** constituye especificación reutilizable para otras cadenas o forks.
 
 **Procedimiento de merge, diffs y verificación:** [README.md](README.md) de esta carpeta, [PLAYBOOK.md](PLAYBOOK.md), [REFERENCE.md](REFERENCE.md), [VERIFICATION.md](VERIFICATION.md).
 
@@ -40,6 +40,16 @@ Solo se personalizan aspectos de **identidad** de la cadena Infinite Drive. Lo t
 ### Disciplina en integraciones con upstream
 
 No duplicar aquí el procedimiento detallado: seguir [PLAYBOOK.md](PLAYBOOK.md). Tras integrar, validar según [VERIFICATION.md](VERIFICATION.md) y, para listados de diff, [REFERENCE.md](REFERENCE.md). **GitHub Actions:** alinear workflows con `upstream/main` como parte del plan de merge, conservando `release.yml` y `.goreleaser.yml` del fork; detalle en [MERGE_STRATEGIES.md — §4](MERGE_STRATEGIES.md#4-github-actions-alinear-con-upstream-en-el-plan-de-merge).
+
+---
+
+## Extensiones de producto (fork)
+
+Además de **identidad** y **rebranding**, este repositorio puede incluir funcionalidad que **no existe** en el ejemplo `evmd` de [cosmos/evm](https://github.com/cosmos/evm). Esa funcionalidad se documenta bajo [`docs/feature/`](../feature/) para mantener este registro enfocado en divergencia *comparativa* frente a upstream y en política de identidad.
+
+| Extensión | Documentación técnica | Notas para merge |
+|-----------|------------------------|------------------|
+| Hyperlane — módulos `x/core` y `x/warp` ([hyperlane-cosmos](https://github.com/bcp-innovations/hyperlane-cosmos)) | [INTEGRATION.md](../feature/hyperlane/INTEGRATION.md) (código) · [OPERATIONS.md](../feature/hyperlane/OPERATIONS.md) (despliegue/registry/EVM) · [README](../feature/hyperlane/README.md) · [bitácora logs/2026-04-03-hyperlane-integration.md](logs/2026-04-03-hyperlane-integration.md) | Zonas habituales de conflicto: [`infinited/app.go`](../../infinited/app.go), [`infinited/go.mod`](../../infinited/go.mod), [`infinited/upgrades.go`](../../infinited/upgrades.go). Preservar módulos y dependencia salvo decisión explícita; actualizar docs de feature si cambia el alcance. |
 
 ---
 
@@ -125,6 +135,7 @@ Renombres representativos: `evmd/app.go` → `infinited/app.go`, `evmd/cmd/evmd/
 ### Documentación
 
 - `docs/guides/*.md` y resto de guías bajo `docs/guides/`
+- `docs/feature/hyperlane/` — integración Hyperlane en `infinited`: [INTEGRATION.md](../feature/hyperlane/INTEGRATION.md), [OPERATIONS.md](../feature/hyperlane/OPERATIONS.md); bitácora [logs/2026-04-03-hyperlane-integration.md](logs/2026-04-03-hyperlane-integration.md); [§ Extensiones de producto (fork)](#extensiones-de-producto-fork)
 - `docs/fork-maintenance/` (este registro y documentos de mantenimiento del fork)
 - `tests/solidity/README.md` — guía específica del harness Solidity (`make test-solidity`) y convenciones del fork (prefijos Bech32, denom `drop`, estabilidad)
 
@@ -136,7 +147,7 @@ Renombres representativos: `evmd/app.go` → `infinited/app.go`, `evmd/cmd/evmd/
 
 - `assets/pre-mainet-genesis.json`, `.goreleaser.yml`, `.goreleaser.linux-only.yml`, `.github/workflows/release.yml`, `local_node.sh`
 - [`.markdownlint.yml`](../../.markdownlint.yml) — calidad de documentación: **MD013** con `code_block_line_length: 200` en bloques de código (política del fork frente a líneas largas en ejemplos shell). Al fusionar con upstream, conservar este valor salvo acuerdo explícito; ver [MERGE_STRATEGIES.md — §4.6](MERGE_STRATEGIES.md#46-markdownlint).
-- [Makefile](../../Makefile) — **`markdownlint_cli2_version`**: misma versión de `markdownlint-cli2` que empaqueta **`markdownlint-cli2-action@v16`** en CI ([`lint.yml`](../../.github/workflows/lint.yml)); **`make lint-md`** / **`make lint`** para reproducir localmente (Node `npx`). Exclusiones de `.md` bajo `tests/systemtests/Counter`, `tests/evm-tools-compatibility` y `**/node_modules/**` (deps vendorizadas por los harnesses JS): [`.markdownlint-cli2.jsonc`](../../.markdownlint-cli2.jsonc). Si se actualiza la etiqueta de la acción en GitHub, actualizar la variable en el mismo ciclo; ver [MERGE_STRATEGIES.md — §4.6](MERGE_STRATEGIES.md#46-markdownlint). **`SYSTEMTEST_LEGACY_TAG`** y `build-v05`: baseline de `make test-system` con descarga verificada (checksums) desde artefactos Linux del release en GitHub del fork; sin compilación local del tag; `test-system-docker` para hosts macOS; ver [bitácora — System tests y upgrades](logs/2026-03-merge-upstream-main.md#system-tests-y-upgrades-on-chain-fork).
+- [Makefile](../../Makefile) — **`markdownlint_cli2_version`**: misma versión de `markdownlint-cli2` que empaqueta **`markdownlint-cli2-action@v16`** en CI ([`lint.yml`](../../.github/workflows/lint.yml)); **`make lint-md`** / **`make lint`** para reproducir localmente (Node `npx`). Exclusiones de `.md` bajo `tests/systemtests/Counter`, `tests/evm-tools-compatibility` y `**/node_modules/**` (deps vendorizadas por los harnesses JS): [`.markdownlint-cli2.jsonc`](../../.markdownlint-cli2.jsonc). Si se actualiza la etiqueta de la acción en GitHub, actualizar la variable en el mismo ciclo; ver [MERGE_STRATEGIES.md — §4.6](MERGE_STRATEGIES.md#46-markdownlint). **`SYSTEMTEST_LEGACY_TAG`** y `build-v05`: baseline de `make test-system` con descarga verificada (checksums) desde artefactos Linux del release en GitHub del fork; sin compilación local del tag; `test-system-docker` para hosts macOS; ver [bitácora — System tests y upgrades](logs/2026-03-21-merge-upstream-main.md#system-tests-y-upgrades-on-chain-fork).
 
 ### Estabilidad CI (harnesses JS)
 
@@ -153,7 +164,8 @@ Renombres representativos: `evmd/app.go` → `infinited/app.go`, `evmd/cmd/evmd/
 
 ### Estabilidad CI (tests Go)
 
-- `mempool/krakatoa_mempool_test.go` (Krakatoa): `setupKrakatoaMempoolWithAccounts` activa **`mempool.AllowUnsafeSyncInsert`** (restaurado con `t.Cleanup`) para que `LegacyPool.Add(..., sync=true)` espere la promoción interna tras cada inserción EVM. Así `TxPool.Sync()` y `CountTx()` / `ContentFrom` quedan alineados sin `require.Eventually` con timeouts arbitrarios, que seguían fallando bajo **`make test-unit-cover`** (segunda pasada con `-race` y `-coverpkg` amplio). Afecta `TestKrakatoaMempool_ReapPromoteDemotePromote`, `TestKrakatoaMempool_ReapNewBlock` y cualquier test que reutilice ese setup (p. ej. `recheck_pool_test.go`). La bandera y su uso en tests están documentados en [`mempool/mempool.go`](../../mempool/mempool.go) (`AllowUnsafeSyncInsert`); detalle operativo: [guides/development/TESTING.md — Mempool Krakatoa tests under test-unit-cover](../guides/development/TESTING.md#mempool-krakatoa-tests-under-test-unit-cover).
+- `mempool/krakatoa_mempool_test.go` (Krakatoa): `setupKrakatoaMempoolWithAccounts` activa **`mempool.AllowUnsafeSyncInsert`** (restaurado con `t.Cleanup`) para que `LegacyPool.Add(..., sync=true)` espere la promoción interna tras cada inserción EVM. Así `TxPool.Sync()` y `CountTx()` / `ContentFrom` quedan alineados en la mayoría de aserciones sin `require.Eventually`. **`TestKrakatoaMempool_ReapNewBlock`** mantiene **`require.Eventually`** tras el evento de nuevo bloque y subida de nonce, porque la expulsión de la tx obsoleta puede retrasarse respecto a un único `Sync()` bajo **`-race`** / segunda pasada de **`make test-unit-cover`**. Afecta también `TestKrakatoaMempool_ReapPromoteDemotePromote` y tests que reutilicen el setup (p. ej. `recheck_pool_test.go`). La bandera está documentada en [`mempool/mempool.go`](../../mempool/mempool.go) (`AllowUnsafeSyncInsert`); detalle: [guides/development/TESTING.md — Mempool Krakatoa tests under test-unit-cover](../guides/development/TESTING.md#mempool-krakatoa-tests-under-test-unit-cover).
+- `tests/systemtests/suite/test_helpers.go`: **`CheckTxsQueuedAsync`** reintenta lecturas de `txpool_content` en todos los nodos hasta que las transacciones esperadas están en **queued** (y no en **pending**) o hasta **`defaultTxPoolContentTimeout`**, en lugar de validar un único snapshot tras el primer RPC exitoso. Mitiga flakes en CI (p. ej. subtests de reemplazo en mempool exclusivo / `EVM_DynamicFeeTx`). Detalle: [guides/development/TESTING.md — System tests: txpool queued assertions](../guides/development/TESTING.md#system-tests-txpool-queued-assertions).
 
 ### Code scanning (CodeQL) — mitigaciones seguras
 

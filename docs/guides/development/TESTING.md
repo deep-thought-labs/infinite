@@ -102,6 +102,12 @@ The repo includes **`tests/systemtests`** (cosmos/evm-style harness): mempool, E
 
 The **software-upgrade** path (legacy release binary → customized genesis → governance → current binary) is documented in **[CHAIN_UPGRADE_SYSTEM_TEST.md](../testing/CHAIN_UPGRADE_SYSTEM_TEST.md)**. That guide is version-specific maintenance material: when the “from” binary or upgrade name changes, update the test and that document together.
 
+#### System tests: txpool queued assertions
+
+Mempool scenarios (including **exclusive** / Krakatoa-style configs) assert EVM mempool state via `eth_txpool_content`. **`CheckTxsPending`** already retries until a tx appears in **pending**; historically **`CheckTxsQueuedAsync`** used the first successful RPC response as a **single snapshot**, which could flake on slower or busy CI runners when a tx was still classified as **pending** instead of **queued**.
+
+`CheckTxsQueuedAsync` in [`tests/systemtests/suite/test_helpers.go`](../../../tests/systemtests/suite/test_helpers.go) now **polls** (same overall deadline as pending checks: `defaultTxPoolContentTimeout` in [`query.go`](../../../tests/systemtests/suite/query.go), ~100 ms between attempts, bounded per-call timeout `txPoolQueuedPollRPC`) until all expected txs satisfy the queued-vs-pending rules, or the deadline is reached. Fork maintenance note: [UPSTREAM_DIVERGENCE_RECORD.md — Estabilidad CI (tests Go)](../../fork-maintenance/UPSTREAM_DIVERGENCE_RECORD.md#estabilidad-ci-tests-go).
+
 ---
 
 ## 🧱 Solidity harness (`make test-solidity`)
@@ -190,7 +196,7 @@ go tool cover -html=coverage.txt
 
 `make test-unit-cover` runs tests **twice** at the repo root: first via `run-tests` with per-package coverage, then a second `go test` over `./...` with **`-race`** and **`-coverpkg`** set to the whole module list (see `Makefile` target `test-unit-cover`). That second pass is slower and more sensitive to timing.
 
-Krakatoa mempool tests under `mempool/` use **`mempool.AllowUnsafeSyncInsert`** inside `setupKrakatoaMempoolWithAccounts` so EVM inserts wait for `LegacyPool.Add`’s synchronous promotion path (see comments on `AllowUnsafeSyncInsert` in `mempool/mempool.go` and `LegacyPool.Add` in `mempool/txpool/legacypool/legacypool.go`). This avoids flaky `CountTx()` / `ContentFrom` assertions that previously relied on `require.Eventually` and could time out in CI.
+Krakatoa mempool tests under `mempool/` use **`mempool.AllowUnsafeSyncInsert`** inside `setupKrakatoaMempoolWithAccounts` so EVM inserts wait for `LegacyPool.Add`’s synchronous promotion path (see comments on `AllowUnsafeSyncInsert` in `mempool/mempool.go` and `LegacyPool.Add` in `mempool/txpool/legacypool/legacypool.go`). That removes most insert/`Sync` flakes; **`TestKrakatoaMempool_ReapNewBlock`** still uses **`require.Eventually`** after a simulated new block bumps the account nonce, because demotion of the stale pending tx can lag behind a single `Sync()` under **`-race`** and the second `test-unit-cover` pass.
 
 Fork maintenance note: [UPSTREAM_DIVERGENCE_RECORD.md](../../fork-maintenance/UPSTREAM_DIVERGENCE_RECORD.md) — *Estabilidad CI (tests Go)*.
 

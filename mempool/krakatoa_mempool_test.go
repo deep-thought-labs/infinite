@@ -379,6 +379,12 @@ func TestKrakatoaMempool_ReapNewBlock(t *testing.T) {
 	// sync the pool to make sure the above happens, tx0 should be dropped
 	// from the pool and the reap list
 	require.NoError(t, mp.GetTxPool().Sync())
+	// Under -race and test-unit-cover's second pass, demotion after the new
+	// block can lag behind a single Sync; poll like the pre-PR-5 harness.
+	require.Eventually(t, func() bool {
+		p, q := legacyPool.ContentFrom(accounts[0].address)
+		return len(p) == 2 && len(q) == 0
+	}, 10*time.Second, 25*time.Millisecond)
 	pending, queued = legacyPool.ContentFrom(accounts[0].address)
 	require.Len(t, pending, 2)
 	require.Len(t, queued, 0)
