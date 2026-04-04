@@ -1,43 +1,43 @@
-# Hyperlane en Infinite Drive — operación (contexto)
+# Hyperlane on Infinite Drive — operations (context)
 
-Complemento de [INTEGRATION.md](INTEGRATION.md), que cubre **el código**. Aquí va orientación **operativa y de producto**: qué deja hecho el repo, qué sigue siendo trabajo **on-chain** (y algo off-chain), y por qué **Cosmos** y **EVM** tienen el **mismo peso** en el plan — son dos frentes distintos, no uno opcional colgado del otro.
+Companion to [INTEGRATION.md](INTEGRATION.md), which covers **the code**. This page is **operational / product** context: what the repository already provides, what remains **on-chain** (and some off-chain), and why **Cosmos** and **EVM** carry **equal weight** in the plan — they are two separate fronts, not an optional add-on to the other.
 
-## Qué ya cubre el código
+## What the code already covers
 
-En `infinited`, `x/core` y `x/warp` preparan la **pista Cosmos SDK**: módulos, estado y upgrade de stores para que Hyperlane pueda existir on-chain **cuando** se ejecuten los despliegues y la configuración de red. Eso **no** reemplaza esos despliegues ni el registro en el ecosistema Hyperlane.
+In `infinited`, `x/core` and `x/warp` set up the **Cosmos SDK track**: modules, state, and store upgrades so Hyperlane can exist on-chain **once** deployments and network configuration are done. That **does not** replace those deployments or registration in the Hyperlane ecosystem.
 
-## Dos pistas, dos frentes (Cosmos y EVM)
+## Two tracks, two fronts (Cosmos and EVM)
 
-Infinite es **dual** (Cosmos + `x/vm`). En Hyperlane, **Cosmos-native** y **EVM** se tratan por separado: cada uno implica su propio despliegue, sus credenciales y, en la práctica, su presencia en registry y en la operación de relayers.
+Infinite is **dual** (Cosmos + `x/vm`). In Hyperlane, **Cosmos-native** and **EVM** are handled **separately**: each implies its own deployment, credentials, and — in practice — presence in the registry and in relayer operations.
 
 | | **Cosmos (SDK)** | **EVM (`x/vm`)** |
 |---|---|---|
-| **Objetivo** | Mensajes y Warp en el mundo SDK (cuentas bech32, denoms nativos). | Mensajes y activos como contratos; experiencia tipo wallet EVM y dApps. |
-| **Qué queda por hacer (a grandes rasgos)** | Despliegue “core” nativo, metadata de cadena en registry, rutas Warp donde hagan falta — alineado con la [guía Cosmos](https://docs.hyperlane.xyz/docs/guides/chains/deploy-hyperlane-cosmos). | Despliegue con el [flujo EVM](https://docs.hyperlane.xyz/docs/guides/chains/deploy-hyperlane): **no** es repetir mecánicamente el mismo checklist que en Cosmos. |
-| **Por qué importa** | Es la pista que este repo ya **cablea en Go**. | Es la pista para quien usa la capa **Solidity / JSON-RPC** de la misma cadena. |
+| **Goal** | Messages and Warp in the SDK world (bech32 accounts, native denoms). | Messages and assets as contracts; EVM-wallet-style UX and dApps. |
+| **Roughly what is still to do** | Native “core” deployment, chain metadata in the registry, Warp routes as needed — aligned with the [Cosmos guide](https://docs.hyperlane.xyz/docs/guides/chains/deploy-hyperlane-cosmos). | Deployment via the [EVM flow](https://docs.hyperlane.xyz/docs/guides/chains/deploy-hyperlane): **not** a mechanical copy of the Cosmos checklist. |
+| **Why it matters** | This is the track **wired in Go** in this repo. | This is the track for the chain’s **Solidity / JSON-RPC** layer. |
 
-Mientras no estén cubiertas las dos (si el producto quiere **las dos** experiencias), no hay que dar por cerrado que la cadena esté “enchufada” al ecosistema Hyperlane solo porque el binario compila.
+Until both are covered (if the product wants **both** experiences), do not treat the chain as fully “plugged into” Hyperlane just because the binary builds.
 
-## Relayers (idea general)
+## Relayers (overview)
 
-Un **relayer** es el agente **off-chain** que **observa** mensajes en la cadena de origen y los **entrega** en la de destino. Sin relayers que cubran tus rutas, los mensajes se **quedan atascados** aunque Mailbox e ISM ya estén desplegados.
+A **relayer** is the **off-chain** agent that **observes** messages on the source chain and **delivers** them on the destination. Without relayers covering your routes, messages **stall** even if Mailbox and ISM are deployed.
 
-- **Relayers públicos de Hyperlane** suelen cubrir cadenas ya integradas; cómodos al inicio o en testnet, pero **cadenas nuevas o muy custom** pueden no entrar de inmediato o ir con menos prioridad.
-- **Relayer propio** (binario oficial, configuración con tus chains, RPC/gRPC en Cosmos, JSON-RPC en EVM, claves para gas en destino, rutas que quieres atender) es lo habitual cuando buscas **producción seria**, baja latencia o rutas que el operador público no cubre.
-- **Combinar** ambos es lo más frecuente: rutas amplias vía red pública y **tu relayer** para Infinite Cosmos + Infinite EVM como entradas claras.
+- **Hyperlane’s public relayers** often cover chains that are already integrated; handy early on or on testnet, but **new or highly custom** chains may not be included immediately or may get lower priority.
+- **Running your own relayer** (official binary, config for your chains, RPC/gRPC on Cosmos, JSON-RPC on EVM, keys for gas on destination, routes you care about) is the usual path for **serious production**, lower latency, or routes public operators do not cover.
+- **Combining** both is common: broad routes via the public network and **your relayer** with explicit entries for Infinite Cosmos + Infinite EVM.
 
-En una red dual, conviene asumir que hace falta pensar **las dos superficies** (Cosmos y EVM) en la configuración del relayer. Temas como **IGP** (gas del relayer pagado por quien envía), registry y Warp routes los detalla la documentación oficial; **validators** y endurecimiento de seguridad son un escalón aparte.
+On a dual network, assume you must account for **both surfaces** (Cosmos and EVM) in relayer configuration. **IGP** (sender pays relayer gas), registry, and Warp routes are spelled out in the official documentation; **validators** and stronger security hardening are a separate step up.
 
-## Modelos de seguridad (ISM) — solo una noción
+## Security models (ISM) — orientation only
 
-En destino, un **ISM** (Interchain Security Module) es quien responde, en esencia: **¿este mensaje viene legítimamente del origen?** Hyperlane permite varios **esquemas** (por ejemplo multisig, agregación de varios ISM, enrutado por origen, optimistic, default del protocolo) y combinarlos según equilibrio **velocidad / confianza**.
+On the destination, an **ISM** (Interchain Security Module) essentially answers: **did this message legitimately come from the source?** Hyperlane supports several **schemes** (e.g. multisig, aggregation of ISMs, routing by origin, optimistic, protocol default) and combinations trading off **speed vs. trust**.
 
-**No es el foco de esta carpeta** profundizar en ISM; sí ayuda saber que al cerrar **core deploy** (en **cada** pista, Cosmos y EVM por separado) se está eligiendo **cómo** se validan los mensajes, y eso afecta la confianza del bridging vía Warp. La doc de Hyperlane es la referencia para diseño fino.
+**This folder does not deep-dive ISMs**; it helps to know that **core deploy** (on **each** track — Cosmos and EVM separately) chooses **how** messages are validated, which affects trust in Warp bridging. Hyperlane’s docs are the place for detailed design.
 
-## Referencias
+## References
 
 - [Deploy Hyperlane — Cosmos SDK](https://docs.hyperlane.xyz/docs/guides/chains/deploy-hyperlane-cosmos)
-- [Deploy Hyperlane — cadenas EVM](https://docs.hyperlane.xyz/docs/guides/chains/deploy-hyperlane)
-- [Hyperlane — módulo Cosmos (conceptos)](https://docs.hyperlane.xyz/docs/alt-vm-implementations/cosmos-sdk)
-- Código y checklist: [INTEGRATION.md](INTEGRATION.md)
-- Bitácora de integración en repo: [logs/2026-04-03-hyperlane-integration.md](../../fork-maintenance/logs/2026-04-03-hyperlane-integration.md)
+- [Deploy Hyperlane — EVM chains](https://docs.hyperlane.xyz/docs/guides/chains/deploy-hyperlane)
+- [Hyperlane — Cosmos module (concepts)](https://docs.hyperlane.xyz/docs/alt-vm-implementations/cosmos-sdk)
+- Code and checklist: [INTEGRATION.md](INTEGRATION.md)
+- Repository integration log: [logs/2026-04-03-hyperlane-integration.md](../../fork-maintenance/logs/2026-04-03-hyperlane-integration.md)
