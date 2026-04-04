@@ -17,27 +17,31 @@
 
 ### DEPENDENCIES
 
+### CONTINUOUS INTEGRATION
+
+- [\#4](https://github.com/deep-thought-labs/infinite/pull/4) Build on `main`/PRs; linux/arm64 + CGO.
+- [\#2](https://github.com/deep-thought-labs/infinite/pull/2) Workflows aligned with upstream.
+- Gates: build, lint, system tests, compat.
+- System tests: upgrade harness; Docker on macOS.
+- [\#5](https://github.com/deep-thought-labs/infinite/pull/5) Upgrade plan `infinite-v0.1.10-to-v0.1.12`; system-test baseline v0.1.10.
+- Solidity jobs: fewer flaky compiles.
+- Buf-breaking baseline: `cosmos/evm` `main`.
+- Markdownlint pin matches the lint action.
+- CodeQL: RPC logs, height casts, VM assert, Solidity helper.
+
 ### IMPROVEMENTS
 
-- [\#4](https://github.com/deep-thought-labs/infinite/pull/4) Build workflow on `main` / PRs (paths filter); linux/arm64 + CGO cross-compile.
-- [\#2](https://github.com/deep-thought-labs/infinite/pull/2) CI aligned with upstream; more reliable tests.
-- CI/test gating: build, lint, system tests, compat tests.
-- System tests: chain-upgrade harness; Docker path on macOS.
-- Solidity CI: fewer transient compile failures.
-
-### FEATURES
+- `local_node.sh`: PATH/GOPATH for installed binary.
 
 ### BUG FIXES
 
-- [\#5](https://github.com/deep-thought-labs/infinite/pull/5) Krakatoa mempool: fix `test-unit-cover` flake (`AllowUnsafeSyncInsert`, drop `Eventually`). Docs: `docs/guides/development/TESTING.md`, `docs/fork-maintenance/UPSTREAM_DIVERGENCE_RECORD.md`.
+- [\#5](https://github.com/deep-thought-labs/infinite/pull/5) Krakatoa: less `test-unit-cover` flake.
 
 ### UPSTREAM INTEGRATION
 
-- [\#3](https://github.com/deep-thought-labs/infinite/pull/3) Sync `cosmos/evm` through `50b4817017187cbda2a0af767fda39a895b9989a`; CI gating for `infinite`.
+- [\#3](https://github.com/deep-thought-labs/infinite/pull/3) Sync `cosmos/evm` to `50b4817…`; CI gates.
+- Retain `ante/evm/10_gas_wanted.go` (removed upstream).
 
-### MERGE
-
-- [\#5](https://github.com/deep-thought-labs/infinite/pull/5) `dev` → `main`: upgrade plan `infinite-v0.1.10-to-v0.1.12`, migration doc, `infinited/upgrades.go`, `SYSTEMTEST_LEGACY_TAG` v0.1.10.
 
 ## v0.1.11
 
