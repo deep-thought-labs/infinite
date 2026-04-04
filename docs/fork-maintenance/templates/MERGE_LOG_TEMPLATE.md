@@ -1,6 +1,6 @@
 # Bitácora de merge upstream — PLANTILLA
 
-> Copiar este archivo a `../logs/` y renombrar según [logs/README.md](../logs/README.md).  
+> Copiar este archivo a `../logs/` y renombrar según [logs/README.md](../logs/README.md) **en cuanto comience** la integración; las tablas pueden quedar parciales hasta el cierre.  
 > Eliminar bloques de ayuda comentados al cerrar la bitácora.
 
 ## Metadatos

@@ -17,6 +17,14 @@
 
 ### DEPENDENCIES
 
+### IMPROVEMENTS
+
+- `local_node.sh`: PATH/GOPATH for installed binary.
+
+### FEATURES
+
+- Hyperlane: nueva implementación; documentación y bitácora del feature en [`docs/feature/hyperlane/`](docs/feature/hyperlane/README.md).
+
 ### CONTINUOUS INTEGRATION
 
 - [\#4](https://github.com/deep-thought-labs/infinite/pull/4) Build on `main`/PRs; linux/arm64 + CGO.
@@ -28,11 +36,7 @@
 - Buf-breaking baseline: `cosmos/evm` `main`.
 - Markdownlint pin matches the lint action.
 - CodeQL: RPC logs, height casts, VM assert, Solidity helper.
-- CI: `paths-filter` skips heavy jobs on docs-only PRs.
-
-### IMPROVEMENTS
-
-- `local_node.sh`: PATH/GOPATH for installed binary.
+- [d56cb2f](https://github.com/deep-thought-labs/infinite/pull/5/changes/d56cb2fe90bab5f205c601672b217d04b12dae8e) CI: `paths-filter` skips heavy jobs on docs-only PRs.
 
 ### BUG FIXES
 

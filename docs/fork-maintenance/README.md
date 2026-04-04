@@ -12,7 +12,7 @@ Punto único en el repositorio para **divergencia frente a upstream**, **procedi
 | [**REFERENCE.md**](REFERENCE.md) | Uso de `list_all_customizations.sh`, informes de diff y notas sobre estadísticas esperadas. |
 | [**VERIFICATION.md**](VERIFICATION.md) | Comprobaciones manuales y script `validate_customizations.sh`. |
 | [**templates/MERGE_LOG_TEMPLATE.md**](templates/MERGE_LOG_TEMPLATE.md) | Plantilla para bitácoras de merge. |
-| [**logs/**](logs/) | Bitácoras cerradas por integración. |
+| [**logs/**](logs/) | Bitácoras de merge upstream: **crear al inicio** del ciclo, **completar al cierre** (ver [logs/README.md](logs/README.md)). |
 | [**../migrations/**](../migrations/) | Guías por salto de versión (fuera de esta carpeta, enlazadas desde el playbook). |
 | [**../guides/testing/CHAIN_UPGRADE_SYSTEM_TEST.md**](../guides/testing/CHAIN_UPGRADE_SYSTEM_TEST.md) | Prueba de sistema **on-chain upgrade** (`TestChainUpgrade`): binario legacy, génesis `upgrade-test`, regeneración de gentx, gobernanza y lista de mantenimiento; específica de versión frente a futuros saltos donde el binario “viejo” ya no sea el release actual. |
 
@@ -30,7 +30,7 @@ Punto único en el repositorio para **divergencia frente a upstream**, **procedi
 3. Merge desde `upstream/...`; resolver conflictos según playbook y registro.
 4. Verificar con [VERIFICATION.md](VERIFICATION.md) y tests ([Fase 3](PLAYBOOK.md#fase-3--verificación)).
 5. **CI:** alinear `.github/workflows/` con `upstream/main` según [MERGE_STRATEGIES.md §4](MERGE_STRATEGIES.md#4-github-actions-alinear-con-upstream-en-el-plan-de-merge) y [PLAYBOOK — Fase 3b](PLAYBOOK.md#fase-3b--alineación-de-github-actions-con-upstream) (mismo PR o PR dedicado; conservar `release.yml`).
-6. Archivar bitácora en `logs/` usando la plantilla (incl. sección **GitHub Actions** si hubo alineación).
+6. **Bitácora en `logs/`:** abierta al inicio (plantilla + metadatos; ver [PLAYBOOK — Fase 0](PLAYBOOK.md#fase-0--preparación) paso 0.5 y [logs/README.md](logs/README.md)); completada antes del cierre del ciclo (conflictos, verificación, **GitHub Actions** si hubo alineación).
 
 ## Scripts (permanecen en `scripts/`)
 

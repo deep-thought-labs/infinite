@@ -1,6 +1,6 @@
 # Bitácoras de merge upstream
 
-Aquí van las **bitácoras cerradas** de cada integración con upstream: conflictos, decisiones y resultados de verificación.
+Aquí van las bitácoras de **cada integración con upstream**. **No esperes a tener el merge cerrado para crear el archivo:** cópialo desde la [plantilla](../templates/MERGE_LOG_TEMPLATE.md) en cuanto **empieces** el trabajo (primera sesión de merge, apertura de la rama de integración o primer commit relevante), rellena metadatos y objetivo, y ve completando conflictos, SHAs y verificación conforme avanzas. La bitácora se considera **cerrada** cuando la integración está fusionada (o archivada en el `main` del fork) y las secciones obligatorias —incluida la verificación— están completas, sin huecos críticos.
 
 ## Convención de nombres
 
@@ -13,9 +13,9 @@ Ejemplos:
 
 Usar **solo minúsculas y guiones** en la descripción para consistencia con el resto del repo.
 
-## Contenido mínimo
+## Contenido mínimo (al cierre)
 
-Cada archivo debe partir de [../templates/MERGE_LOG_TEMPLATE.md](../templates/MERGE_LOG_TEMPLATE.md) y conservar al menos:
+Cada archivo debe partir de [../templates/MERGE_LOG_TEMPLATE.md](../templates/MERGE_LOG_TEMPLATE.md). **Al abrir** la bitácora basta con metadatos iniciales, rama y objetivo; **antes de dar el ciclo por cerrado** debe quedar documentado al menos:
 
 - SHAs de referencia (upstream y local antes/después).
 - Tabla de conflictos y cómo se resolvieron.
