@@ -1,0 +1,172 @@
+# Hyperlane en Infinite Drive — registro técnico de integración
+
+## Propósito de este documento (lectores humanos y modelos de IA)
+
+Este archivo está pensado para **auditoría y revisión cruzada**:
+
+- **Entrada A:** una guía tipo tutorial para integrar Hyperlane en una app Cosmos (pasos `go.mod`, `app` con `depinject`, `app.yaml`, codec opcional, compilación).
+- **Entrada B:** lo que **realmente implementó** este repositorio (**infinite-b** / Infinite Drive) y **por qué** se desvió de la guía donde lo hizo.
+
+Un revisor (humano o IA) debe poder:
+
+1. Comparar **cada paso de la guía original** con **el equivalente en código** (o su ausencia intencional).
+2. Juzgar si las desviaciones son **coherentes** con la arquitectura existente del proyecto y si mantienen **equivalencia funcional** donde aplica.
+3. Identificar **lagunas** (p. ej. upgrade on-chain, CLI) que no equivalen a “incorrecto”, sino a **trabajo pendiente documentado**.
+
+La narrativa técnica detallada vive aquí; el índice breve está en [README.md](README.md).
+
+---
+
+## Contexto del proyecto
+
+**Repositorio:** **infinite-b** — fork de **[cosmos/evm](https://github.com/cosmos/evm)** que implementa la cadena **Infinite Improbability Drive** (“Infinite Drive”).
+
+**Stack:** Cosmos SDK + CometBFT + **EVM** (`x/vm`), ERC-20, IBC, feemarket, etc., con **identidad propia** (denominación base `drop`, chain IDs, prefijos Bech32, binario **`infinited`** en lugar del **`evmd`** de ejemplo upstream). La política identidad vs alineación upstream: [UPSTREAM_DIVERGENCE_RECORD.md](../../fork-maintenance/UPSTREAM_DIVERGENCE_RECORD.md).
+
+**Estructura monorepo relevante:**
+
+| Ubicación | Módulo Go | Rol |
+|-----------|-----------|-----|
+| Raíz del repo | `github.com/cosmos/evm` | Librería Cosmos EVM, tests, `x/*`; **no** construye el daemon con Hyperlane en este diseño. |
+| **`infinited/`** | `github.com/cosmos/evm/infinited` | Daemon **`infinited`**, `NewExampleApp`, `go.mod` con dependencia Hyperlane, CLI raíz. |
+
+**Papel de Hyperlane:** capa **Hyperlane** (`x/core`, `x/warp`) **adicional** al stack anterior; **no** reemplaza IBC ni el EVM. Convive en la misma `BaseApp` que el resto de módulos.
+
+**Documentación general del fork:** [docs/README.md](../../README.md), [docs/guides/README.md](../../guides/README.md).
+
+---
+
+## Alcance de la integración Hyperlane
+
+| Ítem | Valor |
+|------|--------|
+| Repositorio módulo | [github.com/bcp-innovations/hyperlane-cosmos](https://github.com/bcp-innovations/hyperlane-cosmos) |
+| Versión usada | **`v1.2.0-rc.0`** (recomendación abril 2026 en la guía de referencia) |
+| Submódulos integrados | **`x/core`** (mailbox, ISM, post-dispatch), **`x/warp`** (tokens colateral / sintético) |
+| Nombres de módulo on-chain | `hyperlane` (`hyperlanetypes.ModuleName`), `warp` (`warptypes.ModuleName`) |
+| Binario | **`infinited`** (no `hypd` del tutorial genérico) |
+
+---
+
+## Guía de referencia original (resumen fiel de los pasos esperados)
+
+La siguiente numeración reproduce la **lógica** de una guía estándar de integración (p. ej. instrucciones internas alineadas con el `simapp` de `hyperlane-cosmos`), **no** es texto literal de un PDF. Sirve como **contrato** para la tabla de equivalencias más abajo.
+
+1. **Dependencias:** `go get github.com/bcp-innovations/hyperlane-cosmos@v1.2.0-rc.0` y `go mod tidy` en la **raíz del proyecto** (donde viva el `go.mod` de la app).
+2. **`app.go`:** imports side-effect `_` de `x/core` y `x/warp`, tipos `keeper` de core y warp; struct `App` con `HyperlaneKeeper` y `WarpKeeper`; en `New`, **`depinject.Inject`** con `AppConfig()`, `Supply(logger, appOpts)`, punteros a **todos** los keepers incluyendo `HyperlaneKeeper` y `WarpKeeper`.
+3. **Upgrade de stores (si mainnet ya existe):** `storetypes.StoreUpgrades{Added: []string{hyperlane, warp}}` + `SetStoreLoader` con altura de upgrade.
+4. **`app.yaml` (config de módulos):** `runtime.init_genesis` incluye `hyperlane` y `warp`; en `auth`, `module_account_permissions` para cuentas `hyperlane` y `warp` (warp con `minter`, `burner`); bloques `name: hyperlane` y `name: warp` con `@type` de módulo protobuf y `enabled_tokens: [1, 2]` en warp.
+5. **Codec (opcional):** `hyperlanetypes.RegisterInterfaces` / `warptypes.RegisterInterfaces` si hiciera falta fuera del flujo automático.
+6. **Compilar y ejecutar:** `make build`, arranque con el binario de la cadena (ej. `hypd start` en la guía genérica).
+
+**Referencia upstream del módulo:** [tests/simapp](https://github.com/bcp-innovations/hyperlane-cosmos/tree/main/tests/simapp) en `hyperlane-cosmos` (`app.yaml` embebido, `depinject`, `runtime.App`).
+
+---
+
+## Matriz: guía original → implementación en infinite-b
+
+| Paso guía | Qué dictaba la guía | Qué hicimos en este repo | Por qué | ¿Equivalencia funcional? |
+|-----------|---------------------|---------------------------|---------|---------------------------|
+| 1 `go.mod` | `go get` en **raíz** del proyecto | `require` en **`infinited/go.mod`** (`module github.com/cosmos/evm/infinited`) | El daemon y `NewExampleApp` viven en el submódulo `infinited/`; la raíz es otro módulo Go. | **Sí** para el binario `infinited`. La raíz no necesita la dependencia para compilar el daemon. |
+| 2a Imports | `_` core + warp + aliases keeper | Imports **nombrados** `hyperlanecore`, `hyperlanekeeper`, `hyperlanetypes`, `hyperlanewarp`, `warpkeeper`, `warptypes` (sin solo `_`) | Se usan `NewAppModule` y tipos explícitos; los `_` solo fuerzan side-effects innecesarios aquí. | **Sí** — los paquetes se enlazan y registran vía `NewAppModule`. |
+| 2b Struct App | Campos `HyperlaneKeeper`, `WarpKeeper` | Campos homónimos en **`EVMD`** en [`infinited/app.go`](../../../infinited/app.go) | Misma app struct pattern que el resto del fork (`EVMD`). | **Sí.** |
+| 2c `depinject.Inject` | Un único `Inject` que rellena keepers | **No** se usa `depinject` para Hyperlane | `NewExampleApp` ya cablea decenas de keepers a mano (patrón cosmos/evm + fork). Introducir `runtime.App` + YAML solo para Hyperlane fragmentaría la app. | **Sí a nivel de módulos registrados y keepers**, con **distinto** mecanismo de composición. |
+| 2d Orden / init keepers | Inyectado por framework | Tras `Erc20Keeper`: `hyperlanekeeper.NewKeeper` → puntero en `HyperlaneKeeper`; luego `warpkeeper.NewKeeper(..., app.HyperlaneKeeper, []int32{1,2})` | Warp debe registrar rutas en el `AppRouter` del core; el orden es obligatorio. | **Sí.** |
+| 3 `app.yaml` | Módulos y permisos en YAML | **No hay `app.yaml`** para la app | No se adoptó `appconfig`/Compose en `infinited`. Permisos replicados en Go (`permissions.go`); módulos en `module.NewManager`. | **Sí** para permisos y presencia de módulos; **no** hay paridad de formato YAML. |
+| 3b `init_genesis` YAML | Lista incluye `hyperlane`, `warp` | Mismo orden lógico en `SetOrderInitGenesis` / `SetOrderExportGenesis` (`hyperlane` antes de `warp`) | Coherencia con dependencia warp→core. | **Sí.** |
+| 3c `bech32_prefix: hyp` en ejemplo YAML | — | Se mantiene el prefijo Bech32 **del fork Infinite Drive** (configuración existente de cadena), no se forzó `hyp` | `hyp` era ejemplo del simapp genérico; cambiar el HRP rompería identidad y tests del fork. | **Desviación intencional** respecto al **ejemplo** YAML; **correcta** para esta cadena. |
+| 4 Store upgrade | `SetStoreLoader` + `Added` stores | **No** añadido al plan `infinite-v0.1.10-to-v0.1.12` en [`infinited/upgrades.go`](../../../infinited/upgrades.go) | Alcance de ese upgrade ya fijado; stores nuevos requieren plan y gobernanza propios. | **Pendiente** para redes ya vivas; **no aplica** a génesis nueva con keys ya en `NewKVStoreKeys`. |
+| 5 Codec | Opcional `RegisterInterfaces` | **Sí:** `hyperlanetypes.RegisterInterfaces` y `warptypes.RegisterInterfaces` justo después de `evmencoding.MakeConfig` | Equivalente al paso opcional, antes de `BasicModuleManager.RegisterInterfaces`. | **Sí.** |
+| 6 Build / binario | `hypd` o binario del ejemplo | `infinited` — `go build ./cmd/infinited`, `make build-from-infinited` | Nombre del binario del fork. | **Sí** (mismo rol operativo). |
+
+---
+
+## Inventario concreto de cambios en el código
+
+### `infinited/go.mod`
+
+- `require github.com/bcp-innovations/hyperlane-cosmos v1.2.0-rc.0` (y dependencias transitivas resueltas por MVS).
+
+### `infinited/app.go`
+
+- **Registry:** tras `evmencoding.MakeConfig(evmChainID)` → `RegisterInterfaces` de `hyperlanetypes` y `warptypes`.
+- **Store keys:** en `storetypes.NewKVStoreKeys(...)`, entradas `hyperlanetypes.ModuleName` y `warptypes.ModuleName` (strings de módulo `"hyperlane"`, `"warp"`).
+- **Struct `EVMD`:** campos `HyperlaneKeeper *hyperlanekeeper.Keeper`, `WarpKeeper warpkeeper.Keeper`.
+- **Keepers:** `NewKeeper` de core con `appCodec`, `AccountKeeper.AddressCodec()`, `runtime.NewKVStoreService(keys[hyperlanetypes.ModuleName])`, **`authAddr`** (misma autoridad gobierno que el resto de la app), `BankKeeper`. Warp con los mismos más `HyperlaneKeeper` y `[]int32{1, 2}`.
+- **`ModuleManager`:** `hyperlanecore.NewAppModule(appCodec, app.HyperlaneKeeper)`, `hyperlanewarp.NewAppModule(appCodec, app.WarpKeeper)`.
+- **Orden:** `hyperlane` y `warp` añadidos a `SetOrderPreBlockers`, `SetOrderBeginBlockers`, `SetOrderEndBlockers`, y a la lista `genesisModuleOrder` (**hyperlane** antes de **warp**).
+
+### `infinited/config/permissions.go`
+
+- `maccPerms`: clave `hyperlane` sin permisos extra; clave `warp` con `minter` y `burner` (análogo al YAML de referencia).
+
+### Documentación y trazabilidad
+
+- [`CHANGELOG.md`](../../../CHANGELOG.md) (pista Infinite): `DEPENDENCIES` + `FEATURES` con enlaces a este archivo y al registro de divergencia.
+- [UPSTREAM_DIVERGENCE_RECORD.md — Extensiones de producto (fork)](../../fork-maintenance/UPSTREAM_DIVERGENCE_RECORD.md#extensiones-de-producto-fork): referencia cruzada.
+
+---
+
+## Decisiones ampliadas (síntesis)
+
+1. **Manual vs `depinject`:** misma **superficie** de módulos Cosmos (genesis, begin/end, gRPC, mensajes), distinto **ensamblado** — alineado con `NewExampleApp` existente.
+2. **`go.mod` en `infinited`:** refleja la **realidad del build** del daemon en este monorepo.
+3. **Sin `app.yaml`:** configuración equivalente expresada en Go; reduce duplicación de fuentes de verdad.
+4. **Bech32:** se preserva la identidad Infinite Drive, no el prefijo de ejemplo `hyp` del tutorial.
+5. **Upgrade:** explícitamente **fuera** del plan `infinite-v0.1.10-to-v0.1.12` hasta definir plan propio.
+6. **CLI:** sin subcomandos Hyperlane dedicados en `root.go` en esta fase; API/gRPC vía módulos registrados.
+
+---
+
+## Cómo debe validar un revisor (checklist)
+
+- [ ] Los nombres de store / módulo coinciden con los esperados por `hyperlane-cosmos` (`hyperlane`, `warp`).
+- [ ] **Warp** se construye **después** de **core** y recibe el puntero al core keeper que implementa `CoreKeeper`.
+- [ ] `enabled_tokens` `[1,2]` coincide con el YAML de referencia del simapp (colateral + sintético).
+- [ ] Permisos de módulo para **warp** incluyen acuñación/quema según necesite el módulo.
+- [ ] `RegisterInterfaces` está antes del uso masivo del codec en registro de módulos.
+- [ ] Compilación: `cd infinited && go build -o /dev/null ./cmd/infinited` y/o `make build-from-infinited`.
+- [ ] Para **red existente:** existe o se planifica **software-upgrade** con `StoreUpgrades.Added` — si no, la integración solo es segura para **nueva cadena** o estado sin esas keys previas.
+- [ ] Tras merge de **cosmos/evm**, `infinited/app.go` sigue conteniendo los bloques Hyperlane sin pérdida accidental.
+
+---
+
+## Verificación local
+
+```bash
+cd infinited && go build -o /dev/null ./cmd/infinited
+```
+
+Desde la raíz del repo:
+
+```bash
+make build-from-infinited
+```
+
+Suite del submódulo:
+
+```bash
+make test-infinited
+```
+
+---
+
+## Relación con la política del fork
+
+Hyperlane es una **extensión de producto** documentada frente a [cosmos/evm](https://github.com/cosmos/evm) en [UPSTREAM_DIVERGENCE_RECORD.md — Extensiones de producto (fork)](../../fork-maintenance/UPSTREAM_DIVERGENCE_RECORD.md#extensiones-de-producto-fork). Los merges upstream deben tratar **`infinited/app.go`** y **`infinited/go.mod`** como zonas sensibles.
+
+---
+
+## Referencias externas
+
+- [Hyperlane — Cosmos SDK module (documentación)](https://docs.hyperlane.xyz/docs/alt-vm-implementations/cosmos-sdk)
+- [bcp-innovations/hyperlane-cosmos](https://github.com/bcp-innovations/hyperlane-cosmos)
+- [docs/fork-maintenance/README.md](../../fork-maintenance/README.md)
+
+---
+
+## Mantenimiento al integrar upstream
+
+1. Resolver conflictos en **`infinited/app.go`** preservando orden de keepers y listas de módulos.
+2. No subir de versión `hyperlane-cosmos` sin revisar notas de release y actualizar este documento si cambian APIs.
+3. Anotar en la [bitácora de merge](../../fork-maintenance/logs/README.md) si el merge tocó Hyperlane.

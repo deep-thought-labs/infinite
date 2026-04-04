@@ -17,13 +17,15 @@
 
 ### DEPENDENCIES
 
+- `infinited`: `github.com/bcp-innovations/hyperlane-cosmos` `v1.2.0-rc.0` (Hyperlane `x/core` + `x/warp`).
+
 ### IMPROVEMENTS
 
 - `local_node.sh`: PATH/GOPATH for installed binary.
 
 ### FEATURES
 
-- Hyperlane: nueva implementación; documentación y bitácora del feature en [`docs/feature/hyperlane/`](docs/feature/hyperlane/README.md).
+- Hyperlane (`x/core`, `x/warp`) integrado en `infinited` (keepers, `ModuleManager`, genesis order, cuentas de módulo). Registro técnico [`docs/feature/hyperlane/INTEGRATION.md`](docs/feature/hyperlane/INTEGRATION.md); índice [`docs/feature/hyperlane/README.md`](docs/feature/hyperlane/README.md); mantenimiento del fork [`docs/fork-maintenance/UPSTREAM_DIVERGENCE_RECORD.md`](docs/fork-maintenance/UPSTREAM_DIVERGENCE_RECORD.md#extensiones-de-producto-fork).
 
 ### CONTINUOUS INTEGRATION
 

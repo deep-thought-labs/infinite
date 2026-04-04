@@ -43,6 +43,16 @@ No duplicar aquí el procedimiento detallado: seguir [PLAYBOOK.md](PLAYBOOK.md).
 
 ---
 
+## Extensiones de producto (fork)
+
+Además de **identidad** y **rebranding**, este repositorio puede incluir funcionalidad que **no existe** en el ejemplo `evmd` de [cosmos/evm](https://github.com/cosmos/evm). Esa funcionalidad se documenta bajo [`docs/feature/`](../feature/) para mantener este registro enfocado en divergencia *comparativa* frente a upstream y en política de identidad.
+
+| Extensión | Documentación técnica | Notas para merge |
+|-----------|------------------------|------------------|
+| Hyperlane — módulos `x/core` y `x/warp` ([hyperlane-cosmos](https://github.com/bcp-innovations/hyperlane-cosmos)) | [Integración](../feature/hyperlane/INTEGRATION.md) · [índice](../feature/hyperlane/README.md) | Zonas habituales de conflicto: [`infinited/app.go`](../../infinited/app.go) (keepers, `ModuleManager`, órdenes genesis/begin/end), [`infinited/go.mod`](../../infinited/go.mod). Preservar módulos y dependencia salvo decisión explícita del equipo y actualización de INTEGRATION.md. |
+
+---
+
 ## Token
 
 ### Valores
@@ -125,6 +135,7 @@ Renombres representativos: `evmd/app.go` → `infinited/app.go`, `evmd/cmd/evmd/
 ### Documentación
 
 - `docs/guides/*.md` y resto de guías bajo `docs/guides/`
+- `docs/feature/hyperlane/` — integración Hyperlane en `infinited`; registro técnico [INTEGRATION.md](../feature/hyperlane/INTEGRATION.md); referencia cruzada en [§ Extensiones de producto (fork)](#extensiones-de-producto-fork)
 - `docs/fork-maintenance/` (este registro y documentos de mantenimiento del fork)
 - `tests/solidity/README.md` — guía específica del harness Solidity (`make test-solidity`) y convenciones del fork (prefijos Bech32, denom `drop`, estabilidad)
 
