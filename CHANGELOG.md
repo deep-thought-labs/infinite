@@ -43,7 +43,8 @@
 ### BUG FIXES
 
 - [\#5](https://github.com/deep-thought-labs/infinite/pull/5) Krakatoa: less `test-unit-cover` flake.
-- System tests (`tests/systemtests/suite`): `CheckTxsQueuedAsync` now **polls** `txpool_content` until expected txs are in the **queued** (not **pending**) set or `defaultTxPoolContentTimeout` elapses, matching the retry style of `CheckTxsPending`. Reduces intermittent failures (e.g. `TestExclusiveMempoolTxsReplacement/.../EVM_DynamicFeeTx` on CI) when Krakatoa / exclusive mempool classification lags behind a single RPC snapshot. See [TESTING.md — System tests: txpool queued assertions](docs/guides/development/TESTING.md#system-tests-txpool-queued-assertions).
+- Improvement on [\#5](https://github.com/deep-thought-labs/infinite/pull/5) Krakatoa CI fix: `require.Eventually` again only in `TestKrakatoaMempool_ReapNewBlock` after block/nonce bump (`-race` / `test-unit-cover` second pass).
+- [3ce9a5d4](https://github.com/deep-thought-labs/infinite/pull/6/changes/3ce9a5d42ef559dbc529c0dff07d8b7e9db88710) System tests: `CheckTxsQueuedAsync` polls `txpool_content` to deflake exclusive-mempool assertions on CI.
 
 ### UPSTREAM INTEGRATION
 

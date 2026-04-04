@@ -196,7 +196,7 @@ go tool cover -html=coverage.txt
 
 `make test-unit-cover` runs tests **twice** at the repo root: first via `run-tests` with per-package coverage, then a second `go test` over `./...` with **`-race`** and **`-coverpkg`** set to the whole module list (see `Makefile` target `test-unit-cover`). That second pass is slower and more sensitive to timing.
 
-Krakatoa mempool tests under `mempool/` use **`mempool.AllowUnsafeSyncInsert`** inside `setupKrakatoaMempoolWithAccounts` so EVM inserts wait for `LegacyPool.Add`’s synchronous promotion path (see comments on `AllowUnsafeSyncInsert` in `mempool/mempool.go` and `LegacyPool.Add` in `mempool/txpool/legacypool/legacypool.go`). This avoids flaky `CountTx()` / `ContentFrom` assertions that previously relied on `require.Eventually` and could time out in CI.
+Krakatoa mempool tests under `mempool/` use **`mempool.AllowUnsafeSyncInsert`** inside `setupKrakatoaMempoolWithAccounts` so EVM inserts wait for `LegacyPool.Add`’s synchronous promotion path (see comments on `AllowUnsafeSyncInsert` in `mempool/mempool.go` and `LegacyPool.Add` in `mempool/txpool/legacypool/legacypool.go`). That removes most insert/`Sync` flakes; **`TestKrakatoaMempool_ReapNewBlock`** still uses **`require.Eventually`** after a simulated new block bumps the account nonce, because demotion of the stale pending tx can lag behind a single `Sync()` under **`-race`** and the second `test-unit-cover` pass.
 
 Fork maintenance note: [UPSTREAM_DIVERGENCE_RECORD.md](../../fork-maintenance/UPSTREAM_DIVERGENCE_RECORD.md) — *Estabilidad CI (tests Go)*.
 
