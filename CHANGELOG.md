@@ -26,6 +26,7 @@
 ### FEATURES
 
 - [\#6](https://github.com/deep-thought-labs/infinite/pull/6) Integrate Hyperlane as Cosmos SDK Module (`x/core`, `x/warp`).
+- [\#7](https://github.com/deep-thought-labs/infinite/pull/7) `x/bank` extension: gov-only `MsgSetDenomMetadata` for SDK bank denom metadata.
 
 ### CONTINUOUS INTEGRATION
 
