@@ -4,7 +4,7 @@
 
 This file documents code that lives in the **Infinite Improbability Drive** chain repository — the monorepo you clone and build to produce the **`infinited`** binary (project overview: [README](../../../README.md) at the **repository root**). That tree is a **fork of** [cosmos/evm](https://github.com/cosmos/evm); the **root `go.mod`** still declares **`module github.com/cosmos/evm`** so imports stay compatible with the upstream module layout. Packages such as **`github.com/cosmos/evm/x/bank`** are implemented **in this same checkout** under `x/bank/`, not fetched as an external module for day-to-day development.
 
-**Where to run commands:** use the **top-level directory** of that checkout — the folder that contains `go.mod`, `Makefile`, `x/`, `proto/`, and `infinited/`. Run **`go test ./x/bank/...`**, **`go mod tidy`**, **`make proto-gen`**, **`make build-from-infinited`**, and **`make test-infinited`** from that directory. Only when a snippet shows **`cd infinited`** are you inside **`infinited/`** (that subdirectory has its own `go.mod` for the node binary).
+**Where to run commands:** use the **top-level directory** of that checkout — the folder that contains `go.mod`, `Makefile`, `x/`, `proto/`, and `infinited/` (**repository root**). The **exact commands and order** for verification are in **[How to test](#how-to-test)** only. Only when a snippet shows **`cd infinited`** are you inside **`infinited/`** (that subdirectory has its own `go.mod` for the node binary).
 
 ## What it is and what it is for
 
@@ -39,25 +39,7 @@ The message **type URL** in transactions and proposal JSON is **`/cosmos.evm.ban
 | `AppModule` | `x/bank/module.go` |
 | App wiring | `infinited/app.go`: SDK module `sdkbank.NewAppModule(...)` and extension `bank.NewAppModule(...)`; ordering lists include **`"infinitebank"`** (via `evmbanktypes.ModuleName`) in addition to `banktypes.ModuleName` |
 
-## Local verification (module developers)
-
-Follow the same order as [How to test](#how-to-test), in short:
-
-**Run from:** **repository root**.
-
-```bash
-# Only if you edited protos (e.g. tx.proto):
-make proto-gen
-
-# If go.mod / dependencies changed:
-go mod tidy
-
-# Unit tests for x/bank (always from repository root):
-go test ./x/bank/... -count=1
-
-# Build infinited; binary is written to ./build/infinited:
-make build-from-infinited
-```
+After changing this module, use **[How to test](#how-to-test)** for the full local verification sequence (no duplicate command list elsewhere in this file).
 
 ---
 
@@ -224,9 +206,19 @@ If you change **`proto/cosmos/evm/bank/v1/tx.proto`** (or other generated protos
 make proto-gen
 ```
 
-Then run steps 2–3. If you only changed Go under `x/bank/` and did not touch protos, **skip this step**.
+Then continue with steps 2–4 (tidy if needed, then unit tests and build). If you only changed Go under `x/bank/` and did not touch protos, **skip this step**.
 
-### 2. Unit tests for `x/bank`
+### 2. Go module tidy (only if dependencies changed)
+
+**Run from:** **repository root**.
+
+If **`go.mod`** / **`go.sum`** changed (new imports, bumps, or after regenerating protos that affect modules), run:
+
+```bash
+go mod tidy
+```
+
+### 3. Unit tests for `x/bank`
 
 **Run from:** **repository root** — **not** from `infinited/`.
 
@@ -236,7 +228,7 @@ go test ./x/bank/... -count=1
 
 This runs **`x/bank/types/typeurl_test.go`** (message type URL) and **`x/bank/keeper/msg_server_test.go`** (authority check, metadata validation, successful `SetDenomMetaData` call and `set_denom_metadata` event).
 
-### 3. Build the `infinited` binary
+### 4. Build the `infinited` binary
 
 The Makefile target **`build-from-infinited`** is defined for this repository: it runs `go build` inside **`infinited/`** and writes **`build/infinited`** next to the root `go.mod` (see `BUILDDIR` in the root `Makefile`).
 
@@ -253,7 +245,7 @@ cd infinited
 go build -o ../build/infinited ./cmd/infinited
 ```
 
-### 4. Optional: full `infinited` module test suite
+### 5. Optional: full `infinited` module test suite
 
 **Run from:** **repository root**:
 
@@ -263,7 +255,7 @@ make test-infinited
 
 This runs **`go test`** for all packages listed under **`infinited/`** (excluding simulation), with race and `test` build tags — it is **slower** than `go test ./x/bank/...` alone.
 
-### 5. Local or test network (E2E)
+### 6. Local or test network (E2E)
 
 For **end-to-end** flow (proposal → vote → execution → query), follow the same guidance as for the rest of the binary: [docs/guides/development/TESTING.md](../../guides/development/TESTING.md), local networks (`local_node.sh` / project testnet config), and **shortened gov parameters only in dev**.
 

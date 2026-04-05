@@ -348,7 +348,7 @@ format-shell:
 
 protoVer=0.18.1
 protoImageName=ghcr.io/cosmos/proto-builder:$(protoVer)
-protoImage=$(DOCKER) run --rm -v $(CURDIR):/workspace --workdir /workspace --user 0 $(protoImageName)
+protoImage=$(DOCKER) run --rm -v "$(CURDIR):/workspace" --workdir /workspace --user 0 $(protoImageName)
 
 protoLintVer=0.44.0
 protoLinterImage=yoheimuta/protolint

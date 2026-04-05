@@ -15,7 +15,7 @@ The **Infinite Drive** binary (`infinited`) runs both the **Cosmos SDK `bank` mo
 
 | Document | Contents |
 |-----------|-----------|
-| [**INTEGRATION.md**](INTEGRATION.md) | **[Repository context](INTEGRATION.md#repository-context-infinite-improbability-drive)** (where to run commands in this monorepo); what the module is; **[extensibility](INTEGRATION.md#extensibility)**; proto and paths; **[how to use](INTEGRATION.md#how-to-use)**; **[metadata validation](INTEGRATION.md#metadata-validation-cosmos-sdk-xbank)**; **[how to test](INTEGRATION.md#how-to-test)**; `--dry-run`. |
+| [**INTEGRATION.md**](INTEGRATION.md) | **[Repository context](INTEGRATION.md#repository-context-infinite-improbability-drive)** (monorepo layout); what the module is; **[extensibility](INTEGRATION.md#extensibility)**; proto and paths; **[how to use](INTEGRATION.md#how-to-use)**; **[metadata validation](INTEGRATION.md#metadata-validation-cosmos-sdk-xbank)**; **[how to test](INTEGRATION.md#how-to-test)** (verification commands); `--dry-run`. |
 | [**README.md**](README.md) | This index. |
 
 ## Wiring in the binary
