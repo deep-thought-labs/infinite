@@ -1,8 +1,14 @@
 # Infinite Bank — technical integration
 
+## Repository context (Infinite Improbability Drive)
+
+This file documents code that lives in the **Infinite Improbability Drive** chain repository — the monorepo you clone and build to produce the **`infinited`** binary (project overview: [README](../../../README.md) at the **repository root**). That tree is a **fork of** [cosmos/evm](https://github.com/cosmos/evm); the **root `go.mod`** still declares **`module github.com/cosmos/evm`** so imports stay compatible with the upstream module layout. Packages such as **`github.com/cosmos/evm/x/bank`** are implemented **in this same checkout** under `x/bank/`, not fetched as an external module for day-to-day development.
+
+**Where to run commands:** use the **top-level directory** of that checkout — the folder that contains `go.mod`, `Makefile`, `x/`, `proto/`, and `infinited/`. Run **`go test ./x/bank/...`**, **`go mod tidy`**, **`make proto-gen`**, **`make build-from-infinited`**, and **`make test-infinited`** from that directory. Only when a snippet shows **`cd infinited`** are you inside **`infinited/`** (that subdirectory has its own `go.mod` for the node binary).
+
 ## What it is and what it is for
 
-This repository adds an **application module** in Go at **`github.com/cosmos/evm/x/bank`**, which **currently** exposes **`MsgSetDenomMetadata`**. It lets **governance**, once a proposal passes, **define or correct** **denom metadata** in **Cosmos SDK `x/bank`** state (the same internal operation as the SDK keeper’s `SetDenomMetaData`, which is not exposed as a standard SDK transaction message). Any client that reads metadata from bank (for example ERC-20 precompiles that query the keeper) will see the **current values** after the message executes successfully.
+This codebase adds an **application module** in Go at **`github.com/cosmos/evm/x/bank`** (directory **`x/bank/`** here), which **currently** exposes **`MsgSetDenomMetadata`**. It lets **governance**, once a proposal passes, **define or correct** **denom metadata** in **Cosmos SDK `x/bank`** state (the same internal operation as the SDK keeper’s `SetDenomMetaData`, which is not exposed as a standard SDK transaction message). Any client that reads metadata from bank (for example ERC-20 precompiles that query the keeper) will see the **current values** after the message executes successfully.
 
 ### Extensibility
 
@@ -35,11 +41,22 @@ The message **type URL** in transactions and proposal JSON is **`/cosmos.evm.ban
 
 ## Local verification (module developers)
 
+Follow the same order as [How to test](#how-to-test), in short:
+
+**Run from:** **repository root**.
+
 ```bash
-make proto-gen   # or buf generate using the Makefile / proto-builder image
+# Only if you edited protos (e.g. tx.proto):
+make proto-gen
+
+# If go.mod / dependencies changed:
 go mod tidy
-cd infinited && go build -o /dev/null ./cmd/infinited
+
+# Unit tests for x/bank (always from repository root):
 go test ./x/bank/... -count=1
+
+# Build infinited; binary is written to ./build/infinited:
+make build-from-infinited
 ```
 
 ---
@@ -106,7 +123,11 @@ Use the returned address verbatim in the message JSON.
 
 ### Example `proposal.json` (gov v1)
 
-Replace `<GOV_MODULE_ADDRESS>`, `deposit` (denom and minimum per your chain’s `gov`), and set `metadata` to a real denom on that chain.
+Replace `<GOV_MODULE_ADDRESS>` and point **`metadata`** at a **real** `base` denom that already exists on that chain.
+
+**`deposit` (required, real):** must be a valid coin string that satisfies **your** network’s governance **minimum deposit** (query `infinited q gov params --node <RPC>` and use `min_deposit` exactly — correct **amount** and **denom**, usually the chain’s **fee/staking** token). Submission fails if `deposit` does not match what `gov` expects; it has **nothing** to do with the illustrative **TOAST** metadata in `messages`.
+
+The **`metadata` block below is only illustrative**: it uses an obvious toy identity (**`utoast` / TOAST**) so the example is not mistaken for your chain’s native token.
 
 ```json
 {
@@ -115,22 +136,22 @@ Replace `<GOV_MODULE_ADDRESS>`, `deposit` (denom and minimum per your chain’s 
       "@type": "/cosmos.evm.bank.v1.MsgSetDenomMetadata",
       "authority": "<GOV_MODULE_ADDRESS>",
       "metadata": {
-        "description": "Example metadata via governance",
+        "description": "Illustrative metadata for a sample TOAST asset (replace with a real denom on your chain)",
         "denom_units": [
-          { "denom": "drop", "exponent": 0, "aliases": [] },
-          { "denom": "Improbability", "exponent": 18, "aliases": [] }
+          { "denom": "utoast", "exponent": 0, "aliases": [] },
+          { "denom": "TOAST", "exponent": 6, "aliases": [] }
         ],
-        "base": "drop",
-        "display": "Improbability",
-        "name": "Improbability",
-        "symbol": "42",
+        "base": "utoast",
+        "display": "TOAST",
+        "name": "Toast sample token",
+        "symbol": "TOAST",
         "uri": "",
         "uri_hash": ""
       }
     }
   ],
   "metadata": "https://example.invalid/proposal-42",
-  "deposit": "1000000000000000000drop",
+  "deposit": "<MIN_DEPOSIT_FROM_GOV_PARAMS>",
   "title": "Update denom metadata",
   "summary": "Proposal that executes MsgSetDenomMetadata after the vote."
 }
@@ -138,7 +159,7 @@ Replace `<GOV_MODULE_ADDRESS>`, `deposit` (denom and minimum per your chain’s 
 
 ### CLI: submit proposal, vote, verify
 
-From the repo root, with `infinited` built and correct `chain-id` / node:
+From your environment (with `infinited` on `PATH`; build from the **repository root** with `make build-from-infinited`, or from `infinited/` with `go build -o ../build/infinited ./cmd/infinited`), with correct `chain-id` / node:
 
 ```bash
 # 1) Submit the proposal (depositor signs)
@@ -193,25 +214,56 @@ After the proposal passes, confirm on chain that the message applied (e.g. `infi
 
 ## How to test
 
-### Automated tests (quick)
+### 1. Protobuf codegen (only after editing `.proto`)
 
-From the `github.com/cosmos/evm` repo root:
+**Run from:** **repository root** (the directory with the root `go.mod` and `Makefile`).
+
+If you change **`proto/cosmos/evm/bank/v1/tx.proto`** (or other generated protos in this repo), regenerate first:
+
+```bash
+make proto-gen
+```
+
+Then run steps 2–3. If you only changed Go under `x/bank/` and did not touch protos, **skip this step**.
+
+### 2. Unit tests for `x/bank`
+
+**Run from:** **repository root** — **not** from `infinited/`.
 
 ```bash
 go test ./x/bank/... -count=1
 ```
 
-This includes at least the message **type URL** check (`typeurl_test.go`).
+This runs **`x/bank/types/typeurl_test.go`** (message type URL) and **`x/bank/keeper/msg_server_test.go`** (authority check, metadata validation, successful `SetDenomMetaData` call and `set_denom_metadata` event).
 
-### Build the binary
+### 3. Build the `infinited` binary
+
+The Makefile target **`build-from-infinited`** is defined for this repository: it runs `go build` inside **`infinited/`** and writes **`build/infinited`** next to the root `go.mod` (see `BUILDDIR` in the root `Makefile`).
+
+**Run from:** **repository root**:
 
 ```bash
-cd infinited && go build -o ./build/infinited ./cmd/infinited
+make build-from-infinited
 ```
 
-(or your usual `make` targets, e.g. `make build-from-infinited` if applicable).
+**Alternative without Make** — **run from:** `infinited/` (so the build uses `infinited/go.mod`), writing the binary next to the root `build/` folder:
 
-### Local or test network
+```bash
+cd infinited
+go build -o ../build/infinited ./cmd/infinited
+```
+
+### 4. Optional: full `infinited` module test suite
+
+**Run from:** **repository root**:
+
+```bash
+make test-infinited
+```
+
+This runs **`go test`** for all packages listed under **`infinited/`** (excluding simulation), with race and `test` build tags — it is **slower** than `go test ./x/bank/...` alone.
+
+### 5. Local or test network (E2E)
 
 For **end-to-end** flow (proposal → vote → execution → query), follow the same guidance as for the rest of the binary: [docs/guides/development/TESTING.md](../../guides/development/TESTING.md), local networks (`local_node.sh` / project testnet config), and **shortened gov parameters only in dev**.
 
@@ -220,16 +272,6 @@ Typical steps:
 1. Run `infinited` node(s) that include the `infinitebank` module.
 2. Ensure balance and rights for gov **deposit**.
 3. Submit `proposal.json` as above, vote, and verify with `infinited q bank denom-metadata`.
-
-### Regenerating protos
-
-If you change `proto/cosmos/evm/bank/v1/tx.proto`, regenerate and re-run tests/build:
-
-```bash
-make proto-gen
-go test ./x/bank/... -count=1
-cd infinited && go build ./cmd/infinited
-```
 
 ---
 

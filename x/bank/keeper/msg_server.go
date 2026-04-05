@@ -5,7 +5,7 @@ import (
 
 	sdkerrors "cosmossdk.io/errors"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	bankkeeper "github.com/cosmos/cosmos-sdk/x/bank/keeper"
+	banktypes "github.com/cosmos/cosmos-sdk/x/bank/types"
 	govtypes "github.com/cosmos/cosmos-sdk/x/gov/types"
 
 	"github.com/cosmos/evm/x/bank/types"
@@ -13,13 +13,19 @@ import (
 
 var _ types.MsgServer = (*msgServer)(nil)
 
+// DenomMetaDataSetter is the subset of bankkeeper.Keeper used by the Msg server.
+// bankkeeper.Keeper implements it; tests may pass a small fake that only stubs SetDenomMetaData.
+type DenomMetaDataSetter interface {
+	SetDenomMetaData(ctx context.Context, denomMetaData banktypes.Metadata)
+}
+
 type msgServer struct {
-	bankKeeper bankkeeper.Keeper
+	bankKeeper DenomMetaDataSetter
 	authority  sdk.AccAddress
 }
 
-// NewMsgServer returns a Msg server backed by the SDK x/bank keeper.
-func NewMsgServer(bankKeeper bankkeeper.Keeper, authority sdk.AccAddress) types.MsgServer {
+// NewMsgServer returns a Msg server backed by the SDK x/bank keeper (or any DenomMetaDataSetter).
+func NewMsgServer(bankKeeper DenomMetaDataSetter, authority sdk.AccAddress) types.MsgServer {
 	return &msgServer{
 		bankKeeper: bankKeeper,
 		authority:  authority,
