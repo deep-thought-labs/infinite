@@ -1,30 +1,42 @@
-# Infinite Bank — integración técnica
+# Infinite Bank — technical integration
 
-## Alcance (Part A)
+## What it is and what it is for
 
-Módulo **`github.com/cosmos/evm/x/bank`** (nombre on-chain **`infinitebank`**) que registra **`MsgSetDenomMetadata`**: autoridad fija = cuenta del módulo **x/gov**; delega en el **keeper estándar** del SDK `x/bank` (`SetDenomMetaData`).
+This repository adds an **application module** in Go at **`github.com/cosmos/evm/x/bank`**, which **currently** exposes **`MsgSetDenomMetadata`**. It lets **governance**, once a proposal passes, **define or correct** **denom metadata** in **Cosmos SDK `x/bank`** state (the same internal operation as the SDK keeper’s `SetDenomMetaData`, which is not exposed as a standard SDK transaction message). Any client that reads metadata from bank (for example ERC-20 precompiles that query the keeper) will see the **current values** after the message executes successfully.
+
+### Extensibility
+
+The layout follows the usual Cosmos module pattern (`AppModule`, `keeper/`, `types/`, protobuf `service Msg`): it is **ready for more RPCs** on the same **`Msg`** service (or other `.proto` files), new implementations under **`x/bank/keeper`**, wiring in **`RegisterServices`**, and extending **`RegisterInterfaces`** / amino in `types/codec.go` as needed. The goal is to keep **messages that extend SDK bank behaviour** in this module **without** editing the native `bank` module code or growing `app.go` beyond registering the `AppModule`. Any change that affects persisted module state may require bumping **consensus version** and, when applicable, migrations.
+
+### Module identifier (`ModuleName`)
+
+In `x/bank/types/keys.go` the constant is **`ModuleName = "infinitebank"`**. That string is the **module name in the Cosmos SDK runtime**: genesis ordering, begin/end block order, per-module genesis map keys, etc. It is **not** the token symbol or the wallet-facing name. It must **differ** from the standard SDK module name **`"bank"`** (`banktypes.ModuleName`): in `infinited` both **`sdkbank.NewAppModule`** (native bank) and **`bank.NewAppModule`** (this module, import `github.com/cosmos/evm/x/bank`) are registered. Application code often imports `github.com/cosmos/evm/x/bank/types` as `evmbanktypes`; there **`evmbanktypes.ModuleName` == `"infinitebank"`**.
+
+### Authority for `MsgSetDenomMetadata`
+
+It should run only inside an **x/gov** proposal; the **`authority`** field must be the **gov** module account address. The handler rejects any other authority. (Future messages in this module may use different authorization rules.)
 
 ## Proto
 
-- **`proto/cosmos/evm/bank/v1/tx.proto`** — paquete **`cosmos.evm.bank.v1`**, `go_package` **`github.com/cosmos/evm/x/bank/types`** (convención del repo y script `scripts/generate_protos.sh`).
-- Código gogo generado: **`x/bank/types/tx.pb.go`** (`make proto-gen` / `buf generate` con plugins gocosmos).
-- API pulsar (autocli / reflexión): **`api/cosmos/evm/bank/v1/*.go`** (`buf generate` con `buf.gen.pulsar.yaml`).
+- **`proto/cosmos/evm/bank/v1/tx.proto`** — protobuf package **`cosmos.evm.bank.v1`** and `go_package` **`github.com/cosmos/evm/x/bank/types`**, aligned with other protos under `proto/cosmos/evm/` and with `scripts/generate_protos.sh` (only files whose `go_package` references `cosmos/evm`). Additional messages can be added as extra **`rpc`** entries on the same `service Msg`.
+- Generated gogo code: **`x/bank/types/tx.pb.go`** (`make proto-gen` or `buf generate` with the plugins referenced in the repo Makefile).
+- Pulsar API (e.g. reflection): **`api/cosmos/evm/bank/v1/*.go`** (`buf generate` with `proto/buf.gen.pulsar.yaml`).
 
-> Si el documento de diseño hablaba de `infinite.bank.v1`, en este repositorio el equivalente alineado con **buf** y **cosmos/evm** es **`cosmos.evm.bank.v1`**. El nombre de módulo Cosmos sigue siendo **`infinitebank`** para no colisionar con **`bank`** del SDK.
+The message **type URL** in transactions and proposal JSON is **`/cosmos.evm.bank.v1.MsgSetDenomMetadata`** (do not confuse with other package prefixes that do not match this generated file).
 
-## Código
+## Code layout
 
-| Pieza | Ruta |
+| Piece | Path |
 |--------|------|
-| Tipos, codec, genesis vacío JSON | `x/bank/types/` |
+| Types, codec, empty `{}` genesis JSON | `x/bank/types/` (`ModuleName` in `keys.go`) |
 | Msg server | `x/bank/keeper/msg_server.go` |
 | `AppModule` | `x/bank/module.go` |
-| Registro en la app | `infinited/app.go` — `sdkbank.NewAppModule` (SDK) + `bank.NewAppModule` (extensión); orden genesis / begin / end incluye `evmbanktypes.ModuleName` |
+| App wiring | `infinited/app.go`: SDK module `sdkbank.NewAppModule(...)` and extension `bank.NewAppModule(...)`; ordering lists include **`"infinitebank"`** (via `evmbanktypes.ModuleName`) in addition to `banktypes.ModuleName` |
 
-## Verificación local (desarrolladores del módulo)
+## Local verification (module developers)
 
 ```bash
-make proto-gen   # o buf generate con imagen/proto-builder del Makefile
+make proto-gen   # or buf generate using the Makefile / proto-builder image
 go mod tidy
 cd infinited && go build -o /dev/null ./cmd/infinited
 go test ./x/bank/... -count=1
@@ -32,37 +44,69 @@ go test ./x/bank/... -count=1
 
 ---
 
-## Cómo usar
+## How to use
 
-Orientado a **operadores** e **integradores** que envían propuestas en una red en vivo o de pruebas.
+For **operators** and **integrators** submitting proposals on live or test networks.
 
-### Qué hace
+### What it does
 
-Tras aprobarse una propuesta de gobernanza que lo contiene, **`MsgSetDenomMetadata`** escribe metadatos de denominación en el estado de **`x/bank`** del SDK (misma semántica que el keeper estándar: `SetDenomMetaData`). Sirve para fijar o actualizar **nombre, símbolo, unidades (exponentes)** y campos opcionales (`uri`, `uri_hash`) de un `denom` ya existente en cadena.
+After a governance proposal that includes it passes, **`MsgSetDenomMetadata`** writes denom metadata into SDK **`x/bank`** state (same semantics as the standard keeper: `SetDenomMetaData`). Use it to set or update **name, symbol, units (exponents)**, and optional fields (`uri`, `uri_hash`) for a `denom` that already exists on chain.
 
-### Restricciones
+### Restrictions
 
-- **No** es una transacción que firme un usuario normal con su clave: el mensaje debe ir dentro de una **propuesta de gov** y el campo **`authority`** tiene que ser **exactamente** la cuenta del módulo **`gov`** (si no, el handler responde `ErrInvalidSigner`).
-- El **`metadata`** debe cumplir la validación del SDK (`Metadata.Validate()`): por ejemplo, primera unidad = `base` con exponente `0`, orden creciente de exponentes, `display` presente en `denom_units`, `name` y `symbol` no vacíos, etc.
+- It is **not** a normal user-signed transaction: the message must be inside a **gov** proposal, and **`authority`** must **exactly** match the **gov** module account (otherwise the handler returns `ErrInvalidSigner`).
+- **`metadata`** must pass SDK **`Metadata.Validate()`** (see next section). If validation fails, execution of the message may **fail** when gov runs it.
 
-### Tipo protobuf (para `proposal.json`)
+### Metadata validation (Cosmos SDK x/bank)
 
-- **Type URL del mensaje:** `/cosmos.evm.bank.v1.MsgSetDenomMetadata`  
-  (comprobado en tests: `sdk.MsgTypeURL(&MsgSetDenomMetadata{})` en `x/bank/types/typeurl_test.go`.)
+The handler calls `msg.Metadata.Validate()` **before** `SetDenomMetaData` (see `x/bank/keeper/msg_server.go`). The rules are **not** defined by this fork: they come from **`github.com/cosmos/cosmos-sdk/x/bank/types`**, methods `Metadata.Validate()` and `DenomUnit.Validate()`, for whichever Cosmos SDK version your repo’s `go.mod` pins (e.g. the `infinited` module).
 
-### Dirección de `authority`
+#### `Metadata` checks
 
-Obtén la cuenta del módulo gov **en la red que uses** (depende del prefijo Bech32, p. ej. `infinite` en Infinite Drive):
+| Check | Detail |
+|--------------|---------|
+| `name` | Cannot be empty or whitespace-only (`TrimSpace`). |
+| `symbol` | Same as `name`. |
+| `base` | Must be a **valid denom** per `sdk.ValidateDenom` (SDK default regex: leading letter; 3–128 chars; charset `[a-zA-Z0-9/:._-]`, suitable for `ibc/…`). |
+| `display` | Same valid-denom rules as `base`. |
+| `denom_units` | At least one entry; see ordering and `DenomUnit` rules below. |
+| First unit (`denom_units[0]`) | `denom` **must equal** `base` and `exponent` **must be 0**. |
+| Remaining units | `exponent` must be **strictly increasing** (ascending order). |
+| Duplicates | No two units may share the same `denom`. |
+| `display` in units | Some `denom_units` entry must have `denom == display`. |
+| `description`, `uri`, `uri_hash` | **Not** validated by `Metadata.Validate()`; may be empty or set as needed. |
+
+#### Each `DenomUnit`
+
+| Check | Detail |
+|--------------|---------|
+| `denom` | Must pass `sdk.ValidateDenom`. |
+| `aliases` | No duplicates; no empty or whitespace-only alias strings. |
+
+#### Typical error strings (reference)
+
+The SDK returns fixed or `fmt`-style messages such as: `name field cannot be blank`, `symbol field cannot be blank`, `invalid metadata base denom`, `invalid metadata display denom`, `metadata's first denomination unit must be the one with base denom`, `the exponent for base denomination unit … must be 0`, `denom units should be sorted asc by exponent`, `duplicate denomination unit`, `metadata must contain a denomination unit with display denom`, `invalid denom unit`, `duplicate denomination unit alias`, `alias for denom unit … cannot be blank`.
+
+To debug **`Metadata.Validate()`** failures, combine **`--dry-run`** on `submit-proposal` (see [Simulation without broadcast](#simulation-without-broadcast)) with checking **execution results** when gov applies the message after the vote.
+
+### Protobuf type (for `proposal.json`)
+
+- **Message type URL:** `/cosmos.evm.bank.v1.MsgSetDenomMetadata`  
+  (asserted in tests: `sdk.MsgTypeURL(&MsgSetDenomMetadata{})` in `x/bank/types/typeurl_test.go`.)
+
+### `authority` address
+
+Fetch the gov module account for **the network you use** (Bech32 prefix depends on the chain, e.g. `infinite` on Infinite Drive):
 
 ```bash
 infinited q auth module-account gov --node <RPC>
 ```
 
-Usa la dirección devuelta tal cual en el JSON del mensaje.
+Use the returned address verbatim in the message JSON.
 
-### Ejemplo de `proposal.json` (gov v1)
+### Example `proposal.json` (gov v1)
 
-Sustituye `<GOV_MODULE_ADDRESS>`, el `deposit` (denom y cantidad mínima según `gov` de tu red) y ajusta `metadata` a un denom real de esa cadena.
+Replace `<GOV_MODULE_ADDRESS>`, `deposit` (denom and minimum per your chain’s `gov`), and set `metadata` to a real denom on that chain.
 
 ```json
 {
@@ -71,7 +115,7 @@ Sustituye `<GOV_MODULE_ADDRESS>`, el `deposit` (denom y cantidad mínima según 
       "@type": "/cosmos.evm.bank.v1.MsgSetDenomMetadata",
       "authority": "<GOV_MODULE_ADDRESS>",
       "metadata": {
-        "description": "Ejemplo de metadatos vía gobernanza",
+        "description": "Example metadata via governance",
         "denom_units": [
           { "denom": "drop", "exponent": 0, "aliases": [] },
           { "denom": "Improbability", "exponent": 18, "aliases": [] }
@@ -85,83 +129,101 @@ Sustituye `<GOV_MODULE_ADDRESS>`, el `deposit` (denom y cantidad mínima según 
       }
     }
   ],
-  "metadata": "https://ejemplo.invalid/propuesta-42",
+  "metadata": "https://example.invalid/proposal-42",
   "deposit": "1000000000000000000drop",
-  "title": "Actualizar metadata del denom",
-  "summary": "Propuesta que ejecuta MsgSetDenomMetadata tras el voto."
+  "title": "Update denom metadata",
+  "summary": "Proposal that executes MsgSetDenomMetadata after the vote."
 }
 ```
 
-### CLI: enviar propuesta, votar y comprobar
+### CLI: submit proposal, vote, verify
 
-Desde la raíz del repo, con `infinited` compilado y apuntando al nodo y `chain-id` correctos:
+From the repo root, with `infinited` built and correct `chain-id` / node:
 
 ```bash
-# 1) Enviar la propuesta (firma el depósito quien tenga fondos)
-infinited tx gov submit-proposal path/al/proposal.json \
-  --from <tu_clave> \
+# 1) Submit the proposal (depositor signs)
+infinited tx gov submit-proposal path/to/proposal.json \
+  --from <your_key> \
   --chain-id <CHAIN_ID> \
   --gas auto --gas-adjustment 1.3 \
-  --fees <cantidad><denom_fee>
+  --fees <amount><fee_denom>
 
-# 2) Votar (tras abrirse la votación)
-infinited tx gov vote <proposal_id> yes --from <tu_clave> --chain-id <CHAIN_ID> ...
+# 2) Vote (after voting opens)
+infinited tx gov vote <proposal_id> yes --from <your_key> --chain-id <CHAIN_ID> ...
 
-# 3) Tras ejecutarse el mensaje, consultar metadatos en bank
+# 3) After the message runs, query bank metadata
 infinited q bank denom-metadata <base_denom> --node <RPC>
-# o listar todos:
+# or list all:
 infinited q bank denoms-metadata --node <RPC>
 ```
 
-La ayuda integrada describe el formato del JSON:
+Built-in help describes the JSON shape:
 
 ```bash
 infinited tx gov submit-proposal --help
 ```
 
-### Simulación sin broadcast
+### Simulation without broadcast
 
-Para validar gas y codificación sin enviar la tx:
+The Cosmos SDK client supports **`--dry-run`** on `infinited tx gov submit-proposal` (and other `tx` commands): the node **simulates** the transaction and **does not broadcast** it. You still need a reachable **`--node`** and a valid **`--from`** in the keyring to build and sign the simulation.
+
+**What `submit-proposal --dry-run` usually covers**
+
+- Primarily the **proposal submission transaction** (encoding, proposer signature, deposit, gas when using `--gas auto`, etc.).
+- The node **may** surface **some** issues in embedded `messages` **if** the simulation runs them; exact behaviour depends on SDK version and how gov simulates `MsgSubmitProposal`.
+
+**What `--dry-run` does not replace**
+
+- **Definitive** validation of **`MsgSetDenomMetadata`** happens when **x/gov executes** that message **after** the proposal passes: **`authority` + `Metadata.Validate()` + `SetDenomMetaData`**. If that fails, errors show up in **block events / logs** (metadata unchanged).
+- Therefore **`--dry-run` on submit does not guarantee** the inner message will succeed at execution time; it is a pre-check, not a substitute for vote + execution or integration tests.
+
+**Example command**
 
 ```bash
-infinited tx gov submit-proposal proposal.json --from <clave> --chain-id <CHAIN_ID> --dry-run
+infinited tx gov submit-proposal proposal.json \
+  --from <key> \
+  --chain-id <CHAIN_ID> \
+  --node <RPC> \
+  --dry-run
 ```
+
+After the proposal passes, confirm on chain that the message applied (e.g. `infinited q gov proposal <id>` and `infinited q bank denom-metadata <base>`).
 
 ---
 
-## Cómo probar
+## How to test
 
-### Tests automáticos (rápidos)
+### Automated tests (quick)
 
-En la raíz del repositorio `github.com/cosmos/evm`:
+From the `github.com/cosmos/evm` repo root:
 
 ```bash
 go test ./x/bank/... -count=1
 ```
 
-Incluye al menos la comprobación del **type URL** del mensaje (`typeurl_test.go`).
+This includes at least the message **type URL** check (`typeurl_test.go`).
 
-### Compilación del binario
+### Build the binary
 
 ```bash
 cd infinited && go build -o ./build/infinited ./cmd/infinited
 ```
 
-(o los objetivos `make` que use tu flujo, p. ej. `make build-from-infinited` si aplica).
+(or your usual `make` targets, e.g. `make build-from-infinited` if applicable).
 
-### Cadena local o de pruebas
+### Local or test network
 
-Para un flujo **extremo a extremo** (propuesta → voto → ejecución → query), usa la misma guía que para el resto del binario: [docs/guides/development/TESTING.md](../../guides/development/TESTING.md), redes locales (`local_node.sh` / configuración de testnet del proyecto) y parámetros de **gov** acortados solo en entornos de desarrollo.
+For **end-to-end** flow (proposal → vote → execution → query), follow the same guidance as for the rest of the binary: [docs/guides/development/TESTING.md](../../guides/development/TESTING.md), local networks (`local_node.sh` / project testnet config), and **shortened gov parameters only in dev**.
 
-Pasos típicos:
+Typical steps:
 
-1. Levantar nodo(s) con `infinited` que incluyan el módulo `infinitebank`.
-2. Asegurar saldo y permisos para **deposit** de gov.
-3. Enviar `proposal.json` como arriba, votar y verificar con `infinited q bank denom-metadata`.
+1. Run `infinited` node(s) that include the `infinitebank` module.
+2. Ensure balance and rights for gov **deposit**.
+3. Submit `proposal.json` as above, vote, and verify with `infinited q bank denom-metadata`.
 
-### Regeneración de protos
+### Regenerating protos
 
-Si cambias `proto/cosmos/evm/bank/v1/tx.proto`, vuelve a generar y a pasar tests/build:
+If you change `proto/cosmos/evm/bank/v1/tx.proto`, regenerate and re-run tests/build:
 
 ```bash
 make proto-gen
@@ -171,6 +233,6 @@ cd infinited && go build ./cmd/infinited
 
 ---
 
-## Notas para merges upstream
+## Maintainers: integrating changes from cosmos/evm
 
-Revisar `infinited/app.go` (orden de módulos, imports `sdkbank` vs `bank`), `x/bank/**` y regeneración de protos.
+When pulling commits from [cosmos/evm](https://github.com/cosmos/evm), resolve conflicts in `infinited/app.go` (module ordering; imports **`sdkbank`** = SDK bank, **`bank`** = `github.com/cosmos/evm/x/bank`), under `x/bank/**`, and regenerate protos if buf dependencies change.

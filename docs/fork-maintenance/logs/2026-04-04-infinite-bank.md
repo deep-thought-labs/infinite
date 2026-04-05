@@ -1,7 +1,7 @@
-# Bitácora — feature Infinite Bank (extensión `x/bank`)
+# Bitácora — feature Infinite Bank (módulo `infinitebank`)
 
 **Tipo:** integración de **feature del fork** (no merge con [cosmos/evm](https://github.com/cosmos/evm) upstream).  
-**Objetivo:** abrir trazabilidad desde el inicio de la implementación de **mensajes personalizados** sobre el módulo Bank; completar entregables y verificación al cerrar la fase.
+**Objetivo:** trazabilidad de la extensión **`github.com/cosmos/evm/x/bank`** (`ModuleName` **`infinitebank`**) que expone **`MsgSetDenomMetadata`** para gobernanza.
 
 ---
 
@@ -10,43 +10,48 @@
 | Campo | Valor |
 |--------|--------|
 | Fecha apertura (documental) | 2026-04-04 |
-| Estado | **En curso** — diseño e implementación de mensajes |
-| Documentación de feature | [`docs/feature/infinite-bank/README.md`](../../feature/infinite-bank/README.md) · [`INTEGRATION.md`](../../feature/infinite-bank/INTEGRATION.md) |
+| Estado | Implementación base entregada en repo; bitácora actualizable si se añaden mensajes, migraciones o más tests |
+| Documentación de feature | Inglés: [`docs/feature/infinite-bank/README.md`](../../feature/infinite-bank/README.md) · [`INTEGRATION.md`](../../feature/infinite-bank/INTEGRATION.md) |
 | Registro de divergencia | [UPSTREAM_DIVERGENCE_RECORD.md — Extensiones de producto](../UPSTREAM_DIVERGENCE_RECORD.md#extensiones-de-producto-fork) |
 
 ---
 
-## Alcance declarado
+## Alcance en código (referencia)
 
-- Extender el módulo **Bank** con al menos un **mensaje Cosmos personalizado** (detalle de tipos y semántica: pendiente en INTEGRATION.md).
-- Mantener alineación con la política del fork (identidad vs upstream) descrita en [UPSTREAM_DIVERGENCE_RECORD.md](../UPSTREAM_DIVERGENCE_RECORD.md).
+- Mensaje **`MsgSetDenomMetadata`**, autoridad = módulo **gov**, delegación en **`SetDenomMetaData`** del keeper del SDK **x/bank**.
+- Proto **`cosmos.evm.bank.v1`**, código en **`x/bank/`**, registro en **`infinited/app.go`** (módulo SDK **`sdkbank`** + extensión **`bank`**).
 
 ---
 
-## Entregables (ir completando)
+## Entregables
 
-*(Añadir conforme se fusionen cambios en el repositorio.)*
-
-- [ ] Definición protobuf / `Msg*` y autorización.
-- [ ] Cableado en `infinited` (keepers, módulos, router).
-- [ ] Pruebas (unitarias o integración).
-- [ ] Actualización de [INTEGRATION.md](../../feature/infinite-bank/INTEGRATION.md) con rutas de archivos finales.
-- [ ] Si aplica: plan de upgrade on-chain y entrada en `docs/migrations/`.
+- [x] Definición protobuf / `MsgSetDenomMetadata` y autorización en handler.
+- [x] Cableado en `infinited` (`AppModule`, orden genesis / begin / end).
+- [x] Pruebas mínimas en paquete `x/bank/types` (p. ej. type URL).
+- [x] Documentación operativa en [INTEGRATION.md](../../feature/infinite-bank/INTEGRATION.md).
+- [ ] Si en el futuro aplica: upgrade on-chain y entrada en `docs/migrations/`.
 
 ---
 
 ## Verificación ejecutada (referencia)
 
-*(Completar al cerrar la fase: comandos `go build` / `go test`, `make`, etc.)*
+Ejemplos coherentes con el árbol actual del repo:
+
+```bash
+cd /ruta/al/repo && go test ./x/bank/... -count=1
+cd infinited && go build -o /dev/null ./cmd/infinited
+```
+
+*(Añadir SHAs de commit o enlace a PR si la política interna lo pide.)*
 
 ---
 
 ## SHAs / PR (opcional)
 
-*(Enlaces o commits de referencia cuando la política interna lo exija.)*
+*(Enlaces o commits de referencia.)*
 
 ---
 
-## Notas para próximos merges upstream
+## Notas para próximos merges con cosmos/evm
 
-Revisar **`infinited/app.go`**, **`x/bank`** (o rutas del módulo elegido), **`infinited/go.mod`** y **`infinited/upgrades.go`** si hubo migraciones. Ver [MERGE_STRATEGIES.md — §1 Zonas protegidas](../MERGE_STRATEGIES.md#1-zonas-protegidas-no-resolver-a-ciegas-con-upstream).
+Revisar **`infinited/app.go`**, **`x/bank/**`**, **`infinited/go.mod`**, **`infinited/upgrades.go`** si hubo migraciones. Ver [MERGE_STRATEGIES.md — §1 Zonas protegidas](../MERGE_STRATEGIES.md#1-zonas-protegidas-no-resolver-a-ciegas-con-upstream).
