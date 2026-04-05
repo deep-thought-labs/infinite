@@ -1,6 +1,6 @@
 # Infinite Bank — extensión del módulo `bank`
 
-**Estado:** en **planificación / implementación**; los mensajes personalizados y el cableado en cadena se documentarán en [INTEGRATION.md](INTEGRATION.md) conforme avance el trabajo.
+**Estado:** **Part A** — implementado **`MsgSetDenomMetadata`** (módulo on-chain `infinitebank`, ver [INTEGRATION.md](INTEGRATION.md)). Más mensajes u operación (CLI, pruebas de integración) pueden añadirse después.
 
 Esta carpeta describe la extensión del módulo **Bank** del SDK en **Infinite Drive** (`infinited`) para incorporar **mensajes Cosmos personalizados** (además del comportamiento estándar de `x/bank`).
 
@@ -13,7 +13,7 @@ Esta carpeta describe la extensión del módulo **Bank** del SDK en **Infinite D
 
 | Documento | Contenido |
 |-----------|-----------|
-| [**INTEGRATION.md**](INTEGRATION.md) | Código: mensajes, keeper, registro en app, migraciones si aplica, pruebas. |
+| [**INTEGRATION.md**](INTEGRATION.md) | Código, proto, rutas en repo; **[cómo usar](INTEGRATION.md#cómo-usar)** (propuesta gov, `proposal.json`, CLI); **[cómo probar](INTEGRATION.md#cómo-probar)** (tests, build, cadena local). |
 | [**README.md**](README.md) | Este índice. |
 
 ## Contexto en el binario (referencia actual)
