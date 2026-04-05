@@ -50,6 +50,7 @@ Además de **identidad** y **rebranding**, este repositorio puede incluir funcio
 | Extensión | Documentación técnica | Notas para merge |
 |-----------|------------------------|------------------|
 | Hyperlane — módulos `x/core` y `x/warp` ([hyperlane-cosmos](https://github.com/bcp-innovations/hyperlane-cosmos)) | [INTEGRATION.md](../feature/hyperlane/INTEGRATION.md) (código) · [OPERATIONS.md](../feature/hyperlane/OPERATIONS.md) (despliegue/registry/EVM) · [README](../feature/hyperlane/README.md) · [bitácora logs/2026-04-03-hyperlane-integration.md](logs/2026-04-03-hyperlane-integration.md) | Zonas habituales de conflicto: [`infinited/app.go`](../../infinited/app.go), [`infinited/go.mod`](../../infinited/go.mod), [`infinited/upgrades.go`](../../infinited/upgrades.go). Preservar módulos y dependencia salvo decisión explícita; actualizar docs de feature si cambia el alcance. |
+| Infinite Bank — extensión del módulo `bank` con mensajes personalizados | [INTEGRATION.md](../feature/infinite-bank/INTEGRATION.md) · [README](../feature/infinite-bank/README.md) · [bitácora logs/2026-04-04-infinite-bank.md](logs/2026-04-04-infinite-bank.md) | Revisar [`infinited/app.go`](../../infinited/app.go) (keeper / `bank.NewAppModule`), rutas bajo `x/bank` o módulo auxiliar según implementación, [`infinited/go.mod`](../../infinited/go.mod) y, si aplica, [`infinited/upgrades.go`](../../infinited/upgrades.go). Actualizar INTEGRATION.md y esta tabla cuando el diseño de mensajes quede cerrado. |
 
 ---
 
