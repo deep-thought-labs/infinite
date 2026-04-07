@@ -5,7 +5,7 @@ https://infinitedrive.xyz
 Copyright 2025, Deep Thought Labs
 https://deep-thought.computer
 
-This project integrates open-source technologies and includes contributions from:
+This repository is a maintained derivative of the Cosmos EVM codebase (https://github.com/cosmos/evm), incorporating substantial prior work from the Evmos and broader Cosmos ecosystems, and integrates further open-source components as credited below:
 
 Technology Foundations:
 - Copyright Evmos Authors - Tharsis Labs Ltd - https://github.com/evmos/os/

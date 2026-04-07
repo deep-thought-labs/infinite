@@ -31,7 +31,7 @@ const (
 	// Keep this modest (not ~100): after PASSED the chain is often ~height 15–25; needing 80+ more
 	// blocks stresses Docker/CI and makes failures hard to distinguish from a stalled validator set.
 	upgradeHeight int64 = 45
-	upgradeName         = "infinite-v0.1.10-to-v0.1.12" // must match evmd.UpgradeName in infinited/upgrades.go
+	upgradeName         = "infinite-v0.1.10-to-v0.1.12" // must match UpgradeName in infinited/upgrades.go
 
 	// legacyHaltHeight caps the legacy node; must stay well above upgradeHeight (safety net only;
 	// the real stop for the legacy binary is upgradeHeight via x/upgrade).

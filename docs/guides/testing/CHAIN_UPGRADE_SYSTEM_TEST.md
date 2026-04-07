@@ -98,7 +98,7 @@ To tune **gov timing** or deposits for CI stability, prefer **`upgrade-test.json
 | Piece | Behavior |
 |-------|----------|
 | **`tests/systemtests/chainupgrade/v0_1_10_to_v0_1_12.go`** | Plan name **`infinite-v0.1.10-to-v0.1.12`** (must match **`UpgradeName`**). |
-| **`infinited/upgrades.go`** | Registers **`SetUpgradeHandler`** and **`UpgradeStoreLoader`** only for **`UpgradeName`**. |
+| **`infinited/upgrades.go`** | Registers **`SetUpgradeHandler`** and **`UpgradeStoreLoader`** only for **`UpgradeName`**. **`StoreUpgrades.Added`:** `hyperlane`, `warp` (Hyperlane). **Infinite Bank (`infinitebank`)** has no separate KV store here — see [migrations/infinite_v0.1.10_to_v0.1.12.md](../../migrations/infinite_v0.1.10_to_v0.1.12.md). |
 
 ### Relation to upstream `cosmos/evm`
 
