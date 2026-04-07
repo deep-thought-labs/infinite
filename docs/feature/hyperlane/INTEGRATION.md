@@ -24,7 +24,7 @@ Se contrastó este documento y el cableado con la documentación de referencia d
 **Riesgos o seguimiento (no invalidan el módulo Cosmos):**
 
 - **Orden y firmas de constructores** de keepers: si `hyperlane-cosmos` cambia APIs en versiones futuras, revisar `app.go`.
-- **Cadenas vivas:** los stores deben crearse en el **software-upgrade** previsto; aquí quedan ligados al plan **`infinite-v0.1.10-to-v0.1.12`** (ver abajo y [`infinited/upgrades.go`](../../../infinited/upgrades.go)).
+- **Cadenas vivas:** los stores deben crearse en el **software-upgrade** previsto; aquí quedan ligados al plan **`infinite-v0.1.10-to-v0.2.0`** (ver abajo y [`infinited/upgrades.go`](../../../infinited/upgrades.go)).
 - **EVM / ERC-20:** Warp mintea en **bank**; visibilidad en MetaMask/Blockscout como ERC-20 puede requerir trabajo adicional vía **`x/erc20`** o precompilados (fuera del alcance de la integración “solo módulos Cosmos” de esta fase).
 - **Contratos Solidity Hyperlane:** la CLI de despliegue EVM es **fase posterior** si se busca la experiencia dual Cosmos + contratos.
 
@@ -88,7 +88,7 @@ La siguiente numeración reproduce la **lógica** de una guía estándar de inte
 | 3 `app.yaml` | Módulos y permisos en YAML | **No hay `app.yaml`** para la app | No se adoptó `appconfig`/Compose en `infinited`. Permisos replicados en Go (`permissions.go`); módulos en `module.NewManager`. | **Sí** para permisos y presencia de módulos; **no** hay paridad de formato YAML. |
 | 3b `init_genesis` YAML | Lista incluye `hyperlane`, `warp` | Mismo orden lógico en `SetOrderInitGenesis` / `SetOrderExportGenesis` (`hyperlane` antes de `warp`) | Coherencia con dependencia warp→core. | **Sí.** |
 | 3c `bech32_prefix: hyp` en ejemplo YAML | — | Se mantiene el prefijo Bech32 **del fork Infinite Drive** (configuración existente de cadena), no se forzó `hyp` | `hyp` era ejemplo del simapp genérico; cambiar el HRP rompería identidad y tests del fork. | **Desviación intencional** respecto al **ejemplo** YAML; **correcta** para esta cadena. |
-| 4 Store upgrade | `SetStoreLoader` + `Added` stores | **`StoreUpgrades.Added`** con `hyperlane` y `warp` en el plan **`infinite-v0.1.10-to-v0.1.12`** ([`infinited/upgrades.go`](../../../infinited/upgrades.go)) | Decisión de producto: **un solo plan** de gobernanza ya previsto para redes que suben de `v0.1.10` a la línea que incluye Hyperlane; evita un segundo nombre de plan solo para stores. | **Sí** para cadenas que ejecutan ese upgrade. Génesis nueva: las keys ya están en `NewKVStoreKeys` (el loader en altura no aplica). |
+| 4 Store upgrade | `SetStoreLoader` + `Added` stores | **`StoreUpgrades.Added`** con `hyperlane` y `warp` en el plan **`infinite-v0.1.10-to-v0.2.0`** ([`infinited/upgrades.go`](../../../infinited/upgrades.go)) | Decisión de producto: **un solo plan** de gobernanza ya previsto para redes que suben de `v0.1.10` a la línea que incluye Hyperlane; evita un segundo nombre de plan solo para stores. | **Sí** para cadenas que ejecutan ese upgrade. Génesis nueva: las keys ya están en `NewKVStoreKeys` (el loader en altura no aplica). |
 | 5 Codec | Opcional `RegisterInterfaces` | **Sí:** `hyperlanetypes.RegisterInterfaces` y `warptypes.RegisterInterfaces` justo después de `evmencoding.MakeConfig` | Equivalente al paso opcional, antes de `BasicModuleManager.RegisterInterfaces`. | **Sí.** |
 | 6 Build / binario | `hypd` o binario del ejemplo | `infinited` — `go build ./cmd/infinited`, `make build-from-infinited` | Nombre del binario del fork. | **Sí** (mismo rol operativo). |
 
@@ -115,7 +115,7 @@ La siguiente numeración reproduce la **lógica** de una guía estándar de inte
 
 ### `infinited/upgrades.go`
 
-- Para **`UpgradeName` = `infinite-v0.1.10-to-v0.1.12`**, `UpgradeStoreLoader` añade stores **`hyperlane`** y **`warp`** (`hyperlanetypes.ModuleName`, `warptypes.ModuleName`). Debe coincidir con el plan en gobernanza y con [migrations/infinite_v0.1.10_to_v0.1.12.md](../../migrations/infinite_v0.1.10_to_v0.1.12.md).
+- Para **`UpgradeName` = `infinite-v0.1.10-to-v0.2.0`**, `UpgradeStoreLoader` añade stores **`hyperlane`** y **`warp`** (`hyperlanetypes.ModuleName`, `warptypes.ModuleName`). Debe coincidir con el plan en gobernanza y con [migrations/infinite_v0.1.10_to_v0.2.0.md](../../migrations/infinite_v0.1.10_to_v0.2.0.md).
 
 ### `infinited/tests/integration/hyperlane_test.go`
 
@@ -133,7 +133,7 @@ La siguiente numeración reproduce la **lógica** de una guía estándar de inte
 2. **`go.mod` en `infinited`:** refleja la **realidad del build** del daemon en este monorepo.
 3. **Sin `app.yaml`:** configuración equivalente expresada en Go; reduce duplicación de fuentes de verdad.
 4. **Bech32:** se preserva la identidad Infinite Drive, no el prefijo de ejemplo `hyp` del tutorial.
-5. **Upgrade on-chain:** los stores de Hyperlane se incorporan al plan existente **`infinite-v0.1.10-to-v0.1.12`** (`StoreUpgrades.Added`), alineado con la intención de gobernanza y con el harness `TestChainUpgrade` que ya usa ese nombre de plan.
+5. **Upgrade on-chain:** los stores de Hyperlane se incorporan al plan existente **`infinite-v0.1.10-to-v0.2.0`** (`StoreUpgrades.Added`), alineado con la intención de gobernanza y con el harness `TestChainUpgrade` que ya usa ese nombre de plan.
 6. **CLI:** sin subcomandos Hyperlane dedicados en `root.go` en esta fase; API/gRPC vía módulos registrados.
 
 ---
@@ -147,7 +147,7 @@ La siguiente numeración reproduce la **lógica** de una guía estándar de inte
 - [ ] `RegisterInterfaces` está antes del uso masivo del codec en registro de módulos.
 - [ ] `cd infinited && go test -race -tags=test -run TestHyperlane -count=1 ./tests/integration/` (cableado Hyperlane).
 - [ ] Compilación: `cd infinited && go build -o /dev/null ./cmd/infinited` y/o `make build-from-infinited`.
-- [ ] Para **red existente** que aún no pasó el upgrade: el plan **`infinite-v0.1.10-to-v0.1.12`** debe ejecutarse con un binario que incluya este `upgrades.go` para crear stores `hyperlane` / `warp` antes de usar los módulos en producción.
+- [ ] Para **red existente** que aún no pasó el upgrade: el plan **`infinite-v0.1.10-to-v0.2.0`** debe ejecutarse con un binario que incluya este `upgrades.go` para crear stores `hyperlane` / `warp` antes de usar los módulos en producción.
 - [ ] Tras merge de **cosmos/evm**, `infinited/app.go` sigue conteniendo los bloques Hyperlane sin pérdida accidental.
 
 ---

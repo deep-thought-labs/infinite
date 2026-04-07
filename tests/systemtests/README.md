@@ -83,7 +83,7 @@ Chain lifecycle:
 |-----------|-------------|
 | `TestChainUpgrade` | End-to-end upgrade handling; after legacy `SetupChain`, runs `scripts/customize_genesis.sh --network upgrade-test --skip-accounts`, then regenerates gentx in **`drop`** and runs gov until `PASSED` before the upgrade height. **Canonical doc:** [CHAIN_UPGRADE_SYSTEM_TEST.md](../../docs/guides/testing/CHAIN_UPGRADE_SYSTEM_TEST.md) (summary in [GENESIS.md](../../docs/guides/configuration/GENESIS.md#chain-upgrade-system-test-upgrade-test)) |
 
-> ℹ️ `TestChainUpgrade` uses **`infinite-v0.1.10-to-v0.1.12`**, the same string as **`UpgradeName`** in `infinited/upgrades.go` (production governance). Upstream’s sample `v0.4.0-to-v0.5.0` appears only in their docs; this fork does not register it.
+> ℹ️ `TestChainUpgrade` uses **`infinite-v0.1.10-to-v0.2.0`**, the same string as **`UpgradeName`** in `infinited/upgrades.go` (production governance). Upstream’s sample `v0.4.0-to-v0.5.0` appears only in their docs; this fork does not register it.
 >
 > ℹ️ The shared system test suite keeps a single chain alive across multiple tests when the node arguments are identical. Running several tests back-to-back therefore re-uses the same process unless a scenario explicitly changes the node configuration.
 

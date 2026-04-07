@@ -1,6 +1,6 @@
-# Infinite Drive — software upgrade `infinite-v0.1.10-to-v0.1.12`
+# Infinite Drive — software upgrade `infinite-v0.1.10-to-v0.2.0`
 
-This guide describes the **on-chain software-upgrade plan** that Infinite Drive uses when moving validator sets from the **v0.1.10** release line to a **current** `infinited` binary (v0.1.12-era tree). It covers the **exact governance plan name**, what the **upgrade handler** and **store loader** do, how **Hyperlane** and **Infinite Bank** fit in, and—**for operators who have not done a coordinated upgrade before**—what will happen on-chain and **how to prepare, vote, and switch binaries**.
+This guide describes the **on-chain software-upgrade plan** that Infinite Drive uses when moving validator sets from the **v0.1.10** release line to a **current** `infinited` binary (v0.2.0-era tree). It covers the **exact governance plan name**, what the **upgrade handler** and **store loader** do, how **Hyperlane** and **Infinite Bank** fit in, and—**for operators who have not done a coordinated upgrade before**—what will happen on-chain and **how to prepare, vote, and switch binaries**.
 
 ## Table of contents
 
@@ -17,7 +17,7 @@ This guide describes the **on-chain software-upgrade plan** that Infinite Drive 
 
 ## What this upgrade does (plain language)
 
-A **software upgrade proposal** does **not** change the binary on your server by itself. It only **writes a schedule into chain state**: “at block height **H**, the chain will stop accepting blocks from the **old** software and will expect nodes to run a **new** `infinited` that knows how to apply plan `**infinite-v0.1.10-to-v0.1.12`**.”
+A **software upgrade proposal** does **not** change the binary on your server by itself. It only **writes a schedule into chain state**: “at block height **H**, the chain will stop accepting blocks from the **old** software and will expect nodes to run a **new** `infinited` that knows how to apply plan `**infinite-v0.1.10-to-v0.2.0`**.”
 
 **What you should picture:**
 
@@ -36,10 +36,10 @@ If any instruction below is unclear, treat **height H** and **plan name** as the
 Use this **verbatim** in `MsgSoftwareUpgrade` proposals:
 
 ```text
-infinite-v0.1.10-to-v0.1.12
+infinite-v0.1.10-to-v0.2.0
 ```
 
-Registered in code as `**UpgradeName**` in `[infinited/upgrades.go](../../infinited/upgrades.go)`. The Go package in that file is named `**evmd**` for historical reasons; the binary you build and run is `**infinited**`. The `[tests/systemtests/chainupgrade/v0_1_10_to_v0_1_12.go](../../tests/systemtests/chainupgrade/v0_1_10_to_v0_1_12.go)` harness uses the **same** string (`upgradeName` constant) so CI matches production proposals.
+Registered in code as `**UpgradeName**` in `[infinited/upgrades.go](../../infinited/upgrades.go)`. The Go package in that file is named `**evmd**` for historical reasons; the binary you build and run is `**infinited**`. The `[tests/systemtests/chainupgrade/v0_1_10_to_v0_2_0.go](../../tests/systemtests/chainupgrade/v0_1_10_to_v0_2_0.go)` harness uses the **same** string (`upgradeName` constant) so CI matches production proposals.
 
 ## What the handler does today
 
@@ -52,7 +52,7 @@ Source of truth: `[infinited/upgrades.go](../../infinited/upgrades.go)`. Hyperla
 
 The Cosmos EVM **Infinite Bank** extension (`[github.com/cosmos/evm/x/bank](../../x/bank/)`, module name `**infinitebank`**) registers an `**AppModule**` next to SDK `x/bank`, but **does not** add a dedicated entry to `**storetypes.NewKVStoreKeys`** in `[infinited/app.go](../../infinited/app.go)`. Persisted denom metadata goes through the **SDK `bankkeeper.Keeper`** (existing `**bank**` store).
 
-Therefore `**infinitebank` is not** included in `**StoreUpgrades.Added`** for `infinite-v0.1.10-to-v0.1.12`. Bringing a chain from a **legacy binary without this module** still relies on `**RunMigrations`** (and the module’s default genesis / consensus version) so the new module is registered correctly. Product detail: [feature/infinite-bank/INTEGRATION.md](../feature/infinite-bank/INTEGRATION.md).
+Therefore `**infinitebank` is not** included in `**StoreUpgrades.Added`** for `infinite-v0.1.10-to-v0.2.0`. Bringing a chain from a **legacy binary without this module** still relies on `**RunMigrations`** (and the module’s default genesis / consensus version) so the new module is registered correctly. Product detail: [feature/infinite-bank/INTEGRATION.md](../feature/infinite-bank/INTEGRATION.md).
 
 **If** a future change adds **dedicated persisted state** under a **new** store key for this module (or another fork module), that key must appear in `**StoreUpgrades.Added`** for the upgrade that introduces it — usually under a **new** governance-approved `infinite-…` plan name.
 
@@ -83,7 +83,7 @@ Read this as a **checklist**. Replace **H** with the height chosen in the passed
 
 - Use the **example JSON** in [Example governance proposal (JSON)](#example-governance-proposal-json) as a template.
 - `**authority`** must be the **governance module account** address for **your** chain (query it—see the example section).
-- `**plan.name`** must be **exactly** `infinite-v0.1.10-to-v0.1.12` (case-sensitive, no extra spaces).
+- `**plan.name`** must be **exactly** `infinite-v0.1.10-to-v0.2.0` (case-sensitive, no extra spaces).
 - `**plan.height`** must be **H**, encoded as a **string** in JSON (e.g. `"1234567"`), matching what your `infinited` / CLI expects for `MsgSoftwareUpgrade`.
 - After submission, **vote** `yes` (or follow your org’s governance process). Wait until the proposal status is **passed** before relying on the schedule.
 
@@ -108,7 +108,7 @@ Read this as a **checklist**. Replace **H** with the height chosen in the passed
 
 ## Example governance proposal (JSON)
 
-Below is a **template** aligned with how `**TestChainUpgrade`** submits the upgrade (`[v0_1_10_to_v0_1_12.go](../../tests/systemtests/chainupgrade/v0_1_10_to_v0_1_12.go)`). Adjust `**deposit**`, `**title**`, `**summary**`, `**metadata**`, fees, and `**height**` for your network.
+Below is a **template** aligned with how `**TestChainUpgrade`** submits the upgrade (`[v0_1_10_to_v0_2_0.go](../../tests/systemtests/chainupgrade/v0_1_10_to_v0_2_0.go)`). Adjust `**deposit**`, `**title**`, `**summary**`, `**metadata**`, fees, and `**height**` for your network.
 
 **1. Obtain the governance module address** (chain-specific):
 
@@ -142,7 +142,7 @@ Use that string as `**authority**` below.
       "@type": "/cosmos.upgrade.v1beta1.MsgSoftwareUpgrade",
       "authority": "<GOV_MODULE_ADDRESS>",
       "plan": {
-        "name": "infinite-v0.1.10-to-v0.1.12",
+        "name": "infinite-v0.1.10-to-v0.2.0",
         "height": "<UPGRADE_HEIGHT>"
       }
     }
@@ -195,7 +195,7 @@ infinited tx gov submit-proposal path/to/proposal.json \
 | ----------------------------------------------------------- | ---------------------------------------------------------------------------------- |
 | End-to-end system test, genesis `upgrade-test`, maintenance | [CHAIN_UPGRADE_SYSTEM_TEST.md](../guides/testing/CHAIN_UPGRADE_SYSTEM_TEST.md)     |
 | Hyperlane stores and upgrade notes                          | [feature/hyperlane/README.md](../feature/hyperlane/README.md)                      |
-| Infinite Bank module (no separate store)                    | [feature/infinite-bank/IREADME.md](../feature/infinite-bank/README.md)             |
+| Infinite Bank module (no separate store)                    | [feature/infinite-bank/README.md](../feature/infinite-bank/README.md)             |
 
 
 ## When to add a new upgrade plan

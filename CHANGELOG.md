@@ -11,9 +11,9 @@
 
 ## Infinite Drive — Changelog track
 
-## v0.1.12
+## v0.2.0
 
-Follow the [migration document](docs/migrations/infinite_v0.1.10_to_v0.1.12.md) for upgrade instructions. 
+Follow the [migration document](docs/migrations/infinite_v0.1.10_to_v0.2.0.md) for upgrade instructions. 
 
 ### BREAKING CHANGES
 
@@ -38,13 +38,13 @@ Follow the [migration document](docs/migrations/infinite_v0.1.10_to_v0.1.12.md) 
 - [2](https://github.com/deep-thought-labs/infinite/pull/2) Workflows aligned with upstream.
 - Gates: build, lint, system tests, compat.
 - System tests: upgrade harness; Docker on macOS.
-- [5](https://github.com/deep-thought-labs/infinite/pull/5) Upgrade plan `infinite-v0.1.10-to-v0.1.12`; system-test baseline v0.1.10.
+- [5](https://github.com/deep-thought-labs/infinite/pull/5) Upgrade plan `infinite-v0.1.10-to-v0.2.0`; system-test baseline v0.1.10.
 - Solidity jobs: fewer flaky compiles.
 - Buf-breaking baseline: `cosmos/evm` `main`.
 - Markdownlint pin matches the lint action.
 - CodeQL: RPC logs, height casts, VM assert, Solidity helper.
 - [d56cb2f](https://github.com/deep-thought-labs/infinite/pull/5/changes/d56cb2fe90bab5f205c601672b217d04b12dae8e) CI: `paths-filter` skips heavy jobs on docs-only PRs.
-- **Coverage CI**: `test.yml` runs four `**make test-unit-cover-*`** matrix legs (root vs `tests/integration`, `infinited` vs `infinited/tests/integration`) with per-block Codecov `flags`; `make test-unit-cover` merges block profiles into `coverage.txt`. Documented in `docs/guides/development/TESTING.md` and `docs/guides/infrastructure/CI_CD.md`.
+- **Coverage CI**: `test.yml` runs four `**make test-unit-cover-`*** matrix legs (root vs `tests/integration`, `infinited` vs `infinited/tests/integration`) with per-block Codecov `flags`; `make test-unit-cover` merges block profiles into `coverage.txt`. Documented in `docs/guides/development/TESTING.md` and `docs/guides/infrastructure/CI_CD.md`.
 
 ### BUG FIXES
 

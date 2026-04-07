@@ -17,7 +17,7 @@ This folder documents [Hyperlane](https://hyperlane.xyz/) on the **Infinite Impr
 | [**OPERATIONS.md**](OPERATIONS.md) | **After the code:** Cosmos/EVM duality, pending work, relayers, ISM at a high level, links to official docs. |
 | [**README.md**](README.md) | This index. |
 
-**Technical summary (code):** `hyperlane-cosmos@v1.2.0-rc.0` in [`infinited/go.mod`](../../../infinited/go.mod); [`infinited/app.go`](../../../infinited/app.go); [`infinited/config/permissions.go`](../../../infinited/config/permissions.go); stores in [`infinited/upgrades.go`](../../../infinited/upgrades.go) — migration [`infinite-v0.1.10-to-v0.1.12`](../../migrations/infinite_v0.1.10_to_v0.1.12.md). Tests: [`infinited/tests/integration/hyperlane_test.go`](../../../infinited/tests/integration/hyperlane_test.go).
+**Technical summary (code):** `hyperlane-cosmos@v1.2.0-rc.0` in [`infinited/go.mod`](../../../infinited/go.mod); [`infinited/app.go`](../../../infinited/app.go); [`infinited/config/permissions.go`](../../../infinited/config/permissions.go); stores in [`infinited/upgrades.go`](../../../infinited/upgrades.go) — migration [`infinite-v0.1.10-to-v0.2.0`](../../migrations/infinite_v0.1.10_to_v0.2.0.md). Tests: [`infinited/tests/integration/hyperlane_test.go`](../../../infinited/tests/integration/hyperlane_test.go).
 
 ## Fork traceability and maintenance
 
