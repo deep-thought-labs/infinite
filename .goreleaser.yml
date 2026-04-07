@@ -121,9 +121,9 @@ release:
     name: infinite
   # Release notes header
   header: |
-    ## Infinite Drive {{ .Tag }}
+    ## Infinite Improbability Drive {{ .Tag }}
     
-    Release {{ .Tag }} of Infinite Drive.
+    Release {{ .Tag }} of Infinite Improbability Drive.
   # Footer for release notes
   footer: |
     ---

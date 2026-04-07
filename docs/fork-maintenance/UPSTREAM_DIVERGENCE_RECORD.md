@@ -131,6 +131,23 @@ Renombres representativos: `evmd/app.go` → `infinited/app.go`, `evmd/cmd/evmd/
 
 ---
 
+## Tags de release Git (`iid-v*`) y versión embebida
+
+**Propósito:** los tags **`v*.*.*`** de [cosmos/evm](https://github.com/cosmos/evm) pueden coexistir en el historial del fork; las **releases oficiales de Infinite Improbability Drive** usan el prefijo **`iid-v*`** (p. ej. `iid-v0.2.0`) para no chocar con upstream y para que la versión mostrada por el binario no se confunda con la de cosmos/evm.
+
+| Qué | Dónde | Notas de merge |
+|-----|--------|----------------|
+| Disparo de release y job GoReleaser | [`.github/workflows/release.yml`](../../.github/workflows/release.yml) | `on.push.tags: iid-v*`; condición `refs/tags/iid-v`. **No** sustituir por el workflow de tags `v*.*.*` de upstream. |
+| Versión en builds de CI | [`.github/workflows/build.yml`](../../.github/workflows/build.yml) | Paso que calcula `VERSION`: `git describe --tags --always --match 'iid-v*'`. Si upstream modifica ese job, **reconciliar** conservando `--match`. |
+| Versión local / `make build` | [Makefile](../../Makefile) | `IID_VERSION_TAG_MATCH` (defecto `iid-v*`) + `git describe … --match "$(IID_VERSION_TAG_MATCH)"`. No eliminar al portar targets desde upstream. |
+| Notas del release en GitHub | [`.goreleaser.yml`](../../.goreleaser.yml) | Cabecera de notas con el nombre completo **Infinite Improbability Drive**; el cuerpo usa `{{ .Tag }}` (será `iid-v…`). |
+| Guía de mantenedores | [guides/infrastructure/RELEASES.md](../guides/infrastructure/RELEASES.md), [CI_CD.md](../guides/infrastructure/CI_CD.md), [BUILDING.md](../guides/development/BUILDING.md) | Procedimiento de tag y troubleshooting alineados con **`iid-v*`**. |
+| Changelog del fork | [CHANGELOG.md](../../CHANGELOG.md) | Sección de línea **0.2.x** titulada **`iid-v0.2.0`**; nota introductoria del track sobre el prefijo. |
+
+**Independiente del anterior:** el baseline de **system tests** de upgrade (`SYSTEMTEST_LEGACY_TAG`, p. ej. `v0.1.10`) sigue siendo el tag del **artefacto legacy** publicado en GitHub del fork; no tiene por qué usar el prefijo `iid-` hasta que el equipo migre ese release. Ver [PLAYBOOK — A.4](PLAYBOOK.md#a4-binario-nombre-evmd-y-tag-legacy-en-pruebas-de-sistema).
+
+---
+
 ## Archivos añadidos (no presentes en upstream)
 
 ### Documentación
@@ -148,7 +165,9 @@ Renombres representativos: `evmd/app.go` → `infinited/app.go`, `evmd/cmd/evmd/
 
 - `assets/pre-mainet-genesis.json`, `.goreleaser.yml`, `.goreleaser.linux-only.yml`, `.github/workflows/release.yml`, `local_node.sh`
 - [`.markdownlint.yml`](../../.markdownlint.yml) — calidad de documentación: **MD013** con `code_block_line_length: 200` en bloques de código (política del fork frente a líneas largas en ejemplos shell). Al fusionar con upstream, conservar este valor salvo acuerdo explícito; ver [MERGE_STRATEGIES.md — §4.6](MERGE_STRATEGIES.md#46-markdownlint).
-- [Makefile](../../Makefile) — **`markdownlint_cli2_version`**: misma versión de `markdownlint-cli2` que empaqueta **`markdownlint-cli2-action@v16`** en CI ([`lint.yml`](../../.github/workflows/lint.yml)); **`make lint-md`** / **`make lint`** para reproducir localmente (Node `npx`). Exclusiones de `.md` bajo `tests/systemtests/Counter`, `tests/evm-tools-compatibility` y `**/node_modules/**` (deps vendorizadas por los harnesses JS): [`.markdownlint-cli2.jsonc`](../../.markdownlint-cli2.jsonc). Si se actualiza la etiqueta de la acción en GitHub, actualizar la variable en el mismo ciclo; ver [MERGE_STRATEGIES.md — §4.6](MERGE_STRATEGIES.md#46-markdownlint). **`SYSTEMTEST_LEGACY_TAG`** y `build-v05`: baseline de `make test-system` con descarga verificada (checksums) desde artefactos Linux del release en GitHub del fork; sin compilación local del tag; `test-system-docker` para hosts macOS; ver [bitácora — System tests y upgrades](logs/2026-03-21-merge-upstream-main.md#system-tests-y-upgrades-on-chain-fork).
+- [Makefile](../../Makefile) — **`markdownlint_cli2_version`**: misma versión de `markdownlint-cli2` que empaqueta **`markdownlint-cli2-action@v16`** en CI ([`lint.yml`](../../.github/workflows/lint.yml)); **`make lint-md`** / **`make lint`** para reproducir localmente (Node `npx`). Exclusiones de `.md` bajo `tests/systemtests/Counter`, `tests/evm-tools-compatibility` y `**/node_modules/**` (deps vendorizadas por los harnesses JS): [`.markdownlint-cli2.jsonc`](../../.markdownlint-cli2.jsonc). Si se actualiza la etiqueta de la acción en GitHub, actualizar la variable en el mismo ciclo; ver [MERGE_STRATEGIES.md — §4.6](MERGE_STRATEGIES.md#46-markdownlint).
+- [Makefile](../../Makefile) — **`IID_VERSION_TAG_MATCH`** y `git describe --match` para tags **`iid-v*`**: ver [§ Tags de release Git (`iid-v*`)](#tags-de-release-git-iid-v-y-versión-embebida).
+- [Makefile](../../Makefile) — **`SYSTEMTEST_LEGACY_TAG`** y `build-v05`: baseline de `make test-system` con descarga verificada (checksums) desde artefactos Linux del release en GitHub del fork; sin compilación local del tag; `test-system-docker` para hosts macOS; ver [bitácora — System tests y upgrades](logs/2026-03-21-merge-upstream-main.md#system-tests-y-upgrades-on-chain-fork).
 
 ### Estabilidad CI (harnesses JS)
 
