@@ -5,11 +5,12 @@
 #
 # This file is part of the Infinite Drive blockchain tooling.
 #
-# Purpose: Quick validation script to verify all customizations are preserved
-#          AND that upstream technical compliance is maintained.
-#          Use this during merges to ensure:
-#          1. Identity customizations are preserved
-#          2. Technical aspects match upstream (go.mod, go.sum, package paths)
+# Purpose: Safety-net validation for Infinite Drive: chain identity, operational
+#          scripts, and documented fork product code (Infinite Bank x/bank,
+#          Hyperlane core+warp wiring). Also warns on go.mod/go.sum drift vs
+#          upstream where git remote exists.
+#          Use during merges and before merge PRs to catch accidental removal
+#          of fork-specific implementations.
 #
 # Usage: ./scripts/validate_customizations.sh
 #
@@ -51,7 +52,8 @@ check_absent() {
 echo "🔍 Validating Infinite Drive customizations..."
 echo "=============================================="
 echo ""
-echo "⚠️  RULE: Only identity customizations allowed. Technical aspects must match upstream."
+echo "⚠️  Scope: chain identity + genesis/tooling + fork product modules (see docs/feature/)."
+echo "   Upstream drift (go.mod/go.sum) is warned when upstream/main is available."
 echo ""
 
 # Token configuration
@@ -78,6 +80,21 @@ check "testutil/constants/constants.go" "421018" "Chain ID in constants"
 # Bech32 prefixes
 echo "Bech32 prefixes..."
 check "infinited/config/bech32.go" 'Bech32Prefix = "infinite"' "Bech32 prefix"
+
+# Fork product extensions (canonical docs: docs/feature/infinite-bank/, docs/feature/hyperlane/)
+echo "Fork product — Infinite Bank (github.com/cosmos/evm/x/bank)..."
+check "x/bank/types/keys.go" 'ModuleName = "infinitebank"' "EVM x/bank extension module name"
+check "infinited/app.go" '"github.com/cosmos/evm/x/bank"' "app imports EVM x/bank extension"
+check "infinited/app.go" 'evmbanktypes.ModuleName' "app wires EVM x/bank module name (ordering)"
+check "proto/cosmos/evm/bank/v1/tx.proto" 'MsgSetDenomMetadata' "bank extension Msg proto"
+
+echo "Fork product — Hyperlane (hyperlane-cosmos)..."
+check "infinited/go.mod" 'github.com/bcp-innovations/hyperlane-cosmos' "Hyperlane dependency in infinited/go.mod"
+check "infinited/app.go" 'hyperlanecore.NewAppModule' "Hyperlane core AppModule registered"
+check "infinited/app.go" 'hyperlanewarp.NewAppModule' "Hyperlane warp AppModule registered"
+check "infinited/app.go" 'app.HyperlaneKeeper' "Hyperlane keeper field on App"
+check "infinited/upgrades.go" 'hyperlanetypes.ModuleName' "upgrade plan includes Hyperlane store key"
+check "infinited/upgrades.go" 'warptypes.ModuleName' "upgrade plan includes Warp store key"
 
 # ⚠️ CRITICAL: Verify upstream compliance (package paths)
 echo "⚠️  Upstream Compliance - Package Paths..."
@@ -169,32 +186,38 @@ echo "Build configuration..."
 check ".goreleaser.yml" "infinite" "GoReleaser config"
 check "Makefile" "infinited" "Makefile binary name"
 
-# ⚠️ CRITICAL: Verify go.mod/go.sum match upstream (except module name)
+# Optional: compare go.mod/go.sum to upstream/main (informational; fork graph often legitimately differs)
 echo ""
-echo "⚠️  Upstream Compliance - Dependencies..."
+echo "ℹ️  Upstream comparison (go.mod / go.sum vs upstream/main)..."
 if command -v git >/dev/null 2>&1; then
     if git show-ref --verify --quiet "refs/remotes/upstream/main" 2>/dev/null; then
-        # Check if go.mod differs significantly from upstream (excluding module name)
+        # Check if go.mod differs from upstream (excluding module name and local replace)
+        DEPS_NOTICE=0
         GO_MOD_DIFF=$(git diff upstream/main go.mod 2>/dev/null | grep -v "^module" | grep -v "^+++" | grep -v "^---" | grep -v "^@" | grep -v "^replace.*github.com/cosmos/evm => ./" | grep -v "^$" || true)
         if [ -n "$GO_MOD_DIFF" ]; then
-            echo "⚠️  Warning: go.mod differs from upstream (excluding module name and replace directive)"
-            echo "   Review differences: git diff upstream/main go.mod"
-            echo "   Expected: Only module name and replace directive should differ"
+            echo "⚠️  Notice: go.mod is not identical to upstream (after ignoring module line and evm replace)."
+            echo "   This is often expected: fork-only deps (e.g. infinited/Hyperlane), go mod tidy, or pruned indirects."
+            echo "   Spot-check merges: git diff upstream/main go.mod | head"
+            DEPS_NOTICE=1
         else
-            echo "✅ go.mod matches upstream (except module name and replace directive)"
+            echo "✅ go.mod aligns with upstream for this coarse check (module + replace filtered)"
         fi
         
         # Check go.sum
         GO_SUM_DIFF=$(git diff upstream/main go.sum 2>/dev/null | head -20 || true)
         if [ -n "$GO_SUM_DIFF" ]; then
-            echo "⚠️  Warning: go.sum differs from upstream"
-            echo "   This may be normal if dependencies were updated. Verify with: git diff upstream/main go.sum"
+            echo "⚠️  Notice: go.sum differs from upstream."
+            echo "   Normal when go.mod differs or after tidy; spot-check: git diff upstream/main go.sum | head"
+            DEPS_NOTICE=1
         else
-            echo "✅ go.sum matches upstream"
+            echo "✅ go.sum matches upstream for this check"
+        fi
+        if [ "$DEPS_NOTICE" -eq 1 ]; then
+            echo "   Tip: use '| head' on those diffs for a short preview, or run the same command without '| head' for the full output."
         fi
     else
         echo "⚠️  Warning: upstream/main not found. Cannot verify go.mod/go.sum compliance"
-        echo "   Run: git fetch upstream"
+        echo "   Run: git fetch upstream (remote must point to https://github.com/cosmos/evm.git — docs/fork-maintenance/REFERENCE.md#remoto-git-upstream)"
     fi
 else
     echo "⚠️  Warning: git not found. Cannot verify go.mod/go.sum compliance"
@@ -203,14 +226,13 @@ fi
 echo ""
 echo "=============================================="
 if [ $FAILED -eq 0 ]; then
-    echo "✅ All customizations validated"
-    echo "✅ Upstream compliance verified"
+    echo "✅ Identity, tooling, and fork product wiring checks passed"
+    echo "✅ Package paths OK (no deep-thought-labs/infinite in module paths)"
     exit 0
 else
     echo "❌ Validation failed - review the errors above"
     echo ""
-    echo "Remember: Only identity customizations are allowed."
-    echo "All technical aspects must match upstream."
+    echo "If you removed a fork feature on purpose, update docs/feature/ and this script."
     exit 1
 fi
 

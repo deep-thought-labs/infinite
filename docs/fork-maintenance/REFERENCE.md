@@ -1,5 +1,35 @@
 # Referencia: diffs y listados frente a upstream
 
+## Remoto Git `upstream`
+
+Origen del código de referencia: [cosmos/evm](https://github.com/cosmos/evm) — URL del remoto: `https://github.com/cosmos/evm.git`.
+
+Varios scripts y comprobaciones usan la ref `**upstream/main**`. El remoto debe apuntar al **origen upstream**, no al fork del equipo.
+
+**Añadir** (si aún no existe):
+
+```bash
+git remote add upstream https://github.com/cosmos/evm.git
+git fetch upstream
+```
+
+**Si ya existe `upstream` pero con otra URL**, corregir:
+
+```bash
+git remote set-url upstream https://github.com/cosmos/evm.git
+git fetch upstream
+```
+
+**Comprobar:**
+
+```bash
+git remote -v
+# upstream  https://github.com/cosmos/evm.git (fetch)
+# upstream  https://github.com/cosmos/evm.git (push)
+```
+
+`origin` suele ser el fork (p. ej. `deep-thought-labs/infinite`); `upstream` es **solo** cosmos/evm.
+
 ## Script `list_all_customizations.sh`
 
 Lista archivos que difieren entre `HEAD` y una referencia Git (por defecto `upstream/main`).
@@ -26,7 +56,7 @@ Salida típica:
 
 ## Estadísticas “esperadas” (snapshot histórico)
 
-Cifras del tipo “~122 archivos”, “~141 diferencias”, etc., son **instantáneas antiguas** de comparaciones `migration` vs `main` y **pueden estar obsoletas**. No usarlas como verdad absoluta: regenerar siempre con:
+Cifras del tipo “~~122 archivos”, “~~141 diferencias”, etc., son **instantáneas antiguas** de comparaciones `migration` vs `main` y **pueden estar obsoletas**. No usarlas como verdad absoluta: regenerar siempre con:
 
 ```bash
 ./scripts/list_all_customizations.sh upstream/main
@@ -61,9 +91,9 @@ grep -R 'github.com/cosmos/evm/evmd' --include='*.go' . --exclude-dir=.git
 
 ### Organización esperada del árbol
 
-- Binario y main package: carpeta **`infinited/`**, no una duplicada **`evmd/`** en la raíz del mismo módulo.
-- Tras ediciones amplias: **`go mod tidy`** desde la raíz y, si existe, desde submódulos bajo **`tests/`** que tengan su propio `go.mod`.
+- Binario y main package: carpeta `**infinited/**`, no una duplicada `**evmd/**` en la raíz del mismo módulo.
+- Tras ediciones amplias: `**go mod tidy**` desde la raíz y, si existe, desde submódulos bajo `**tests/**` que tengan su propio `go.mod`.
 
 ### Dependencias Go vs upstream
 
-Tras cerrar el merge, es normal que `go.mod` / `go.sum` difieran de upstream *más allá* del nombre del submódulo `infinited`; [validate_customizations.sh](../../scripts/validate_customizations.sh) puede avisar por ello. Conviene **documentar** en la bitácora si hubo cambios de `replace`, exclusiones o líneas solo-fork.
+Tras cerrar el merge, es normal que `go.mod` / `go.sum` difieran de upstream *más allá* del nombre del submódulo `infinited` (deps solo-fork, `go mod tidy`, indirectas podadas). [validate_customizations.sh](../../scripts/validate_customizations.sh) muestra **avisos informativos** al comparar con `upstream/main`, sin fallar el script por ello. Conviene **documentar** en la bitácora si hubo cambios de `replace`, exclusiones o líneas solo-fork.

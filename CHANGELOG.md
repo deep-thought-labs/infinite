@@ -22,6 +22,8 @@
 ### IMPROVEMENTS
 
 - `local_node.sh`: PATH/GOPATH for installed binary.
+- `validate_customizations.sh`: Infinite Bank + Hyperlane wiring checks; softer informational comparison vs `upstream/main` for `go.mod`/`go.sum`; tip to use `git diff` with or without `| head`.
+- Fork maintenance docs: add `upstream` remote instructions (cosmos/evm); align REFERENCE, README, SCRIPTS, VERIFICATION with validation behavior.
 
 ### FEATURES
 

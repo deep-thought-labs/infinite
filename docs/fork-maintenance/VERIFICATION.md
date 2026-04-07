@@ -2,13 +2,15 @@
 
 ## Script automatizado (recomendado)
 
+Además de **identidad** y **scripts de genesis**, el script valida el cableado documentado de **Infinite Bank** (`x/bank`) y **Hyperlane** en `infinited/`. Detalle de comprobaciones: [SCRIPTS.md — `validate_customizations.sh`](../guides/development/SCRIPTS.md#2-validate_customizationssh).
+
 ```bash
 ./scripts/validate_customizations.sh
 ```
 
-Comprueba valores críticos de identidad y ausencia de paths incorrectos. No depende del nombre de la rama actual.
+Comprueba valores críticos de identidad, extensiones de producto del fork y ausencia de paths incorrectos. No depende del nombre de la rama actual.
 
-Tras un merge, si el script avisa por `go.mod` / `go.sum` respecto a upstream, **revisar** que sea intencional (fork + `infinited`) y no un conflicto mal cerrado.
+Tras un merge, si el script muestra **avisos** sobre `go.mod` / `go.sum` frente a `upstream/main`, suele ser **normal** en un fork (deps propias, `go mod tidy`); **revisar** solo si sospechas conflicto mal cerrado. Detalle: [REFERENCE.md — Dependencias Go vs upstream](REFERENCE.md#dependencias-go-vs-upstream). Si el aviso es *“upstream/main not found”*, falta el remoto o el fetch: [REFERENCE.md — Remoto `upstream`](REFERENCE.md#remoto-git-upstream).
 
 ## Marcadores de conflicto (obligatorio tras resolver merge)
 

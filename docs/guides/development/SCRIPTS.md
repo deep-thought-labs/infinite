@@ -80,21 +80,23 @@ Git installation: ✅ Installed (version 2.x)
 
 ### 2. `validate_customizations.sh`
 
-**Purpose**: Validate that Infinite Drive customizations are correctly implemented in the code.
+**Purpose**: **Safety net** for fork-specific code: chain identity, genesis/tooling scripts, and **documented product extensions** wired into `infinited` (see [feature/infinite-bank/INTEGRATION.md](../../feature/infinite-bank/INTEGRATION.md), [feature/hyperlane/INTEGRATION.md](../../feature/hyperlane/INTEGRATION.md)). Also blocks wrong Go module paths. When `upstream/main` exists, it prints **informational notices** if `go.mod`/`go.sum` differ from upstream (expected on a fork after tidy or fork-only deps; does not fail the script).
 
 **What it validates**:
 
 - ✅ Token configuration (denoms, chain ID)
-- ✅ Custom genesis functions
-- ✅ Bech32 prefixes
-- ✅ Upstream compliance (go.mod, package paths)
+- ✅ Custom genesis functions and Bech32 prefixes
+- ✅ **Infinite Bank** (`x/bank`): module name `infinitebank`, `app.go` import/wiring, `MsgSetDenomMetadata` proto
+- ✅ **Hyperlane**: `hyperlane-cosmos` in `infinited/go.mod`, core+warp `AppModule` and keeper on `App`, store keys in `upgrades.go`
+- ✅ Genesis scripts, `genesis-configs`, NOTICE, GoReleaser, binary `infinited`
+- ✅ No `deep-thought-labs/infinite` import paths; root/submodule `module` lines
 
 **When to use**:
 
 - **After making code changes**
 - **Before committing**
-- **During merges with upstream**
-- To verify customizations weren't lost
+- **During merges with upstream** (run after resolving conflicts in `app.go`, `go.mod`, `x/bank/`, or Hyperlane paths)
+- To verify customizations and fork product wiring were not dropped
 
 **Usage**:
 
