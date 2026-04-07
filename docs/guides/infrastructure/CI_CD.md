@@ -113,7 +113,7 @@ All workflows under [`.github/workflows/`](../../../.github/workflows/):
 | [build.yml](../../../.github/workflows/build.yml) | PR with `paths:`; push; `workflow_dispatch` | High | **Done** — internal filter on **push**; dispatch always builds. |
 | [proto.yml](../../../.github/workflows/proto.yml) | PR with `paths: proto/**` only | Medium | **No** — workflow does not run on docs-only PRs. Inner `get-diff` is optional cleanup only. |
 | [tests-compatibility-*.yml](../../../.github/workflows/) (Foundry, Hardhat, Web3.js, Viem, Uniswap v3) | PR/push `main`/`develop` with `paths:` per harness | High (Go + Foundry + Node) | **Low priority** — already scoped by directory/scripts in `on: paths` (verify paths are correct relative to repo root; some entries use `../../scripts/…`, which may not match). |
-| [release.yml](../../../.github/workflows/release.yml) | Tags `v*.*.*`, `workflow_dispatch` | Release build | **No** — not tied to arbitrary PR doc edits. |
+| [release.yml](../../../.github/workflows/release.yml) | Tags `iid-v*`, `workflow_dispatch` | Release build | **No** — not tied to arbitrary PR doc edits. |
 | [dependencies.yml](../../../.github/workflows/dependencies.yml) | `workflow_dispatch`, schedule | Medium | **No** — not triggered by normal PRs. |
 | [bsr-push.yml](../../../.github/workflows/bsr-push.yml), [trigger-docs-update.yml](../../../.github/workflows/trigger-docs-update.yml) | Manual / disabled | N/A | **No** — disabled by fork policy. |
 | [stale.yml](../../../.github/workflows/stale.yml) | Schedule | Low | **No**. |
@@ -164,7 +164,7 @@ If you use GoReleaser Pro (paid version), you need:
 
 ## Release automation
 
-Pushing a semantic tag `v*.*.*` triggers `.github/workflows/release.yml` (also supports `workflow_dispatch`). Step-by-step for maintainers (prepare code, tag, push, verify assets): **[RELEASES.md](RELEASES.md)**.
+Pushing an official release tag `iid-v*` (Infinite Improbability Drive; e.g. `iid-v1.2.3`) triggers `.github/workflows/release.yml` (also supports `workflow_dispatch`). Step-by-step for maintainers (prepare code, tag, push, verify assets): **[RELEASES.md](RELEASES.md)**.
 
 ---
 
@@ -203,7 +203,7 @@ Logs update in real time while the workflow runs. You can see:
 1. **Verify tag format**:
 
    ```bash
-   # Must be: vX.Y.Z (e.g., v1.0.0)
+   # Must be: iid-vX.Y.Z (e.g., iid-v1.0.0)
    git tag -l
    ```
 

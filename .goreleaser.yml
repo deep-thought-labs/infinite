@@ -11,7 +11,7 @@
 # Usage:
 #   - make release-dry-run        # Test build locally (Linux only)
 #   - make release                # Create official release (requires .release-env)
-#   - GitHub Actions triggers automatically on version tags (v*.*.*)
+#   - GitHub Actions triggers automatically on version tags (iid-v*, Infinite Improbability Drive)
 #
 # Important Notes:
 #   - Requires CGO_ENABLED=1 for cryptographic functions (secp256k1)

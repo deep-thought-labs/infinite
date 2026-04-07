@@ -9,7 +9,7 @@
 #          GoReleaser (.goreleaser.yml): Linux amd64 + Linux arm64 only
 #
 # Triggers:
-#   - Automatic: Push of version tags matching v*.*.* (e.g., v1.0.0, v2.3.1)
+#   - Automatic: Push of Infinite Improbability Drive release tags matching iid-v* (e.g., iid-v1.2.3)
 #   - Manual: Can be triggered from GitHub Actions UI (workflow_dispatch)
 #
 # Environment:
@@ -29,7 +29,7 @@ name: Release
 on:
   push:
     tags:
-      - 'v*.*.*'  # Triggers on semantic version tags like v1.0.0, v1.2.3, etc.
+      - 'iid-v*'  # Official fork tags only (not upstream v0.x tags)
   workflow_dispatch:  # Allows manual triggering from GitHub UI
 
 permissions:
@@ -74,8 +74,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           TMVERSION: ${{ steps.cometbft-version.outputs.TMVERSION }}
-        # Only run on tags, not on manual dispatch for testing
-        if: startsWith(github.ref, 'refs/tags/v')
+        # Only run on iid-v* release tags, not on manual dispatch for testing
+        if: startsWith(github.ref, 'refs/tags/iid-v')
 
       - name: Run GoReleaser (Snapshot/Dry-run)
         uses: goreleaser/goreleaser-action@v5

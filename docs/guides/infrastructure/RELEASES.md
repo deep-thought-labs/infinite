@@ -8,7 +8,7 @@ Companion guide: **[CI_CD.md](CI_CD.md)**.
 
 | Use **this file (`RELEASES.md`)** when you need to… | Use **[`CI_CD.md`](CI_CD.md)** when you need to… |
 |-----------------------------------------------------|---------------------------------------------------|
-| Follow the **maintainer procedure**: prepare the branch, create and push a **version tag** (`v*.*.*`), watch the release job, **verify** binaries and notes on GitHub | Change **repository Settings** (Actions **workflow permissions**, **Secrets**), monitor the **Actions** tab in general, or fix **platform-level** workflow failures (permissions, token, runner) |
+| Follow the **maintainer procedure**: prepare the branch, create and push a **version tag** (`iid-v*`, e.g. `iid-v1.2.3`), watch the release job, **verify** binaries and notes on GitHub | Change **repository Settings** (Actions **workflow permissions**, **Secrets**), monitor the **Actions** tab in general, or fix **platform-level** workflow failures (permissions, token, runner) |
 
 **Rule of thumb**: **`RELEASES.md`** = *what to do in git and on the Releases page to ship a version*. **`CI_CD.md`** = *how the repo is wired for Actions and how to fix the machinery*.
 
@@ -105,40 +105,40 @@ make test-all
 
 #### Version Format
 
-Use [Semantic Versioning](https://semver.org/): `vMAJOR.MINOR.PATCH`
+Official Infinite Improbability Drive release tags use the prefix **`iid-`** so they do not collide with upstream `v*` tags. After the prefix, use [Semantic Versioning](https://semver.org/) for **`MAJOR.MINOR.PATCH`**: `iid-vMAJOR.MINOR.PATCH` (e.g. `iid-v1.2.3`).
 
-- **MAJOR**: Incompatible changes (v1.0.0 → v2.0.0)
-- **MINOR**: Compatible new features (v1.0.0 → v1.1.0)
-- **PATCH**: Bug fixes (v1.0.0 → v1.0.1)
+- **MAJOR**: Incompatible changes (1.0.0 → 2.0.0)
+- **MINOR**: Compatible new features (1.0.0 → 1.1.0)
+- **PATCH**: Bug fixes (1.0.0 → 1.0.1)
 
 #### Create the Tag
 
 ```bash
-# Create local tag (format: vX.Y.Z)
-git tag v1.0.0
+# Create local tag (format: iid-vX.Y.Z)
+git tag iid-v1.0.0
 
 # Verify the tag
 git tag -l
 
 # View tag information
-git show v1.0.0
+git show iid-v1.0.0
 ```
 
 #### Tag with Message (Recommended)
 
 ```bash
 # Create tag with descriptive message
-git tag -a v1.0.0 -m "Release v1.0.0: Initial stable release"
+git tag -a iid-v1.0.0 -m "Release iid-v1.0.0: Initial stable release"
 
 # View the tag with message
-git show v1.0.0
+git show iid-v1.0.0
 ```
 
 ### Step 3: Push Tag to GitHub
 
 ```bash
 # Push the tag (this activates GitHub Actions)
-git push origin v1.0.0
+git push origin iid-v1.0.0
 
 # Or push all tags
 git push --tags
@@ -167,10 +167,10 @@ git push --tags
 Once GitHub Actions completes:
 
 1. Go to **"Releases"** on GitHub (right side of repository)
-2. You should see your new version (e.g., "v1.0.0")
+2. You should see your new version (e.g., "iid-v1.0.0")
 3. Binaries will be available for download
 
-**Location**: `https://github.com/your-user/infinite/releases/tag/v1.0.0`
+**Location**: `https://github.com/your-user/infinite/releases/tag/iid-v1.0.0`
 
 ## 🧪 Release Testing (Dry Run)
 
@@ -272,7 +272,7 @@ docker logs <container-id>
 
    ```bash
    # Download and verify
-   wget https://github.com/your-user/infinite/releases/download/v1.0.0/infinited-linux-amd64
+   wget https://github.com/your-user/infinite/releases/download/iid-v1.0.0/infinited-linux-amd64
    chmod +x infinited-linux-amd64
    ./infinited-linux-amd64 version
    ```
@@ -287,7 +287,7 @@ git tag -l
 git ls-remote --tags origin
 
 # View information of a specific tag
-git show v1.0.0
+git show iid-v1.0.0
 ```
 
 ## 🔄 Update an Existing Release
@@ -297,8 +297,8 @@ git show v1.0.0
 1. **Create a new release** with incremented version:
 
    ```bash
-   git tag v1.0.1  # Patch release
-   git push origin v1.0.1
+   git tag iid-v1.0.1  # Patch release
+   git push origin iid-v1.0.1
    ```
 
 2. **If you need to fix the same release**:
@@ -336,7 +336,7 @@ git show v1.0.0
 
 ### Tag Already Exists
 
-**Problem**: `git tag v1.0.0` says the tag already exists
+**Problem**: `git tag iid-v1.0.0` says the tag already exists
 
 **Solution**:
 
@@ -345,13 +345,13 @@ git show v1.0.0
 git tag -l
 
 # Delete local tag (if necessary)
-git tag -d v1.0.0
+git tag -d iid-v1.0.0
 
 # Delete remote tag (if necessary)
-git push origin --delete v1.0.0
+git push origin --delete iid-v1.0.0
 
 # Create new tag
-git tag v1.0.0
+git tag iid-v1.0.0
 ```
 
 ### Release Not Created
@@ -396,6 +396,6 @@ git tag v1.0.0
 |--------|---------|------|
 | Local test (Linux) | `make release-dry-run-linux` | 10-15 min |
 | Local test (all) | `make release-dry-run` | 20-30 min |
-| Create tag | `git tag v1.0.0` | <1 min |
-| Push tag | `git push origin v1.0.0` | <1 min |
+| Create tag | `git tag iid-v1.0.0` | <1 min |
+| Push tag | `git push origin iid-v1.0.0` | <1 min |
 | Complete release | Tag → GitHub Actions | 30-45 min |
