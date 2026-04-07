@@ -2,14 +2,18 @@
 
 This guide is the **canonical reference** for the end-to-end **software-upgrade** system test, its **genesis customization** path, and the **maintenance** expectations when Infinite Drive’s upgrade story changes. It complements (and does not replace) [GENESIS.md](../configuration/GENESIS.md) and [SCRIPTS.md](../development/SCRIPTS.md).
 
+### Naming: `infinited` vs `evmd` paths in this harness
+
+Infinite Drive’s binary is **`infinited`**. The root **`Makefile`** still copies the current build to **`tests/systemtests/binaries/evmd`** and places the downloaded legacy release into **`tests/systemtests/binaries/v0.5/evmd`** so **`cosmossdk.io/systemtests`** can keep using **`--binary evmd`** (upstream naming). Those paths are **infinited** executables; only the **filename** is `evmd` for driver compatibility.
+
 ---
 
 ## Scope and intent
 
 | Aspect | Detail |
-|--------|--------|
+| --- | --- |
 | **Test entry** | `TestChainUpgrade` in `tests/systemtests` (implementation: `tests/systemtests/chainupgrade/v0_1_10_to_v0_1_12.go`) |
-| **What it proves** | A **legacy** `evmd` binary can run until a planned height; an on-chain `MsgSoftwareUpgrade` proposal passes; the node restarts with the **current branch** binary and basic transactions still work. |
+| **What it proves** | A **legacy** `infinited` binary (see naming note above) can run until a planned height; an on-chain `MsgSoftwareUpgrade` proposal passes; the node restarts with the **current branch** binary and basic transactions still work. |
 | **What it is not** | A recipe for production mainnet upgrades, nor a substitute for [migrations guides](../../migrations/) for operators. |
 
 The harness is **large by nature**: it stitches together release artifacts, shell genesis customization, `jq`, per-validator `genesis gentx` / `collect-gentxs`, governance timing, and SDK systemtest keyring layout. Treat this file as the place to record **why** each step exists and **what to revisit** when the next upgrade path differs (e.g. both binaries share the same denom/gentx story).
@@ -17,8 +21,8 @@ The harness is **large by nature**: it stitches together release artifacts, shel
 ### Legacy binary vs current binary (scope of changes)
 
 | Expectation | Detail |
-|-------------|--------|
-| **Legacy `evmd`** | Treated as an **external release artifact** (default: downloaded from GitHub Releases into `tests/systemtests/binaries/v0.5/evmd`). This test **does not** assume you **edit or rebuild** the legacy binary from this repo’s tree **for the sake of the harness**. You may **pin a different tag** in the Makefile when the migrated-from version changes; that is still “use a published binary,” not “patch legacy source inside this test.” |
+| --- | --- |
+| **Legacy `infinited`** | Treated as an **external release artifact** (default: downloaded from GitHub Releases into `tests/systemtests/binaries/v0.5/evmd` — see [naming note](#naming-infinited-vs-evmd-paths-in-this-harness)). This test **does not** assume you **edit or rebuild** the legacy binary from this repo’s tree **for the sake of the harness**. You may **pin a different tag** in the Makefile when the migrated-from version changes; that is still “use a published binary,” not “patch legacy source inside this test.” |
 | **Goal** | A **successful on-chain software upgrade**: the legacy node runs until the scheduled height / halt behavior, then the process continues with the **current-branch** binary (built from the working tree) and a smoke transaction proves the chain is live. |
 | **What may change in-repo** | Genesis scripts, systemtest orchestration (`v0_1_10_to_v0_1_12.go`), and the **current** application (`infinited/…`) so that the upgrade scenario is **reachable** and CI-stable — **not** a standing requirement to fork-patch the legacy executable’s source for every CI run. |
 
@@ -30,8 +34,8 @@ The application-side upgrade wiring described [below](#application-upgrade-names
 
 Today the flow assumes:
 
-1. **Legacy binary** — downloaded from GitHub Releases (default tag `v0.1.10`, repo `deep-thought-labs/infinite`) into `tests/systemtests/binaries/v0.5/evmd`. No `git checkout` of the old tag.
-2. **Current binary** — built from the working tree and installed as `tests/systemtests/binaries/evmd` for validation and for the post-upgrade node.
+1. **Legacy binary** — `infinited` from GitHub Releases (default tag `v0.1.10`, repo `deep-thought-labs/infinite`), installed at `tests/systemtests/binaries/v0.5/evmd` (harness filename). No `git checkout` of the old tag.
+2. **Current binary** — `infinited` built from the working tree, copied to `tests/systemtests/binaries/evmd` for the post-upgrade node and systemtest driver.
 
 **Implications for maintainers:**
 
@@ -49,7 +53,7 @@ Stop chain → point SUT at legacy binary → SetupChain (testnet init-files)
     → read self-delegation amounts from embedded gentx
     → jq: clear app_state.genutil.gen_txs
     → copy genesis to all nodes
-    → per-node: evmd genesis gentx (legacy binary, amounts in drop)
+    → per-node: infinited genesis gentx (legacy binary path `…/v0.5/evmd`, amounts in drop)
     → collect-gentxs on node0 → copy final genesis to all nodes
     → merge validator keyrings into testnet/keyring-test (CLI votes)
     → StartChain with halt-height → deposit/vote → wait PASSED → **await upgrade height − 1 via HTTP GET /status** (`awaitCometBlockHeightHTTP`, not `AwaitBlockHeight` nor an extra RPC websocket)
@@ -61,7 +65,7 @@ Stop chain → point SUT at legacy binary → SetupChain (testnet init-files)
 ## Files and configuration
 
 | Artifact | Role |
-|----------|------|
+| --- | --- |
 | `scripts/genesis-configs/upgrade-test.json` | Harness-only economics and IDs: `local-4221`, EVM `4221`, **short** gov periods, deposits in **`drop`**. **Constraint:** `expedited_voting_period` must be **strictly less** than `voting_period` (SDK). |
 | `scripts/customize_genesis.sh` | Applies profile; for `upgrade-test`, uses `--skip-accounts` (module/vesting setup scripts only accept mainnet/testnet/creative). Sets staking/mint/bank alignment to **`drop`** and **merges duplicate denoms per account** so `genesis gentx` does not hit “duplicate denomination drop”. |
 | `tests/systemtests/chainupgrade/v0_1_10_to_v0_1_12.go` | Orchestrates gentx regeneration, keyring merge, proposal JSON, fees/deposit, **`awaitGovProposalStatus`** (tally is time-based, not “last vote”), halt height, binary swap, smoke test. |
@@ -84,7 +88,7 @@ To tune **gov timing** or deposits for CI stability, prefer **`upgrade-test.json
 
 ## Application: upgrade names and handlers
 
-`TestChainUpgrade` must work with a **downloaded legacy binary** (release artifact) and a **current-branch binary** (built from this repo). We do **not** patch/rebuild the legacy artifact just to satisfy the harness.
+`TestChainUpgrade` must work with a **downloaded legacy `infinited`** (release artifact) and a **current-branch `infinited`** (built from this repo). We do **not** patch/rebuild the legacy artifact just to satisfy the harness.
 
 **Single plan name (fork policy):** governance proposals on Infinite Drive and `TestChainUpgrade` use the **same** on-chain plan string, **`infinite-v0.1.10-to-v0.1.12`**, registered as **`UpgradeName`** in `infinited/upgrades.go`. CI therefore exercises the same handler path operators would use after voting that plan.
 
@@ -96,9 +100,9 @@ To tune **gov timing** or deposits for CI stability, prefer **`upgrade-test.json
 ### Files
 
 | Piece | Behavior |
-|-------|----------|
+| --- | --- |
 | **`tests/systemtests/chainupgrade/v0_1_10_to_v0_1_12.go`** | Plan name **`infinite-v0.1.10-to-v0.1.12`** (must match **`UpgradeName`**). |
-| **`infinited/upgrades.go`** | Registers **`SetUpgradeHandler`** and **`UpgradeStoreLoader`** only for **`UpgradeName`**. **`StoreUpgrades.Added`:** `hyperlane`, `warp` (Hyperlane). **Infinite Bank (`infinitebank`)** has no separate KV store here — see [migrations/infinite_v0.1.10_to_v0.1.12.md](../../migrations/infinite_v0.1.10_to_v0.1.12.md). |
+| **`infinited/upgrades.go`** | Registers **`SetUpgradeHandler`** and **`UpgradeStoreLoader`** only for **`UpgradeName`**. **`StoreUpgrades.Added`:** `hyperlane`, `warp` (Hyperlane). **Infinite Bank (`infinitebank`)** has no separate KV store — see [migrations/infinite_v0.1.10_to_v0.1.12.md](../../migrations/infinite_v0.1.10_to_v0.1.12.md). |
 
 ### Relation to upstream `cosmos/evm`
 
@@ -126,6 +130,8 @@ cd tests/systemtests
 go test -failfast -mod=readonly -tags=system_test ./... -run TestChainUpgrade \
   --verbose --binary evmd --block-time 3s --chain-id local-4221 --bech32=infinite
 ```
+
+`--binary evmd` selects the executable under `tests/systemtests/binaries/evmd`, which is **`infinited`** copied there by `make test-system` (see [naming note](#naming-infinited-vs-evmd-paths-in-this-harness)).
 
 ---
 
