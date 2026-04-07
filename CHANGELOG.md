@@ -59,18 +59,18 @@ Follow the [migration document](docs/migrations/infinite_v0.1.10_to_v0.2.0.md) f
 
 ## v0.1.10
 
-### Overview
+### OVERVIEW
 
 - **First published production release** of Infinite Improbability Drive (`infinite`).
 - **Infinite Drive** uses `v0.1.x` versioning; that is separate from **cosmos/evm** release tags (`v0.5.0`, `v0.6.0`, …).
 
-### Upstream pointer and fork merges
+### UPSTREAM POINTER AND FORK MERGES
 
 - **cosmos/evm** integrated at `381a3542ed72e2950bd1076a86b0d48e95be3171` — *test: adjusts precisebank module account balance to expected amount (#837)* — **2025-11-14** (UTC). Rough position on upstream `main`: after **v0.5.0**, same era as **v0.5.1**, before **v0.6.0**; `git describe` on that line ≈ `v0.5.0-rc.0-131-g381a3542`.
 - [1](https://github.com/deep-thought-labs/infinite/pull/1) *merge from cosmos evm*; fork merge commit `5b735e9310adf7e25e2bd4037b26b8bf2242bf62`, then identity work so the release ships `**infinited/`** (not `evmd/`).
 - `**infinited/upgrades.go`:** registers `**v0.4.0-to-v0.5.0`** — same class of reference handler upstream documents for the v0.5.x→v0.6.0 sample (`docs/migrations/v0.5.x_to_v0.6.0.md`); upstream had used the name `v0.5.0-to-v0.6.0` in `evmd/` before the rename. No mainnet software-upgrade proposal had been executed at this release.
 
-### Operational notes
+### OPERATIONAL NOTES
 
 - When running chain upgrade system tests, `v0.1.10` is used as the legacy baseline for the upgrade scenario (see `Makefile` system test variables and `docs/guides/testing/CHAIN_UPGRADE_SYSTEM_TEST.md`).
 
