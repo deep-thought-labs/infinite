@@ -1,0 +1,22 @@
+# Hardhat build & cache (do not commit)
+artifacts/
+cache/
+
+# Test-generated flatten output (see test/hardhat_instruction.test.js)
+Flattened.sol
+
+# Dependencies
+node_modules/
+
+# Env & coverage (if used)
+.env
+.env.*
+coverage/
+coverage.json
+
+# TypeChain (if enabled later)
+typechain/
+typechain-types/
+
+# Hardhat Ignition local deployments
+ignition/deployments/
