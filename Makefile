@@ -3,8 +3,11 @@
 ###############################################################################
 ###                           Module & Versioning                           ###
 ###############################################################################
-
-VERSION ?= $(shell echo $(shell git describe --tags --always) | sed 's/^v//')
+# Release tags use prefix iid-v* (Infinite Improbability Drive) so describe
+# does not pick upstream or unrelated v* tags. Legacy/system-test tags unchanged
+# (see SYSTEMTEST_LEGACY_TAG).
+IID_VERSION_TAG_MATCH ?= iid-v*
+VERSION ?= $(shell echo $(shell git describe --tags --always --match "$(IID_VERSION_TAG_MATCH)") | sed 's/^v//')
 TMVERSION := $(shell go list -m github.com/cometbft/cometbft | sed 's:.* ::')
 COMMIT := $(shell git log -1 --format='%H')
 
