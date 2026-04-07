@@ -12,7 +12,7 @@ Punto único en el repositorio para **divergencia frente a upstream**, **procedi
 | [**REFERENCE.md**](REFERENCE.md) | Uso de `list_all_customizations.sh`, informes de diff y notas sobre estadísticas esperadas. |
 | [**VERIFICATION.md**](VERIFICATION.md) | Comprobaciones manuales y script `validate_customizations.sh`. |
 | [**templates/MERGE_LOG_TEMPLATE.md**](templates/MERGE_LOG_TEMPLATE.md) | Plantilla para bitácoras de merge. |
-| [**logs/**](logs/) | Bitácoras de merge upstream (**crear al inicio**, **completar al cierre** — [logs/README.md](logs/README.md)) y, si aplica, **cierre de features del fork** (p. ej. [Hyperlane](logs/2026-04-03-hyperlane-integration.md)). |
+| [**logs/**](logs/) | Bitácoras de merge upstream (**crear al inicio**, **completar al cierre** — [logs/README.md](logs/README.md)) y, si aplica, **features del fork** (p. ej. [Hyperlane](logs/2026-04-03-hyperlane-integration.md), [Infinite Bank](logs/2026-04-04-infinite-bank.md)). |
 | [**../migrations/**](../migrations/) | Guías por salto de versión (fuera de esta carpeta, enlazadas desde el playbook). |
 | [**../guides/testing/CHAIN_UPGRADE_SYSTEM_TEST.md**](../guides/testing/CHAIN_UPGRADE_SYSTEM_TEST.md) | Prueba de sistema **on-chain upgrade** (`TestChainUpgrade`): binario legacy, génesis `upgrade-test`, regeneración de gentx, gobernanza y lista de mantenimiento; específica de versión frente a futuros saltos donde el binario “viejo” ya no sea el release actual. |
 
@@ -26,11 +26,12 @@ Punto único en el repositorio para **divergencia frente a upstream**, **procedi
 ## Flujo resumido
 
 1. Leer [PLAYBOOK.md](PLAYBOOK.md) (preparación) y [UPSTREAM_DIVERGENCE_RECORD.md](UPSTREAM_DIVERGENCE_RECORD.md) (archivos sensibles).
-2. Opcional: línea base con `./scripts/list_all_customizations.sh` (ver [REFERENCE.md](REFERENCE.md)).
-3. Merge desde `upstream/...`; resolver conflictos según playbook y registro.
-4. Verificar con [VERIFICATION.md](VERIFICATION.md) y tests ([Fase 3](PLAYBOOK.md#fase-3--verificación)).
-5. **CI:** alinear `.github/workflows/` con `upstream/main` según [MERGE_STRATEGIES.md §4](MERGE_STRATEGIES.md#4-github-actions-alinear-con-upstream-en-el-plan-de-merge) y [PLAYBOOK — Fase 3b](PLAYBOOK.md#fase-3b--alineación-de-github-actions-con-upstream) (mismo PR o PR dedicado; conservar `release.yml`).
-6. **Bitácora en `logs/`:** abierta al inicio (plantilla + metadatos; ver [PLAYBOOK — Fase 0](PLAYBOOK.md#fase-0--preparación) paso 0.5 y [logs/README.md](logs/README.md)); completada antes del cierre del ciclo (conflictos, verificación, **GitHub Actions** si hubo alineación).
+2. Tener el remoto **`upstream`** apuntando a [cosmos/evm](https://github.com/cosmos/evm) y ejecutar `git fetch upstream` (instrucciones: [REFERENCE.md — Remoto Git `upstream`](REFERENCE.md#remoto-git-upstream)).
+3. Opcional: línea base con `./scripts/list_all_customizations.sh` (ver [REFERENCE.md](REFERENCE.md)).
+4. Merge desde `upstream/...`; resolver conflictos según playbook y registro.
+5. Verificar con [VERIFICATION.md](VERIFICATION.md) y tests ([Fase 3](PLAYBOOK.md#fase-3--verificación)).
+6. **CI:** alinear `.github/workflows/` con `upstream/main` según [MERGE_STRATEGIES.md §4](MERGE_STRATEGIES.md#4-github-actions-alinear-con-upstream-en-el-plan-de-merge) y [PLAYBOOK — Fase 3b](PLAYBOOK.md#fase-3b--alineación-de-github-actions-con-upstream) (mismo PR o PR dedicado; conservar `release.yml`).
+7. **Bitácora en `logs/`:** abierta al inicio (plantilla + metadatos; ver [PLAYBOOK — Fase 0](PLAYBOOK.md#fase-0--preparación) paso 0.5 y [logs/README.md](logs/README.md)); completada antes del cierre del ciclo (conflictos, verificación, **GitHub Actions** si hubo alineación).
 
 ## Scripts (permanecen en `scripts/`)
 

@@ -1,0 +1,32 @@
+syntax = "proto3";
+package cosmos.evm.bank.v1;
+
+import "amino/amino.proto";
+import "cosmos/bank/v1beta1/bank.proto";
+import "cosmos/msg/v1/msg.proto";
+import "cosmos_proto/cosmos.proto";
+import "gogoproto/gogo.proto";
+
+option go_package = "github.com/cosmos/evm/x/bank/types";
+
+// Msg defines the infinite bank extension Msg service (governance-only helpers
+// around x/bank).
+service Msg {
+  option (cosmos.msg.v1.service) = true;
+  // SetDenomMetadata sets bank metadata for a denomination. Authority is the
+  // x/gov module account.
+  rpc SetDenomMetadata(MsgSetDenomMetadata) returns (MsgSetDenomMetadataResponse);
+}
+
+// MsgSetDenomMetadata defines a governance Msg to set denom metadata.
+message MsgSetDenomMetadata {
+  option (cosmos.msg.v1.signer) = "authority";
+  option (amino.name) = "cosmos/evm/x/bank/MsgSetDenomMetadata";
+
+  string authority = 1 [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
+  cosmos.bank.v1beta1.Metadata metadata = 2
+      [ (gogoproto.nullable) = false, (amino.dont_omitempty) = true ];
+}
+
+// MsgSetDenomMetadataResponse is the MsgSetDenomMetadata result type.
+message MsgSetDenomMetadataResponse {}

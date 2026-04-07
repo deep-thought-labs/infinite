@@ -10,6 +10,7 @@ Ejemplos:
 
 - `2026-03-21-merge-upstream-main.md`
 - `2026-04-03-hyperlane-integration.md`
+- `2026-04-04-infinite-bank.md`
 
 Usar **solo minúsculas y guiones** en la descripción para consistencia con el resto del repo.
 
@@ -26,6 +27,7 @@ Cada archivo debe partir de [../templates/MERGE_LOG_TEMPLATE.md](../templates/ME
 Para **features grandes del fork** (p. ej. Hyperlane) que **no** son un merge de [cosmos/evm](https://github.com/cosmos/evm), se puede archivar una bitácora de **cierre de fase** aquí con el mismo esquema de nombres (recomendado `YYYY-MM-DD-…`), **sin** usar la plantilla de merge upstream salvo que el equipo quiera homogeneizar.
 
 - **Ejemplo:** [2026-04-03-hyperlane-integration.md](2026-04-03-hyperlane-integration.md) — código + upgrade + enlaces a documentación operativa ([OPERATIONS.md](../../feature/hyperlane/OPERATIONS.md)).
+- **Ejemplo (feature en curso):** [2026-04-04-infinite-bank.md](2026-04-04-infinite-bank.md) — extensión del módulo Bank; documentación técnica en inglés: [INTEGRATION.md](../../feature/infinite-bank/INTEGRATION.md).
 
 ---
 

@@ -987,8 +987,8 @@ type EvmCoinInfo struct {
 	Denom         string `protobuf:"bytes,1,opt,name=denom,proto3" json:"denom,omitempty"`
 	ExtendedDenom string `protobuf:"bytes,2,opt,name=extended_denom,json=extendedDenom,proto3" json:"extended_denom,omitempty"`
 	DisplayDenom  string `protobuf:"bytes,3,opt,name=display_denom,json=displayDenom,proto3" json:"display_denom,omitempty"`
-	// decimals is now deprecated and will be removed in a future release. When it is removed we will assume
-	// the evm token denom is 18 decimal precision.
+	// decimals is now deprecated and will be removed in a future release. When it
+	// is removed we will assume the evm token denom is 18 decimal precision.
 	Decimals uint32 `protobuf:"varint,4,opt,name=decimals,proto3" json:"decimals,omitempty"` // Deprecated: Do not use.
 }
 

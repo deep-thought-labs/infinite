@@ -201,7 +201,20 @@ PACKAGES_UNIT := $(shell go list ./... | grep -v '/tests/e2e$$' | grep -v '/simu
 PACKAGES_INFINITED := $(shell cd infinited && go list ./... | grep -v '/simulation')
 COVERPKG_EVM  := $(shell go list ./... | grep -v '/tests/e2e$$' | grep -v '/simulation' | paste -sd, -)
 COVERPKG_ALL  := $(COVERPKG_EVM)
+COVERPKG_INFINITED := $(shell cd infinited && go list ./... | grep -v '/simulation' | paste -sd, -)
 COMMON_COVER_ARGS := -timeout=15m -covermode=atomic
+
+# Granular coverage blocks: root `tests/integration/*` vs rest, and `infinited/tests/integration/*` vs rest.
+# CI runs each block in a separate job (see .github/workflows/test.yml) so failures and timeouts are attributable.
+PACKAGES_EVM_CORE := $(shell go list ./... | grep -v '/tests/e2e$$' | grep -v '/simulation' | grep -v '/tests/integration')
+PACKAGES_EVM_INTEGRATION := $(shell go list ./... | grep '/tests/integration')
+PACKAGES_INFINITED_CORE := $(shell cd infinited && go list ./... | grep -v '/simulation' | grep -v '/tests/integration')
+PACKAGES_INFINITED_INTEGRATION := $(shell cd infinited && go list ./... | grep '/tests/integration')
+
+COVERAGE_EVM_CORE := coverage_evm_core.txt
+COVERAGE_EVM_INTEGRATION := coverage_evm_integration.txt
+COVERAGE_INFINITED_CORE := coverage_infinited_core.txt
+COVERAGE_INFINITED_INTEGRATION := coverage_infinited_integration.txt
 
 TEST_PACKAGES := ./...
 TEST_TARGETS := test-unit test-evmd test-unit-cover test-race
@@ -218,15 +231,29 @@ test-infinited: ARGS=-timeout=15m
 test-infinited:
 	@cd infinited && go test -race -tags=test -mod=readonly $(ARGS) $(EXTRA_ARGS) $(PACKAGES_INFINITED)
 
-test-unit-cover: ARGS=-timeout=15m -coverprofile=coverage.txt -covermode=atomic
-test-unit-cover: TEST_PACKAGES=$(PACKAGES_UNIT)
-test-unit-cover: run-tests
-	@echo "🔍 Running evm (root) coverage..."
-	@go test -race -tags=test $(COMMON_COVER_ARGS) -coverpkg=$(COVERPKG_ALL) -coverprofile=coverage.txt ./...
-	@echo "🔍 Running infinited coverage..."
-	@cd infinited && go test -race -tags=test $(COMMON_COVER_ARGS) -coverpkg=$(COVERPKG_ALL) -coverprofile=coverage_infinited.txt ./...
-	@echo "🔀 Merging infinited coverage into root coverage..."
-	@tail -n +2 infinited/coverage_infinited.txt >> coverage.txt && rm infinited/coverage_infinited.txt
+# Full local coverage: four blocks (parallel-safe as prerequisites of merge) then merge + filter + summary.
+test-unit-cover: test-unit-cover-merge
+
+test-unit-cover-evm-core:
+	@echo "🔍 Coverage block: evm core (root module, excluding tests/integration)..."
+	@go test -race -tags=test -mod=readonly $(COMMON_COVER_ARGS) -coverpkg=$(COVERPKG_ALL) -coverprofile=$(COVERAGE_EVM_CORE) $(PACKAGES_EVM_CORE)
+
+test-unit-cover-evm-integration:
+	@echo "🔍 Coverage block: evm integration (root tests/integration/*)..."
+	@go test -race -tags=test -mod=readonly $(COMMON_COVER_ARGS) -coverpkg=$(COVERPKG_ALL) -coverprofile=$(COVERAGE_EVM_INTEGRATION) $(PACKAGES_EVM_INTEGRATION)
+
+test-unit-cover-infinited-core:
+	@echo "🔍 Coverage block: infinited core (excluding tests/integration)..."
+	@cd infinited && go test -race -tags=test -mod=readonly $(COMMON_COVER_ARGS) -coverpkg=$(COVERPKG_INFINITED) -coverprofile=../$(COVERAGE_INFINITED_CORE) $(PACKAGES_INFINITED_CORE)
+
+test-unit-cover-infinited-integration:
+	@echo "🔍 Coverage block: infinited integration (infinited/tests/integration/*)..."
+	@cd infinited && go test -race -tags=test -mod=readonly $(COMMON_COVER_ARGS) -coverpkg=$(COVERPKG_INFINITED) -coverprofile=../$(COVERAGE_INFINITED_INTEGRATION) $(PACKAGES_INFINITED_INTEGRATION)
+
+test-unit-cover-merge: test-unit-cover-evm-core test-unit-cover-evm-integration test-unit-cover-infinited-core test-unit-cover-infinited-integration
+	@echo "🔀 Merging coverage blocks into coverage.txt..."
+	@echo "mode: atomic" > coverage.txt
+	@grep -h -v '^mode:' $(COVERAGE_EVM_CORE) $(COVERAGE_EVM_INTEGRATION) $(COVERAGE_INFINITED_CORE) $(COVERAGE_INFINITED_INTEGRATION) >> coverage.txt
 	@echo "🧹 Filtering ignored files from coverage.txt..."
 	@grep -v -E '/cmd/|/client/|/proto/|/testutil/|/mocks/|/test_.*\.go:|\.pb\.go:|\.pb\.gw\.go:|/x/[^/]+/module\.go:|/scripts/|/ibc/testing/|/version/|\.md:|\.pulsar\.go:' coverage.txt > tmp_coverage.txt && mv tmp_coverage.txt coverage.txt
 	@echo "📊 Coverage summary:"
@@ -256,7 +283,9 @@ test-solidity:
 	@echo "Beginning solidity tests..."
 	./scripts/run-solidity-tests.sh
 
-.PHONY: run-tests test test-all $(TEST_TARGETS)
+.PHONY: run-tests test test-all $(TEST_TARGETS) \
+	test-unit-cover-evm-core test-unit-cover-evm-integration \
+	test-unit-cover-infinited-core test-unit-cover-infinited-integration test-unit-cover-merge
 
 benchmark:
 	@go test -race -tags=test -mod=readonly -bench=. $(PACKAGES_NOSIMULATION)
@@ -348,7 +377,7 @@ format-shell:
 
 protoVer=0.18.1
 protoImageName=ghcr.io/cosmos/proto-builder:$(protoVer)
-protoImage=$(DOCKER) run --rm -v $(CURDIR):/workspace --workdir /workspace --user 0 $(protoImageName)
+protoImage=$(DOCKER) run --rm -v "$(CURDIR):/workspace" --workdir /workspace --user 0 $(protoImageName)
 
 protoLintVer=0.44.0
 protoLinterImage=yoheimuta/protolint

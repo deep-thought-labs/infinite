@@ -12,6 +12,7 @@ For an **ordered checklist** that includes lint, build, tests, and fork scripts,
 - [Complete Tests](#complete-tests)
 - [End-to-end system tests](#end-to-end-system-tests)
 - [Tests with Coverage](#tests-with-coverage)
+- [Granular coverage blocks (`test-unit-cover`)](#granular-coverage-blocks-test-unit-cover)
 - [Mempool Krakatoa tests under test-unit-cover](#mempool-krakatoa-tests-under-test-unit-cover)
 - [Code Validation](#code-validation)
 
@@ -22,7 +23,7 @@ For an **ordered checklist** that includes lint, build, tests, and fork scripts,
 | **Unit** | `make test-unit` | Individual functions | 5-15 min |
 | **Integration** | `make test-infinited` | Component integration | 10-20 min |
 | **Complete** | `make test-all` | All tests | 15-30 min |
-| **With Coverage** | `make test-unit-cover` | Tests + coverage report | 10-20 min |
+| **With Coverage** | `make test-unit-cover` | Four blocks, merged `coverage.txt` (see below) | 10-20 min |
 
 ---
 
@@ -171,16 +172,36 @@ make test-all
 ### Run Tests with Coverage
 
 ```bash
-# Unit tests with coverage
+# Unit tests with coverage (runs all four blocks, then merges into coverage.txt)
 make test-unit-cover
 ```
 
 **What it does**:
 
-- Runs unit tests
-- Generates coverage report in `coverage.txt`
+- Builds **`test-unit-cover-merge`**, whose prerequisites are the four blocks below; with default **`make`** they run **sequentially**, with **`make -j4 test-unit-cover`** (or higher) they can run **in parallel** locally. Each block uses **`-race`**, **`-tags=test`**, and **`-timeout=15m`**
+- Merges block profiles into **`coverage.txt`** (same path filter as before), then prints **`go tool cover -func`**
 
 **Estimated time**: 10-20 minutes
+
+### Granular coverage blocks (`test-unit-cover`)
+
+**Why (fork)**: Splitting coverage isolates **which tree** failed or hit the global test timeout (e.g. **`infinited/tests/integration`** vs root **`tests/integration/*`** vs core packages). GitHub Actions runs one matrix leg per block; Codecov receives **one upload per block** with **`flags`**: `evm-core`, `evm-integration`, `infinited-core`, `infinited-integration` (see [`.github/workflows/test.yml`](../../../.github/workflows/test.yml)).
+
+| Make target | Scope |
+|-------------|--------|
+| `make test-unit-cover-evm-core` | Root module **`github.com/cosmos/evm/...`** excluding **`tests/integration`** |
+| `make test-unit-cover-evm-integration` | Root **`tests/integration/...`** only |
+| `make test-unit-cover-infinited-core` | Submodule **`infinited/`** excluding **`tests/integration`** |
+| `make test-unit-cover-infinited-integration` | **`infinited/tests/integration/...`** only |
+| `make test-unit-cover-merge` | Merges `coverage_*.txt` → **`coverage.txt`** (requires all four block outputs) |
+
+Intermediate files: `coverage_evm_core.txt`, `coverage_evm_integration.txt`, `coverage_infinited_core.txt`, `coverage_infinited_integration.txt` (gitignored). **`COVERPKG_INFINITED`** scopes **`infinited`** blocks to the submodule module list.
+
+**CI / branch protection**: The **Tests** workflow exposes four jobs named **`test-unit-cover (evm-core)`**, **`test-unit-cover (evm-integration)`**, **`test-unit-cover (infinited-core)`**, **`test-unit-cover (infinited-integration)`** (full name in the UI is typically **`Tests / test-unit-cover (…)`**). Add each as a required check if you gate merges that way.
+
+**Maintenance record**: [fork-maintenance/UPSTREAM_DIVERGENCE_RECORD.md](../../fork-maintenance/UPSTREAM_DIVERGENCE_RECORD.md) — *Estabilidad CI (tests Go)*; operational CI table: [guides/infrastructure/CI_CD.md](../infrastructure/CI_CD.md).
+
+**Upstream merges:** New or changed tests are classified **automatically** by path into one of the four blocks (see `PACKAGES_*` in the root `Makefile`). When merging [cosmos/evm](https://github.com/cosmos/evm), use the diff checklist and edge cases (new module layout, `test.yml` conflicts) in [MERGE_STRATEGIES.md — §3.1](../../fork-maintenance/MERGE_STRATEGIES.md#31-tests-y-cobertura-en-bloques-tras-traer-upstream).
 
 ### View Coverage Report
 
@@ -194,9 +215,9 @@ go tool cover -html=coverage.txt
 
 ### Mempool Krakatoa tests under test-unit-cover
 
-`make test-unit-cover` runs tests **twice** at the repo root: first via `run-tests` with per-package coverage, then a second `go test` over `./...` with **`-race`** and **`-coverpkg`** set to the whole module list (see `Makefile` target `test-unit-cover`). That second pass is slower and more sensitive to timing.
+Krakatoa mempool tests run under the **`test-unit-cover-evm-core`** block (root module, no `tests/integration` path): **`go test -race`** with **`-coverpkg`** set to the whole root module list. That pass is slower and more sensitive to timing than non-race unit runs.
 
-Krakatoa mempool tests under `mempool/` use **`mempool.AllowUnsafeSyncInsert`** inside `setupKrakatoaMempoolWithAccounts` so EVM inserts wait for `LegacyPool.Add`’s synchronous promotion path (see comments on `AllowUnsafeSyncInsert` in `mempool/mempool.go` and `LegacyPool.Add` in `mempool/txpool/legacypool/legacypool.go`). That removes most insert/`Sync` flakes; **`TestKrakatoaMempool_ReapNewBlock`** still uses **`require.Eventually`** after a simulated new block bumps the account nonce, because demotion of the stale pending tx can lag behind a single `Sync()` under **`-race`** and the second `test-unit-cover` pass.
+Krakatoa mempool tests under `mempool/` use **`mempool.AllowUnsafeSyncInsert`** inside `setupKrakatoaMempoolWithAccounts` so EVM inserts wait for `LegacyPool.Add`’s synchronous promotion path (see comments on `AllowUnsafeSyncInsert` in `mempool/mempool.go` and `LegacyPool.Add` in `mempool/txpool/legacypool/legacypool.go`). That removes most insert/`Sync` flakes; **`TestKrakatoaMempool_ReapNewBlock`** still uses **`require.Eventually`** after a simulated new block bumps the account nonce, because demotion of the stale pending tx can lag behind a single `Sync()` under **`-race`** during that coverage block.
 
 Fork maintenance note: [UPSTREAM_DIVERGENCE_RECORD.md](../../fork-maintenance/UPSTREAM_DIVERGENCE_RECORD.md) — *Estabilidad CI (tests Go)*.
 
@@ -308,5 +329,6 @@ ls -la coverage.txt
 |------|---------|------|
 | Quick tests | `make test-unit` | 5-15 min |
 | Complete tests | `make test-all` | 15-30 min |
-| Coverage | `make test-unit-cover` | 10-20 min |
+| Coverage (merged) | `make test-unit-cover` | 10-20 min |
+| Coverage (one block) | `make test-unit-cover-evm-core` (etc.) | varies |
 | Validate code | `./scripts/validate_customizations.sh` | <1 min |

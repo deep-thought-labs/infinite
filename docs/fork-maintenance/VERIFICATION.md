@@ -2,13 +2,15 @@
 
 ## Script automatizado (recomendado)
 
+Además de **identidad** y **scripts de genesis**, el script valida el cableado documentado de **Infinite Bank** (`x/bank`) y **Hyperlane** en `infinited/`. Detalle de comprobaciones: [SCRIPTS.md — `validate_customizations.sh`](../guides/development/SCRIPTS.md#2-validate_customizationssh).
+
 ```bash
 ./scripts/validate_customizations.sh
 ```
 
-Comprueba valores críticos de identidad y ausencia de paths incorrectos. No depende del nombre de la rama actual.
+Comprueba valores críticos de identidad, extensiones de producto del fork y ausencia de paths incorrectos. No depende del nombre de la rama actual.
 
-Tras un merge, si el script avisa por `go.mod` / `go.sum` respecto a upstream, **revisar** que sea intencional (fork + `infinited`) y no un conflicto mal cerrado.
+Tras un merge, si el script muestra **avisos** sobre `go.mod` / `go.sum` frente a `upstream/main`, suele ser **normal** en un fork (deps propias, `go mod tidy`); **revisar** solo si sospechas conflicto mal cerrado. Detalle: [REFERENCE.md — Dependencias Go vs upstream](REFERENCE.md#dependencias-go-vs-upstream). Si el aviso es *“upstream/main not found”*, falta el remoto o el fetch: [REFERENCE.md — Remoto `upstream`](REFERENCE.md#remoto-git-upstream).
 
 ## Marcadores de conflicto (obligatorio tras resolver merge)
 
@@ -58,6 +60,7 @@ Ajustar `upstream/main` si la integración usa otra rama.
 ## Tests tras merge
 
 - Ejecutar al menos **`make test-unit`** desde la raíz del módulo `cosmos/evm`.
+- Para paridad con CI de cobertura: el workflow **Tests** ejecuta **cuatro** bloques (`make test-unit-cover-evm-core`, `…-evm-integration`, `…-infinited-core`, `…-infinited-integration`); un fallo aislado en **`infinited/tests/integration`** ya no enmascara los otros tres. Detalle: [TESTING.md — Granular coverage blocks](../guides/development/TESTING.md#granular-coverage-blocks-test-unit-cover).
 - Parte de la integración vive en el submódulo **`infinited/`** (p. ej. `TestEvmUnitAnteTestSuite` en `infinited/tests/integration/ante`). Si solo pasan los tests de la raíz pero falló algo en ante/EIP-712/mempool, validar explícitamente:  
   `cd infinited && go test ./tests/integration/...`
 - Si aparecen fallos por denom/bech32, por límites de gas de bloque en tests, o por **compilación** en `tests/integration/**`, revisar [PLAYBOOK.md — Apéndice A.7](PLAYBOOK.md#a7-tests-y-apis-tras-merge-upstream).

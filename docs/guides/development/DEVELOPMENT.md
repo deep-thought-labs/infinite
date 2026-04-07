@@ -182,11 +182,11 @@ go test -v
 # All tests
 make test-all
 
-# Tests with coverage
+# Tests with coverage (four blocks merged to coverage.txt; see TESTING.md for per-block targets)
 make test-unit-cover
 ```
 
-**More information**: See [development/TESTING.md](TESTING.md)
+**More information**: See [development/TESTING.md](TESTING.md) — [Granular coverage blocks](TESTING.md#granular-coverage-blocks-test-unit-cover).
 
 ---
 
