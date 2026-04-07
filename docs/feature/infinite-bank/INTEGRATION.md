@@ -41,7 +41,7 @@ The message **type URL** in transactions and proposal JSON is **`/cosmos.evm.ban
 
 ### On-chain software upgrades (Infinite Drive)
 
-The extension **does not** register a separate **`KVStoreKey`** for `infinitebank` in `infinited/app.go`; state changes use **SDK `x/bank`**. The fork plan **`infinite-v0.1.10-to-v0.1.12`** therefore does **not** add `infinitebank` to **`StoreUpgrades.Added`** in `infinited/upgrades.go` (unlike **Hyperlane** `hyperlane` / `warp` stores). New binaries still pick up the module via **`ModuleManager.RunMigrations`** when upgrading from a release that omitted it. Canonical write-up: [migrations/infinite_v0.1.10_to_v0.1.12.md](../../migrations/infinite_v0.1.10_to_v0.1.12.md).
+The extension **does not** register a separate **`KVStoreKey`** for `infinitebank` in `infinited/app.go`; state changes use **SDK `x/bank`**. The fork plan **`infinite-v0.1.10-to-v0.2.0`** therefore does **not** add `infinitebank` to **`StoreUpgrades.Added`** in `infinited/upgrades.go` (unlike **Hyperlane** `hyperlane` / `warp` stores). New binaries still pick up the module via **`ModuleManager.RunMigrations`** when upgrading from a release that omitted it. Canonical write-up: [migrations/infinite_v0.1.10_to_v0.2.0.md](../../migrations/infinite_v0.1.10_to_v0.2.0.md).
 
 After changing this module, use **[How to test](#how-to-test)** for the full local verification sequence (no duplicate command list elsewhere in this file).
 

@@ -12,7 +12,7 @@
 | Fecha cierre (documental) | 2026-04-03 |
 | Módulo externo | [github.com/bcp-innovations/hyperlane-cosmos](https://github.com/bcp-innovations/hyperlane-cosmos) **`v1.2.0-rc.0`** |
 | Binario | `infinited` (`github.com/cosmos/evm/infinited`) |
-| Plan on-chain de stores | **`infinite-v0.1.10-to-v0.1.12`** — `StoreUpgrades.Added`: `hyperlane`, `warp` |
+| Plan on-chain de stores | **`infinite-v0.1.10-to-v0.2.0`** — `StoreUpgrades.Added`: `hyperlane`, `warp` |
 
 ---
 

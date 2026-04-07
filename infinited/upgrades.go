@@ -13,8 +13,8 @@ import (
 )
 
 // UpgradeName is the software-upgrade plan name for Infinite Drive: use in governance
-// (MsgSoftwareUpgrade) and in TestChainUpgrade (tests/systemtests/chainupgrade/v0_1_10_to_v0_1_12.go).
-const UpgradeName = "infinite-v0.1.10-to-v0.1.12"
+// (MsgSoftwareUpgrade) and in TestChainUpgrade (tests/systemtests/chainupgrade/v0_1_10_to_v0_2_0.go).
+const UpgradeName = "infinite-v0.1.10-to-v0.2.0"
 
 func (app EVMD) RegisterUpgradeHandlers() {
 	app.UpgradeKeeper.SetUpgradeHandler(
