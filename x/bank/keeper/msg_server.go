@@ -3,12 +3,13 @@ package keeper
 import (
 	"context"
 
+	"github.com/cosmos/evm/x/bank/types"
+
 	sdkerrors "cosmossdk.io/errors"
+
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	banktypes "github.com/cosmos/cosmos-sdk/x/bank/types"
 	govtypes "github.com/cosmos/cosmos-sdk/x/gov/types"
-
-	"github.com/cosmos/evm/x/bank/types"
 )
 
 var _ types.MsgServer = (*msgServer)(nil)

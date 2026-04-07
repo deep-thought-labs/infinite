@@ -10,10 +10,10 @@ import (
 
 	abci "github.com/cometbft/cometbft/abci/types"
 
-	"cosmossdk.io/core/appmodule"
-
 	"github.com/cosmos/evm/x/bank/keeper"
 	"github.com/cosmos/evm/x/bank/types"
+
+	"cosmossdk.io/core/appmodule"
 
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/codec"
@@ -27,10 +27,11 @@ import (
 const consensusVersion = 1
 
 var (
-	_ module.AppModule           = AppModule{}
-	_ module.AppModuleBasic      = AppModuleBasic{}
-	_ appmodule.AppModule        = AppModule{}
-	_ module.HasABCIGenesis      = AppModule{}
+	//nolint:staticcheck // module.AppModule is deprecated but still required for compile-time checks with module.Manager.
+	_ module.AppModule      = AppModule{}
+	_ module.AppModuleBasic = AppModuleBasic{}
+	_ appmodule.AppModule   = AppModule{}
+	_ module.HasABCIGenesis = AppModule{}
 )
 
 // AppModuleBasic defines the basic application module for the infinite bank extension.
