@@ -197,7 +197,7 @@ make test-unit-cover
 
 Intermediate files: `coverage_evm_core.txt`, `coverage_evm_integration.txt`, `coverage_infinited_core.txt`, `coverage_infinited_integration.txt` (gitignored). **`COVERPKG_INFINITED`** scopes **`infinited`** blocks to the submodule module list.
 
-**CI / branch protection**: After this split, the **Tests** workflow exposes **four check rows** (matrix). If you use required status checks, add **each** matrix permutation GitHub shows (names depend on the job + matrix labels), or use a single aggregate job later if you prefer one gate.
+**CI / branch protection**: The **Tests** workflow exposes four jobs named **`test-unit-cover (evm-core)`**, **`test-unit-cover (evm-integration)`**, **`test-unit-cover (infinited-core)`**, **`test-unit-cover (infinited-integration)`** (full name in the UI is typically **`Tests / test-unit-cover (…)`**). Add each as a required check if you gate merges that way.
 
 **Maintenance record**: [fork-maintenance/UPSTREAM_DIVERGENCE_RECORD.md](../../fork-maintenance/UPSTREAM_DIVERGENCE_RECORD.md) — *Estabilidad CI (tests Go)*; operational CI table: [guides/infrastructure/CI_CD.md](../infrastructure/CI_CD.md).
 

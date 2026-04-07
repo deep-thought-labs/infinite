@@ -68,12 +68,12 @@ Lista de verificación rápida: [VERIFICATION.md](VERIFICATION.md), `make build`
 
 La cobertura del fork **no enumera paquetes a mano**: los cuatro bloques se derivan de `go list` + filtros en el [`Makefile`](../../Makefile) (`PACKAGES_EVM_CORE`, `PACKAGES_EVM_INTEGRATION`, `PACKAGES_INFINITED_CORE`, `PACKAGES_INFINITED_INTEGRATION`). Por tanto, **la mayoría** de tests nuevos o modificados que upstream añada bajo rutas ya cubiertas **entran solos** en el bloque que corresponda:
 
-| Ubicación del test (tras el merge) | Bloque `make` / job de matriz |
-|------------------------------------|-------------------------------|
-| Módulo raíz `github.com/cosmos/evm/...`, **sin** ruta `tests/integration` | `test-unit-cover-evm-core` / `evm-core` |
-| Solo bajo `tests/integration/...` del módulo raíz | `test-unit-cover-evm-integration` / `evm-integration` |
-| Módulo `infinited`, **sin** `tests/integration` en el import path | `test-unit-cover-infinited-core` / `infinited-core` |
-| Bajo `infinited/tests/integration/...` | `test-unit-cover-infinited-integration` / `infinited-integration` |
+| Ubicación del test (tras el merge) | `make` / check en GitHub (`Tests / …`) |
+|------------------------------------|----------------------------------------|
+| Módulo raíz `github.com/cosmos/evm/...`, **sin** ruta `tests/integration` | `test-unit-cover-evm-core` / **`test-unit-cover (evm-core)`** |
+| Solo bajo `tests/integration/...` del módulo raíz | `test-unit-cover-evm-integration` / **`test-unit-cover (evm-integration)`** |
+| Módulo `infinited`, **sin** `tests/integration` en el import path | `test-unit-cover-infinited-core` / **`test-unit-cover (infinited-core)`** |
+| Bajo `infinited/tests/integration/...` | `test-unit-cover-infinited-integration` / **`test-unit-cover (infinited-integration)`** |
 
 **Cómo identificar cambios de tests en el merge (antes de integrar “a ciegas”):**
 
