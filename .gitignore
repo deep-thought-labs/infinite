@@ -15,6 +15,10 @@
 
 # Testing
 coverage.txt
+coverage_evm_core.txt
+coverage_evm_integration.txt
+coverage_infinited_core.txt
+coverage_infinited_integration.txt
 yarn.lock
 
 # IDE

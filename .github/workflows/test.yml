@@ -50,22 +50,40 @@ jobs:
               - '.github/workflows/test.yml'
               - 'scripts/**'
 
+  # Four coverage blocks (fork): isolates failures/timeouts (e.g. infinited integration vs evm core).
+  # See docs/guides/development/TESTING.md — Granular coverage blocks.
   test-unit-cover:
     needs: changes
     if: needs.changes.outputs.tests_go == 'true'
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - make_target: test-unit-cover-evm-core
+            coverage_file: coverage_evm_core.txt
+            codecov_flags: evm-core
+          - make_target: test-unit-cover-evm-integration
+            coverage_file: coverage_evm_integration.txt
+            codecov_flags: evm-integration
+          - make_target: test-unit-cover-infinited-core
+            coverage_file: coverage_infinited_core.txt
+            codecov_flags: infinited-core
+          - make_target: test-unit-cover-infinited-integration
+            coverage_file: coverage_infinited_integration.txt
+            codecov_flags: infinited-integration
     steps:
       - uses: actions/setup-go@v5
         with:
           go-version: "1.25"
           check-latest: true
       - uses: actions/checkout@v4
-      - name: Test and Create Coverage Report
-        run: |
-          make test-unit-cover
+      - name: Test coverage block (${{ matrix.make_target }})
+        run: make ${{ matrix.make_target }}
       - uses: codecov/codecov-action@v5
         with:
-          file: ./coverage.txt
+          file: ./${{ matrix.coverage_file }}
+          flags: ${{ matrix.codecov_flags }}
           # We were getting a 500 error on codecov servers
           # so we decided to avoid blocking the CI if this fails
           fail_ci_if_error: false

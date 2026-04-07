@@ -6,7 +6,7 @@ Use this document for **multi-step validation flows** (what to run together and 
 |-------|----------------|
 | **Each script** (purpose, usage, output, requirements) | [development/SCRIPTS.md](../development/SCRIPTS.md#validation-and-verification-scripts) |
 | **Ordered full-repo check** (lint → build → tests → …) | [PROJECT_INTEGRITY_CHECKLIST.md](PROJECT_INTEGRITY_CHECKLIST.md) |
-| **`make test-*` and coverage** | [development/TESTING.md](../development/TESTING.md) |
+| **`make test-*` and coverage** | [development/TESTING.md](../development/TESTING.md) (granular coverage: [Granular coverage blocks](../development/TESTING.md#granular-coverage-blocks-test-unit-cover)) |
 | **Build prerequisites and compile** | [development/BUILDING.md](../development/BUILDING.md) |
 
 ## Validation scripts at a glance

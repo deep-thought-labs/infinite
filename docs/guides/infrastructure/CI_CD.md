@@ -78,7 +78,7 @@ If the file exists, the workflow is configured.
 
 | Workflow | File | Behavior |
 |----------|------|------------|
-| Tests | [test.yml](../../../.github/workflows/test.yml) | `tests_go` / `tests_scripts` gate `test-unit-cover` and `test-scripts`. |
+| Tests | [test.yml](../../../.github/workflows/test.yml) | `tests_go` / `tests_scripts` gate **`test-unit-cover`** (matrix: four `make test-unit-cover-*` blocks) and `test-scripts`. |
 | System Test | [system-test.yml](../../../.github/workflows/system-test.yml) | `code` gates `test-system`. |
 | JSON-RPC compat | [jsonrpc-compatibility.yml](../../../.github/workflows/jsonrpc-compatibility.yml) | `code` gates the Docker test job (covers **merge_group** / **push** where workflow-level `paths` do not apply). |
 | Solidity | [solidity-test.yml](../../../.github/workflows/solidity-test.yml) | `code` gates `make test-solidity`. |
@@ -91,6 +91,8 @@ If the file exists, the workflow is configured.
 
 **Branch protection**: If a repository **required check** names a job that becomes **skipped** on docs-only PRs, GitHub may block the merge. Options: require a workflow that always completes, use a small aggregate job, or do not require skipped jobs. Adjust **Settings → Rules / Branch protection** to match.
 
+**Tests — `test-unit-cover` matrix**: The **Tests** workflow runs **four** coverage legs (`test-unit-cover-evm-core`, `test-unit-cover-evm-integration`, `test-unit-cover-infinited-core`, `test-unit-cover-infinited-integration`) under one matrix job. GitHub shows **one status line per matrix combination** (exact label depends on the UI). If you require checks by name, verify the names under **Actions** after the first run and require **all four**, or only the blocks you treat as merge gates. Rationale and Makefile targets: [guides/development/TESTING.md — Granular coverage blocks](../development/TESTING.md#granular-coverage-blocks-test-unit-cover).
+
 **Extending**: To skip more heavy workflows on docs-only changes, add a `changes` job (or reuse a reusable workflow) and gate jobs with `needs` + `if: needs.changes.outputs.<name> == 'true'`. Keep filter lists in sync with what actually affects the job.
 
 ### Workflow inventory
@@ -99,7 +101,7 @@ All workflows under [`.github/workflows/`](../../../.github/workflows/):
 
 | Workflow | Triggers (summary) | Cost / note | Apply job-level `paths-filter`? |
 |----------|-------------------|-------------|-----------------------------------|
-| [test.yml](../../../.github/workflows/test.yml) | PR, merge queue, push `main` / `release/**` | High (Go, coverage ×2) | **Done** |
+| [test.yml](../../../.github/workflows/test.yml) | PR, merge queue, push `main` / `release/**` | High (Go, **four** coverage matrix legs + Codecov each) | **Done** |
 | [system-test.yml](../../../.github/workflows/system-test.yml) | Same pattern | High (Go + Foundry) | **Done** |
 | [jsonrpc-compatibility.yml](../../../.github/workflows/jsonrpc-compatibility.yml) | PR **with paths**, plus **merge_group** and **push** | **High** | **Done** (see table above). |
 | [codeql-analysis.yml](../../../.github/workflows/codeql-analysis.yml) | PR | **High** | **Done** — per-language matrix `if`. |

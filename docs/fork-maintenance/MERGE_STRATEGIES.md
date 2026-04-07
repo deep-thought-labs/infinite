@@ -60,8 +60,32 @@ No basta con “aceptar” el merge: lo que upstream asume para `evmd` o su CI d
 | Workflows `.github/workflows/**` | Fusionar YAML: conservar jobs propios (release, fuzz, CodeQL); traer mejoras upstream; **reemplazar rutas `evmd` por `infinited`** donde el repo no tenga `evmd/`. |
 | Tests que asumen HRP/denom “cosmos” | Ajustar a identidad del fork (ver [PLAYBOOK — A.7](PLAYBOOK.md#a7-tests-y-apis-tras-merge-upstream)). |
 | Nuevas APIs en keepers | Actualizar tests bajo `infinited/tests/...` y ejecutar `make test-infinited`. |
+| Nuevos o cambiados `_test.go` / paquetes de test | Ver [§3.1](#31-tests-y-cobertura-en-bloques-tras-traer-upstream): mapear al bloque `make test-unit-cover-*` correcto; revisar `Makefile` y `test.yml` solo si cambia el **árbol** de paquetes. |
 
-Lista de verificación rápida: [VERIFICATION.md](VERIFICATION.md), `make build`, `make test-unit`, `make test-infinited`, y la tabla de la Fase 3 del playbook.
+Lista de verificación rápida: [VERIFICATION.md](VERIFICATION.md), `make build`, `make test-unit`, `make test-infinited`, cobertura granular (`make test-unit-cover-*` / matriz en `test.yml`; ver [TESTING.md — Granular coverage blocks](../guides/development/TESTING.md#granular-coverage-blocks-test-unit-cover)), y la tabla de la Fase 3 del playbook.
+
+### 3.1 Tests y cobertura en bloques (tras traer upstream)
+
+La cobertura del fork **no enumera paquetes a mano**: los cuatro bloques se derivan de `go list` + filtros en el [`Makefile`](../../Makefile) (`PACKAGES_EVM_CORE`, `PACKAGES_EVM_INTEGRATION`, `PACKAGES_INFINITED_CORE`, `PACKAGES_INFINITED_INTEGRATION`). Por tanto, **la mayoría** de tests nuevos o modificados que upstream añada bajo rutas ya cubiertas **entran solos** en el bloque que corresponda:
+
+| Ubicación del test (tras el merge) | Bloque `make` / job de matriz |
+|------------------------------------|-------------------------------|
+| Módulo raíz `github.com/cosmos/evm/...`, **sin** ruta `tests/integration` | `test-unit-cover-evm-core` / `evm-core` |
+| Solo bajo `tests/integration/...` del módulo raíz | `test-unit-cover-evm-integration` / `evm-integration` |
+| Módulo `infinited`, **sin** `tests/integration` en el import path | `test-unit-cover-infinited-core` / `infinited-core` |
+| Bajo `infinited/tests/integration/...` | `test-unit-cover-infinited-integration` / `infinited-integration` |
+
+**Cómo identificar cambios de tests en el merge (antes de integrar “a ciegas”):**
+
+1. **Diff por archivos de test** (ajusta el ref de upstream al SHA de la bitácora):
+   - `git fetch upstream && git diff upstream/main...HEAD --name-only | grep -E '_test\.go$|/testdata/'`
+   - O por directorios: `git diff upstream/main...HEAD --stat -- tests/ infinited/tests/ x/ mempool/ rpc/ ante/ ...` (según lo que toque el merge).
+2. **Comprobar paquetes nuevos** que `go list` verá tras el merge:
+   - `go list ./...` (raíz) y `cd infinited && go list ./...` — si aparece un paquete de test **fuera** de los cuatro criterios anteriores (p. ej. nuevo submódulo, nueva raíz `tests/foo` distinta de `tests/integration`, o renombre masivo de rutas), **hay que actualizar el `Makefile`** (variables `PACKAGES_*` / `COVERPKG_*`) y documentarlo en la bitácora y, si aplica, en [UPSTREAM_DIVERGENCE_RECORD.md](UPSTREAM_DIVERGENCE_RECORD.md).
+3. **Fusionar `test.yml` con upstream:** conservar la **matriz de cuatro bloques** del fork; si upstream cambia el mismo workflow, **reconciliar** (no sustituir el archivo entero por el de upstream sin revisar). Los objetivos `make` deben seguir siendo los cuatro `test-unit-cover-*` acordados.
+4. **Verificación mínima tras resolver conflictos de tests:** además de `make test-unit` / `make test-infinited`, ejecutar al menos el bloque afectado por el diff (p. ej. `make test-unit-cover-infinited-integration` si solo tocó `infinited/tests/integration/`) antes de dar por cerrada la integración.
+
+Referencia de producto: [guides/development/TESTING.md — Granular coverage blocks](../guides/development/TESTING.md#granular-coverage-blocks-test-unit-cover).
 
 ## 4. GitHub Actions: alinear con upstream en el plan de merge
 

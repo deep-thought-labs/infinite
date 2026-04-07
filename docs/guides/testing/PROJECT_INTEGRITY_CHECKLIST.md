@@ -74,6 +74,7 @@ Other targets you may add for stricter checks:
 | Command | Use when |
 |---------|----------|
 | `make test-unit` | Faster subset (unit packages, no full `test-all` sweep) |
+| `make test-unit-cover` | Full merged coverage (`coverage.txt`); or run a single block: `make test-unit-cover-evm-core`, `…-evm-integration`, `…-infinited-core`, `…-infinited-integration` (matches CI matrix) |
 | `make test-infinited` | Focus on the `infinited` module only |
 | `make test-scripts` | Python tests under `scripts/` (requires pytest) |
 | `make test-solidity` | Solidity harness (see script output if deps missing) |

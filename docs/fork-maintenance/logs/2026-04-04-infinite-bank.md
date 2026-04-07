@@ -65,7 +65,24 @@ $(go env GOPATH)/bin/golangci-lint run --timeout=15m ./x/bank/...
 go test -race -tags=test ./x/bank/... -count=1
 ```
 
-**Nota (otro artefacto de CI):** el job **`test-unit-cover`** puede fallar por **`panic: test timed out after 15m0s`** en `infinited/tests/integration` (p. ej. `TestGenesisTestSuite` / `TestExportGenesis`), con trazas que sugieren bloqueo en **D-Bus / Ledger** en un runner sin hardware; es un problema **distinto** del lint de `x/bank` y puede requerir exclusión en CI, mock o más tiempo según política del equipo (ver también entradas de deflake en [CHANGELOG.md](../../../CHANGELOG.md)).
+### `test-unit-cover` / integración: timeout y Ledger (contexto ya documentado en el fork)
+
+En CI, el workflow **Tests** ejecuta la cobertura en **cuatro bloques** (matriz sobre `make test-unit-cover-*`): ver [TESTING.md — Granular coverage blocks](../../guides/development/TESTING.md#granular-coverage-blocks-test-unit-cover) y [CI_CD.md — Path filtering](../../guides/infrastructure/CI_CD.md#path-filtering-docs-only-changes). Un fallo por timeout en **`infinited/tests/integration`** aparece entonces como **entrada de matriz** (p. ej. objetivo **`test-unit-cover-infinited-integration`**), sin enmascarar el resto de bloques.
+
+El bloque **`test-unit-cover-infinited-integration`** (misma suite que antes formaba parte del monolito **`make test-unit-cover`**) puede terminar en **`panic: test timed out after 15m0s`** en el paquete **`github.com/cosmos/evm/infinited/tests/integration`** (ej. observado alrededor de **`TestGenesisTestSuite` / `TestExportGenesis`**), con volcados donde aparecen **godbus/dbus** y mensajes tipo **“check your Ledger”**: en GitHub Actions **no hay dispositivo ni daemon** esperado, así que el proceso puede **bloquearse hasta el límite de `go test` del bloque** (`-timeout=15m` en `COMMON_COVER_ARGS` del `Makefile`).
+
+**Esto no viene del feature `x/bank` en sí**; es de la misma **familia de riesgos** que ya se trató en otras partes del historial documental del repo (sin repetir aquí el análisis técnico completo):
+
+| Dónde | Qué documenta |
+|--------|----------------|
+| [Bitácora merge 2026-03-21 — estabilización `infinited`](2026-03-21-merge-upstream-main.md#cambios-aplicados) | Correcciones a **tests de wallets / Ledger** bajo **`tests/integration/wallets/`** (HRP `infinite`, fixtures, checksum amino). Mismo eje **integración + Ledger**, **otro path** que `infinited/tests/integration`. |
+| [Bitácora merge 2026-03-21 — addendum CI](2026-03-21-merge-upstream-main.md#addendum--ci-y-codeql-tras-abrir-pr-2026-04-01) | Flakes bajo **`-race`** y cobertura CI (ej. mempool Krakatoa); enfoque **timing bajo `-race`**, no Ledger. |
+| [`TESTING.md` — Mempool Krakatoa](../../guides/development/TESTING.md#mempool-krakatoa-tests-under-test-unit-cover) | Krakatoa bajo **`-race`** en el bloque **`test-unit-cover-evm-core`** (antes, segunda pasada monolítica en raíz). |
+| [`TESTING.md` — Granular coverage blocks](../../guides/development/TESTING.md#granular-coverage-blocks-test-unit-cover) | Cuatro bloques `make test-unit-cover-*`, matriz en **`test.yml`**, Codecov por `flags`. |
+| [`UPSTREAM_DIVERGENCE_RECORD.md` — § Estabilidad CI (tests Go)](../UPSTREAM_DIVERGENCE_RECORD.md#estabilidad-ci-tests-go) | Krakatoa (`AllowUnsafeSyncInsert`, `TestKrakatoaMempool_ReapNewBlock`, **`require.Eventually`**) y **`CheckTxsQueuedAsync`** frente a flakes en **`test-unit-cover`**. |
+| [CHANGELOG — Infinite Drive UNRELEASED / BUG FIXES](../../../CHANGELOG.md) | [\#5](https://github.com/deep-thought-labs/infinite/pull/5), [\#6](https://github.com/deep-thought-labs/infinite/pull/6) (Krakatoa, `CheckTxsQueuedAsync`) como **deflakes de CI** ya integrados. |
+
+**Seguimiento sugerido** si el timeout en **`infinited/tests/integration`** se reproduce: revisar si algún subtest o dependencia intenta **Ledger real** en CI (skip con build tag / env, mock, o separar job), alineado con lo ya hecho para **`tests/integration/wallets`**. [PLAYBOOK.md — A.7](../PLAYBOOK.md#a7-tests-y-apis-tras-merge-upstream) y [VERIFICATION.md](../VERIFICATION.md) recuerdan validar explícitamente **`infinited/tests/integration/...`**.
 
 ---
 

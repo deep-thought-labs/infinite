@@ -40,11 +40,12 @@
 - Markdownlint pin matches the lint action.
 - CodeQL: RPC logs, height casts, VM assert, Solidity helper.
 - [d56cb2f](https://github.com/deep-thought-labs/infinite/pull/5/changes/d56cb2fe90bab5f205c601672b217d04b12dae8e) CI: `paths-filter` skips heavy jobs on docs-only PRs.
+- **Coverage CI**: `test.yml` runs four **`make test-unit-cover-*`** matrix legs (root vs `tests/integration`, `infinited` vs `infinited/tests/integration`) with per-block Codecov `flags`; `make test-unit-cover` merges block profiles into `coverage.txt`. Documented in `docs/guides/development/TESTING.md` and `docs/guides/infrastructure/CI_CD.md`.
 
 ### BUG FIXES
 
 - [\#5](https://github.com/deep-thought-labs/infinite/pull/5) Krakatoa: less `test-unit-cover` flake.
-- [ee53e7b7](https://github.com/deep-thought-labs/infinite/pull/6/changes/ee53e7b734aed000e3f48bf4aa67097d45c2a323) Improvement on [\#5](https://github.com/deep-thought-labs/infinite/pull/5) Krakatoa CI fix: `require.Eventually` again only in `TestKrakatoaMempool_ReapNewBlock` after block/nonce bump (`-race` / `test-unit-cover` second pass).
+- [ee53e7b7](https://github.com/deep-thought-labs/infinite/pull/6/changes/ee53e7b734aed000e3f48bf4aa67097d45c2a323) Improvement on [\#5](https://github.com/deep-thought-labs/infinite/pull/5) Krakatoa CI fix: `require.Eventually` again only in `TestKrakatoaMempool_ReapNewBlock` after block/nonce bump (`-race` / `test-unit-cover-evm-core` coverage block).
 - [3ce9a5d4](https://github.com/deep-thought-labs/infinite/pull/6/changes/3ce9a5d42ef559dbc529c0dff07d8b7e9db88710) System tests: `CheckTxsQueuedAsync` polls `txpool_content` to deflake exclusive-mempool assertions on CI.
 
 ### UPSTREAM INTEGRATION
