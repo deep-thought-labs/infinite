@@ -23,7 +23,7 @@ Choose the workflow based on your objective:
 | **Verify it compiles** | Testing Build | `make build` | 2-5 min |
 | **Run system upgrade tests on macOS** | Linux Container Build/Test | `make test-system-docker` | 15-30 min |
 | **Release test (local)** | Release Build (Local) | `make release-dry-run-linux` | 10-15 min |
-| **Published binaries** | GitHub Actions (remote) | Push tag `iid-v*` (maintainers) | CI-managed |
+| **Published binaries** | GitHub Actions (remote) | Push tag `v*.*.*` (maintainers) | CI-managed |
 
 ---
 
@@ -435,13 +435,13 @@ ls -lh dist/
 
 **Purpose**: **Versioned release binaries** are produced by **automation** in this repository. **Pre-built artifacts**: [GitHub Releases](https://github.com/deep-thought-labs/infinite/releases/latest). **Local dry-runs** (`make release-dry-run*`) validate the same pipeline on your machine before tagging.
 
-**What is configured**: [`.github/workflows/release.yml`](../../../.github/workflows/release.yml) runs **GoReleaser** when an official tag matching `iid-v*` is pushed (for example `iid-v1.2.3`). Per **`.goreleaser.yml`**, it builds **Linux amd64 and arm64** artifacts, attaches them to a **GitHub Release**, and generates **checksums**. Maintainers can also trigger the workflow manually from the Actions UI (`workflow_dispatch`) for snapshot-style runs.
+**What is configured**: [`.github/workflows/release.yml`](../../../.github/workflows/release.yml) runs **GoReleaser** when a **semantic version tag** matching `v*.*.*` is pushed (for example `v1.2.3`). Per **`.goreleaser.yml`**, it builds **Linux amd64 and arm64** artifacts, attaches them to a **GitHub Release**, and generates **checksums**. Maintainers can also trigger the workflow manually from the Actions UI (`workflow_dispatch`) for snapshot-style runs.
 
 **Where to go next** (same split as in each guide’s intro):
 
 | You want to… | Open |
 |--------------|------|
-| **Ship a version** (prepare branch, `iid-v*` tag, push, verify release assets on GitHub) | **[infrastructure/RELEASES.md](../infrastructure/RELEASES.md)** |
+| **Ship a version** (prepare branch, `v*.*.*` tag, push, verify release assets on GitHub) | **[infrastructure/RELEASES.md](../infrastructure/RELEASES.md)** |
 | **Configure or debug CI** (Settings → Actions permissions, secrets, workflow logs, why a job fails) | **[infrastructure/CI_CD.md](../infrastructure/CI_CD.md)** |
 
 ---

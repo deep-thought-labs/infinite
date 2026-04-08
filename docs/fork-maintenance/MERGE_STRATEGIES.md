@@ -95,12 +95,8 @@ Referencia de producto: [guides/development/TESTING.md — Granular coverage blo
 
 | Artefacto | Motivo |
 |-----------|--------|
-| `.github/workflows/release.yml` | Pipeline de release del proyecto (GoReleaser, tags **`iid-v*`**, permisos). **Mantener la versión del fork** salvo revisión explícita conjunta con [`.goreleaser.yml`](../../.goreleaser.yml). |
-| `.goreleaser.yml` | Define binarios `infinited` y metadatos de Infinite Drive (notas de release con nombre completo **Infinite Improbability Drive**). No sustituir por el de upstream (orientado a `evmd`). |
-| [Makefile](../../Makefile) (`VERSION`, `IID_VERSION_TAG_MATCH`) | `git describe … --match` acotado a **`iid-v*`** para la cadena embebida en el binario. Al portar cambios del Makefile de upstream, **no** eliminar este bloque sin acuerdo. |
-| [`.github/workflows/build.yml`](../../.github/workflows/build.yml) (paso de versión) | Mismo criterio: `describe --match 'iid-v*'`. Reconciliar con upstream si tocan ese paso. |
-
-Detalle y tabla de referencia: [UPSTREAM_DIVERGENCE_RECORD.md — Tags de release Git (`iid-v*`)](UPSTREAM_DIVERGENCE_RECORD.md#tags-de-release-git-iid-v-y-versión-embebida).
+| `.github/workflows/release.yml` | Pipeline de release del proyecto (GoReleaser, tags, permisos). **Mantener la versión del fork** salvo revisión explícita conjunta con [`.goreleaser.yml`](../../.goreleaser.yml). |
+| `.goreleaser.yml` | Define binarios `infinited` y metadatos de Infinite Drive. No sustituir por el de upstream (orientado a `evmd`). |
 
 ### 4.2 Qué tomar de upstream
 

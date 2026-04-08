@@ -2,29 +2,18 @@
 
 > This file contains two parallel tracks:
 >
-> - **Infinite Improbability Drive** (`infinite`): fork release notes. Line **0.1.x** used plain **`v*`** tags on GitHub; from **0.2.x** official tags are **`iid-v*`** so they do not collide with **cosmos/evm**.
+> - **Infinite Improbability Drive** (`infinite`): releases and project-specific notes using Infinite Drive versioning (e.g. `v0.1.x`).
 > - **cosmos/evm**: the reference track, preserved in the same structure for easier synchronization.
 >
 > **Note**: All entries currently listed under the `cosmos/evm` track below are included in this repository. Newer `cosmos/evm` entries may be added in later synchronization cycles.
 
 ---
 
-## Infinite Improbability Drive — Changelog track
+## Infinite Drive — Changelog track
 
-## iid-v0.2.0
+## v0.2.0
 
-### OVERVIEW
-
-- First release tagged **`iid-v*`** on GitHub so fork releases do not share **`v*.*.*`** names with **cosmos/evm**.
-- Adds **Hyperlane**, **Infinite Bank** (`MsgSetDenomMetadata`), on-chain plan **`infinite-v0.1.10-to-v0.2.0`**, and the CI items below.
-
-### UPSTREAM POINTER AND FORK MERGES
-
-- **cosmos/evm** baseline for this tree: **`50b4817…`** (see **cosmos/evm** changelog track below). Upper sections are fork-only.
-
-### OPERATIONAL NOTES
-
-- Live upgrade from **v0.1.10** uses governance plan **`infinite-v0.1.10-to-v0.2.0`**.
+Follow the [migration document](docs/migrations/infinite_v0.1.10_to_v0.2.0.md) for upgrade instructions.
 
 ### BREAKING CHANGES
 
@@ -34,17 +23,14 @@
 
 ### IMPROVEMENTS
 
-- Local node script: ensure installed binary is on PATH.
-- Validation script: Infinite Bank and Hyperlane wiring checks; lighter diff hints vs **cosmos/evm** `main` for Go modules.
-- Fork maintenance docs: **upstream** remote and validation docs aligned with scripts.
-- [8](https://github.com/deep-thought-labs/infinite/pull/8) Markdownlint fixes for changelog and migration guide.
-- [9](https://github.com/deep-thought-labs/infinite/pull/9) GoReleaser release notes header uses the full name **Infinite Improbability Drive**.
+- `local_node.sh`: PATH/GOPATH for installed binary.
+- `validate_customizations.sh`: Infinite Bank + Hyperlane wiring checks; softer informational comparison vs `upstream/main` for `go.mod`/`go.sum`; tip to use `git diff` with or without `| head`.
+- Fork maintenance docs: add `upstream` remote instructions (cosmos/evm); align REFERENCE, README, SCRIPTS, VERIFICATION with validation behavior.
 
 ### FEATURES
 
 - [6](https://github.com/deep-thought-labs/infinite/pull/6) Integrate Hyperlane as Cosmos SDK Module (`x/core`, `x/warp`).
 - [7](https://github.com/deep-thought-labs/infinite/pull/7) `x/bank` extension: gov-only `MsgSetDenomMetadata` for SDK bank denom metadata.
-- [8](https://github.com/deep-thought-labs/infinite/pull/8) On-chain plan **`infinite-v0.1.10-to-v0.2.0`** wired through app, handler, and system test.
 
 ### CONTINUOUS INTEGRATION
 
@@ -57,17 +43,14 @@
 - Buf-breaking baseline: `cosmos/evm` `main`.
 - Markdownlint pin matches the lint action.
 - CodeQL: RPC logs, height casts, VM assert, Solidity helper.
-- [5](https://github.com/deep-thought-labs/infinite/pull/5) CI: path filter skips heavy jobs when a PR is docs-only.
-- **Coverage CI**: four **`test-unit-cover`** matrix jobs in Actions; local **`make test-unit-cover`** merges profiles for one report.
-- [8](https://github.com/deep-thought-labs/infinite/pull/8) Node.js 24 in Actions for markdownlint, solhint, and EVM compatibility jobs.
-- [8](https://github.com/deep-thought-labs/infinite/pull/8) Hardhat harness: ignore build outputs and generated flatten file.
-- [9](https://github.com/deep-thought-labs/infinite/pull/9) Release tags **`iid-v*`**; workflow and `git describe` only use fork tags so version strings are not confused with upstream.
+- [d56cb2f](https://github.com/deep-thought-labs/infinite/pull/5/changes/d56cb2fe90bab5f205c601672b217d04b12dae8e) CI: `paths-filter` skips heavy jobs on docs-only PRs.
+- **Coverage CI**: `test.yml` runs four `**make test-unit-cover-`*** matrix legs (root vs `tests/integration`, `infinited` vs `infinited/tests/integration`) with per-block Codecov `flags`; `make test-unit-cover` merges block profiles into `coverage.txt`. Documented in `docs/guides/development/TESTING.md` and `docs/guides/infrastructure/CI_CD.md`.
 
 ### BUG FIXES
 
 - [5](https://github.com/deep-thought-labs/infinite/pull/5) Krakatoa: less `test-unit-cover` flake.
-- [6](https://github.com/deep-thought-labs/infinite/pull/6) Krakatoa tests: narrow **`require.Eventually`** to the block where `-race` coverage needs it (follow-up to [5](https://github.com/deep-thought-labs/infinite/pull/5)).
-- [6](https://github.com/deep-thought-labs/infinite/pull/6) System tests: poll **`txpool_content`** to stabilize mempool queue assertions on CI.
+- [ee53e7b7](https://github.com/deep-thought-labs/infinite/pull/6/changes/ee53e7b734aed000e3f48bf4aa67097d45c2a323) Improvement on [5](https://github.com/deep-thought-labs/infinite/pull/5) Krakatoa CI fix: `require.Eventually` again only in `TestKrakatoaMempool_ReapNewBlock` after block/nonce bump (`-race` / `test-unit-cover-evm-core` coverage block).
+- [3ce9a5d4](https://github.com/deep-thought-labs/infinite/pull/6/changes/3ce9a5d42ef559dbc529c0dff07d8b7e9db88710) System tests: `CheckTxsQueuedAsync` polls `txpool_content` to deflake exclusive-mempool assertions on CI.
 
 ### UPSTREAM INTEGRATION
 
@@ -83,13 +66,13 @@
 
 ### UPSTREAM POINTER AND FORK MERGES
 
-- **cosmos/evm** at **`381a354…`** (2025-11-14); upstream era **~v0.5.x** before **v0.6.0**.
-- [1](https://github.com/deep-thought-labs/infinite/pull/1) Initial merge from **cosmos/evm**; binary and tree ship as **`infinited`** (not **`evmd`**).
-- Reference upgrade handler name **`v0.4.0-to-v0.5.0`** (upstream-style sample only); no mainnet upgrade executed on this release.
+- **cosmos/evm** integrated at `381a3542ed72e2950bd1076a86b0d48e95be3171` — *test: adjusts precisebank module account balance to expected amount (#837)* — **2025-11-14** (UTC). Rough position on upstream `main`: after **v0.5.0**, same era as **v0.5.1**, before **v0.6.0**; `git describe` on that line ≈ `v0.5.0-rc.0-131-g381a3542`.
+- [1](https://github.com/deep-thought-labs/infinite/pull/1) *merge from cosmos evm*; fork merge commit `5b735e9310adf7e25e2bd4037b26b8bf2242bf62`, then identity work so the release ships `infinited/` (not `evmd/`).
+- **infinited/upgrades.go** registers **`v0.4.0-to-v0.5.0`** — same class of reference handler upstream documents for the v0.5.x→v0.6.0 sample (`docs/migrations/v0.5.x_to_v0.6.0.md`); upstream had used the name `v0.5.0-to-v0.6.0` in `evmd/` before the rename. No mainnet software-upgrade proposal had been executed at this release.
 
 ### OPERATIONAL NOTES
 
-- Chain-upgrade system tests treat **v0.1.10** as the legacy baseline binary from GitHub Releases.
+- When running chain upgrade system tests, `v0.1.10` is used as the legacy baseline for the upgrade scenario (see `Makefile` system test variables and `docs/guides/testing/CHAIN_UPGRADE_SYSTEM_TEST.md`).
 
 ---
 
@@ -119,7 +102,7 @@
 
 ### BUG FIXES
 
-- [965](https://github.com/cosmos/evm/pull/965) Fix gas double charging on EVM calls in IBCOnTimeoutPacketCallback.
+ [965](https://github.com/cosmos/evm/pull/965) Fix gas double charging on EVM calls in IBCOnTimeoutPacketCallback.
 
 - [869](https://github.com/cosmos/evm/pull/869) Fix erc20 IBC callbacks to check for native token transfer before parsing recipient.
 - [860](https://github.com/cosmos/evm/pull/860) Fix EIP-712 signature verification to use configured EVM chain ID instead of parsing cosmos chain ID string and replace legacytx.StdSignBytes with the aminojson sign mode handler.
