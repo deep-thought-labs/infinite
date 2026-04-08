@@ -63,7 +63,7 @@ Guides about infrastructure, CI/CD, and tools.
 
 | Guide | Description | When to Use |
 |-------|-------------|-------------|
-| **[infrastructure/RELEASES.md](infrastructure/RELEASES.md)** | **Ship a version**: git steps, `iid-v*` tag, push, verify GitHub Release + binaries | Publish a new version |
+| **[infrastructure/RELEASES.md](infrastructure/RELEASES.md)** | **Ship a version**: git steps, `v*.*.*` tag, push, verify GitHub Release + binaries | Publish a new version |
 | **[infrastructure/CI_CD.md](infrastructure/CI_CD.md)** | **Wire and debug Actions**: Settings → permissions, Secrets, workflow logs, runner errors | First-time repo CI setup; any workflow failing for config/permissions |
 | **[infrastructure/DOCKER.md](infrastructure/DOCKER.md)** | Docker usage in builds | Understand Docker builds |
 

@@ -11,7 +11,7 @@
 # Usage:
 #   - make release-dry-run        # Test build locally (Linux only)
 #   - make release                # Create official release (requires .release-env)
-#   - GitHub Actions triggers automatically on version tags (iid-v*, Infinite Improbability Drive)
+#   - GitHub Actions triggers automatically on version tags (v*.*.*)
 #
 # Important Notes:
 #   - Requires CGO_ENABLED=1 for cryptographic functions (secp256k1)
@@ -121,9 +121,9 @@ release:
     name: infinite
   # Release notes header
   header: |
-    ## Infinite Improbability Drive {{ .Tag }}
+    ## Infinite Drive {{ .Tag }}
     
-    Release {{ .Tag }} of Infinite Improbability Drive.
+    Release {{ .Tag }} of Infinite Drive.
   # Footer for release notes
   footer: |
     ---

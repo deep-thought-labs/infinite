@@ -60,7 +60,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0  # Required for git describe to match iid-v* release tags
+          fetch-depth: 0  # Required for git describe to get version tags
 
       - name: Setup Go
         uses: actions/setup-go@v5
@@ -82,7 +82,7 @@ jobs:
         id: version
         shell: bash
         run: |
-          VERSION=$(git describe --tags --always --match 'iid-v*' | sed 's/^v//')
+          VERSION=$(git describe --tags --always | sed 's/^v//')
           COMMIT=$(git log -1 --format='%H')
           COMMIT_SHORT=$(git log -1 --format='%h')
           TMVERSION=$(go list -m github.com/cometbft/cometbft | sed 's:.* ::')
